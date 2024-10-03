@@ -14,4 +14,3 @@ layout:
 
 # Trigonometry
 
-View the subpages of this page to see all trigonometry methods
