@@ -60,4 +60,6 @@ log 10 % 3
 // this is doing 10 / 3 and returning the remainder "1"
 ```
 
-More Information on Modulo: [https://en.wikipedia.org/wiki/Modulo](https://en.wikipedia.org/wiki/Modulo)
+More Information on Modulo:
+
+{% embed url="https://en.wikipedia.org/wiki/Modulo" %}
