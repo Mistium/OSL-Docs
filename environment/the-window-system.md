@@ -101,6 +101,14 @@ log window.height
 // the window's height in pixels
 ```
 
+## Create a new window
+
+```javascript
+window "add" window.file.uuid "data"
+// the data is what that window receives in the variable "passed_data"
+// window.file.uuid returns the uud of the file that this window is made from, essentially making an exact duplicate window
+```
+
 ## All endpoints on the window variable
 
 ### **Parents and Children**

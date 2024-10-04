@@ -15,9 +15,22 @@ log arr
 // returns ["value5","value2","value3","value4"]
 ```
 
+## Setting Nested Items
+
+In osl you can update nested items using multiple stacked references to a part of an object/array that gets compiled into a simple json path.
+
+```javascript
+array = ["data",["data2","data3"]]
+
+array[2][2] = "data4"
+
+log array
+// ["data",["data2","data4"]]
+```
+
 ## Appending And Prepending
 
-To append and prepend to an array, you can not only use the `+` operator [#appending-or-prepending-to-an-array-with-a-value](../operators/array-operations.md#appending-or-prepending-to-an-array-with-a-value "mention") but you can also use the [#methods](../#methods "mention") .append() and .prepend().
+To append and prepend to an array, you can not only use the `+` operator in [array-operations.md](../operators/array-operations.md "mention") but you can also use the [.prepend-val.md](../methods/utilities/.prepend-val.md "mention") and [.append-val.md](../methods/utilities/.append-val.md "mention") methods
 
 ```javascript
 arr = ["wow"]

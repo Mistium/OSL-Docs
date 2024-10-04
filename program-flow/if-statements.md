@@ -6,14 +6,30 @@ In the OSL language, `if` statements are pivotal for controlling the flow of a p
 
 The basic `if` statement tests a condition. If the condition is true, the commands within the block are executed. If not, the program moves to the next section.
 
-Example:
-
-```js
-if condition (
-   say "command1"
-   say "command2"
+{% tabs %}
+{% tab title="OSL" %}
+```javascript
+if 10 > 5 (
+   log "10 is bigger than 5!"
 )
 ```
+{% endtab %}
+
+{% tab title="JavaScript" %}
+```javascript
+if (10 > 5) {
+   console.log("10 is bigger than 5!")
+}
+```
+{% endtab %}
+
+{% tab title="Python" %}
+```python
+if 10 > 5:
+   print("10 is bigger than 5!")
+```
+{% endtab %}
+{% endtabs %}
 
 ## if else Statements
 
