@@ -7,8 +7,7 @@ This is not and will never be supported by the embed system on originOS
 ## Listing save data
 
 ```js
-save "contents"
-log save_data
+log saveContents()
 // logs an array of the files in your save data
 ```
 
