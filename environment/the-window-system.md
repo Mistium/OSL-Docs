@@ -27,16 +27,11 @@ You can modify the parameters of your osl window in origin such as disabling res
 ### **Window Position**
 
 ```js
-window "x" x
-window "y" y
-// set the x and y of the window
-
 window.x = x
-window.y = y
-// equivalent as cleaner syntax
+// set the window's x position
 
-window "goto" x y
-// make the window goto an x y position
+window.y = y
+// set the window's y position
 ```
 
 ### **Window Size**
@@ -45,16 +40,9 @@ window "goto" x y
 window "resizable" true/false
 // enables and disables the window from being resized by the user
 
-window "width" width
-window "height" height
-// set the width and height of the window
-
 window.width = width
 window.height = height
-// equivalent as cleaner syntax
-
-window "dimensions" width height
-// set the width and height of the window
+// set the size of the window
 ```
 
 ### Closing the window and execution control
@@ -71,6 +59,18 @@ exit "exit code"
 window "responsive" true/false
 // this disables origin's application sleep mode for this window, allowing you to continue running code even when the window is not in focus
 // this may affect system performance depending on what code you are running
+
+window.renderexec = true/false
+// a boolean that enables or disables the window osl script running when hovered over with the mouse and not focused
+// this is settable
+
+window.framerate = (10 to 250)
+// the fps that the window wants to be run at
+// clamped between 10 and 250
+// this is settable
+
+window.no_desktop = true/false
+// disables or enables the desktop system affecting your application.
 ```
 
 ### Extra
@@ -80,25 +80,6 @@ If your window is hidden and you are rendering things, they may leave a trail be
 ```js
 window "redraw_bg"
 // this redraws the background behind your app
-```
-
-### Get data from your window
-
-You can access data about the window using the `window` variable. It is a json object and is writable.
-
-```js
-log window.width
-// get the width property from the window
-
-window.width = 1000
-// equivalent to
-// window "width" 1000
-
-log window_width
-// window_width is a legacy variable
-
-log window.height
-// the window's height in pixels
 ```
 
 ## Create a new window
@@ -184,22 +165,6 @@ window.height
 // This is settable
 ```
 
-### **Window Execution**
-
-```js
-window.renderexec
-// a boolean that enables or disables the window osl script running when hovered over with the mouse and not focused
-// this is settable
-
-window.framerate
-// the fps that the window wants to be run at
-// clamped between 10 and 250
-// this is settable
-
-window.no_desktop = true/false
-// disables or enables the desktop system affecting your application.
-```
-
 ## Accent Colour
 
 You can set the outline of your window using the window\_accent variable
@@ -216,7 +181,7 @@ window_accent = #fff
 You can change the text it shows when a window is minimised using the minimised\_text variable
 
 ```js
-minimised_text = "shown"
+minimised_text = "Info"
 // this has a maximum length of 6
 ```
 
