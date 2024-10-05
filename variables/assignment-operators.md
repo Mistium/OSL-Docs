@@ -36,3 +36,13 @@ variable %= number
 variable ^= number
 // sets the varable value to "variable ^ number"
 ```
+
+## Increment/Decrement
+
+```javascript
+variable ++
+// increase a variable by exactly 1
+
+variable --
+// decrease a variable by exactly 1
+```
