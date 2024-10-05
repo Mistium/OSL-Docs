@@ -30,7 +30,7 @@ log array
 
 ## Appending And Prepending
 
-To append and prepend to an array, you can not only use the `+` operator in [array-operations.md](../operators/array-operations.md "mention") but you can also use the [.prepend-val.md](../methods/utilities/.prepend-val.md "mention") and [.append-val.md](../methods/utilities/.append-val.md "mention") methods
+To append and prepend to an array, you can not only use the `+` operator in [array-operations.md](../operators/array-operations.md "mention") but you can also use the [.prepend.md](../methods/utilities/.prepend.md "mention") and [.append.md](../methods/utilities/.append.md "mention") methods
 
 ```javascript
 arr = ["wow"]
@@ -58,4 +58,4 @@ log arr
 
 ## Delete An Item Of An Array
 
-To remove an item from an array, you can use either the [.insert-location-val-1.md](../methods/utilities/.insert-location-val-1.md "mention") method or [.pop.md](../methods/json/arrays/.pop.md "mention") to remove the last item, or [.shift.md](../methods/json/arrays/.shift.md "mention") to remove the first item.
+To remove an item from an array, you can use either the [.delete.md](../methods/utilities/.delete.md "mention") method or [.pop.md](../methods/json/arrays/.pop.md "mention") to remove the last item, or [.shift.md](../methods/json/arrays/.shift.md "mention") to remove the first item.
