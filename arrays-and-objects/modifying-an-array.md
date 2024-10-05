@@ -58,4 +58,4 @@ log arr
 
 ## Delete An Item Of An Array
 
-To remove an item from an array, you can use either the&#x20;
+To remove an item from an array, you can use either the [.insert-location-val-1.md](../methods/utilities/.insert-location-val-1.md "mention") method or [.pop.md](../methods/json/arrays/.pop.md "mention") to remove the last item, or [.shift.md](../methods/json/arrays/.shift.md "mention") to remove the first item.

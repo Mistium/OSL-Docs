@@ -83,6 +83,7 @@
   * [.append(val)](methods/utilities/.append-val.md)
   * [.prepend(val)](methods/utilities/.prepend-val.md)
   * [.insert(location,val)](methods/utilities/.insert-location-val.md)
+  * [.delete(location)](methods/utilities/.insert-location-val-1.md)
   * [.concat(val)](methods/utilities/.concat-val.md)
   * [.trim(idx1,idx2)](methods/utilities/.trim-idx1-idx2.md)
   * [.left(num)](methods/utilities/.left-num.md)
