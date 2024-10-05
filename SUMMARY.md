@@ -41,7 +41,11 @@
 * [Notifications](environment/notifications.md)
 * [Send Data Between Windows](environment/send-data-between-windows.md)
 * [Interfacing With Rightclick](environment/interfacing-with-rightclick.md)
-* [Local DB](environment/local-db.md)
+
+## Storage
+
+* [Save DB](storage/save-db.md)
+* [Local DB](storage/local-db.md)
 
 ## Methods
 
