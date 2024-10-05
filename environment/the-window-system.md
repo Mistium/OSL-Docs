@@ -195,6 +195,9 @@ window.framerate
 // the fps that the window wants to be run at
 // clamped between 10 and 250
 // this is settable
+
+window.no_desktop = true/false
+// disables or enables the desktop system affecting your application.
 ```
 
 ## Accent Colour
