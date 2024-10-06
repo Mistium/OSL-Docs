@@ -1,7 +1,5 @@
 # Functions
 
-## Custom Functions
-
 In OSL, you can define custom functions to modularize and reuse your code. Functions can take multiple parameters, perform operations, and return results. These functions can be invoked with specific arguments and used throughout your script.
 
 ## Defining a Custom Function
