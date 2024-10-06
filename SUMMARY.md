@@ -47,6 +47,17 @@
 * [Save DB](storage/save-db.md)
 * [Local DB](storage/local-db.md)
 
+## Custom Syntax
+
+* [Commands](custom-syntax/commands.md)
+* [Methods](custom-syntax/methods.md)
+* [Functions](custom-syntax/functions.md)
+
+## External
+
+* [Make An Iframe App](external/make-an-iframe-app.md)
+* [GPT Integration](external/gpt-integration.md)
+
 ## Methods
 
 * [Strings](methods/strings/README.md)
@@ -55,7 +66,8 @@
   * [.startsWith(val)](methods/strings/.startswith-val.md)
   * [.endsWith(val)](methods/strings/.endswith-val.md)
   * [.wrapText(characters)](methods/strings/.wraptext-characters.md)
-  * [.trimText(characters)](methods/strings/.trimtext-characters.md)
+  * [.trimText(characters)](methods/strings/.trimtext.md)
+  * [.split(characters)](methods/strings/.split.md)
   * [Encoding](methods/strings/encoding/README.md)
     * [.encodeBin()](methods/strings/encoding/.encodebin.md)
     * [.decodeBin()](methods/strings/encoding/.decodebin.md)
@@ -127,6 +139,7 @@
     * [.sort(direction)](methods/json/arrays/.sort.md)
     * [.sortBy(key,direction)](methods/json/arrays/.sortby.md)
     * [.swap(idx1,idx2)](methods/json/arrays/.swap.md)
+    * [.join(characters)](methods/json/arrays/.join.md)
   * [Objects](methods/json/objects/README.md)
     * [.getKeys(keys)](methods/json/objects/.getkeys.md)
     * [.getValues()](methods/json/objects/.getvalues.md)
@@ -154,8 +167,3 @@
     * [.wsHasnew()](methods/networking/websockets/.wshasnew.md)
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
-
-## External
-
-* [Make An Iframe App](external/make-an-iframe-app.md)
-* [GPT Integration](external/gpt-integration.md)
