@@ -11,7 +11,7 @@ To define a custom function, use the `def` keyword followed by the function name
 Here’s how you can create a function that performs basic arithmetic operations and returns a result:
 
 ```javascript
-def calculate(this.num1, this.num2, this.operation)
+def calculate(this.num1, this.num2, this.operation) (
   switch this.operation (
     case "add"
       this.result = this.num1 + this.num2
@@ -27,7 +27,7 @@ def calculate(this.num1, this.num2, this.operation)
       break
   )
   return this.result
-endef
+)
 
 log calculate(10,5,"add")
 // Outputs: 15
@@ -44,7 +44,7 @@ log calculate(10,5,"divide")
 You can also define functions to perform operations on strings. Here’s an example of a function that reverses a string:
 
 ```javascript
-def reverseString(this.text)
+def reverseString(this.text) (
   this.reversed = ""
   i = this.text.len
   loop this.text.len (
@@ -52,7 +52,7 @@ def reverseString(this.text)
     i --
   )
   return this.reversed
-endef
+)
 
 log reverseString("hello")  // Outputs: "olleh"
 ```
@@ -62,10 +62,10 @@ log reverseString("hello")  // Outputs: "olleh"
 You can define a function and then trigger it based on an event. Here’s an example where a function is called when a specific key is pressed:
 
 ```javascript
-def greet(this.name)
+def greet(this.name) (
   this.message = "Hello," + this.name ++ "!"
   return this.message
-endef
+)
 
 if "G".onKeyDown() (
   say greet("Alice")  // Outputs: "Hello, Alice!"
@@ -77,7 +77,7 @@ if "G".onKeyDown() (
 Custom functions can also handle complex data processing, such as filtering an array:
 
 ```javascript
-def filterEvenNumbers(this.nums)
+def filterEvenNumbers(this.nums) (
   this.even = []
   for i this.nums.len (
     if this.nums[i] % 2 == 0 (
@@ -85,7 +85,7 @@ def filterEvenNumbers(this.nums)
     )
   )
   return this.even
-endef
+)
 
 data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 log filterEvenNumbers(data)  // Outputs: [2, 4, 6, 8, 10]

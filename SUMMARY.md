@@ -167,3 +167,19 @@
     * [.wsHasnew()](methods/networking/websockets/.wshasnew.md)
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
+
+## Advanced
+
+* [Canvas](advanced/canvas.md)
+
+## Rendering
+
+* [Basics](rendering/basics.md)
+* [Commands](rendering/commands/README.md)
+  * [Draw Cursor](rendering/commands/draw-cursor/README.md)
+    * [goto x y](rendering/commands/draw-cursor/goto-x-y.md)
+    * [set\_x x](rendering/commands/draw-cursor/set\_x-x.md)
+    * [set\_y y](rendering/commands/draw-cursor/set\_y-y.md)
+    * [change\_x x](rendering/commands/draw-cursor/change\_x-x.md)
+    * [change\_y y](rendering/commands/draw-cursor/change\_y-y.md)
+    * [change x y](rendering/commands/draw-cursor/change-x-y.md)
