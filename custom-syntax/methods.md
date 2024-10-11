@@ -6,10 +6,10 @@ Using the `def` command you can create a new custom method for your program to u
 
 ## Syntax
 
-<pre class="language-js"><code class="lang-js">def input.method(parameters)
+<pre class="language-js"><code class="lang-js">def input.method(parameters) (
     // run your method code
     return "data"
-endef
+)
 
 log "hi".method()
 <strong>// this passes "hi" and null to the method and then logs "data"
@@ -20,7 +20,7 @@ log "hi".method()
 The below is an example of how to make a script that splits a string into single characters, like using&#x20;
 
 ```js
-def text_data.makeLetters()
+def text_data.makeLetters() (
   data = []
   // new array
   i = 0
@@ -36,7 +36,7 @@ def text_data.makeLetters()
   )
   return data
   // return the array
-endef
+)
 
 log "hello".makeLetters()
 // ["h","e","l","l","o"]
@@ -45,7 +45,7 @@ log "hello".makeLetters()
 We can also compress the splitter using some more advanced techniques
 
 ```javascript
-def text_data.makeLetters()
+def text_data.makeLetters() (
   data = []
   // new array
   
@@ -57,7 +57,7 @@ def text_data.makeLetters()
   )
   return data
   // return the array
-endef
+)
 
 log "hello".makeLetters()
 // ["h","e","l","l","o"]
