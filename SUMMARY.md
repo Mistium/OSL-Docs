@@ -174,10 +174,17 @@
 
 * [Math](functions/math/README.md)
   * [Math()](functions/math/math.md)
-  * [random(low,high)](functions/math/random-low-high.md)
+  * [random(low,high)](functions/math/random.md)
+  * [min(num1,num2)](functions/math/min.md)
+  * [max(num1,num2)](functions/math/max.md)
+  * [lcm(num1,num2)](functions/math/lcm.md)
+  * [gcd(num1,num2)](functions/math/gcd.md)
+  * [sum(num1,..)](functions/math/sum.md)
+  * [average(num1,..)](functions/math/average.md)
+  * [dist(x1,y1,x2,y2)](functions/math/dist.md)
 * [Encoding](functions/encoding/README.md)
-  * [encodeURIComponent(string)](functions/encoding/encodeuricomponent-string.md)
-  * [decodeURIComponent(string)](functions/encoding/decodeuricomponent-string.md)
+  * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
+  * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
 
 ## Advanced
 
