@@ -170,6 +170,15 @@
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
 
+## Functions
+
+* [Math](functions/math/README.md)
+  * [Math()](functions/math/math.md)
+  * [random(low,high)](functions/math/random-low-high.md)
+* [Encoding](functions/encoding/README.md)
+  * [encodeURIComponent(string)](functions/encoding/encodeuricomponent-string.md)
+  * [decodeURIComponent(string)](functions/encoding/decodeuricomponent-string.md)
+
 ## Advanced
 
 * [Canvas](advanced/canvas.md)
