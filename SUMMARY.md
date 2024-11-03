@@ -141,7 +141,7 @@
     * [.sortBy(key,direction)](methods/json/arrays/.sortby.md)
     * [.swap(idx1,idx2)](methods/json/arrays/.swap.md)
     * [.join(characters)](methods/json/arrays/.join.md)
-    * [.map(callback)](methods/json/arrays/.join-1.md)
+    * [.map(callback)](methods/json/arrays/.map.md)
   * [Objects](methods/json/objects/README.md)
     * [.getKeys(keys)](methods/json/objects/.getkeys.md)
     * [.getValues()](methods/json/objects/.getvalues.md)
