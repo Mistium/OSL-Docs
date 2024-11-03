@@ -7,10 +7,20 @@ Currently osl has support for:\
 
 Bitwise `and` for osl is identical to bitwise `and` in js
 
-[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise\_AND](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise\_AND)
+{% embed url="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND" %}
+
+```javascript
+log 101 & 100
+// 100
+```
 
 ## Bitwise OR
 
 Bitwise `or` for osl is identical to bitwise `or` in js
 
-[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise\_OR](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise\_OR)
+{% embed url="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_OR" %}
+
+```javascript
+log 101 | 100
+// 101
+```

@@ -52,6 +52,7 @@
 * [Commands](custom-syntax/commands.md)
 * [Methods](custom-syntax/methods.md)
 * [Functions](custom-syntax/functions.md)
+* [Inline](custom-syntax/inline.md)
 
 ## External
 
