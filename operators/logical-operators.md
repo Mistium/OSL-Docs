@@ -121,3 +121,19 @@ log true nand false
 // nand is literally "not and" so it will return the opposite of an and statement
 ```
 
+## NOT
+
+The `NOT` statement negates the truth value of its operand. In the context of osl, you can apply it using an exclamation mark (`!`) before a value or group of values. Here's how it works:
+
+* `!true` evaluates to `false`.
+* `!false` evaluates to `true`.
+
+In osl, you can also use the `!` operator in conjunction with logical operators to achieve similar effects. For instance, `!(false and true)` evaluates to `true` since the `AND` operation between `false` and `true` is `false`, and the `NOT` operation negates it.
+
+```javascript
+log !true
+// false
+
+log !(true and true)
+// false
+```
