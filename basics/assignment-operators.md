@@ -46,3 +46,12 @@ variable ++
 variable --
 // decrease a variable by exactly 1
 ```
+
+## Nullish Coalescence
+
+[#nullish-coalescence](assignment-operators.md#nullish-coalescence "mention")
+
+```javascript
+variable ??= 10
+// only sets the variable if the variable doesnt exist
+```
