@@ -5,12 +5,9 @@
 * [Syntax](README.md)
 * [Types](basics/types.md)
 * [The Execution Loop](basics/the-execution-loop.md)
-
-## Variables
-
-* [Defining Variables](variables/defining-variables.md)
-* [Assignment Operators](variables/assignment-operators.md)
-* [Local Scoping](variables/local-scoping.md)
+* [Defining Variables](basics/defining-variables.md)
+* [Assignment Operators](basics/assignment-operators.md)
+* [Local Scoping](basics/local-scoping.md)
 
 ## Operators
 
@@ -58,6 +55,19 @@
 
 * [Make An Iframe App](external/make-an-iframe-app.md)
 * [GPT Integration](external/gpt-integration.md)
+
+## Rendering
+
+* [Basics](rendering/basics.md)
+* [Commands](rendering/commands/README.md)
+  * [Draw Cursor](rendering/commands/draw-cursor/README.md)
+    * [goto x y](rendering/commands/draw-cursor/goto-x-y.md)
+    * [set\_x x](rendering/commands/draw-cursor/set\_x-x.md)
+    * [set\_y y](rendering/commands/draw-cursor/set\_y-y.md)
+    * [change\_x x](rendering/commands/draw-cursor/change\_x-x.md)
+    * [change\_y y](rendering/commands/draw-cursor/change\_y-y.md)
+    * [change x y](rendering/commands/draw-cursor/change-x-y.md)
+  * [Canvas](rendering/commands/canvas.md)
 
 ## Methods
 
@@ -186,22 +196,7 @@
   * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
   * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
 
-## Advanced
-
-* [Canvas](advanced/canvas.md)
-
-## Rendering
-
-* [Basics](rendering/basics.md)
-* [Commands](rendering/commands/README.md)
-  * [Draw Cursor](rendering/commands/draw-cursor/README.md)
-    * [goto x y](rendering/commands/draw-cursor/goto-x-y.md)
-    * [set\_x x](rendering/commands/draw-cursor/set\_x-x.md)
-    * [set\_y y](rendering/commands/draw-cursor/set\_y-y.md)
-    * [change\_x x](rendering/commands/draw-cursor/change\_x-x.md)
-    * [change\_y y](rendering/commands/draw-cursor/change\_y-y.md)
-    * [change x y](rendering/commands/draw-cursor/change-x-y.md)
-
 ## Files
 
 * [What is a file? (in ofsf)](files/what-is-a-file-in-ofsf.md)
+* [Creating Directories](files/creating-directories.md)
