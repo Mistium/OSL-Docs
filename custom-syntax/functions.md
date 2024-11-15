@@ -91,4 +91,28 @@ data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 log filterEvenNumbers(data)  // Outputs: [2, 4, 6, 8, 10]
 ```
 
-\
+## Functions are Stored As Variables
+
+Whenever you define a function, it is stored as a variable, the same way that [inline.md](inline.md "mention")functions are stored.
+
+```javascript
+def myfunc() (
+
+)
+
+log myfunc
+// logs the function object
+```
+
+This means u can also clone functions and edit their code
+
+```javascript
+def myfunc() (
+  return 10
+)
+
+myNewFunc = myfunc
+
+log myNewFunc()
+// logs 10
+```
