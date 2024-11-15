@@ -38,6 +38,7 @@
 * [Notifications](environment/notifications.md)
 * [Send Data Between Windows](environment/send-data-between-windows.md)
 * [Interfacing With Rightclick](environment/interfacing-with-rightclick.md)
+* [Permissions](environment/permissions.md)
 
 ## Storage
 
