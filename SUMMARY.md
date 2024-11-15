@@ -201,3 +201,7 @@
     * [change\_x x](rendering/commands/draw-cursor/change\_x-x.md)
     * [change\_y y](rendering/commands/draw-cursor/change\_y-y.md)
     * [change x y](rendering/commands/draw-cursor/change-x-y.md)
+
+## Files
+
+* [What is a file? (in ofsf)](files/what-is-a-file-in-ofsf.md)
