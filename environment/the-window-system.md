@@ -125,6 +125,11 @@ window.permissions
 // this key is only a copy of the window permissions
 // it will not edit the actual permissions if you change this
 
+window.file.path
+// this functions identically to window.permissions, it is not editable
+// this will return the file path of the current osl file
+// example: "origin/(c) users/username/downloads/new.osl"
+
 window.file.uuid
 // returns the uuid that leads to the file that controls this window
 
