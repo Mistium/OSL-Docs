@@ -78,7 +78,7 @@ window.no_desktop = true/false
 If your window is hidden and you are rendering things, they may leave a trail behind, so when you move the thing you are rendering and need to clear the screen, use
 
 ```js
-window "redraw_bg"
+window "refresh_bg"
 // this redraws the background behind your app
 ```
 
