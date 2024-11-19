@@ -86,8 +86,9 @@ window "redraw_bg"
 
 ```javascript
 window "add" window.file.uuid "data"
+// add a new window from the same file (essentially clone this window)
 // the data is what that window receives in the variable "passed_data"
-// window.file.uuid returns the uud of the file that this window is made from, essentially making an exact duplicate window
+// be careful because this can cause an infinite loop and crash osl
 ```
 
 ## All endpoints on the window variable
@@ -110,6 +111,37 @@ window.parent.name
 window.children
 // returns an array of the ids of windows that this window has created
 // this key is not a direct reference to the window children and changing it will only affect your program
+```
+
+### **Parent Variables**
+
+**In osl, if the parent window is running the same file as the child window, you can access the parent's variables by reference to edit and view them in real time.**
+
+[#create-a-new-window](the-window-system.md#create-a-new-window "mention")
+
+```javascript
+if window.parent.file_uuid == window.file.uuid (
+  // only run if the parent window is the same file
+  if passed_data == "Child" (
+    // only run if this window was created with the data "Child"
+    vars @= window.parent.variables
+    // get the parent window's variables by reference
+    vars.hello += 1
+    // increment the hello variable
+    window "stop"
+  )
+)
+
+hello = 10
+// set hello to 10
+
+window "add" window.file.uuid "Child"
+// create a new window with the data "Child" from the same file
+
+mainloop:
+log hello
+// keep logging the hello variable
+// this changes from 10 to 11
 ```
 
 ### **File and code data**
