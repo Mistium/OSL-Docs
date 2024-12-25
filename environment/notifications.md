@@ -16,7 +16,7 @@ hasperms = false
 mainloop:
 if hasperms.not (
   // only check while you don't have permissions
-  if permissions.contains("notifications") (
+  if window.permissions.contains("notifications") (
     hasperms = true
   ) else (
     exit
