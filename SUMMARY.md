@@ -63,12 +63,16 @@
 * [Commands](rendering/commands/README.md)
   * [Draw Cursor](rendering/commands/draw-cursor/README.md)
     * [goto x y](rendering/commands/draw-cursor/goto-x-y.md)
-    * [set\_x x](rendering/commands/draw-cursor/set\_x-x.md)
-    * [set\_y y](rendering/commands/draw-cursor/set\_y-y.md)
-    * [change\_x x](rendering/commands/draw-cursor/change\_x-x.md)
-    * [change\_y y](rendering/commands/draw-cursor/change\_y-y.md)
+    * [set\_x x](rendering/commands/draw-cursor/set_x-x.md)
+    * [set\_y y](rendering/commands/draw-cursor/set_y-y.md)
+    * [change\_x x](rendering/commands/draw-cursor/change_x-x.md)
+    * [change\_y y](rendering/commands/draw-cursor/change_y-y.md)
     * [change x y](rendering/commands/draw-cursor/change-x-y.md)
   * [Canvas](rendering/commands/canvas.md)
+  * [Rectangle](rendering/commands/rectangle.md)
+  * [Icon](rendering/commands/icon.md)
+  * [Image](rendering/commands/image.md)
+  * [Pen](rendering/commands/pen.md)
 
 ## Methods
 
