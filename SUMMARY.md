@@ -74,27 +74,27 @@
 
 ## Rendering
 
-* [Basics](rendering/basics.md)
-* [Commands](rendering/commands/README.md)
-  * [Draw Cursor](rendering/commands/draw-cursor/README.md)
-    * [goto x y](rendering/commands/draw-cursor/goto-x-y.md)
-    * [set\_x x](rendering/commands/draw-cursor/set_x-x.md)
-    * [set\_y y](rendering/commands/draw-cursor/set_y-y.md)
-    * [change\_x x](rendering/commands/draw-cursor/change_x-x.md)
-    * [change\_y y](rendering/commands/draw-cursor/change_y-y.md)
-    * [change x y](rendering/commands/draw-cursor/change-x-y.md)
-  * [Canvas](rendering/commands/canvas.md)
-  * [Rectangle](rendering/commands/rectangle.md)
-  * [Icon](rendering/commands/icon.md)
-  * [Image](rendering/commands/image.md)
-  * [Pen](rendering/commands/pen.md)
-
 ## Commands
 
 * [Debugging](commands/debugging/README.md)
   * [log "hello world"](commands/debugging/log-hello-world.md)
   * [warn "you should change this"](commands/debugging/warn-you-should-change-this.md)
   * [error "something went wrong"](commands/debugging/error-something-went-wrong.md)
+* [Rendering](commands/rendering/README.md)
+  * [Basics](commands/rendering/basics.md)
+  * [Draw Cursor](commands/rendering/draw-cursor/README.md)
+    * [goto x y](commands/rendering/draw-cursor/goto-x-y.md)
+    * [set\_x x](commands/rendering/draw-cursor/set_x-x.md)
+    * [set\_y y](commands/rendering/draw-cursor/set_y-y.md)
+    * [change\_x x](commands/rendering/draw-cursor/change_x-x.md)
+    * [change\_y y](commands/rendering/draw-cursor/change_y-y.md)
+    * [change x y](commands/rendering/draw-cursor/change-x-y.md)
+  * [Elements](commands/rendering/elements/README.md)
+    * [Canvas](commands/rendering/elements/canvas.md)
+    * [Rectangle](commands/rendering/elements/rectangle.md)
+    * [Icon](commands/rendering/elements/icon.md)
+    * [Image](commands/rendering/elements/image.md)
+    * [Pen](commands/rendering/elements/pen.md)
 
 ## Functions
 
