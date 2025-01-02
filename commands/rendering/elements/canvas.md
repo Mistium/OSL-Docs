@@ -51,7 +51,7 @@ log id.canvPixel(index)
 
 In osl you can load custom images using ids, so here we will simply create a canvas and then get its data uri and then load it as an image. Then we simply render the image on the window
 
-<figure><img src="../../.gitbook/assets/Screenshot 2024-10-11 at 09.41.15.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/Screenshot 2024-10-11 at 09.41.15.png" alt=""><figcaption></figcaption></figure>
 
 ```javascript
 canv "create" "board" 8 8 #fff
@@ -75,7 +75,7 @@ import "win-buttons"
 
 Using our previous code, we can simply modify it to set every other pixel in the canvas so that we have a chess board
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ```javascript
 canv "create" "board" 8 8 #fff
