@@ -5,7 +5,9 @@
 * [Syntax](README.md)
 * [Types](basics/types.md)
 * [The Execution Loop](basics/the-execution-loop.md)
-* [Defining Variables](basics/defining-variables.md)
+* [Defining Variables](basics/defining-variables/README.md)
+  * [Clone Objects (=)](basics/defining-variables/clone-objects.md)
+  * [Create Object References (@=)](basics/defining-variables/create-object-references.md)
 * [Assignment Operators](basics/assignment-operators.md)
 * [Local Scoping](basics/local-scoping.md)
 
