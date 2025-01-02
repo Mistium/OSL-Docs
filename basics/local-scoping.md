@@ -1,17 +1,15 @@
-# Local Scoping
+# Local Scoping (this.val)
 
 ### About Variables
 
 In osl all variables are global scope and to use locally scoped variables you must use the keyword `this`
 
-### Where can i use `this`?
+### Where can I use `this`?
 
 You can use `this` inside of the following scopes
 
 ```
-def
-
-method
+functions/commands/methods
 
 main
 
@@ -34,11 +32,11 @@ log this
 ### Example script
 
 ```js
-def "test_cmd"
+def "test_cmd" (
   this.hello = "greetings!"
   log this.hello
   // logs "greetings!"
-endef
+)
 
 this.hello = "hello world"
 
