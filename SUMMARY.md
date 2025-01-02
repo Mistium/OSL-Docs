@@ -9,11 +9,17 @@
   * [Clone Objects (=)](basics/defining-variables/clone-objects.md)
   * [References To Objects/Variables (@=)](basics/defining-variables/references-to-objects-variables.md)
 * [Assignment Operators](basics/assignment-operators.md)
-* [Local Scoping](basics/local-scoping.md)
+* [Local Scoping (this.val)](basics/local-scoping.md)
 
 ## Operators
 
-* [Mathematical Usage](operators/mathematical-usage.md)
+* [Mathematical Usage](operators/mathematical-usage/README.md)
+  * [Addition Operator (+)](operators/mathematical-usage/addition-operator-+.md)
+  * [Subtraction Operator (-)](operators/mathematical-usage/subtraction-operator.md)
+  * [Divide Operator (/)](operators/mathematical-usage/divide-operator.md)
+  * [Multiply Operator (\*)](operators/mathematical-usage/multiply-operator.md)
+  * [To The Power Of (^)](operators/mathematical-usage/to-the-power-of.md)
+  * [Modulo Operator (%)](operators/mathematical-usage/modulo-operator.md)
 * [Text Usage](operators/text-usage.md)
 * [Array Operations](operators/array-operations.md)
 * [Comparative Operators](operators/comparative-operators.md)
