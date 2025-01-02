@@ -217,3 +217,10 @@
 
 * [What is a file? (in ofsf)](files/what-is-a-file-in-ofsf.md)
 * [Creating Directories](files/creating-directories.md)
+
+## Commands
+
+* [Debugging](commands/debugging/README.md)
+  * [log value](commands/debugging/log-value.md)
+  * [warn value](commands/debugging/warn-value.md)
+  * [error value](commands/debugging/error-value.md)
