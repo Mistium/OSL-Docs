@@ -51,6 +51,9 @@
 * [Send Data Between Windows](environment/send-data-between-windows.md)
 * [Interfacing With Rightclick](environment/interfacing-with-rightclick.md)
 * [Permissions](environment/permissions.md)
+* [Files](environment/files/README.md)
+  * [What is a file? (in ofsf)](environment/files/what-is-a-file-in-ofsf.md)
+  * [Creating Directories](environment/files/creating-directories.md)
 
 ## Storage
 
@@ -85,6 +88,29 @@
   * [Icon](rendering/commands/icon.md)
   * [Image](rendering/commands/image.md)
   * [Pen](rendering/commands/pen.md)
+
+## Commands
+
+* [Debugging](commands/debugging/README.md)
+  * [log value](commands/debugging/log-value.md)
+  * [warn value](commands/debugging/warn-value.md)
+  * [error value](commands/debugging/error-value.md)
+
+## Functions
+
+* [Math](functions/math/README.md)
+  * [Math()](functions/math/math.md)
+  * [random(low,high)](functions/math/random.md)
+  * [min(num1,num2)](functions/math/min.md)
+  * [max(num1,num2)](functions/math/max.md)
+  * [lcm(num1,num2)](functions/math/lcm.md)
+  * [gcd(num1,num2)](functions/math/gcd.md)
+  * [sum(num1,..)](functions/math/sum.md)
+  * [average(num1,..)](functions/math/average.md)
+  * [dist(x1,y1,x2,y2)](functions/math/dist.md)
+* [Encoding](functions/encoding/README.md)
+  * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
+  * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
 
 ## Methods
 
@@ -196,31 +222,3 @@
     * [.wsHasnew()](methods/networking/websockets/.wshasnew.md)
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
-
-## Functions
-
-* [Math](functions/math/README.md)
-  * [Math()](functions/math/math.md)
-  * [random(low,high)](functions/math/random.md)
-  * [min(num1,num2)](functions/math/min.md)
-  * [max(num1,num2)](functions/math/max.md)
-  * [lcm(num1,num2)](functions/math/lcm.md)
-  * [gcd(num1,num2)](functions/math/gcd.md)
-  * [sum(num1,..)](functions/math/sum.md)
-  * [average(num1,..)](functions/math/average.md)
-  * [dist(x1,y1,x2,y2)](functions/math/dist.md)
-* [Encoding](functions/encoding/README.md)
-  * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
-  * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
-
-## Files
-
-* [What is a file? (in ofsf)](files/what-is-a-file-in-ofsf.md)
-* [Creating Directories](files/creating-directories.md)
-
-## Commands
-
-* [Debugging](commands/debugging/README.md)
-  * [log value](commands/debugging/log-value.md)
-  * [warn value](commands/debugging/warn-value.md)
-  * [error value](commands/debugging/error-value.md)
