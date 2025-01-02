@@ -92,9 +92,9 @@
 ## Commands
 
 * [Debugging](commands/debugging/README.md)
-  * [log value](commands/debugging/log-value.md)
-  * [warn value](commands/debugging/warn-value.md)
-  * [error value](commands/debugging/error-value.md)
+  * [log "hello world"](commands/debugging/log-hello-world.md)
+  * [warn "you should change this"](commands/debugging/warn-you-should-change-this.md)
+  * [error "something went wrong"](commands/debugging/error-something-went-wrong.md)
 
 ## Functions
 
