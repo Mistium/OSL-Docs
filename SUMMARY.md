@@ -28,7 +28,11 @@
 
 ## Program Flow
 
-* [If Statements](program-flow/if-statements.md)
+* [If Statements](program-flow/if-statements/README.md)
+  * [if truthy (](program-flow/if-statements/if-truthy.md)
+  * [) else if truthy (](program-flow/if-statements/else-if-truthy.md)
+  * [) else (](program-flow/if-statements/else.md)
+  * [)](program-flow/if-statements/undefined.md)
 * [Switch Case](program-flow/switch-case.md)
 * [Iteration](program-flow/iteration.md)
 * [While And Until](program-flow/while-and-until.md)
