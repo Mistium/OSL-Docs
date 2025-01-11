@@ -41,9 +41,9 @@ The line height can be adjusted using the `configtext` command with the `linehei
 
 #### **Example:**
 
-```bash
+```javascript
 configtext "lineheight" 23
-# Sets the line height to 23
+// Sets the line height to 23
 ```
 
 ### Changing Character Spacing
@@ -52,9 +52,9 @@ The space between characters can be adjusted as a multiple of the size of the te
 
 **Example:**
 
-```bash
+```javascript
 configtext "spacing" 1
-# Sets the spacing between characters to 1 times the size of the text
+// Sets the spacing between characters to 1 times the size of the text
 ```
 
 ### Selecting a Font
@@ -63,7 +63,7 @@ To select a font to use, use the `configtext` command with the `usefont` paramet
 
 **Example:**
 
-```js
+```javascript
 configtext "usefont" "Llama"
 // Selects the "Llama" font for text rendering
 ```
