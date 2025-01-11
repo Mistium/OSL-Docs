@@ -93,6 +93,7 @@
     * [Canvas](commands/rendering/elements/canvas.md)
     * [Rectangle](commands/rendering/elements/rectangle.md)
     * [Icon](commands/rendering/elements/icon.md)
+    * [Text](commands/rendering/elements/text.md)
     * [Image](commands/rendering/elements/image.md)
     * [Pen](commands/rendering/elements/pen.md)
 
