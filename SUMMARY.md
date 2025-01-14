@@ -9,7 +9,7 @@
   * [Clone Objects (=)](basics/defining-variables/clone-objects.md)
   * [References To Objects/Variables (@=)](basics/defining-variables/references-to-objects-variables.md)
 * [Assignment Operators](basics/assignment-operators.md)
-* [Local Scoping (this.val)](basics/local-scoping.md)
+* [Local Scoping](basics/local-scoping.md)
 
 ## Operators
 

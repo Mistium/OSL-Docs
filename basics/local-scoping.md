@@ -1,27 +1,19 @@
-# Local Scoping (this.val)
+# Local Scoping
 
 ### About Variables
 
-In osl all variables are global scope and to use locally scoped variables you must use the keyword `this`
+In osl all variables are global scope and to use locally scoped variables you must use the keyword `local`
 
-### Where can I use `this`?
+### Where can I use `local`?
 
-You can use `this` inside of the following scopes
+You can local scope inside of any function context
 
-```
-functions/commands/methods
+### How does `local` work?
 
-main
-
-run
-```
-
-### How does `this` work?
-
-The `this` variable is a json object that can be modified by setting keys on it, as shown below
+The local keyword creates a key on an json object that's unique to the current context/scope that's accessible using the `this keyword`
 
 ```js
-this.key = "1234"
+local key = "1234"
 
 log this
 // returns {"key":"1234"}
@@ -33,15 +25,17 @@ log this
 
 ```js
 def "test_cmd" (
-  this.hello = "greetings!"
-  log this.hello
+  local hello = "greetings!"
+  log hello
   // logs "greetings!"
 )
 
-this.hello = "hello world"
+local hello = "hello world"
 
 test_cmd
 
-log this.hello
+log hello
 // logs "hello world"
 ```
+
+If a local variable and a global variable exist with the same name, it will access the local variable first.
