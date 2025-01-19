@@ -96,6 +96,7 @@
     * [Text](commands/rendering/elements/text.md)
     * [Image](commands/rendering/elements/image.md)
     * [Pen](commands/rendering/elements/pen.md)
+  * [Clipping And Scrolling (frames)](commands/rendering/clipping-and-scrolling-frames.md)
 
 ## Functions
 
