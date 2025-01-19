@@ -36,7 +36,7 @@ frame left top right bottom (
 Within osl, you can hand off scrolling to the system using a frame, which gives an area on your application that clips the data inside of it, adds scrolling for you and is generally simple.
 
 ```javascript
-frame left top right bottom frame_id [content_width, content_height] (
+frame left top right bottom "frame_id" [content_width, content_height] (
   // content
 )
 ```
@@ -48,7 +48,7 @@ text_size = 10
 image_width = 150
 
 // content width of 200, content height of 1000
-frame -100 100 100 -100 scroll_frame [200, 1000] (
+frame -100 100 100 -100 "scroll_frame" [200, 1000] (
   // content to be scrolled
   goto scroll_x scroll_y
   text "Sample Text" text_size
