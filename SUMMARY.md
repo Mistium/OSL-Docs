@@ -184,6 +184,7 @@
   * [.sign()](methods/maths/.sign.md)
   * [.chance()](methods/maths/.chance.md)
   * [.clamp(low,high)](methods/maths/.clamp.md)
+  * [.toBase(base)](methods/maths/.tobase.md)
   * [Rounding](methods/maths/rounding/README.md)
     * [.round(places)](methods/maths/rounding/.round.md)
     * [.ceiling()](methods/maths/rounding/.ceiling.md)
