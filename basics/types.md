@@ -26,16 +26,16 @@ Logical values representing true or false (case-insensitive).
 
 ```javascript
 // Boolean values
-isTrue = True
-isFalse = False
+isTrue = true
+isFalse = false
 
 // In conditions
-if True (
+if true (
     log "This will execute"
 )
 
 // Boolean operations
-result = True and False  // False
+result = true and false  // false
 ```
 
 ## Number
@@ -64,7 +64,7 @@ Ordered collections of values enclosed in square brackets.
 names = ["Alice", "Bob", "Charlie"]
 
 // Mixed type array
-data = [1, "two", True, 4.5]
+data = [1, "two", true, 4.5]
 
 // Nested array
 matrix = [[1, 2], [3, 4]]
@@ -98,7 +98,7 @@ user = {
 // Object with arrays
 data = {
     numbers: [1, 2, 3],
-    flags: [True, False]
+    flags: [true, false]
 }
 ```
 
