@@ -104,3 +104,39 @@ each i item list (
 )
 // logs the items in array "list"
 ```
+
+## Break Statement
+
+The `break` statement allows you to exit a loop early when a certain condition is met.
+
+### Example
+
+```js
+// Exit loop when a condition is met
+loop 10 (
+  if i > 5 (
+    break  // Exits the loop when i is greater than 5
+  )
+  log i
+)
+// Only logs numbers 1-5
+
+// Break in for loop
+for i 10 (
+  if i == 7 (
+    break  // Exits when i equals 7
+  )
+  log i
+)
+// Only logs numbers 1-6
+
+// Break in each loop
+each i item list (
+  if item == "stop" (
+    break  // Exits when finding "stop"
+  )
+  log item
+)
+```
+
+The `break` statement is useful when you need to exit a loop before its normal completion, such as when searching for a specific value or when a certain condition is met.
