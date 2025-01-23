@@ -27,7 +27,7 @@ var = 10
 Methods allow you to modify the data you input into them, and they do return a value.
 
 ```javascript
-log 10.sin
+log 10.sin()
 // logs the sin of 10 to the console
 ```
 
@@ -48,6 +48,9 @@ Functions take parameters and no inputs, and are mostly used for when the functi
 ```javascript
 log min(10,5)
 // logs 5 to the console
+
+func(10,5)
+// runs the function with the parameters 10 and 5
 ```
 
 ### Statements
