@@ -48,6 +48,9 @@ slice = arr.trim(2, 4)  // Gets elements from index 2 to 4 inclusive
 
 // Mapping over elements
 doubled = arr.map(def(x) -> (return x * 2))
+
+// Fill array with value
+numbers = (1 to 10).fill("hi")  // ["hi", "hi", "hi", "hi", "hi", "hi", "hi", "hi", "hi", "hi"]
 ```
 
 ## Array Merging
