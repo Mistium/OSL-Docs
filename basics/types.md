@@ -1,35 +1,146 @@
 # Types
 
-OSL uses the syntax of data to dynamically figure out its type.
+OSL supports six fundamental data types that can be used to represent various kinds of data.
 
-When a token is parsed, the osl system figures out its type dynamically based on how you wrote the code.
+## String
+
+Text values enclosed in double quotation marks.
 
 ```javascript
-// the command and operators
-log "hello" + 10
+// Basic string
+name = "Hello"
 
-// gets figured out to
-["command","string","operator","number"]
+// String with spaces
+message = "Hello, World!"
+
+// String with special characters
+path = "C:/Users/Documents"
+
+// Empty string
+empty = ""
 ```
 
+## Boolean
 
+Logical values representing true or false (case-insensitive).
 
-### Strings
+```javascript
+// Boolean values
+isTrue = True
+isFalse = False
 
-Any data surrounded with double quotes will be treated as a string. Examples of a string might be "hello world" or "100" because these values have double quotes surrounding them.
+// In conditions
+if True (
+    log "This will execute"
+)
 
-### Numbers
+// Boolean operations
+result = True and False  // False
+```
 
-Numbers must be only digits from 0-9 and can only have a single decimal place. Examples of numbers are 10 or 5.3
+## Number
 
-### Arrays
+Numeric values including integers and decimals.
 
-An array must be surrounded with square brackets, for example \["hello","world"] Arrays store a "list" of values that can be any type, including arrays and objects
+```javascript
+// Integers
+count = 42
+negative = -10
 
-### Objects
+// Decimals
+price = 19.99
+temperature = -2.5
 
-An object must be surrounded with curly brackets, for example {"key":"value"} Objects can store key value pairs.
+// In calculations
+total = 10.5 + 20  // 30.5
+```
 
-### Booleans
+## JSON Array
 
-A boolean is either true or false, lower or upper case, and no quotation marks
+Ordered collections of values enclosed in square brackets.
+
+```javascript
+// Simple array
+names = ["Alice", "Bob", "Charlie"]
+
+// Mixed type array
+data = [1, "two", True, 4.5]
+
+// Nested array
+matrix = [[1, 2], [3, 4]]
+
+// Empty array
+empty = []
+```
+
+## JSON Object
+
+Key-value collections enclosed in curly braces.
+
+```javascript
+// Simple object
+person = {
+    name: "John",
+    age: 30
+}
+
+// Nested object
+user = {
+    info: {
+        id: 123,
+        email: "user@example.com"
+    },
+    settings: {
+        theme: "dark"
+    }
+}
+
+// Object with arrays
+data = {
+    numbers: [1, 2, 3],
+    flags: [True, False]
+}
+```
+
+## null
+
+Represents an empty or undefined value.
+
+```javascript
+// Explicit null
+value = null
+
+// Checking for null
+if value == null (
+    log "Value is null"
+)
+
+// In objects
+user = {
+    name: "John",
+    middleName: null
+}
+```
+
+## Type Checking
+
+You can check the type of a value using the `.getType()` method:
+
+```javascript
+"Hello".getType()      // "string"
+42.getType()          // "number"
+True.getType()        // "boolean"
+[1,2,3].getType()     // "array"
+{x:1}.getType()       // "object"
+null.getType()        // "null"
+```
+
+## Important Notes
+
+- Strings must use double quotes (`"`)
+- Booleans are case-insensitive (`True` or `true`)
+- Numbers must match the pattern `[0-9.\-]+`
+- Arrays can contain mixed types
+- Object keys don't need quotes
+- `null` represents absence of value
+- All types support the `.getType()` method

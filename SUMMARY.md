@@ -49,6 +49,10 @@
 
 * [Window Methods](environment/window-methods.md)
 * [Mouse Cursor](environment/mouse-cursor.md)
+* [Camera](environment/camera.md)
+* [Sound System](environment/sound.md)
+* [Input Simulation](environment/input-simulation.md)
+* [Running Other Languages](environment/running-other-languages.md)
 * [Notifications](environment/notifications.md)
 * [Send Data Between Windows](environment/send-data-between-windows.md)
 * [Interfacing With Rightclick](environment/interfacing-with-rightclick.md)
@@ -86,6 +90,7 @@
 * [Rendering](commands/rendering/README.md)
   * [Basics](commands/rendering/basics.md)
     * [Color Commands](commands/rendering/basics/color.md)
+    * [Color Picker](commands/rendering/basics/color-picker.md)
     * [Modifiers](commands/rendering/basics/modifiers.md)
   * [Draw Cursor](commands/rendering/draw-cursor/README.md)
     * [goto x y](commands/rendering/draw-cursor/goto-x-y.md)
@@ -110,6 +115,7 @@
     * [Drawing Commands](commands/rendering/icn/drawing-commands.md)
     * [Dynamic Icons](commands/rendering/icn/dynamic-icons.md)
   * [Clipping And Scrolling (frames)](commands/rendering/clipping-and-scrolling-frames.md)
+  * [3D Rendering](commands/rendering/3d-rendering.md)
 
 ## Functions
 
@@ -256,3 +262,7 @@
     * [.wsHasnew()](methods/networking/websockets/.wshasnew.md)
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
+* [Timestamp](methods/timestamp/README.md)
+  * [.timestamp("component")](methods/timestamp/timestamp-component.md)
+  * [.timestamp("convert-date")](methods/timestamp/timestamp-convert-date.md)
+  * [.timestamp("convert-timestamp")](methods/timestamp/timestamp-convert-timestamp.md)
