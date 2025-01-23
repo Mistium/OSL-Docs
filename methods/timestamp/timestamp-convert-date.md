@@ -1,45 +1,51 @@
-# .timestamp("convert-date")
+# .timestamp("to-date/to-time/to-full/to-relative")
 
-Converts a Unix timestamp into a human-readable date and time string.
+Converts a timestamp to various date and time formats.
 
 ## Syntax
 
 ```javascript
-timestamp.timestamp("convert-date")
+timestamp.timestamp("to-date")     // Convert to date format
+timestamp.timestamp("to-time")     // Convert to time format
+timestamp.timestamp("to-full")     // Convert to full date and time
+timestamp.timestamp("to-relative") // Convert to relative time
 ```
 
 ## Parameters
 
-- `"convert-date"`: Literal string specifying the conversion to date format
+The format parameter can be one of:
+- `"to-date"`: Returns date in "YYYY-MM-DD" format
+- `"to-time"`: Returns time in "HH:MM:SS" format
+- `"to-full"`: Returns full datetime in "YYYY-MM-DD HH:MM:SS" format
+- `"to-relative"`: Returns relative time (e.g., "8 seconds ago")
 
 ## Returns
 
-String in the format "YYYY-MM-DD HH:MM:SS"
+A string containing the formatted date/time.
 
-## Examples
+## Example
 
 ```javascript
-timestamp = 1683825624878
+current_time = 1706069489000  // January 23, 2025 04:51:29
 
-// Convert timestamp to readable date
-date = timestamp.timestamp("convert-date")
-log date  // "2023-05-11 18:20:24"
+// Convert to different formats
+date = current_time.timestamp("to-date")     // "2025-01-23"
+time = current_time.timestamp("to-time")     // "04:51:29"
+full = current_time.timestamp("to-full")     // "2025-01-23 04:51:44"
+relative = current_time.timestamp("to-relative") // "8 seconds ago"
 
-// Use in string operations
-if date.startsWith("2023") (
-    log "This is from 2023"
-)
-
-// Combine with other operations
-current = time.now()
-formatted = current.timestamp("convert-date")
-log "Current time is: " + formatted
+// Using in UI
+text "Date: " + date 10
+text "Time: " + time 10
+text "Full: " + full 10
+text "Posted: " + relative 10
 ```
 
 ## Important Notes
 
-- The timestamp should be a valid Unix timestamp in milliseconds
-- Returns date in 24-hour time format
-- Date format is fixed as "YYYY-MM-DD HH:MM:SS"
-- Time is formatted with leading zeros where needed
-- Can be used with the current time using `time.now()` 
+- All formats return strings
+- Date format uses leading zeros for month and day
+- Time format uses 24-hour clock with leading zeros
+- Full format combines both date and time
+- Relative format is automatically calculated based on current time
+- Invalid timestamps return appropriate error messages 
