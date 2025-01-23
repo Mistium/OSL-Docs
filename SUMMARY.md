@@ -124,6 +124,8 @@
   * [.wrapText(characters)](methods/strings/.wraptext-characters.md)
   * [.trimText(characters)](methods/strings/.trimtext-characters.md)
   * [.split(characters)](methods/strings/.split.md)
+  * [.count(val)](methods/strings/.count.md)
+  * [.replace(old,new)](methods/strings/.replace.md)
   * [Encoding](methods/strings/encoding/README.md)
     * [.encodeBin()](methods/strings/encoding/.encodebin.md)
     * [.decodeBin()](methods/strings/encoding/.decodebin.md)
