@@ -208,6 +208,24 @@ window.height
 // This is settable
 ```
 
+### **Window Permissions**
+
+```js
+window.hasPermission(permission)
+// Returns true if the window has the specified permission, false otherwise
+// Example:
+if window.hasPermission("camera") (
+    // Use camera
+) else (
+    permission "request" "camera"
+)
+
+// Can check multiple permissions
+if window.hasPermission("notifications") and window.hasPermission("sound") (
+    // Play notification sound
+)
+```
+
 ## Accent Colour
 
 You can set the outline of your window using the window\_accent variable
