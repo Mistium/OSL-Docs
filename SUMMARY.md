@@ -77,7 +77,6 @@
 ## External
 
 * [Make An Iframe App](external/make-an-iframe-app.md)
-* [GPT Integration](external/gpt-integration.md)
 
 ## Rendering
 
