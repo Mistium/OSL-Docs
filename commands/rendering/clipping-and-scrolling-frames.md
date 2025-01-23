@@ -39,9 +39,11 @@ mainloop:
 
 ## Scrollable Frames
 
-You can create scrollable areas by adding content dimensions and a frame ID to the frame command.
+You can create scrollable areas in two ways:
+1. Two-dimensional scrolling with content width and height
+2. Vertical-only scrolling with just content height
 
-### Syntax
+### Two-Dimensional Scrolling Syntax
 
 ```javascript
 frame left top right bottom [content_width, content_height] "frame_id" (
@@ -53,7 +55,19 @@ Additional parameters:
 - `[content_width, content_height]`: Dimensions of the scrollable content area
 - `"frame_id"`: Unique identifier for the scrollable frame
 
-### Example: Scrollable Content
+### Vertical-Only Scrolling Syntax
+
+```javascript
+frame left top right bottom content_height "frame_id" (
+    // Vertically scrollable content goes here
+)
+```
+
+Additional parameters:
+- `content_height`: Total height of the scrollable content (integer)
+- `"frame_id"`: Unique identifier for the scrollable frame
+
+### Example: Two-Dimensional Scrolling
 
 ```javascript
 // Style settings
@@ -66,20 +80,30 @@ mainloop:
         // Position content using scroll coordinates
         goto scroll_x scroll_y
         
-        // Add text
+        // Add content that can scroll both horizontally and vertically
         text "Header Text" text_size
-        
-        // Move down for next element
         change_y -20
-        
-        // Add an image
         image my_image image_width
+    )
+```
+
+### Example: Vertical-Only Scrolling
+
+```javascript
+mainloop:
+    // Create a 200x200 frame with 500px scrollable height
+    frame -100 100 100 -100 500 "vertical_scroll" (
+        // Position content using scroll_y only
+        goto 0 scroll_y
         
-        // Move down again
+        // Add vertically scrolling content
+        text "Title" text_size
+        change_y -30
+        
+        text "Long content that scrolls vertically..." text_size
         change_y -20
         
-        // Add more content...
-        text "More content below..." text_size
+        image my_image image_width
     )
 ```
 
