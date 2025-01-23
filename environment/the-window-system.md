@@ -11,10 +11,10 @@ If you want to do almost anything with the window in osl you will more than like
 ## Showing the window
 
 ```js
-window "show"
+window.show()
 // Shows the window (allowing the user to move/drag and resize the window by default)
 
-window "hide"
+window.hide()
 // Hides the window, stopping all user interaction that is handled by origin
 ```
 
@@ -37,8 +37,10 @@ window.y = y
 ### **Window Size**
 
 ```js
-window "resizable" true/false
+window.setResizable(true)
 // enables and disables the window from being resized by the user
+
+window.resize(width, height)
 
 window.width = width
 window.height = height
@@ -48,7 +50,7 @@ window.height = height
 ### Closing the window and execution control
 
 ```js
-window "stop"
+window.close()
 // this instantly closes the window and stops all code execution
 
 exit "exit code"
@@ -85,9 +87,11 @@ window "refresh_bg"
 ## Create a new window
 
 ```javascript
-window "add" window.file.uuid "data"
+window.create(window.file.uuid, {
+  "passed_data": "data"
+})
 // add a new window from the same file (essentially clone this window)
-// the data is what that window receives in the variable "passed_data"
+// the passed_data is what that window receives in the variable "passed_data"
 // be careful because this can cause an infinite loop and crash osl
 ```
 
@@ -135,7 +139,9 @@ if window.parent.file_uuid == window.file.uuid (
 hello = 10
 // set hello to 10
 
-window "add" window.file.uuid "Child"
+window.create(window.file.uuid, {
+  "passed_data": "Child"
+})
 // create a new window with the data "Child" from the same file
 
 mainloop:
@@ -212,14 +218,3 @@ window_accent = #fff
 ```
 
 ![Screenshot 2024-07-04 at 18 41 04](https://github.com/Mistium/Origin-OS/assets/92952823/b6759e77-d5e8-47f4-bd84-51170a0954f6)
-
-## Minimised Text
-
-You can change the text it shows when a window is minimised using the minimised\_text variable
-
-```js
-minimised_text = "Info"
-// this has a maximum length of 6
-```
-
-![Screenshot 2024-07-04 at 18 42 27](https://github.com/Mistium/Origin-OS/assets/92952823/435128f0-71fd-4b5c-a725-0ae50fab96f9)
