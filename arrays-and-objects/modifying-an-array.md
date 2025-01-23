@@ -1,61 +1,79 @@
 # Modifying An Array
 
-OSL is a 1 indexed scripting language, meaning that arrays start at the index 1 not at 0 like many other languages.
+## Basic Operations
 
-## Setting Items Of An Array
-
-You can set or update an item of an array using any way of assignment shown here [Broken link](broken-reference "mention")
+Arrays in OSL provide several methods for modification and access.
 
 ```javascript
-arr = ["value1","value2","value3","value4"]
+arr = [1, 2, 3, 4]
 
-arr[1] = "value5"
+// Accessing elements (1-indexed)
+first = arr[1]    // 1
+second = arr[2]   // 2
 
-log arr
-// returns ["value5","value2","value3","value4"]
+// Modifying elements
+arr[1] = 10      // [10, 2, 3, 4]
+
+// Getting length
+length = arr.len  // Number of elements
 ```
 
-## Setting Nested Items
-
-In osl you can update nested items using multiple stacked references to a part of an object/array that gets compiled into a simple json path.
+## Adding and Removing Elements
 
 ```javascript
-array = ["data",["data2","data3"]]
+// Adding elements
+arr.append(5)     // Adds to end
+arr.prepend(0)    // Adds to beginning
 
-array[2][2] = "data4"
-
-log array
-// ["data",["data2","data4"]]
+// Removing elements
+last = arr.pop()    // Removes and returns last element
+first = arr.shift() // Removes and returns first element
 ```
 
-## Appending And Prepending
-
-To append and prepend to an array, you can not only use the `+` operator in [array-operations.md](../operators/array-operations.md "mention") but you can also use the [.prepend.md](../methods/utilities/.prepend.md "mention") and [.append.md](../methods/utilities/.append.md "mention") methods
+## Array Methods
 
 ```javascript
-arr = ["wow"]
-// setup the empty array
+// Sorting
+arr.sort()        // Ascending order
+arr.sort("desc")  // Descending order
 
-arr.prepend("hello world")
-// i use a method as a command so that it updates the variable
-// prepend adds the new value as the first item in the array
+// Swapping elements
+arr.swap(1, 2)    // Swaps elements at indices 1 and 2
 
-log arr
-// returns ["hello world","wow"]
+// Getting random element
+random = arr.randomOf()
+
+// Slicing arrays
+slice = arr.trim(2, 4)  // Gets elements from index 2 to 4 inclusive
+
+// Mapping over elements
+doubled = arr.map(def(x) -> (return x * 2))
 ```
+
+## Array Merging
 
 ```javascript
-arr = ["wow"]
-// setup the empty array
-
-arr.append("hello world")
-// i use a method as a command so that it updates the variable
-// prepend adds the new value as the last item in the array
-
-log arr
-// returns ["wow","hello world"]
+// Using the ++ operator
+arr1 = [1, 2]
+arr2 = [3, 4]
+combined = arr1 ++ arr2  // [1, 2, 3, 4]
 ```
 
-## Delete An Item Of An Array
+## Array Destructuring
 
-To remove an item from an array, you can use either the [.delete.md](../methods/utilities/.delete.md "mention") method or [.pop.md](../methods/json/arrays/.pop.md "mention") to remove the last item, or [.shift.md](../methods/json/arrays/.shift.md "mention") to remove the first item.
+```javascript
+// Assign multiple variables from array
+var1, var2, var3 = [1, 2, 3]
+
+// Skip elements
+first, , third = [1, 2, 3]
+```
+
+## Important Notes
+
+- Arrays are 1-indexed in OSL
+- Most operations create new copies
+- `.trim()` is used for array slicing
+- Destructuring can skip elements using empty slots
+- The `++` operator combines arrays
+- Methods like `sort()` and `map()` return new arrays

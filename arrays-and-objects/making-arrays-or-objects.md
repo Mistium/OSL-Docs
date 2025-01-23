@@ -2,37 +2,57 @@
 
 If you want a json editor, I suggest [https://www.jsonblob.com](https://www.jsonblob.com/) or [https://jsoncrack.com/editor](https://jsoncrack.com/editor)
 
-## Arrays
+## Creating Arrays
 
-Arrays tend to follow the syntax shown below
-
-```json
-["value1","value2","value3","value4"]
-```
-
-Assigning an array
+Arrays in OSL are 1-indexed collections that can hold any type of value.
 
 ```javascript
-arr = ["value1","value2","value3","value4"]
-// on one line
+// Simple array
+numbers = [1, 2, 3, 4, 5]
 
-arr = [
-  "value1",
-  "value2",
-  "value3",
-  "value4"
-]
-// or over multiple lines
+// Array with expressions
+base = 10
+computed = [base * 1, base * 2, base * 3]  // [10, 20, 30]
+
+// Mixed type array
+mixed = [1, "text", true, {x: 10}]
+
+// Array with computed values
+vals = [1 + 1, "pre" ++ "fix", 10 * 2]  // [2, "prefix", 20]
 ```
 
-Arrays can be used to store data in a list that can be accessed and updated by your program.
+## Creating Objects
 
-<pre class="language-javascript"><code class="lang-javascript">num = 10
+Objects are collections of key-value pairs that can include computed values and methods.
 
-// you can also put variables and calculations in arrays
-arr = [
-  num,
-<strong>  num + 1,
-</strong>  num * 10
-]
-</code></pre>
+```javascript
+// Simple object
+person = {
+    name: "John",
+    age: 30
+}
+
+// Object with computed values
+multiplier = 2
+product = {
+    price: 10,
+    discount: 0.2,
+    final: self.price * (1 - self.discount) * multiplier
+}
+
+// Object with methods
+calculator = {
+    value: 100,
+    double: def() -> (
+        return self.value * 2
+    )
+}
+```
+
+## Important Notes
+
+- Arrays are 1-indexed (first element is at index 1)
+- Objects can use `self` to reference their own properties
+- Both arrays and objects can contain any OSL data type
+- Values can be computed when creating arrays or objects
+- Methods can be included in objects using `def() ->`
