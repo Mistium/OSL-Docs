@@ -67,4 +67,31 @@ log window.parent.permissions
 
 ***
 
+## Checking Permissions
+
+### window.hasPermission(permission)
+
+Checks if the window has been granted a specific permission.
+
+```javascript
+// Check if we have camera permission
+if window.hasPermission("camera") (
+  // Start using camera
+) else (
+  // Request camera permission first
+)
+
+// Check if we can simulate inputs
+if window.hasPermission("simulate inputs") (
+  // Simulate keyboard/mouse input
+)
+
+// Example: Check multiple permissions
+if window.hasPermission("notifications") and window.hasPermission("sound") (
+  // Play notification sound
+)
+```
+
+## Requesting Permissions
+
 By following these conventions, you can efficiently manage application permissions while maintaining the security and integrity of your system.
