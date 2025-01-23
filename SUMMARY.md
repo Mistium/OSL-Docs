@@ -42,6 +42,8 @@
 
 * [Making Arrays Or Objects](arrays-and-objects/making-arrays-or-objects.md)
 * [Modifying An Array](arrays-and-objects/modifying-an-array.md)
+* [Clone Objects And References](arrays-and-objects/cloning-and-references.md)
+* [Object Operations](arrays-and-objects/object-operations.md)
 
 ## Environment
 
