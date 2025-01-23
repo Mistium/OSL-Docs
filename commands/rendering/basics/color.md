@@ -26,10 +26,10 @@ c #3498db      // Shorthand version
 
 // Using colors with UI elements
 c #ff0000      // Red
-rectangle 100 100 50 50
+square 100 100 10
 
 c #00ff00      // Green
-text "Colored text"
+text "Colored text" 10
 
 // RGB color values
 c #fff         // White (shorthand)
@@ -38,11 +38,11 @@ c #7f7f7f      // Gray
 
 // Using colors in a drawing
 c #f1c40f      // Yellow
-rectangle 0 0 100 100
+square 100 100 10
 c #e74c3c      // Red
-circle 50 50 30
+icon "dot 0 0" 10
 c #3498db      // Blue
-text "Hello, World!"
+text "Hello, World!" 10
 ```
 
 ## Important Notes
