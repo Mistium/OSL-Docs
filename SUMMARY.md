@@ -233,6 +233,7 @@
     * [.sort(direction)](methods/json/arrays/.sort.md)
     * [.sortBy(key,direction)](methods/json/arrays/.sortby.md)
     * [.swap(idx1,idx2)](methods/json/arrays/.swap.md)
+    * [.fill(value)](methods/json/arrays/.fill.md)
     * [.join(characters)](methods/json/arrays/.join.md)
     * [.map(callback)](methods/json/arrays/.map.md)
   * [Objects](methods/json/objects/README.md)
