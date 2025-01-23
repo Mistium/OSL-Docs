@@ -47,7 +47,7 @@
 
 ## Environment
 
-* [Window Methods](environment/window-methods.md)
+* [The Window System](environment/the-window-system.md)
 * [Mouse Cursor](environment/mouse-cursor.md)
 * [Camera](environment/camera.md)
 * [Sound System](environment/sound.md)
