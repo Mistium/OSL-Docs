@@ -86,3 +86,12 @@ log 15
 
 // all evaluation of operators are done from left to right
 ```
+
+## Getting Started
+
+Browse through the documentation sections to learn more about:
+- [Basic Syntax](basics/types.md)
+- [Program Flow](program-flow/if-statements/README.md)
+- [String Methods](methods/strings/README.md)
+- [Math Functions](functions/math/README.md)
+- [Utility Methods](methods/utilities/README.md)
