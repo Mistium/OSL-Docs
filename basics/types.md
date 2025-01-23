@@ -15,9 +15,6 @@ message = "Hello, World!"
 
 // String with special characters
 path = "C:/Users/Documents"
-
-// Empty string
-empty = ""
 ```
 
 ## Boolean
@@ -109,6 +106,9 @@ Represents an empty or undefined value.
 ```javascript
 // Explicit null
 value = null
+
+// Empty strings are the same as null
+empty = ""
 
 // Checking for null
 if value == null (
