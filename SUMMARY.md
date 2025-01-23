@@ -45,7 +45,7 @@
 
 ## Environment
 
-* [The Window System](environment/the-window-system.md)
+* [Window Methods](environment/window-methods.md)
 * [Mouse Cursor](environment/mouse-cursor.md)
 * [Notifications](environment/notifications.md)
 * [Send Data Between Windows](environment/send-data-between-windows.md)

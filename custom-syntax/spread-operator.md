@@ -66,4 +66,4 @@ log join("hello", "world", "!") // "hello world !"
 - Inside the function, the spread parameter is treated as a regular array
 - If no arguments are passed, the spread parameter will be an empty array
 - You can use any valid array methods on the spread parameter
-- The spread operator in function definitions is different from the spread operator used to expand arrays 
+- The spread operator in function definitions is different from the spread operator used to expand arrays
