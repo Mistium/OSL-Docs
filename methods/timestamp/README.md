@@ -63,9 +63,3 @@ current_time.timestamp("get-second")  // "29"
    - Relative time is automatically calculated
    - Invalid timestamps return appropriate error messages
    - Methods can be chained with other string operations
-
-## Available Methods
-
-- [.timestamp("component")](timestamp-component.md) - Extract specific time components
-- [.timestamp("convert-date")](timestamp-convert-date.md) - Convert timestamp to readable date
-- [.timestamp("convert-timestamp")](timestamp-convert-timestamp.md) - Convert date string to timestamp 
