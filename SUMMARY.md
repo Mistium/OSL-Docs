@@ -263,6 +263,5 @@
     * [.wsGetnext()](methods/networking/websockets/.wsgetnext.md)
     * [.wsGetcount()](methods/networking/websockets/.wsgetcount.md)
 * [Timestamp](methods/timestamp/README.md)
-  * [.timestamp("component")](methods/timestamp/timestamp-component.md)
   * [.timestamp("convert-date")](methods/timestamp/timestamp-convert-date.md)
-  * [.timestamp("convert-timestamp")](methods/timestamp/timestamp-convert-timestamp.md)
+  * [.timestamp("component")](methods/timestamp/timestamp-component.md)
