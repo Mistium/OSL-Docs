@@ -131,7 +131,7 @@
   * [.replaceFirst(old,new)](methods/strings/.replacefirst.md)
   * [.oslTokenise()](methods/strings/.osltokenise.md)
   * [.strip()](methods/strings/.strip.md)
-  * [.toUint8()](methods/strings/.touint8.md)
+  * [.toOrdArray()](methods/strings/.toordarray.md)
   * [.match(pattern)](methods/strings/.match.md)
   * [Encoding](methods/strings/encoding/README.md)
     * [.encodeBin()](methods/strings/encoding/.encodebin.md)
