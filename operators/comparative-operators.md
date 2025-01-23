@@ -81,6 +81,28 @@ log "1" in "1234"
 // returns true
 ```
 
+## Ternary Operator (?)
+
+The `?` operator provides a shorthand way to write simple if-else statements. It takes three operands: a condition followed by two values, where the first value is returned if the condition is true, and the second value if it's false.
+
+```javascript
+// Basic syntax:
+condition ? value1 value2
+
+// Examples
+age = 20
+status = age >= 18 ? "adult" "minor"
+// If age is >= 18, status will be "adult", otherwise "minor"
+
+score = 85
+result = score > 60 ? "pass" "fail"
+// If score is > 60, result will be "pass", otherwise "fail"
+
+// Can be used in expressions
+text "Points: " + (points > 100 ? "max" points)
+// Shows "max" if points > 100, otherwise shows the points value
+```
+
 ## Inverting A Comparison
 
 You can simply place a ! infront of any comparison below to make it do the opposite of the norm.
