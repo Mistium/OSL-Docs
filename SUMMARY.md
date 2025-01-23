@@ -138,6 +138,8 @@
     * [.decodeHex()](methods/strings/encoding/.decodehex.md)
     * [.encodeUTF16()](methods/strings/encoding/.encodeutf16.md)
     * [.decodeUTF16()](methods/strings/encoding/.decodeutf16.md)
+    * [.encrypt(password)](methods/strings/encoding/.encrypt.md)
+    * [.decrypt(password)](methods/strings/encoding/.decrypt.md)
     * [.ord()](methods/strings/encoding/.ord.md)
     * [.chr()](methods/strings/encoding/.chr.md)
   * [Hashing](methods/strings/hashing/README.md)
