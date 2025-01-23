@@ -33,20 +33,25 @@ person = {
 }
 
 // Object with computed values
+numbers = {
+  num1: 0.5 * 2,
+  num2: 1 * 2,
+  num3: 1.5 * 2
+}
+
+log product.final()
+
+// Object with methods
 multiplier = 2
 product = {
     price: 10,
     discount: 0.2,
-    final: self.price * (1 - self.discount) * multiplier
+    final: def() -> (
+      return self.price * (1 - self.discount) * multiplier
+   )
 }
 
-// Object with methods
-calculator = {
-    value: 100,
-    double: def() -> (
-        return self.value * 2
-    )
-}
+log product.final()
 ```
 
 ## Important Notes
