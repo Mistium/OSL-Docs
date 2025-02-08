@@ -44,6 +44,7 @@
 * [Modifying An Array](arrays-and-objects/modifying-an-array.md)
 * [Clone Objects And References](arrays-and-objects/cloning-and-references.md)
 * [Object Operations](arrays-and-objects/object-operations.md)
+* [Object Property Shorthand](arrays-and-objects/object-property-shorthand.md)
 
 ## Environment
 
