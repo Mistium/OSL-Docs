@@ -13,7 +13,7 @@ In the provided example, the variable `var` is defined with the value `"hello wo
 * The output is an object with the values of `var` and `var2`.
 
 {% code overflow="wrap" %}
-```osl
+```javascript
 var = "hello world"
 var2 = "var2"
 
