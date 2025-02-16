@@ -79,8 +79,6 @@
 
 * [Make An Iframe App](external/make-an-iframe-app.md)
 
-## Rendering
-
 ## Commands
 
 * [Debugging](commands/debugging/README.md)
@@ -99,6 +97,7 @@
     * [change\_x x](commands/rendering/draw-cursor/change_x-x.md)
     * [change\_y y](commands/rendering/draw-cursor/change_y-y.md)
     * [change x y](commands/rendering/draw-cursor/change-x-y.md)
+    * [loc a b c d](commands/rendering/draw-cursor/loc-a-b-c-d.md)
   * [Elements](commands/rendering/elements/README.md)
     * [Canvas](commands/rendering/elements/canvas.md)
     * [Rectangle](commands/rendering/elements/rectangle.md)
