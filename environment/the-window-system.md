@@ -77,14 +77,28 @@ window.no_desktop = true/false
 
 ### Extra
 
-If your window is hidden and you are rendering things, they may leave a trail behind, so when you move the thing you are rendering and need to clear the screen, use
+If your window is hidden and you are rendering things, they may leave a trail behind, so when you move the thing you are rendering and need to clear the screen, use the "refresh\_bg" command.
 
 ```js
 window "refresh_bg"
 // this redraws the background behind your app
 ```
 
+## DragBox
+
+The window dragbox sets the hitbox where the user can drag on your window to move it around. This method takes two arrays of inputs in the same order and meaning as in an loc command.
+
+```javascript
+window.setDragbox([2,2,0,0],[-2,-2,0,0])
+// sets the dragbox to cover the whole window
+
+// the top left position is the first array
+// the bottom right position is the second array
+```
+
 ## Create a new window
+
+window.create takes the (name / path / uuid) of an osl file and creates a new window using it. It also takes an object of parameters for the setup of the program.
 
 ```javascript
 window.create(window.file.uuid, {
