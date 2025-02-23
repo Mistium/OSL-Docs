@@ -57,14 +57,14 @@ log data  // Outputs the Python print result
 
 ```javascript
 // Calculate Fibonacci numbers using Python
-py """
+py "
 def fib(n):
     a, b = 0, 1
     for _ in range(n):
         a, b = b, a + b
     return a
 print(fib(10))
-"""
+"
 log data  // Outputs the 10th Fibonacci number
 ```
 
@@ -88,10 +88,10 @@ eval "console.log('Hello from JavaScript')"  // Outputs to browser console
 
 ```javascript
 // Use JavaScript to interact with the browser
-eval """
+eval "
 let date = new Date();
 console.log(`Current time: ${date.toLocaleTimeString()}`);
-"""
+"
 ```
 
 ## Best Practices
