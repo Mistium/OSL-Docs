@@ -133,6 +133,7 @@
 * [Encoding](functions/encoding/README.md)
   * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
   * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
+* [function()](functions/function.md)
 
 ## Methods
 
