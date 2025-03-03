@@ -21,13 +21,29 @@ log this
 
 `this` has a different value depending on the scope of when you access it
 
+### Local variables can be re-assigned without the local keyword
+
+```javascript
+def myFunc() (
+  local v = 0
+  v ++
+  return v
+)
+
+log myFunc()
+// returns 1
+```
+
 ### Example script
 
 ```js
 def "test_cmd" (
-  local hello = "greetings!"
+  local hello = "Greetings!"
   log hello
-  // logs "greetings!"
+  // logs "Greetings!"
+  hello += "I'm Mistium"
+  log hello
+  // logs "Greetings! I'm Mistium"
 )
 
 local hello = "hello world"
