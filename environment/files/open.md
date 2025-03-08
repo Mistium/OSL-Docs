@@ -72,20 +72,6 @@ try (
 )
 ```
 
-### Opening and Using a File for Subsequent Operations
-
-```javascript
-// Open a file
-open("users.json")
-
-// Now use fileGet() to access specific data from the open file
-username = fileGet("users[0].name")
-email = fileGet("users[0].email")
-
-log "User: " ++ username
-log "Email: " ++ email
-```
-
 ## Notes
 
 - The file remains open until another file is opened or the application closes
