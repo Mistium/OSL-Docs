@@ -11,22 +11,22 @@ To define a custom function, use the `def` keyword followed by the function name
 Here’s how you can create a function that performs basic arithmetic operations and returns a result:
 
 ```javascript
-def calculate(this.num1, this.num2, this.operation) (
-  switch this.operation (
+def calculate(num1, num2, operation) (
+  switch operation (
     case "add"
-      this.result = this.num1 + this.num2
+      result = num1 + num2
       break
     case "subtract"
-      this.result = this.num1 - this.num2
+      result = num1 - num2
       break
     case "multiply"
-      this.result = this.num1 * this.num2
+      result = num1 * num2
       break
     case "divide"
-      this.result = this.num1 / this.num2
+      result = num1 / num2
       break
   )
-  return this.result
+  return result
 )
 
 log calculate(10,5,"add")
@@ -44,14 +44,14 @@ log calculate(10,5,"divide")
 You can also define functions to perform operations on strings. Here’s an example of a function that reverses a string:
 
 ```javascript
-def reverseString(this.text) (
-  this.reversed = ""
-  i = this.text.len
-  loop this.text.len (
-    this.reversed += this.text[i]
-    i --
+def reverseString(text) (
+  local reversed = ""
+  local i = text.len
+  loop text.len (
+    local reversed += text[i]
+    local i --
   )
-  return this.reversed
+  return reversed
 )
 
 log reverseString("hello")  // Outputs: "olleh"
@@ -62,9 +62,9 @@ log reverseString("hello")  // Outputs: "olleh"
 You can define a function and then trigger it based on an event. Here’s an example where a function is called when a specific key is pressed:
 
 ```javascript
-def greet(this.name) (
-  this.message = "Hello," + this.name ++ "!"
-  return this.message
+def greet(name) (
+  local message = "Hello," + name ++ "!"
+  return message
 )
 
 if "G".onKeyDown() (
@@ -77,18 +77,21 @@ if "G".onKeyDown() (
 Custom functions can also handle complex data processing, such as filtering an array:
 
 ```javascript
-def filterEvenNumbers(this.nums) (
-  this.even = []
-  for i this.nums.len (
-    if this.nums[i] % 2 == 0 (
-      this.even = this.even.append(this.nums[i])
+def filterEvenNumbers(nums) (
+  local even = []
+  for i nums.len (
+    if nums[i] % 2 == 0 (
+      local even = even.append(nums[i])
     )
   )
-  return this.even
+  return even
 )
 
 data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 log filterEvenNumbers(data)  // Outputs: [2, 4, 6, 8, 10]
+
+// or you can use .filter()
+log data.filter(num -> (num % 2 == 0))  // Outputs: [2, 4, 6, 8, 10]
 ```
 
 ## Functions are Stored As Variables

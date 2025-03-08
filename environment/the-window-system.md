@@ -77,21 +77,42 @@ window.no_desktop = true/false
 
 ### Extra
 
-If your window is hidden and you are rendering things, they may leave a trail behind, so when you move the thing you are rendering and need to clear the screen, use
+If your window is hidden and you are rendering things, they may leave a trail behind, so when you move the thing you are rendering and need to clear the screen, use this window method.
 
 ```js
-window "refresh_bg"
+window.callRender()
 // this redraws the background behind your app
+```
+
+## DragBox
+
+The window dragbox sets the hitbox where the user can drag on your window to move it around. This method takes two arrays of inputs in the same order and meaning as in an [loc command.](../commands/rendering/draw-cursor/loc-a-b-c-d.md)
+
+```javascript
+window.setDragbox([2,2,0,0],[-2,-2,0,0])
+// sets the dragbox to cover the whole window
+
+// the top left position is the first array
+// the bottom right position is the second array
 ```
 
 ## Create a new window
 
+window.create takes the (name / path / uuid) of an osl file and creates a new window using it. It also takes an object of parameters for the setup of the program.
+
 ```javascript
-window.create(window.file.uuid, {
-  "passed_data": "data"
+window.create(window.file.uuid, { // all keys here are optional
+  passed_data: "data", // the passed_data is what that window receives in the variable "passed_data"
+  x: 0,                // the x position to spawn the new window at
+  x_target: 0,         // where the window should interpolate to on the x axis
+  y: 0,                // the y position to spawn the new window at
+  y_target: 0,         // where the window should interpolate to on the y axis
+  width: 1000,         // the width of the new window
+  width_target: 1000,  // how wide the window should smoothly transition to
+  height: 600,         // the height of the new window
+  height_target: 600   // how tall the window should smoothly transition to
 })
 // add a new window from the same file (essentially clone this window)
-// the passed_data is what that window receives in the variable "passed_data"
 // be careful because this can cause an infinite loop and crash osl
 ```
 

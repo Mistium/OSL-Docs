@@ -44,6 +44,7 @@
 * [Modifying An Array](arrays-and-objects/modifying-an-array.md)
 * [Clone Objects And References](arrays-and-objects/cloning-and-references.md)
 * [Object Operations](arrays-and-objects/object-operations.md)
+* [Object Property Shorthand](arrays-and-objects/object-property-shorthand.md)
 
 ## Environment
 
@@ -78,8 +79,6 @@
 
 * [Make An Iframe App](external/make-an-iframe-app.md)
 
-## Rendering
-
 ## Commands
 
 * [Debugging](commands/debugging/README.md)
@@ -98,6 +97,7 @@
     * [change\_x x](commands/rendering/draw-cursor/change_x-x.md)
     * [change\_y y](commands/rendering/draw-cursor/change_y-y.md)
     * [change x y](commands/rendering/draw-cursor/change-x-y.md)
+    * [loc a b c d](commands/rendering/draw-cursor/loc-a-b-c-d.md)
   * [Elements](commands/rendering/elements/README.md)
     * [Canvas](commands/rendering/elements/canvas.md)
     * [Rectangle](commands/rendering/elements/rectangle.md)
@@ -133,6 +133,7 @@
 * [Encoding](functions/encoding/README.md)
   * [encodeURIComponent(string)](functions/encoding/encodeuricomponent.md)
   * [decodeURIComponent(string)](functions/encoding/decodeuricomponent.md)
+* [function()](functions/function.md)
 
 ## Methods
 
@@ -235,6 +236,9 @@
     * [.fill(value)](methods/json/arrays/.fill.md)
     * [.join(characters)](methods/json/arrays/.join.md)
     * [.map(callback)](methods/json/arrays/.map.md)
+    * [.filter(callback)](methods/json/arrays/.filter.md)
+    * [.some(callback)](methods/json/arrays/.some.md)
+    * [.every(callback)](methods/json/arrays/.every.md)
   * [Objects](methods/json/objects/README.md)
     * [.getKeys(keys)](methods/json/objects/.getkeys.md)
     * [.getValues()](methods/json/objects/.getvalues.md)

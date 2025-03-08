@@ -23,17 +23,3 @@ def "logtimes" "times, string" (
 logtimes 5 "hello world"
 // logs hello world 5 times
 ```
-
-This has a flaw however, it fully uses only global variables, meaning that the variables can be accessed from anywhere and meaning that making a recursive command is almost impossible. To ensure it uses local we can use: `this` from [local-scoping.md](../basics/local-scoping.md "mention")
-
-```javascript
-def "logtimes" "this.times, this.string" (
-  loop this.times (
-    log this.string
-    // log the input string
-  )
-)
-
-logtimes 5 "hello world"
-// logs hello world 5 times
-```
