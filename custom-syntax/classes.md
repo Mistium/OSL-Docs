@@ -29,19 +29,24 @@ class Person (
   age = 0
   
   def greet() (
-    return "Hello, my name is " + name + " and I am " + age + " years old."
+    return "Hello, my name is " ++ name ++ " and I am " ++ age + " years old."
   )
   
   def birthday() (
-    age++
+    age ++
     return age
   )
 )
 
 // Access class methods
-log Person.greet()  // "Hello, my name is Unknown and I am 0 years old."
-log Person.birthday()  // 1
-log Person.age  // 1
+log Person.greet()
+// "Hello, my name is Unknown and I am 0 years old."
+
+log Person.birthday()
+// 1
+
+log Person.age
+// 1
 ```
 
 ## Class Properties
@@ -53,7 +58,7 @@ class Counter (
   count = 0
   
   def increment() (
-    count++
+    count ++
     return count
   )
   
@@ -63,10 +68,14 @@ class Counter (
   )
 )
 
-log Counter.count  // 0
-log Counter.increment()  // 1
-log Counter.increment()  // 2
-log Counter.reset()  // 0
+log Counter.count
+// 0
+log Counter.increment()
+// 1
+log Counter.increment()
+// 2
+log Counter.reset()
+// 0
 ```
 
 ## Private Properties
@@ -86,14 +95,19 @@ class User (
   )
   
   def getPassword() (
-    return _password  // Accessible within class methods
+    return _password
+    // Accessible within class methods
   )
 )
 
-log User.username  // "guest"
-log User._password  // Error: Cannot access private property
-log User.login("secret")  // true
-log User.getPassword()  // "secret"
+log User.username
+// "guest"
+log User._password
+// Error: Cannot access private property
+log User.login("secret")
+// true
+log User.getPassword()
+// "secret"
 ```
 
 ## Inheritance
@@ -121,9 +135,12 @@ class Dog extends Animal (
   )
 )
 
-log Dog.type  // "Dog"
-log Dog.makeSound()  // "Woof"
-log Dog.fetch()  // "Fetching the ball!"
+log Dog.type
+// "Dog"
+log Dog.makeSound()
+// "Woof"
+log Dog.fetch()
+// "Fetching the ball!"
 ```
 
 When a class extends another class:
@@ -140,7 +157,8 @@ class Calculator (
   result = 0
   
   def add(num) (
-    result += num  // Directly access the result property
+    result += num
+    // Directly access the result property
     return result
   )
   
@@ -150,8 +168,10 @@ class Calculator (
   )
 )
 
-log Calculator.add(5)  // 5
-log Calculator.subtract(2)  // 3
+log Calculator.add(5)
+// 5
+log Calculator.subtract(2)
+// 3
 ```
 
 ## Cloning vs. Referencing Classes
@@ -173,15 +193,19 @@ class Counter (
 myCounter = Counter
 myCounter.count = 10
 
-log Counter.count  // 0 (original unchanged)
-log myCounter.count  // 10
+log Counter.count
+// 0 (original unchanged)
+log myCounter.count
+// 10
 
 // Create a reference to the class
 sharedCounter @= Counter
 sharedCounter.count = 5
 
-log Counter.count  // 5 (original changed)
-log sharedCounter.count  // 5
+log Counter.count
+// 5 (original changed)
+log sharedCounter.count
+// 5
 ```
 
 ## Examples
@@ -216,10 +240,14 @@ player = Character
 player.name = "Alice"
 
 // Use the character
-log player.name  // "Alice"
-log player.attack()  // 10
-log player.takeDamage(25)  // 75
-log player.isAlive()  // true
+log player.name
+// "Alice"
+log player.attack()
+// 10
+log player.takeDamage(25)
+// 75
+log player.isAlive()
+// true
 ```
 
 ### Class with Private Implementation
@@ -244,8 +272,10 @@ class SecureStorage (
 
 storage = SecureStorage
 storage.set("username", "admin")
-log storage.get("username")  // "admin"
-log storage._data  // Error: Cannot access private property
+log storage.get("username")
+// "admin"
+log storage._data
+// Error: Cannot access private property
 ```
 
 ## Notes
