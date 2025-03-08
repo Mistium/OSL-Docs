@@ -64,6 +64,9 @@
 * [Files](environment/files/README.md)
   * [What is a file? (in ofsf)](environment/files/what-is-a-file-in-ofsf.md)
   * [Creating Directories](environment/files/creating-directories.md)
+  * [open("file_path")](environment/files/open.md)
+  * [fileGet("path")](environment/files/fileGet.md)
+  * [listFiles()](environment/files/listFiles.md)
 
 ## Storage
 
@@ -134,6 +137,8 @@
   * [sum(num1,..)](functions/math/sum.md)
   * [average(num1,..)](functions/math/average.md)
   * [dist(x1,y1,x2,y2)](functions/math/dist.md)
+  * [noise(x, y, z)](functions/math/noise.md)
+  * [octaveNoise(x, y, z, octaves, persistence)](functions/math/octaveNoise.md)
 * [Types](functions/types/README.md)
   * [typeof(value)](functions/types/typeof.md)
 * [Encoding](functions/encoding/README.md)
