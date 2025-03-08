@@ -29,8 +29,8 @@ In osl you can use a function as arguments for other functions, methods and comm
 ```javascript
 arr = [1,2,3,4,5]
 
-log arr.map(def(this.item) -> (
-  return this.item * 2
+log arr.map(def(item) -> (
+  return item * 2
   // set each item to itself * 2
 ))
 
@@ -42,12 +42,13 @@ You can also define a function earlier and then pass it as input
 ```javascript
 arr = [1,2,3,4,5]
 
-this.func = def(this.item) -> (
-  return this.item * 2
+// define the function into the global func variable
+func = def(item) -> (
+  return item * 2
   // set each item to itself * 2
 )
 
-log arr.map(this.func)
+log arr.map(func)
 // pass the function as a parameter
 
 // [2,4,6,8,10]
