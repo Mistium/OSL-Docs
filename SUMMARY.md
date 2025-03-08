@@ -25,6 +25,8 @@
 * [Comparative Operators](operators/comparative-operators.md)
 * [Logical Operators](operators/logical-operators.md)
 * [Bitwise operators](operators/bitwise-operators.md)
+* [Pipe Operator (|>)](operators/pipe-operator.md)
+* [Nullish Coalescing Operator (??)](operators/nullish-coalescing-operator.md)
 
 ## Program Flow
 
@@ -74,6 +76,8 @@
 * [Functions](custom-syntax/functions.md)
 * [Inline](custom-syntax/inline.md)
 * [Spread Operator](custom-syntax/spread-operator.md)
+* [Typed Parameters](custom-syntax/typed-parameters.md)
+* [Classes](custom-syntax/classes.md)
 
 ## External
 
