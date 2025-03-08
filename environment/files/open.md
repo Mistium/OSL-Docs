@@ -35,7 +35,7 @@ This function requires appropriate file permissions to be granted to the applica
 ```javascript
 // Open a file and get its contents
 content = open("data.txt")
-log "File contents: " + content
+log "File contents: " ++ content
 ```
 
 ### Opening and Processing a File
@@ -48,8 +48,8 @@ config = open("config.json")
 configObj = config.JsonParse()
 
 // Access configuration values
-log "Username: " + configObj.username
-log "Theme: " + configObj.theme
+log "Username: " ++ configObj.username
+log "Theme: " ++ configObj.theme
 ```
 
 ### Using File UUID
@@ -68,7 +68,7 @@ try (
   content = open("data.txt")
   log "File opened successfully"
 ) catch (
-  log "Error opening file: " + error
+  log "Error opening file: " ++ error
 )
 ```
 
@@ -82,8 +82,8 @@ open("users.json")
 username = fileGet("users[0].name")
 email = fileGet("users[0].email")
 
-log "User: " + username
-log "Email: " + email
+log "User: " ++ username
+log "Email: " ++ email
 ```
 
 ## Notes

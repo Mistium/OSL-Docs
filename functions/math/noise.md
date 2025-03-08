@@ -39,7 +39,7 @@ The function can be called with one, two, or three parameters to generate 1D, 2D
 // Generate 1D noise
 for i 10 (
   value = noise(i * 0.1)
-  log "Noise at " + i + ": " + value
+  log "Noise at " ++ i ++ ": " ++ value
 )
 ```
 
@@ -62,13 +62,13 @@ for y height (
     
     // Map to a character based on value
     if normalized < 0.3 (
-      row += " "
+      row ++= " "
     ) else if normalized < 0.6 (
-      row += "."
+      row ++= "."
     ) else if normalized < 0.8 (
-      row += "o"
+      row ++= "o"
     ) else (
-      row += "#"
+      row ++= "#"
     )
   )
   log row
@@ -90,13 +90,13 @@ mainloop:
       normalized = (value + 1) / 2
       
       if normalized < 0.3 (
-        row += " "
+        row = row ++ " "
       ) else if normalized < 0.6 (
-        row += "."
+        row = row ++ "."
       ) else if normalized < 0.8 (
-        row += "o"
+        row = row ++ "o"
       ) else (
-        row += "#"
+        row = row ++ "#"
       )
     )
     log row
@@ -127,9 +127,9 @@ for x width (
   column = ""
   for y 20 (
     if y >= 20 - heights[x] (
-      column += "#"
+      column = column ++ "#"
     ) else (
-      column += " "
+      column = column ++ " "
     )
   )
   log column

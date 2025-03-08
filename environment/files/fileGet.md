@@ -38,9 +38,9 @@ username = fileGet("username")
 theme = fileGet("settings.theme")
 firstTag = fileGet("tags[0]")
 
-log "Username: " + username
-log "Theme: " + theme
-log "First tag: " + firstTag
+log "Username: " ++ username
+log "Theme: " ++ theme
+log "First tag: " ++ firstTag
 ```
 
 ### Working with Nested Data
@@ -54,9 +54,9 @@ firstName = fileGet("users[0].name.first")
 city = fileGet("users[0].address.city")
 secondUserEmail = fileGet("users[1].email")
 
-log "First user's first name: " + firstName
-log "First user's city: " + city
-log "Second user's email: " + secondUserEmail
+log "First user's first name: " ++ firstName
+log "First user's city: " ++ city
+log "Second user's email: " ++ secondUserEmail
 ```
 
 ### Checking if Data Exists
@@ -69,7 +69,7 @@ open("data.json")
 hasSettings = fileGet("settings") != null
 if hasSettings (
   darkMode = fileGet("settings.darkMode") ?? false
-  log "Dark mode: " + darkMode
+  log "Dark mode: " ++ darkMode
 ) else (
   log "Settings not found"
 )
@@ -98,9 +98,9 @@ open("data.json")
 // Try to access data with error handling
 try (
   value = fileGet("deeply.nested.property")
-  log "Value: " + value
+  log "Value: " ++ value
 ) catch (
-  log "Error accessing property: " + error
+  log "Error accessing property: " ++ error
 )
 ```
 

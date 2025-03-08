@@ -4,14 +4,14 @@ Operators will use their text variant if either of their operands are strings.
 
 ## Join Strings
 
-You can use the simple `+` operator when you want to join two values together
+You can use the simple `+` operator when you want to join two values together with a space
 
 ```javascript
 log "hello" + "world"
 // joins the two input strings using a space, returning "hello world"
 
 log "10 + 5 =" + 15
-// this will also work and the number will be appended to the string
+// this will also work and the number will be appended to the string with a space
 ```
 
 You can join two strings without a space using the `++` operator

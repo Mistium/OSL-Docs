@@ -47,7 +47,7 @@ octaves = 4
 persistence = 0.5
 
 value = octaveNoise(x, y, z, octaves, persistence)
-log "Octave noise value: " + value
+log "Octave noise value: " ++ value
 ```
 
 ### Terrain Generation with Octave Noise
@@ -74,9 +74,9 @@ for x width (
   column = ""
   for y 30 (
     if y >= 30 - heights[x] (
-      column += "#"
+      column = column ++ "#"
     ) else (
-      column += " "
+      column = column ++ " "
     )
   )
   log column
@@ -100,13 +100,13 @@ for y height (
     normalized = (value + 1) / 2
     
     if normalized < 0.3 (
-      row += " "
+      row = row ++ " "
     ) else if normalized < 0.6 (
-      row += "."
+      row = row ++ "."
     ) else if normalized < 0.8 (
-      row += "o"
+      row = row ++ "o"
     ) else (
-      row += "#"
+      row = row ++ "#"
     )
   )
   log row
@@ -121,13 +121,13 @@ for y height (
     normalized = (value + 1) / 2
     
     if normalized < 0.3 (
-      row += " "
+      row = row ++ " "
     ) else if normalized < 0.6 (
-      row += "."
+      row = row ++ "."
     ) else if normalized < 0.8 (
-      row += "o"
+      row = row ++ "o"
     ) else (
-      row += "#"
+      row = row ++ "#"
     )
   )
   log row
@@ -149,13 +149,13 @@ mainloop:
       normalized = (value + 1) / 2
       
       if normalized < 0.4 (
-        row += " "  // Clear sky
+        row = row ++ " "  // Clear sky
       ) else if normalized < 0.6 (
-        row += "."  // Light cloud
+        row = row ++ "."  // Light cloud
       ) else if normalized < 0.8 (
-        row += "o"  // Medium cloud
+        row = row ++ "o"  // Medium cloud
       ) else (
-        row += "#"  // Dense cloud
+        row = row ++ "#"  // Dense cloud
       )
     )
     log row

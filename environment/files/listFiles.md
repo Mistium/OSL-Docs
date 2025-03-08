@@ -37,7 +37,7 @@ files = listFiles()
 // Display the files
 log "Available files:"
 for i files.len (
-  log (i + 1) + ". " + files[i]
+  log (i + 1) ++ ". " ++ files[i]
 )
 ```
 
@@ -54,9 +54,9 @@ fileExists = files.contains(fileName)
 if fileExists (
   // Open the file if it exists
   content = open(fileName)
-  log "File opened: " + fileName
+  log "File opened: " ++ fileName
 ) else (
-  log "File not found: " + fileName
+  log "File not found: " ++ fileName
 )
 ```
 
@@ -77,14 +77,14 @@ for i files.len (
 // Process each JSON file
 for i jsonFiles.len (
   currentFile = jsonFiles[i]
-  log "Processing: " + currentFile
+  log "Processing: " ++ currentFile
   
   // Open and process the file
   content = open(currentFile)
   data = content.JsonParse()
   
   // Do something with the data
-  log "File contains " + data.len + " items"
+  log "File contains " ++ data.len ++ " items"
 )
 ```
 
@@ -97,7 +97,7 @@ files = listFiles()
 // Display a simple file selector
 log "Select a file by number:"
 for i files.len (
-  log (i + 1) + ": " + files[i]
+  log (i + 1) ++ ": " ++ files[i]
 )
 
 // Get user selection
@@ -105,11 +105,11 @@ selection = ask("Enter file number:").toNum()
 
 if selection > 0 and selection <= files.len (
   selectedFile = files[selection - 1]
-  log "You selected: " + selectedFile
+  log "You selected: " ++ selectedFile
   
   // Open the selected file
   content = open(selectedFile)
-  log "File content: " + content
+  log "File content: " ++ content
 ) else (
   log "Invalid selection"
 )

@@ -22,7 +22,7 @@ slider width height id
 // Basic volume slider
 goto 100 100
 slider 200 20 volumeSlider
-log "Volume is set to: " + volumeSlider
+log "Volume is set to: " ++ volumeSlider
 
 // Multiple sliders for RGB color mixing
 goto 50 50
@@ -38,7 +38,7 @@ rectangle 50 150 100 100
 // Slider with value display
 goto 100 200
 slider 250 25 zoomSlider
-text "Zoom: " + (zoomSlider * 100).round() + "%"
+text "Zoom: " ++ (zoomSlider * 100).round() ++ "%"
 ```
 
 ## Important Notes

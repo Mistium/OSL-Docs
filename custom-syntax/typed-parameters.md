@@ -34,7 +34,7 @@ def double(number val) (
 
 // Function with a string parameter
 def greet(string name) (
-  return "Hello, " + name + "!"
+  return "Hello, " ++ name ++ "!"
 )
 
 // Function with multiple typed parameters
