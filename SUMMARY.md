@@ -248,6 +248,8 @@
   * [.toNum()](methods/types/.tonum.md)
   * [.toBool()](methods/types/.tobool.md)
   * [.toStr()](methods/types/.tostr.md)
+* [Functions](methods/functions/README.md)
+  * [.bind(context)](methods/functions/bind.md)
 * [Networking](methods/networking/README.md)
   * [.httpGet()](methods/networking/.httpget.md)
   * [.http(method,data,headers)](methods/networking/.http.md)
