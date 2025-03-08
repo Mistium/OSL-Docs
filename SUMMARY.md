@@ -10,6 +10,7 @@
   * [References To Objects/Variables (@=)](basics/defining-variables/references-to-objects-variables.md)
 * [Assignment Operators](basics/assignment-operators.md)
 * [Local Scoping](basics/local-scoping.md)
+* [Typed Variables](basics/typed-variables.md)
 
 ## Operators
 
@@ -89,6 +90,7 @@
   * [log "hello world"](commands/debugging/log-hello-world.md)
   * [warn "you should change this"](commands/debugging/warn-you-should-change-this.md)
   * [error "something went wrong"](commands/debugging/error-something-went-wrong.md)
+  * [void expression](commands/void.md)
 * [Rendering](commands/rendering/README.md)
   * [Basics](commands/rendering/basics.md)
     * [Color Commands](commands/rendering/basics/color.md)
