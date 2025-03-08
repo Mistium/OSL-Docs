@@ -41,8 +41,8 @@ minute = current_time.timestamp("get-minute") // "51"
 second = current_time.timestamp("get-second") // "29"
 
 // Using components in a custom format
-log month + "/" + day + "/" + year  // "01/23/2025"
-log hour + ":" + minute             // "4:51"
+log month ++ "/" ++ day ++ "/" ++ year  // "01/23/2025"
+log hour ++ ":" ++ minute             // "4:51"
 ```
 
 ## Important Notes

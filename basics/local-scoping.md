@@ -41,7 +41,7 @@ def "test_cmd" (
   local hello = "Greetings!"
   log hello
   // logs "Greetings!"
-  hello += "I'm Mistium"
+  hello ++= " I'm Mistium"
   log hello
   // logs "Greetings! I'm Mistium"
 )

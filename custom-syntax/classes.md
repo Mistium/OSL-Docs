@@ -29,11 +29,11 @@ class Person (
   age = 0
   
   def greet() (
-    return "Hello, my name is " ++ name ++ " and I am " ++ age + " years old."
+    return "Hello, my name is " ++ name ++ " and I am " ++ age ++ " years old."
   )
   
   def birthday() (
-    age ++
+    age++
     return age
   )
 )
@@ -157,13 +157,13 @@ class Calculator (
   result = 0
   
   def add(num) (
-    result += num
+    result = result + num
     // Directly access the result property
     return result
   )
   
   def subtract(num) (
-    result -= num
+    result = result - num
     return result
   )
 )

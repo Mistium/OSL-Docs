@@ -2,7 +2,7 @@
 
 ## Appending Or Prepending To An Array With A Value
 
-You can use the `+` operator to append or prepend a string to an array
+You can use the `+` operator to append or prepend a value to an array
 
 ```javascript
 log "hello" + ["world"]

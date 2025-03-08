@@ -126,7 +126,7 @@ mainloop:
         
         if window.permissions.contains("javascript") (
             // Use JavaScript to display result
-            eval "console.log('Sum calculated by Python:', " + sum + ")"
+            eval "console.log('Sum calculated by Python:', " ++ sum ++ ")"
         )
     )
 ```

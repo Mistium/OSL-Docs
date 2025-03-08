@@ -8,7 +8,7 @@ To define a custom function, use the `def` keyword followed by the function name
 
 ## Example: Basic Arithmetic Function
 
-Here’s how you can create a function that performs basic arithmetic operations and returns a result:
+Here's how you can create a function that performs basic arithmetic operations and returns a result:
 
 ```javascript
 def calculate(num1, num2, operation) (
@@ -41,15 +41,15 @@ log calculate(10,5,"divide")
 
 ## Example: String Manipulation Function
 
-You can also define functions to perform operations on strings. Here’s an example of a function that reverses a string:
+You can also define functions to perform operations on strings. Here's an example of a function that reverses a string:
 
 ```javascript
 def reverseString(text) (
   local reversed = ""
   local i = text.len
   loop text.len (
-    local reversed += text[i]
-    local i --
+    reversed ++= text[i]
+    i --
   )
   return reversed
 )
@@ -59,11 +59,11 @@ log reverseString("hello")  // Outputs: "olleh"
 
 ## Example: Combining Functions and Events
 
-You can define a function and then trigger it based on an event. Here’s an example where a function is called when a specific key is pressed:
+You can define a function and then trigger it based on an event. Here's an example where a function is called when a specific key is pressed:
 
 ```javascript
 def greet(name) (
-  local message = "Hello," + name ++ "!"
+  local message = "Hello, " ++ name ++ "!"
   return message
 )
 
@@ -81,7 +81,7 @@ def filterEvenNumbers(nums) (
   local even = []
   for i nums.len (
     if nums[i] % 2 == 0 (
-      local even = even.append(nums[i])
+      even.append(nums[i])
     )
   )
   return even
