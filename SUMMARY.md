@@ -64,8 +64,8 @@
 * [Files](environment/files/README.md)
   * [What is a file? (in ofsf)](environment/files/what-is-a-file-in-ofsf.md)
   * [Creating Directories](environment/files/creating-directories.md)
-  * [open("file_path")](environment/files/open.md)
-  * [fileGet("path")](environment/files/fileGet.md)
+  * [open("file\_path")](environment/files/open.md)
+  * [fileGet(int)](environment/files/fileGet.md)
   * [listFiles()](environment/files/listFiles.md)
 
 ## Storage
