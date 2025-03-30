@@ -1,7 +1,5 @@
 # Event
 
-### Events
-
 The `window` object provides an event system for responding to various actions in your application:
 
 ```javascript
