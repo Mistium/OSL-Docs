@@ -64,6 +64,5 @@ log user[private_data]  // "Sensitive information"
 
 - Each symbol value is unique and immutable.
 - Symbols are not automatically converted to strings when used with string operations.
-- Symbols are not enumerated in `for...in` loops or by `Object.keys()`.
 - Symbols can be used to avoid property name collisions.
 - Unlike JavaScript, OSL's implementation may have some differences in edge cases.

@@ -86,7 +86,7 @@ if user.sys.enablebackups === "true" (
 
 // Display user's friends
 log "Your friends:"
-each friend user["sys.friends"](
+each friend user["sys.friends"] (
   log "- " + friend
 )
 ```

@@ -3,6 +3,7 @@
 ## Description
 
 OSL provides powerful and flexible JSON handling with several unique features:
+
 - 1-based array indexing
 - Dynamic JSON creation with variables and expressions
 - Built-in merging operations
@@ -61,6 +62,7 @@ str = "Hello" ++ " " ++ "World"  // "Hello World"
 ## Type Support
 
 OSL JSON can contain any valid OSL type:
+
 - Numbers (integer and float)
 - Strings
 - Booleans
@@ -90,4 +92,3 @@ complex = {
 - Expressions and variables in JSON are evaluated when the object is created
 - Nested objects and arrays are supported to any depth
 - All OSL data types can be stored in JSON structures
-

@@ -7,6 +7,7 @@ typeof returns a string representing the type of the given value.
 ## Parameters
 
 typeof needs one parameter:
+
 - value: The value to check the type of
 
 ## Usage
@@ -34,4 +35,4 @@ log typeof(null)
 if typeof(value) == "string" (
   // handle string case
 )
-``` 
+```
