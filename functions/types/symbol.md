@@ -4,28 +4,25 @@ The `symbol()` function creates a unique and immutable data type that can be use
 
 ```javascript
 // Create a unique symbol
-mySymbol = symbol("description")
+mySymbol = symbol()
 ```
 
 ## Syntax
 
 ```javascript
-symbol([description])
+symbol()
 ```
 
 ## Parameters
 
-- `description` (optional): String - A description of the symbol, used for debugging purposes but not for accessing the symbol itself
+- `none`: This function does not take any parameters.
 
 ## Return Value
 
-Returns a new Symbol with the optional description.
-
-## Description
-
-Symbols are unique identifiers that can be used as property keys in objects, ensuring that the property will not conflict with any other property, regardless of what name is used.
+Returns a new Symbol object.
 
 Symbols are particularly useful for:
+
 - Creating truly private or hidden properties
 - Adding non-enumerable properties to objects
 - Defining special behaviors for objects
@@ -37,16 +34,13 @@ Symbols are particularly useful for:
 ```javascript
 // Create a simple symbol
 id = symbol()
-
-// Create a symbol with a description
-userSymbol = symbol("user")
 ```
 
 ### Using Symbols as Object Keys
 
 ```javascript
 // Create a symbol for a "private" property
-private_data = symbol("privateData")
+private_data = symbol()
 
 // Create an object with both regular and symbol properties
 object user = {
@@ -58,42 +52,12 @@ object user = {
 user[private_data] = "Sensitive information"
 
 // The symbol property won't show up in regular enumeration
-for key in user (
+each key user.getKeys() (
   log key  // Only outputs "name" and "age"
 )
 
 // But can be accessed directly
 log user[private_data]  // "Sensitive information"
-```
-
-### Using Symbols for Special Behavior
-
-```javascript
-// Define a symbol for a custom iterator
-iterator = symbol("iterator")
-
-// Create an object with a custom iteration behavior
-object collection = {
-  items: [1, 2, 3, 4, 5],
-  [iterator]: def() -> (
-    return {
-      index: 0,
-      items: this.items,
-      next: def() -> (
-        if this.index < this.items.len (
-          value = this.items[this.index]
-          this.index++
-          return { value: value, done: false }
-        )
-        return { done: true }
-      )
-    }
-  )
-}
-
-// Use the custom iterator
-iter = collection[iterator]()
-result = iter.next()  // { value: 1, done: false }
 ```
 
 ## Notes

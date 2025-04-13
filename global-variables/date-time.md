@@ -42,14 +42,20 @@ These global variables provide information about the current date and time.
 log "Current time: " ++ hour ++ ":" ++ minute ++ ":" ++ second
 
 // Display current date
-log "Today is " ++ day ++ ", " ++ month ++ " " ++ day_number ++ ", " ++ year
+log "Today is " + day + ", " + month + " " + day_number + ", " + year
 
 // Format date with conditional suffix
 suffix = "th"
-if (day_number % 10 == 1 && day_number != 11) suffix = "st"
-if (day_number % 10 == 2 && day_number != 12) suffix = "nd"
-if (day_number % 10 == 3 && day_number != 13) suffix = "rd"
-log "Today is the " ++ day_number ++ suffix ++ " of " ++ month
+if day_number % 10 == 1 and day_number != 11 (
+  suffix = "st"
+)
+if day_number % 10 == 2 and day_number != 12 (
+  suffix = "nd"
+)
+if day_number % 10 == 3 and day_number != 13 (
+  suffix = "rd"
+)
+log "Today is the " + day_number + suffix + " of " + month
 
 // Use the arrays to find the day of week by index
 tomorrow_index = (days.index(day) + 1) % 7

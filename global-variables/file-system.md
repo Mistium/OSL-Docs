@@ -50,11 +50,11 @@ def getFileTypeDescription(filename) (
   extension = filename.substring(filename.lastIndexOf("."))
   fileType = file_types[extension]
   
-  if (fileType) {
+  if fileType (
     return fileType[1] // Return the description (second element)
-  } else {
+  ) else (
     return "Unknown file type"
-  }
+  )
 )
 
 // Get applications that can open a file
@@ -62,26 +62,26 @@ def getCompatibleApps(filename) (
   extension = filename.substring(filename.lastIndexOf("."))
   fileType = file_types[extension]
   
-  if (fileType && fileType[2]) {
+  if fileType and fileType[2] (
     return fileType[2] // Return the array of applications
-  } else {
+  ) else (
     return []
-  }
+  )
 )
 
 // Example usage
 filename = "document.txt"
 
-if (isRecognizedFileType(filename)) {
+if isRecognizedFileType(filename) (
   log "File type: " + getFileTypeDescription(filename)
   
   apps = getCompatibleApps(filename)
-  if (apps.length > 0) {
+  if apps.length > 0 (
     log "Can be opened with: " + apps.join(", ")
-  } else {
+  ) else (
     log "No compatible applications found"
-  }
-}
+  )
+)
 ```
 
 ## Notes

@@ -40,37 +40,37 @@ These global variables provide information about the current state of input devi
 
 ```javascript
 // Check for mouse input
-if (mouse_down) {
+if mouse_down (
   log "Mouse is being held down"
-}
+)
 
-if (mouse_left) {
+if mouse_left (
   log "Left mouse button is pressed"
-}
+)
 
 // Check for keyboard input
-if (pressed == "Enter") {
+if pressed == "Enter" (
   log "Enter key was just pressed"
-}
+)
 
 // Check if a specific key is being held
-if (all_pressed.contains("Shift")) {
+if all_pressed.contains("Shift") (
   log "Shift is being held down"
-}
+)
 
 // Respond to scroll input
-if (scroll_velocity > 0) {
+if scroll_velocity > 0 (
   log "User is scrolling down"
-} else if (scroll_velocity < 0) {
+) else if scroll_velocity < 0 (
   log "User is scrolling up"
-}
+)
 
 // Change cursor style
 cursor = "pointer" // Changes mouse cursor to a pointer
 
 // Get gamepad information
 gamepads = getGamepads()
-if (gamepads.length > 0) {
+if gamepads.length > 0 (
   log "Gamepad connected: " + gamepads[0].id
-}
+)
 ```

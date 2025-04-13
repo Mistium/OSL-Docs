@@ -80,13 +80,13 @@ background user.theme.background
 text_color user.theme.text
 
 // Check if user has enabled backups
-if (user.sys.enablebackups === "true") {
+if user.sys.enablebackups === "true" (
   log "Backups are enabled"
-}
+)
 
 // Display user's friends
 log "Your friends:"
-for (friend in user.sys.friends) {
+each friend user["sys.friends"](
   log "- " + friend
-}
+)
 ```

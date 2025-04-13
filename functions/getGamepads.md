@@ -47,8 +47,8 @@ An app with support for gamepads is Arrow by Mist, source code found below:
 
 ```javascript
 if gamepads.len > 0 (
-  // Check if the A button (index 0) is pressed
-  if gamepads[1].buttons[0]["pressed"] (
+  // Check if the A button (index 1) is pressed
+  if gamepads[1].buttons[1]["pressed"] (
     say "A button pressed!"
   )
 )

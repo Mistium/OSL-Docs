@@ -36,31 +36,33 @@ These global variables provide information about the network status, connections
 
 ```javascript
 // Check network connection
-if (network.connected) {
+if network.connected (
   log "Connected to " + network.server
-} else {
+) else (
   log "Not connected to a network"
-}
+)
 
 // Display online users
 log "Users online: " + network.online_users.length
-for (user in network.online_users) {
-  log "- " + user
-}
+each user network.online_users (
+  log "-" + user
+)
 
 // Display network statistics
 log "Upload: " + formatFileSize(network.upload) + "/s"
 log "Download: " + formatFileSize(network.download) + "/s"
 
 // Using RoTurLink to send a message when enabled
-if (roturlink.enabled) {
+if roturlink.enabled (
   message = {
     type: "chat",
     text: "Hello from OSL!",
     timestamp: timestamp
   }
+
+  // simply lets osl communicate with the websocket
   
   roturlink.send(message)
   log "Message sent through RoTurLink"
-}
+)
 ```

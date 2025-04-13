@@ -9,7 +9,7 @@ These global variables provide information about the system, operating system, a
 | `system_os` | String | The operating system of the device (e.g., "macOS", "Windows", "Linux") |
 | `system_browser` | String | The browser being used (e.g., "Chrome", "Firefox", "Safari") |
 | `system_url` | String | The URL of the current environment |
-| `fps` | Number | The current frames per second of the os |
+| `fps` | Number | The current frames per second of the application |
 | `delta_time` | Number | The time elapsed since the last frame in seconds |
 
 ## Origin System Information
@@ -31,9 +31,9 @@ log "Origin version: " + origin.version
 log "Kernel: " + origin.kernel.name + " " + origin.kernel.version + " (" + origin.kernel.type + ")"
 
 // Use the fps value for performance monitoring
-if (fps < 30) {
+if fps < 30 (
   log "Warning: Low performance detected"
-}
+)
 
 // Use delta_time for frame-independent animations
 position_x += speed * delta_time
