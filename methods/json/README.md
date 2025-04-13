@@ -53,8 +53,9 @@ arr1 = [1, 2]
 arr2 = [3, 4]
 merged = arr1 ++ arr2  // [1, 2, 3, 4]
 
-// String merging
+// String concatenation without spaces (++), different from + which adds spaces
 str = "Hello" ++ " " ++ "World"  // "Hello World"
+// Note: We explicitly add a space as a separate string since ++ doesn't add spaces
 ```
 
 ## Type Support

@@ -7,9 +7,11 @@ You can use the `+` operator to append or prepend a value to an array
 ```javascript
 log "hello" + ["world"]
 // This prepends a value to an array, returning ["hello","world"]
+// Note: The + operator does NOT add a space when used between a string and an array
 
 log ["hello"] + "world"
 // This appends a value to an array, returning ["hello","world"]
+// Note: The + operator does NOT add a space when used between an array and a string
 ```
 
 ## Removing A Value From An Array

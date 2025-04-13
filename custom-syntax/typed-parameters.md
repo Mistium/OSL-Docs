@@ -34,6 +34,7 @@ def double(number val) (
 
 // Function with a string parameter
 def greet(string name) (
+  // Using ++ to concatenate without spaces
   return "Hello, " ++ name ++ "!"
 )
 
@@ -90,4 +91,4 @@ log processData(numbers, double)  // Outputs: [2, 4, 6, 8, 10]
 - Type annotations are optional - you can mix typed and untyped parameters
 - If no type is specified, the parameter accepts any type
 - Type checking happens at runtime when the function is called
-- Type annotations do not affect the function's return value 
+- Type annotations do not affect the function's return value

@@ -39,6 +39,7 @@ The function can be called with one, two, or three parameters to generate 1D, 2D
 // Generate 1D noise
 for i 10 (
   value = noise(i * 0.1)
+  // Using ++ for string concatenation without spaces
   log "Noise at " ++ i ++ ": " ++ value
 )
 ```
@@ -142,4 +143,4 @@ for x width (
 - Small changes in input produce small changes in output (coherence)
 - For best results, use small increments between coordinates (0.01-0.1)
 - The function is deterministic - same seed produces same sequence
-- Combine with different scales for more complex patterns 
+- Combine with different scales for more complex patterns

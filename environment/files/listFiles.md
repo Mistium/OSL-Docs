@@ -37,6 +37,7 @@ files = listFiles()
 // Display the files
 log "Available files:"
 for i files.len (
+  // Using ++ to concatenate strings without spaces
   log (i + 1) ++ ". " ++ files[i]
 )
 ```
@@ -54,6 +55,7 @@ fileExists = files.contains(fileName)
 if fileExists (
   // Open the file if it exists
   content = open(fileName)
+  // Using ++ to join strings without adding spaces
   log "File opened: " ++ fileName
 ) else (
   log "File not found: " ++ fileName
@@ -122,4 +124,4 @@ if selection > 0 and selection <= files.len (
 - The returned list may be empty if no files have been opened yet
 - File permissions are still enforced when trying to open files from the list
 - The function returns only file names, not full paths
-- To get more information about files, you'll need to open them individually 
+- To get more information about files, you'll need to open them individuall

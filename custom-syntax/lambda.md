@@ -7,7 +7,7 @@
 3. **Maintainability**: Their simple syntax makes them easy to update and maintain.
 4. **Performance**: Lambda functions are typically inlined, reducing function call overhead.
 
-#### Example
+### Example
 
 Here's a basic example of a lambda function that adds two numbers:
 
@@ -37,12 +37,9 @@ The syntax consists of the following parts:
 
 The return value of a lambda function is the result of the expression in the function body.
 
-
 ## Single input lambda functions
 
 If a lambda function has only one input parameter, the parentheses around the parameter can be omitted.
-
-#### Example
 
 ```javascript
 square = v -> (v * v)

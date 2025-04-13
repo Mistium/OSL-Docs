@@ -19,6 +19,7 @@ mixed = [1, "text", true, {x: 10}]
 
 // Array with computed values
 vals = [1 + 1, "pre" ++ "fix", 10 * 2]  // [2, "prefix", 20]
+// Note: ++ concatenates without spaces, so "pre" ++ "fix" becomes "prefix"
 ```
 
 ## Creating Objects

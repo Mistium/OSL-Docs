@@ -22,6 +22,7 @@ slider width height id
 // Basic volume slider
 goto 100 100
 slider 200 20 volumeSlider
+// Using ++ to concatenate strings without spaces
 log "Volume is set to: " ++ volumeSlider
 
 // Multiple sliders for RGB color mixing
@@ -38,6 +39,7 @@ rectangle 50 150 100 100
 // Slider with value display
 goto 100 200
 slider 250 25 zoomSlider
+// Using ++ for direct concatenation without spaces
 text "Zoom: " ++ (zoomSlider * 100).round() ++ "%"
 ```
 
@@ -50,4 +52,4 @@ text "Zoom: " ++ (zoomSlider * 100).round() ++ "%"
 - Multiple sliders can be used simultaneously with different IDs
 - The slider position is relative to the current draw cursor
 - Slider state persists between frames unless explicitly changed
-- The ID must be unique to avoid conflicts with other UI elements 
+- The ID must be unique to avoid conflicts with other UI elements
