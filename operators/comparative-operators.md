@@ -101,6 +101,7 @@ result = score > 60 ? "pass" "fail"
 // Can be used in expressions
 text "Points: " + (points > 100 ? "max" points)
 // Shows "max" if points > 100, otherwise shows the points value
+// Note: The + operator here adds a space between "Points: " and the result
 ```
 
 ## Inverting A Comparison

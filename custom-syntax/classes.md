@@ -29,6 +29,7 @@ class Person (
   age = 0
   
   def greet() (
+    // Using ++ to concatenate strings without spaces where needed
     return "Hello, my name is " ++ name ++ " and I am " ++ age ++ " years old."
   )
   
@@ -144,6 +145,7 @@ log Dog.fetch()
 ```
 
 When a class extends another class:
+
 - It inherits all properties and methods from the parent class
 - It can override properties by redefining them
 - It can add new properties and methods
@@ -284,4 +286,4 @@ log storage._data
 - Class names typically use PascalCase by convention
 - Private properties (starting with `_`) provide encapsulation
 - Inheritance allows for code reuse through the `extends` keyword
-- By default, assigning a class creates a clone; use `@=` for references 
+- By default, assigning a class creates a clone; use `@=` for references

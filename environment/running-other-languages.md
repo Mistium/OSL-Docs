@@ -126,6 +126,7 @@ mainloop:
         
         if window.permissions.contains("javascript") (
             // Use JavaScript to display result
+            // Using ++ to concatenate without spaces, since we need exact syntax for eval
             eval "console.log('Sum calculated by Python:', " ++ sum ++ ")"
         )
     )
@@ -139,4 +140,4 @@ mainloop:
 - Output from Python is captured in the `data` variable
 - JavaScript console output appears in the browser's developer tools
 - Code execution in other languages may have performance implications
-- Always validate and sanitize any dynamic code before execution 
+- Always validate and sanitize any dynamic code before execution

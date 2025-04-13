@@ -63,6 +63,7 @@ You can define a function and then trigger it based on an event. Here's an examp
 
 ```javascript
 def greet(name) (
+  // Using ++ to concatenate without spaces
   local message = "Hello, " ++ name ++ "!"
   return message
 )
