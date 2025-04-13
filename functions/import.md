@@ -27,12 +27,14 @@ Returns the exported data from the imported file, which can be any valid OSL val
 ## Description
 
 The `import()` function loads and executes OSL code from an external file, allowing you to:
+
 - Organize your code into modules
 - Reuse code across multiple scripts
 - Share functionality between different parts of your application
 - Load dynamically selected scripts at runtime
 
 The function supports two main import paths:
+
 1. Local files in the current workspace
 2. Package files from the packages directory
 

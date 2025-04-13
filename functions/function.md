@@ -10,4 +10,3 @@ myFunc = function("v", "return v + 10")
 log myFunc(10)
 // 20
 ```
-

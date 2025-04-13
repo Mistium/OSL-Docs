@@ -5,6 +5,7 @@ These global variables provide information about file types, file handling, and 
 ## File Type Definitions
 
 The `file_types` object contains definitions for various file types recognized by the system. Each entry includes:
+
 - Icon definition (for visual representation)
 - Description of the file type
 - Associated applications that can open the file type
@@ -41,17 +42,18 @@ Here's a summary of some key file types defined in the system:
 ```javascript
 // Check if a file extension is recognized
 def isRecognizedFileType(filename) (
-  extension = filename.substring(filename.lastIndexOf("."))
+  local extension = filename.split(".").last()
   return file_types[extension] != null
 )
 
 // Get the description of a file type
 def getFileTypeDescription(filename) (
-  extension = filename.substring(filename.lastIndexOf("."))
-  fileType = file_types[extension]
+  local extension = filename.split(".").last()
+  local fileType = file_types[extension]
   
   if fileType (
-    return fileType[1] // Return the description (second element)
+    return fileType[2]
+    // Return the description (second element)
   ) else (
     return "Unknown file type"
   )
@@ -59,11 +61,12 @@ def getFileTypeDescription(filename) (
 
 // Get applications that can open a file
 def getCompatibleApps(filename) (
-  extension = filename.substring(filename.lastIndexOf("."))
-  fileType = file_types[extension]
+  local extension = filename.split(".").last()
+  local fileType = file_types[extension]
   
-  if fileType and fileType[2] (
-    return fileType[2] // Return the array of applications
+  if fileType and fileType[3] (
+    return fileType[3]
+    // Return the array of applications
   ) else (
     return []
   )
@@ -73,11 +76,11 @@ def getCompatibleApps(filename) (
 filename = "document.txt"
 
 if isRecognizedFileType(filename) (
-  log "File type: " + getFileTypeDescription(filename)
+  log "File type: " ++ getFileTypeDescription(filename)
   
   apps = getCompatibleApps(filename)
-  if apps.length > 0 (
-    log "Can be opened with: " + apps.join(", ")
+  if apps.len > 0 (
+    log "Can be opened with: " ++ apps.join(", ")
   ) else (
     log "No compatible applications found"
   )
