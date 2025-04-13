@@ -37,40 +37,42 @@ position_x = background_width / 2 - element_width / 2
 position_y = background_height / 2 - element_height / 2
 
 // Check if application has focus
-if (is_origin_focused) {
+if is_origin_focused (
   log "Origin has focus"
-}
+)
 
 // Display current application
 log "Current application: " + focused_application + " (ID: " + focused_application_id + ")"
 
 // Display battery information
-if (battery_charging) {
+if battery_charging (
   log "Battery: " + battery_percent + "% (Charging, " + formatTime(battery_time_until_full) + " until full)"
-} else {
+) else (
   log "Battery: " + battery_percent + "% (" + formatTime(battery_time_until_empty) + " remaining)"
-}
+)
 
 // Helper function to format time in seconds to a readable format
 def formatTime(seconds) (
-  if (seconds == null) return "Unknown"
+  if seconds == null (
+    return "Unknown"
+  )
   
   hours = Math.floor(seconds / 3600)
   minutes = Math.floor((seconds % 3600) / 60)
   
-  if (hours > 0) {
+  if hours > 0 (
     return hours + "h " + minutes + "m"
-  } else {
+  ) else (
     return minutes + "m"
-  }
+  )
 )
 
 // Responsive layout based on device type
-if (on_mobile) {
+if on_mobile (
   // Use mobile-friendly layout
   element_width = background_width * 0.9
-} else {
+) else (
   // Use desktop layout
   element_width = background_width * 0.6
-}
+)
 ```

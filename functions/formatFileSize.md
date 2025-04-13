@@ -51,7 +51,7 @@ gigabytes = formatFileSize(1073741824)  // "1 GB"
 files = listFiles("my_directory")
 
 // Display file names and sizes
-for file in files (
+each file files.getKeys() (
   size = formatFileSize(file.size)
   log file.name + ": " + size
 )

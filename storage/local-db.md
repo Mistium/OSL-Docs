@@ -83,7 +83,7 @@ if saved (
 )
 
 // Save high score if better than previous
-if score > localDbGet("highscore") ?? 0 (
+if score > (localDbGet("highscore") ?? 0) (
   localDbSet("highscore", score)
 )
 ```

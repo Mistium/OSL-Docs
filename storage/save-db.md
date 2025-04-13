@@ -14,12 +14,14 @@ log saveContents()
 ## Setting your save directory
 
 {% code overflow="wrap" %}
+
 ```js
 save "myapp@myusername" "set_directory"
 // a basic app data directory example
 
 // if you are unable to set your directory because it has already been used, the user will be prompted to allow or deny you access, if the user denys access, your app will be closed, if they allow it, your app will execute the rest of your code.
 ```
+
 {% endcode %}
 
 <figure><img src="https://github.com/user-attachments/assets/0a526978-e414-4400-8e1b-c8fc2eb37e0f" alt=""><figcaption><p>The application waiting for you to allow its access to a save directory</p></figcaption></figure>

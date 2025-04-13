@@ -24,11 +24,13 @@ Returns a string containing a cryptographically strong unique identifier.
 ## Description
 
 The `ouidNew()` function creates unique identifiers by combining several sources of entropy including:
+
 - Current timestamp
 - System performance metrics
 - User's unique identifier
 
 The result is then hashed using SHA-256 to create a fixed-length unique string that's suitable for:
+
 - Database record identifiers
 - Session or authentication tokens
 - Unique filenames
