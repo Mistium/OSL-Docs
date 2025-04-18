@@ -19,7 +19,6 @@ You can use any of the following types for parameter type annotations:
 - `boolean` - Logical values (true/false)
 - `array` - JSON arrays
 - `object` - JSON objects
-- `function` - Function objects
 - `any` - Any type (default if no type is specified)
 
 ## Examples
@@ -66,7 +65,7 @@ You can also use type annotations with more complex function signatures:
 
 ```javascript
 // Function that takes a callback function
-def processData(array data, function processor) (
+def processData(array data, processor) (
   result = []
   for i data.len (
     result = result.append(processor(data[i]))
