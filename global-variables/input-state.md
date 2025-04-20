@@ -54,7 +54,7 @@ if pressed == "Enter" (
 )
 
 // Check if a specific key is being held
-if all_pressed.contains("Shift") (
+if all_pressed.contains("shift") (
   log "Shift is being held down"
 )
 
@@ -70,7 +70,7 @@ cursor = "pointer" // Changes mouse cursor to a pointer
 
 // Get gamepad information
 gamepads = getGamepads()
-if gamepads.length > 0 (
+if gamepads.len > 0 (
   log "Gamepad connected: " + gamepads[0].id
 )
 ```
