@@ -42,13 +42,13 @@ if is_origin_focused (
 )
 
 // Display current application
-log "Current application: " + focused_application + " (ID: " + focused_application_id + ")"
+log "Current application: " ++ focused_application + " (ID: " ++ focused_application_id ++ ")"
 
 // Display battery information
 if battery_charging (
-  log "Battery: " + battery_percent + "% (Charging, " + formatTime(battery_time_until_full) + " until full)"
+  log "Battery: " + battery_percent ++ "% (Charging, " + formatTime(battery_time_until_full) ++ " until full)"
 ) else (
-  log "Battery: " + battery_percent + "% (" + formatTime(battery_time_until_empty) + " remaining)"
+  log "Battery: " + battery_percent ++ "% (" + formatTime(battery_time_until_empty) ++ " remaining)"
 )
 
 // Helper function to format time in seconds to a readable format
@@ -57,13 +57,13 @@ def formatTime(seconds) (
     return "Unknown"
   )
   
-  hours = Math.floor(seconds / 3600)
-  minutes = Math.floor((seconds % 3600) / 60)
+  hours = floor(seconds / 3600)
+  minutes = floor((seconds % 3600) / 60)
   
   if hours > 0 (
-    return hours + "h " + minutes + "m"
+    return hours ++ "h " ++ minutes ++ "m"
   ) else (
-    return minutes + "m"
+    return minutes ++ "m"
   )
 )
 
