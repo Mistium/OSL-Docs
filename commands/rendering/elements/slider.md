@@ -32,7 +32,7 @@ goto 50 80
 slider 300 15 "greenSlider"
 goto 50 110
 slider 300 15 "blueSlider"
-log out
+log output
 // logs the value of the blue slider without needing its id
 
 // implement a way to convert these to a hex colour from rgb
