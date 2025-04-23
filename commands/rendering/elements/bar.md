@@ -34,15 +34,17 @@ bar 200 5 0 0.5
 c #0000ff
 goto 100 200
 bar 400 30 15 0.25
+```
 
+```javascript
 // Loading animation
 c #ffffff
 goto 50 50
 progress = 0
-while progress < 1 (
-    bar 200 20 10 progress
-    progress = progress + 0.01
-)
+
+mainloop:
+bar 200 20 10 progress
+progress += 0.01
 ```
 
 ## Important Notes
