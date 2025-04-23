@@ -2,22 +2,22 @@
 
 The icon command renders a single ".icn" file that can be created locally on your account or pulled from the system.
 
-#### Functionality
+## Functionality
 
 The icon command allows you to display icons within your OSL application. These icons can be sourced from files in the system's Icons folder, specified by their names, or created using raw icon data directly within the command.
 
-#### Syntax
+## Syntax
 
 ```osl
 icon "code/name" size
 ```
 
-#### Parameters
+## Parameters
 
 * `"code/name"`: Specifies the name of the icon file or provides raw icon code for rendering.
 * `size`: Sets the multiplier for the size of the icon to be rendered. (1 indicates the original size of the icon)
 
-#### Color Modifier
+## Color Modifier
 
 You can modify the color of the icon using a modifier syntax:
 
@@ -25,11 +25,11 @@ You can modify the color of the icon using a modifier syntax:
 icon "code/name" size : c#fff
 ```
 
-#### Icon Creation Recommendations
+## Icon Creation Recommendations
 
 It's recommended to keep all icon data inside the application and avoid referencing locally created icons. This ensures consistent access to icons across different users.
 
-#### Examples
+## Examples
 
 1.  Display an icon named "my\_icon" with a size multiplier of 1:
 
@@ -41,19 +41,17 @@ It's recommended to keep all icon data inside the application and avoid referenc
     ```osl
     icon "c #fff line -10 10 10 -10 line -10 -10 10 10" 2
     ```
-3.  Display an icon using an array of icon data and set its color to white (#fff):
 
-    ```osl
-    icon ["c","#fff","line","-10","10","10","-10","line","-10","-10","10","10"] 1 : c#fff
-    ```
+## Learn icn here
+https://icn.rotur.dev
 
-#### Notes
+## Notes
 
 * Ensure that icon files are accessible to all users by storing them within the application rather than locally.
 
 ```js
 // Define the icon code as a variable
-my_icon_code = ["c","#fff","line","-10","10","10","-10","line","-10","-10","10","10"]
+my_icon_code = "c #fff line -10 10 10 -10 line -10 -10 10 10"
 
 // Render the icon using the variable
 icon my_icon_code 2
