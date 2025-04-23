@@ -13,6 +13,10 @@ canv "create" id width height #colour
 // creates a new canvas (used for rendering)
 // much faster than the uri commands
 
+canv "load" "name" "url/uri" width height
+// creates a new canvas with a url or uri in the center of it
+// lets you save and load canvases
+
 canv "remove" id
 // deletes the canvas
 
