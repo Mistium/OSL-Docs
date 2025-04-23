@@ -15,32 +15,35 @@ slider width height id
 - `width`: Width of the slider track in pixels
 - `height`: Height of the slider track in pixels
 - `id`: Unique identifier for the slider, used to access its value
+- `rounding`: Similar to square, you can round the corners of the element
 
 ## Usage Examples
 
 ```javascript
 // Basic volume slider
 goto 100 100
-slider 200 20 volumeSlider
-// Using ++ to concatenate strings without spaces
-log "Volume is set to: " ++ volumeSlider
+slider 200 20 "volumeSlider"
+log "Volume is set to: " ++ slider_volumeSlider
 
 // Multiple sliders for RGB color mixing
 goto 50 50
-slider 300 15 redSlider
+slider 300 15 "redSlider"
 goto 50 80
-slider 300 15 greenSlider
+slider 300 15 "greenSlider"
 goto 50 110
-slider 300 15 blueSlider
+slider 300 15 "blueSlider"
+log out
+// logs the value of the blue slider without needing its id
 
-c rgb(redSlider * 255, greenSlider * 255, blueSlider * 255)
-rectangle 50 150 100 100
+// implement a way to convert these to a hex colour from rgb
+c rgb(slider_redSlider * 255, slider_greenSlider * 255, slider_blueSlider * 255)
+square 100 100 10
 
 // Slider with value display
 goto 100 200
-slider 250 25 zoomSlider
+slider 250 25 "zoomSlider"
 // Using ++ for direct concatenation without spaces
-text "Zoom: " ++ (zoomSlider * 100).round() ++ "%"
+text "Zoom: " ++ round(zoomSlider * 100) ++ "%"
 ```
 
 ## Important Notes
