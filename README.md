@@ -44,7 +44,7 @@ var = 10 + 5
 varTwo = var + 5 / 2
 
 // Operators can assess logic gates.
-log (var == 15) and (varTwo == 10)
+log var == 15 and varTwo == 10
 ```
 
 ### Methods
