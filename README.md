@@ -18,7 +18,7 @@ log x_position y_position
 
 ### Assignments
 
-As the name suggests, assignments apply a value to the specified variable. The second token in an assignment will always be an [assignment operator](/basics/assignment-operators), usually taking the form of an equals sign (=). Assignments only take one input (aside from the initially specified variable), and do not have a return value.
+As the name suggests, assignments apply a value to the specified variable. The second token in an assignment will always be an [assignment operator](/basics/assignment-operators.md), usually taking the form of an equals sign (=). Assignments only take one input (aside from the initially specified variable), and do not have a return value.
 
 ```javascript
 variable assignment input
@@ -34,7 +34,7 @@ log varTwo
 
 ### Operators
 
-Operators return a value based on a calculation. Operators can either be [equations](/operators/mathematical-usage) (addition, subtraction, division, etc.), [comparisons](/operators/comparative-operators) (==, <, >, etc.) or [logic gates](/operators/logical-operators) (and, or, nor, etc.). Unless parentheses are used, operators will always be processed from left to right, ignoring mathematical order of operations.
+Operators return a value based on a calculation. Operators can either be [equations](/operators/mathematical-usage.md) (addition, subtraction, division, etc.), [comparisons](/operators/comparative-operators.md) (==, <, >, etc.) or [logic gates](/operators/logical-operators.md) (and, or, nor, etc.). Unless parentheses are used, operators will always be processed from left to right, ignoring mathematical order of operations.
 
 ```javascript
 // Variable "var" will be set to the solution of the operator equation.
@@ -70,7 +70,7 @@ var = var.method()
 
 ### Functions
 
-Functions are similar to methods, with the main difference being that functions do not take an input. Functions typically return a value, however this isn't strictly required— functions lacking an output won't throw an error, but instead output [null](/basics/types#null). Similarly to methods, functions can be run on their own, however no values will be modified.
+Functions are similar to methods, with the main difference being that functions do not take an input. Functions typically return a value, however this isn't strictly required— functions lacking an output won't throw an error, but instead output [null](/basics/types.md#null). Similarly to methods, functions can be run on their own, however no values will be modified.
 
 ```javascript
 // Logs a random number 1 through 10.
@@ -82,7 +82,7 @@ func(10, 5)
 
 ### Statements
 
-Statements are containers for other commands, and modify their behavior through [looping the statement](/program-flow/iteration) or [ignoring it if the specified conditions aren't met](/program-flow/if-statements). Statements are always followed by a set of parentheses which surround a script. They generally take one or more inputs, supplied between the statement itself and the opening parenthesis.
+Statements are containers for other commands, and modify their behavior through [looping the statement](/program-flow/iteration.md) or [ignoring it if the specified conditions aren't met](/program-flow/if-statements.md). Statements are always followed by a set of parentheses which surround a script. They generally take one or more inputs, supplied between the statement itself and the opening parenthesis.
 
 
 ```javascript
