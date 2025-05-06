@@ -1,4 +1,4 @@
-# Clipping and Scrolling with Frames
+# Clipping And Scrolling (frames)
 
 OSL provides a powerful frame system for clipping content and creating scrollable areas in your applications.
 
@@ -15,10 +15,11 @@ frame left top right bottom (
 ```
 
 The frame boundaries are defined by four coordinates:
-- `left`: Left edge position (x-coordinate)
-- `top`: Top edge position (y-coordinate)
-- `right`: Right edge position (x-coordinate)
-- `bottom`: Bottom edge position (y-coordinate)
+
+* `left`: Left edge position (x-coordinate)
+* `top`: Top edge position (y-coordinate)
+* `right`: Right edge position (x-coordinate)
+* `bottom`: Bottom edge position (y-coordinate)
 
 ### Example: Basic Clipping
 
@@ -40,6 +41,7 @@ mainloop:
 ## Scrollable Frames
 
 You can create scrollable areas in two ways:
+
 1. Two-dimensional scrolling with content width and height
 2. Vertical-only scrolling with just content height
 
@@ -52,8 +54,9 @@ frame left top right bottom [content_width, content_height] "frame_id" (
 ```
 
 Additional parameters:
-- `[content_width, content_height]`: Dimensions of the scrollable content area
-- `"frame_id"`: Unique identifier for the scrollable frame
+
+* `[content_width, content_height]`: Dimensions of the scrollable content area
+* `"frame_id"`: Unique identifier for the scrollable frame
 
 ### Vertical-Only Scrolling Syntax
 
@@ -64,8 +67,9 @@ frame left top right bottom content_height "frame_id" (
 ```
 
 Additional parameters:
-- `content_height`: Total height of the scrollable content (integer)
-- `"frame_id"`: Unique identifier for the scrollable frame
+
+* `content_height`: Total height of the scrollable content (integer)
+* `"frame_id"`: Unique identifier for the scrollable frame
 
 ### Example: Two-Dimensional Scrolling
 
@@ -110,23 +114,20 @@ mainloop:
 ## Important Notes
 
 1. **Frame Coordinates**
-   - Coordinates are relative to the center of the screen
-   - Positive Y goes up, negative Y goes down
-   - Frame size = (right - left) × (top - bottom)
-
+   * Coordinates are relative to the center of the screen
+   * Positive Y goes up, negative Y goes down
+   * Frame size = (right - left) × (top - bottom)
 2. **Scrolling Behavior**
-   - Scrollbars appear automatically when content exceeds frame size
-   - Scroll position is tracked via `scroll_x` and `scroll_y` variables
-   - Content coordinates are relative to scroll position
-
+   * Scrollbars appear automatically when content exceeds frame size
+   * Scroll position is tracked via `scroll_x` and `scroll_y` variables or `frame.scroll` `frame.scroll_h` respectively
+   * Content coordinates are relative to scroll position
 3. **Best Practices**
-   - Use meaningful frame IDs for easier management
-   - Consider padding inside frames for better appearance
-   - Update content layout based on scroll position
-   - Clean up or reset scroll position when needed
-
+   * Use meaningful frame IDs for easier management
+   * Consider padding inside frames for better appearance
+   * Update content layout based on scroll position
+   * Clean up or reset scroll position when needed
 4. **Common Use Cases**
-   - Long text documents
-   - Image galleries
-   - Lists and menus
-   - Content that exceeds screen size
+   * Long text documents
+   * Image galleries
+   * Lists and menus
+   * Content that exceeds screen size
