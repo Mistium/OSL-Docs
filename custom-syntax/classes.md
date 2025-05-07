@@ -34,7 +34,7 @@ class Person (
   )
   
   def birthday() (
-    age++
+    self.age ++
     return age
   )
 )
@@ -59,12 +59,12 @@ class Counter (
   count = 0
   
   def increment() (
-    count ++
+    self.count ++
     return count
   )
   
   def reset() (
-    count = 0
+    self.count = 0
     return count
   )
 )
@@ -146,9 +146,9 @@ log Dog.fetch()
 
 When a class extends another class:
 
-- It inherits all properties and methods from the parent class
-- It can override properties by redefining them
-- It can add new properties and methods
+* It inherits all properties and methods from the parent class
+* It can override properties by redefining them
+* It can add new properties and methods
 
 ## Method Context
 
@@ -159,13 +159,13 @@ class Calculator (
   result = 0
   
   def add(num) (
-    result = result + num
+    self.result = result + num
     // Directly access the result property
     return result
   )
   
   def subtract(num) (
-    result = result - num
+    self.result = result - num
     return result
   )
 )
@@ -186,7 +186,7 @@ class Counter (
   count = 0
   
   def increment() (
-    count++
+    self.count ++
     return count
   )
 )
@@ -225,9 +225,9 @@ class Character (
   )
   
   def takeDamage(amount) (
-    health -= amount
+    self.health -= amount
     if health < 0 (
-      health = 0
+      self.health = 0
     )
     return health
   )
@@ -259,7 +259,7 @@ class SecureStorage (
   _data = {}
   
   def set(key, value) (
-    _data[key] = value
+    self._data[key] = value
     return true
   )
   
@@ -282,8 +282,8 @@ log storage._data
 
 ## Notes
 
-- Classes in OSL are first-class objects
-- Class names typically use PascalCase by convention
-- Private properties (starting with `_`) provide encapsulation
-- Inheritance allows for code reuse through the `extends` keyword
-- By default, assigning a class creates a clone; use `@=` for references
+* Classes in OSL are first-class objects
+* Class names typically use PascalCase by convention
+* Private properties (starting with `_`) provide encapsulation
+* Inheritance allows for code reuse through the `extends` keyword
+* By default, assigning a class creates a clone; use `@=` for references
