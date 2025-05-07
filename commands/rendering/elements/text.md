@@ -33,6 +33,16 @@ In this example, the text "Hello, World!" is rendered at the current draw cursor
 
 Additionally, the `text` command can be used to set the font for subsequent text rendering by providing the URL or file path of a text file containing font data along with the `setfont` parameter. This command provides a simple and effective way to display text within the UI, allowing for customization of text appearance and font selection when needed.
 
+## Centering text
+
+### Centering Text
+
+The `centext` command works similarly to the `text` command, but with the added functionality of centering the text on the draw cursor position. This command is beneficial for aligning text centrally within the UI component or screen area, ensuring a balanced and aesthetically pleasing visual arrangement. Like the `text` command, it allows for customization of font size and style.
+
+```javascript
+centext "hello world" 10
+```
+
 ## Using the Font System
 
 ### Changing Line Height
