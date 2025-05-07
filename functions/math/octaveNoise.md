@@ -10,11 +10,11 @@ octaveNoise(x, y, z, octaves, persistence)
 
 ## Parameters
 
-- `x` - The x-coordinate in the noise space
-- `y` - The y-coordinate in the noise space
-- `z` - The z-coordinate in the noise space
-- `octaves` - The number of layers of noise to combine
-- `persistence` - How much each octave contributes to the final result (0-1)
+* `x` - The x-coordinate in the noise space
+* `y` - The y-coordinate in the noise space
+* `z` - The z-coordinate in the noise space
+* `octaves` - The number of layers of noise to combine
+* `persistence` - How much each octave contributes to the final result (0-1)
 
 ## Return Value
 
@@ -30,9 +30,10 @@ Octave noise (also known as fractal noise) combines multiple layers of Perlin no
 This creates noise with both large-scale features and fine details, similar to natural phenomena like terrain, clouds, or textures.
 
 The parameters work as follows:
-- Higher `octaves` values create more detailed noise but are more computationally expensive
-- Lower `persistence` values create smoother noise with subtle details
-- Higher `persistence` values create rougher noise with more prominent details
+
+* Higher `octaves` values create more detailed noise but are more computationally expensive
+* Lower `persistence` values create smoother noise with subtle details
+* Higher `persistence` values create rougher noise with more prominent details
 
 ## Examples
 
@@ -134,36 +135,6 @@ for y height (
 )
 ```
 
-### Animated Cloud-like Pattern
-
-```javascript
-// Animate octave noise over time
-mainloop:
-  clear()
-  time = getTime() * 0.005
-  
-  for y 20 (
-    row = ""
-    for x 40 (
-      value = octaveNoise(x * 0.1, y * 0.1, time, 4, 0.5)
-      normalized = (value + 1) / 2
-      
-      if normalized < 0.4 (
-        row = row ++ " "  // Clear sky
-      ) else if normalized < 0.6 (
-        row = row ++ "."  // Light cloud
-      ) else if normalized < 0.8 (
-        row = row ++ "o"  // Medium cloud
-      ) else (
-        row = row ++ "#"  // Dense cloud
-      )
-    )
-    log row
-  )
-  
-  wait 50
-```
-
 ## Comparison with Basic Noise
 
 Octave noise differs from basic Perlin noise in several ways:
@@ -175,8 +146,8 @@ Octave noise differs from basic Perlin noise in several ways:
 
 ## Notes
 
-- Typical values for `octaves` range from 1 to 8 (higher values are more expensive)
-- Typical values for `persistence` range from 0.25 to 0.75
-- Each additional octave doubles the computational cost
-- For real-time applications, use fewer octaves (1-4)
-- For pre-generated content, higher octave counts (4-8) create more detailed results 
+* Typical values for `octaves` range from 1 to 8 (higher values are more expensive)
+* Typical values for `persistence` range from 0.25 to 0.75
+* Each additional octave doubles the computational cost
+* For real-time applications, use fewer octaves (1-4)
+* For pre-generated content, higher octave counts (4-8) create more detailed results
