@@ -84,6 +84,7 @@
 * [Spread Operator](custom-syntax/spread-operator.md)
 * [Typed Parameters](custom-syntax/typed-parameters.md)
 * [Classes](custom-syntax/classes.md)
+* [Promises](custom-syntax/promises.md)
 
 ## External
 
