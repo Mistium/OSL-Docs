@@ -106,5 +106,5 @@ myPromise.then(def() -> (
 
 // Despite being nearly instant, a mainloop is still required to give the promise time to run it's course.
 mainloop:
-if myPromise.worker.alive.not "window.close()"
+if myPromise.worker.alive.not() "window.close()"
 ```
