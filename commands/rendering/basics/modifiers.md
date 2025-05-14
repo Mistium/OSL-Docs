@@ -68,4 +68,3 @@ image "icon.png" 64 : chx#10 chy#10 hover_size#1.2 hover_c#ff0000
 - Position modifiers are relative to the original position
 - Hover modifiers only take effect when the mouse is over the element
 - Multiple modifiers of the same type will use the last one specified
-- For the most up-to-date list of modifiers, refer to: https://osl.mistium.com/#C_About 
