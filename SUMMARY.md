@@ -117,6 +117,7 @@
     * [Icon](commands/rendering/elements/icon.md)
     * [Text](commands/rendering/elements/text.md)
     * [Image](commands/rendering/elements/image.md)
+    * [Video](commands/rendering/elements/video.md)
     * [Input](commands/rendering/elements/input.md)
     * [Pen](commands/rendering/elements/pen.md)
     * [Hitbox](commands/rendering/elements/hitbox.md)
