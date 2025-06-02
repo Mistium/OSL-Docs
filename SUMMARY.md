@@ -173,8 +173,8 @@
 ## Methods
 
 * [Strings](methods/strings/README.md)
-  * [.padStart(num,val)](methods/strings/.padstart-num-val.md)
-  * [.padEnd(num,val)](methods/strings/.padend-num-val.md)
+  * [.padStart(val,num)](methods/strings/.padstart-val-num.md)
+  * [.padEnd(val,num](methods/strings/.padend-val-num.md)
   * [.startsWith(val)](methods/strings/.startswith-val.md)
   * [.endsWith(val)](methods/strings/.endswith-val.md)
   * [.wrapText(characters)](methods/strings/.wraptext-characters.md)
