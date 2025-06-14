@@ -31,8 +31,6 @@ text "Hello, World!" 16
 
 In this example, the text "Hello, World!" is rendered at the current draw cursor position with a font size of 16. The `text` command allows for direct rendering of text strings on the screen.
 
-Additionally, the `text` command can be used to set the font for subsequent text rendering by providing the URL or file path of a text file containing font data along with the `setfont` parameter. This command provides a simple and effective way to display text within the UI, allowing for customization of text appearance and font selection when needed.
-
 ## Centering text
 
 ### Centering Text
