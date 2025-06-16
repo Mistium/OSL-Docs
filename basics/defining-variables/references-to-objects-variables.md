@@ -154,7 +154,7 @@ The `window.on()` function allows you to listen for custom events in your applic
 #### Example:
 
 ```javascript
-window.on("event", () => {
+window.on("event", () -> {
   console.log("my event fired");
 });
 
