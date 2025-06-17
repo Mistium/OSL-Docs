@@ -90,12 +90,12 @@ A logical xnor statement will evaluate both of its operands, and if both of them
 
 You can see the truth table below
 
-| A     | B     | A nor B |
-| ----- | ----- | ------- |
-| true  | true  | true    |
-| true  | false | false   |
-| false | true  | false   |
-| false | false | true    |
+| A     | B     | A xnor B |
+| ----- | ----- | -------- |
+| true  | true  | true     |
+| true  | false | false    |
+| false | true  | false    |
+| false | false | true     |
 
 ```javascript
 log true xnor false
@@ -108,12 +108,12 @@ A logical nand statement will evaluate both of its operands, and if both of them
 
 You can see the truth table below
 
-| A     | B     | A nor B |
-| ----- | ----- | ------- |
-| true  | true  | false   |
-| true  | false | true    |
-| false | true  | true    |
-| false | false | true    |
+| A     | B     | A nand B |
+| ----- | ----- | -------- |
+| true  | true  | false    |
+| true  | false | true     |
+| false | true  | true     |
+| false | false | true     |
 
 ```javascript
 log true nand false
