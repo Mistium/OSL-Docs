@@ -124,7 +124,7 @@
     * [Slider](commands/rendering/elements/slider.md)
   * [Image Editing](commands/rendering/editing/README.md)
     * [Canvas](commands/rendering/editing/canvas.md)
-    * [Rectangle](commands/rendering/editing/uri.md)
+    * [URI](commands/rendering/editing/uri.md)
   * [ICN (Icon System)](commands/rendering/icn/README.md)
     * [Drawing Commands](commands/rendering/icn/drawing-commands.md)
     * [Dynamic Icons](commands/rendering/icn/dynamic-icons.md)
