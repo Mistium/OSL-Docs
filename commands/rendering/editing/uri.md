@@ -103,5 +103,5 @@ uri "effect" "[one of the ops below]" [percentage]
 | `"blur"` | Blurs the image. A lot slower than the built-in blur command above. |
 | `"sepia"` | Applies the filter from Breaking Bad to the image. 0% is default. |
 | `"scanlines"` | Randomly modifies rows of pixels, distorting the original image. 0% is default. |
-| `"scanlines"` | Randomly modifies individual pixels, distorting the original image. 0% is default. |
+| `"grain"` | Randomly modifies individual pixels, distorting the original image. 0% is default. |
 | `"cubism"` | Pixelates the image. 0% is default, with higher percentages decreasing the amount of pixels. |
