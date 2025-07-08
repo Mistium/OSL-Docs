@@ -5,7 +5,7 @@ These global variables provide information about the network status, connections
 ## Connection Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `network.connected` | Boolean | Whether the device is connected to a network |
 | `network.server` | String | URL of the current server the application is connected to |
 | `network.username` | String | Network username used for the current connection |
@@ -14,20 +14,21 @@ These global variables provide information about the network status, connections
 ## Network Statistics
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `network.upload` | Number | Current upload speed in bytes |
 | `network.download` | Number | Current download speed in bytes |
 
 ## Online Users
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `network.online_users` | Array | Array of usernames currently online on the server |
+| `network.online` | Array | Array of users currently online, trimmed to only their username. Users without a username will be replaced with "null" |
 
 ## RoTurLink
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `roturlink.enabled` | Boolean | Whether RoTurLink functionality is enabled |
 | `roturlink.ws` | Object | WebSocket connection object for RoTurLink |
 | `roturlink.send` | Function | Function to send data through RoTurLink |
