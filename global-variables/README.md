@@ -8,13 +8,13 @@ Global variables are predefined variables that are accessible from anywhere in y
 
 The global variables are organized into the following categories:
 
-- [System Information](../global-variables/system-info.md) - Variables providing information about the system, OS, and environment
-- [User Information](../global-variables/system-info.md) - Variables related to the current user and user settings
-- [Date and Time](../global-variables/system-info.md) - Variables for current date, time, and related values
-- [Input State](../global-variables/system-info.md) - Variables for tracking mouse, keyboard, and input devices
-- [Display and UI](../global-variables/system-info.md) - Variables related to the display, window, and UI state
-- [Network](../global-variables/system-info.md) - Variables for network status and connectivity information
-- [File System](../global-variables/system-info.md) - Variables related to files and file types
+- [System Information](system-info.md) - Variables providing information about the system, OS, and environment
+- [User Information](user-info.md) - Variables related to the current user and user settings
+- [Date and Time](date-time.md) - Variables for current date, time, and related values
+- [Input State](input-state.md) - Variables for tracking mouse, keyboard, and input devices
+- [Display and UI](display-ui.md) - Variables related to the display, window, and UI state
+- [Network](network.md) - Variables for network status and connectivity information
+- [File System](file-system.md) - Variables related to files and file types
 
 ## Usage
 
