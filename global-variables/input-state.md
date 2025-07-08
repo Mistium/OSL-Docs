@@ -35,7 +35,7 @@ These global variables provide information about the current state of input devi
 
 | Variable | Type | Description |
 | --- | --- | --- |
-| `picker_color` | String | Currently selected color in the [color picker](/app/joplin-desktop/resources/app/[color-picker]%28:/e48b76d19f294e999282a66d924e53ef%29) (hex format) |
+| `picker_color` | String | Currently selected color in the [color picker](../commands/basics/color-picker.md) (hex format) |
 | `getGamepads` | Function | Function to get information about connected gamepads |
 
 ## Examples
