@@ -8,13 +8,13 @@ Global variables are predefined variables that are accessible from anywhere in y
 
 The global variables are organized into the following categories:
 
-- [System Information](../../OSL-Docs-main/global-variables/system-info.md) - Variables providing information about the system, OS, and environment
-- [User Information](../../OSL-Docs-main/global-variables/user-info.md) - Variables related to the current user and user settings
-- [Date and Time](../../OSL-Docs-main/global-variables/date-time.md) - Variables for current date, time, and related values
-- [Input State](../../OSL-Docs-main/global-variables/input-state.md) - Variables for tracking mouse, keyboard, and input devices
-- [Display and UI](../../OSL-Docs-main/global-variables/display-ui.md) - Variables related to the display, window, and UI state
-- [Network](../../OSL-Docs-main/global-variables/network.md) - Variables for network status and connectivity information
-- [File System](../../OSL-Docs-main/global-variables/file-system.md) - Variables related to files and file types
+- [System Information](../global-variables/system-info.md) - Variables providing information about the system, OS, and environment
+- [User Information](../global-variables/system-info.md) - Variables related to the current user and user settings
+- [Date and Time](../global-variables/system-info.md) - Variables for current date, time, and related values
+- [Input State](../global-variables/system-info.md) - Variables for tracking mouse, keyboard, and input devices
+- [Display and UI](../global-variables/system-info.md) - Variables related to the display, window, and UI state
+- [Network](../global-variables/system-info.md) - Variables for network status and connectivity information
+- [File System](../global-variables/system-info.md) - Variables related to files and file types
 
 ## Usage
 
