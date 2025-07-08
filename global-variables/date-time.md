@@ -5,7 +5,7 @@ These global variables provide information about the current date and time.
 ## Basic Time Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `second` | String | The current second (00-59) |
 | `minute` | String | The current minute (00-59) |
 | `hour` | String | The current hour in 24-hour format (00-23) |
@@ -13,7 +13,7 @@ These global variables provide information about the current date and time.
 ## Date Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `day` | String | The current day of the week (e.g., "Monday", "Tuesday") |
 | `day_number` | Number | The current day of the month (1-31) |
 | `month` | String | The current month name (e.g., "January", "February") |
@@ -23,17 +23,24 @@ These global variables provide information about the current date and time.
 ## Timezone Information
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `timezone` | String | The current timezone (e.g., "UTC+1") |
 | `time.offset` | Number | The current timezone offset in milliseconds |
 | `time.daylight_savings` | Boolean | Whether daylight saving time is currently active |
 
+## User Time Preferences
+
+| Variable | Type | Description |
+| --- | --- | --- |
+| `user.timeformat.hours` | String | The user's preferred time display ("12h" or "24h") |
+| `user.timeformat.show_seconds` | Boolean | Whether clocks should specify down to the second |
+
 ## Constants for Day and Month Names
 
 | Variable | Type | Description |
-|----------|------|-------------|
-| `days` | Array | Array of day names ["Monday", "Tuesday", ...] |
-| `months` | Array | Array of month names ["January", "February", ...] |
+| --- | --- | --- |
+| `days` | Array | Array of day names \["Monday", "Tuesday", ...\] |
+| `months` | Array | Array of month names \["January", "February", ...\] |
 
 ## Examples
 

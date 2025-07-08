@@ -5,18 +5,19 @@ These global variables provide information about the current state of input devi
 ## Mouse Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `mouse_down` | Boolean | Whether any mouse button is currently pressed |
 | `mouse_ondown` | Boolean | Whether any mouse button was just pressed (true for only one frame) |
 | `mouse_left` | Boolean | Whether the left mouse button is currently pressed |
 | `mouse_middle` | Boolean | Whether the middle mouse button is currently pressed |
 | `mouse_right` | Boolean | Whether the right mouse button is currently pressed |
+| `mouse_moving` | Boolean | Whether the mouse cursor has changed positions since last frame. |
 | `cursor` | String | The current mouse cursor style (e.g., "default", "pointer") |
 
 ## Keyboard Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `pressed` | String | The key that was most recently pressed |
 | `all_pressed` | Array | Array of all keys currently being pressed |
 | `all_hit` | Array | Array of keys just pressed in the current frame |
@@ -24,16 +25,17 @@ These global variables provide information about the current state of input devi
 ## Scroll Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
 | `scroll_velocity` | Number | The current vertical scroll velocity |
 | `scroll.x.velocity` | Number | The current horizontal scroll velocity |
 | `scroll.y.velocity` | Number | The current vertical scroll velocity (same as scroll_velocity) |
 | `scroll.multiplier` | Number | The user's scroll speed multiplier preference |
 
-## Gamepad Support
+## Other Variables
 
 | Variable | Type | Description |
-|----------|------|-------------|
+| --- | --- | --- |
+| `picker_color` | String | Currently selected color in the [color picker](../commands/basics/color-picker.md) (hex format) |
 | `getGamepads` | Function | Function to get information about connected gamepads |
 
 ## Examples
