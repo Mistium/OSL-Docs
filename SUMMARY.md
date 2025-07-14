@@ -40,7 +40,6 @@
 * [Switch Case](program-flow/switch-case.md)
 * [Iteration](program-flow/iteration.md)
 * [While And Until](program-flow/while-and-until.md)
-* [Dynamic OSL Execution](program-flow/dynamic-osl-execution.md)
 
 ## Arrays And Objects
 

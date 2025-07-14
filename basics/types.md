@@ -52,7 +52,7 @@ temperature = -2.5
 total = 10.5 + 20  // 30.5
 ```
 
-## JSON Array
+## Array
 
 Ordered collections of values enclosed in square brackets.
 
@@ -70,7 +70,7 @@ matrix = [[1, 2], [3, 4]]
 empty = []
 ```
 
-## JSON Object
+## Object
 
 Key-value collections enclosed in curly braces.
 
@@ -127,20 +127,20 @@ user = {
 You can check the type of a value using the `.getType()` method:
 
 ```javascript
-"Hello".getType()      // "string"
-42.getType()          // "number"
-True.getType()        // "boolean"
-[1,2,3].getType()     // "array"
-{x:1}.getType()       // "object"
-null.getType()        // "null"
+typeof("Hello")     // "string"
+typeof(42)          // "number"
+typeof(true)        // "boolean"
+typeof([1,2,3])     // "array"
+typeof({x:1})       // "object"
+typeof(null)        // "null"
 ```
 
 ## Important Notes
 
-- Strings must use double quotes (`"`)
-- Booleans are case-insensitive (`True` or `true`)
-- Numbers must match the pattern `[0-9.\-]+`
-- Arrays can contain mixed types
-- Object keys don't need quotes
-- `null` represents absence of value
-- All types support the `.getType()` method
+* Strings must use double quotes (`"`)
+* Booleans are case-insensitive (`True` or `true`)
+* Numbers must match the pattern `[0-9.\-]+`
+* Arrays can contain mixed types
+* Object keys don't need quotes
+* `null` represents absence of value
+* All types support the `.getType()` method

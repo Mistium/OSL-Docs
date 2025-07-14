@@ -18,24 +18,23 @@ if gamepads.len > 0 (
 
 Returns an array of gamepad objects, with each object containing the following properties:
 
-- `id`: String identifying the gamepad
-- `index`: Numeric index of the gamepad
-- `connected`: Boolean indicating if the gamepad is connected
-- `timestamp`: The last time the gamepad state was updated
-- `mapping`: String indicating the mapping type (e.g., "standard")
-- `axes`: Array of objects representing analog sticks, each with:
-  - `x`: X-axis value (range: -1.0 to 1.0)
-  - `y`: Y-axis value (range: -1.0 to 1.0, inverted for natural directional control)
-- `buttons`: Array of button objects, each with:
-  - `pressed`: Boolean indicating if the button is pressed
-  - `touched`: Boolean indicating if the button is touched
-  - `value`: Numeric value of the button pressure (range: 0.0 to 1.0)
-- `haptic`: Function to trigger vibration feedback on the controller (when supported)
+* `id`: String identifying the gamepad
+* `index`: Numeric index of the gamepad
+* `connected`: Boolean indicating if the gamepad is connected
+* `timestamp`: The last time the gamepad state was updated
+* `mapping`: String indicating the mapping type (e.g., "standard")
+* `axes`: Array of objects representing analog sticks, each with:
+  * `x`: X-axis value (range: -1.0 to 1.0)
+  * `y`: Y-axis value (range: -1.0 to 1.0, inverted for natural directional control)
+* `buttons`: Array of button objects, each with:
+  * `pressed`: Boolean indicating if the button is pressed
+  * `touched`: Boolean indicating if the button is touched
+  * `value`: Numeric value of the button pressure (range: 0.0 to 1.0)
+* `haptic`: Function to trigger vibration feedback on the controller (when supported)
 
 ## Common Button Indexes
 
-Standard gamepad mappings can be found below:
-[Mappings](https://w3c.github.io/gamepad/#remapping)
+Standard gamepad mappings can be found below:[Mappings](https://w3c.github.io/gamepad/#remapping)
 
 ## Example application
 
@@ -83,6 +82,6 @@ if gamepads.len > 0 (
 
 ## Notes
 
-- If no gamepads are connected, the function returns an empty array.
-- Gamepad support varies by browser and device.
-- The haptic function may not work on all controllers or platforms.
+* If no gamepads are connected, the function returns an empty array.
+* Gamepad support varies by browser and device.
+* The haptic function may not work on all controllers or platforms.
