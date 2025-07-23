@@ -24,12 +24,14 @@ username = null
 defaultName = "Guest"
 
 displayName = username ?? defaultName
-log displayName  // Outputs: "Guest"
+log displayName
+// Outputs: "Guest"
 
 // With non-null values
 username = "Alice"
 displayName = username ?? defaultName
-log displayName  // Outputs: "Alice"
+log displayName
+// Outputs: "Alice"
 ```
 
 ### Comparison with Logical OR
@@ -41,11 +43,13 @@ defaultScore = 100
 
 // Using ??
 finalScore = score ?? defaultScore
-log finalScore  // Outputs: 0 (preserves the 0)
+log finalScore
+// Outputs: 0 (preserves the 0)
 
-// Using ||
-finalScore = score || defaultScore
-log finalScore  // Outputs: 100 (treats 0 as falsy)
+// Using or
+finalScore = score or defaultScore
+log finalScore
+// Outputs: 100 (treats 0 as falsy)
 ```
 
 ### Working with Objects
@@ -59,7 +63,8 @@ user = {
 
 // If bio doesn't exist, use a default
 bio = user.bio ?? "No bio available"
-log bio  // Outputs: "No bio available"
+log bio
+// Outputs: "No bio available"
 ```
 
 ### Working with Database Values
@@ -67,7 +72,8 @@ log bio  // Outputs: "No bio available"
 ```javascript
 // Getting values from a database with fallbacks
 highScore = localDbGet("highscore") ?? 0
-log highScore  // Outputs: 0 if the value doesn't exist
+log highScore
+// Outputs: 0 if the value doesn't exist
 
 // In conditionals
 if score > (localDbGet("highscore") ?? 0) (
