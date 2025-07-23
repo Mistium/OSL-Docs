@@ -53,6 +53,6 @@ switch value (
 
 ## Break?
 
-You need to send your cases with break otherwise you may end up causing some big issues
+You need to end your cases with break otherwise you may end up causing some big issues
 
 When break is run, the switch case will immediately be exited
