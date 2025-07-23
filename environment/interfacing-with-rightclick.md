@@ -80,7 +80,10 @@ this menu looks no different to the one from before, except for one change, it h
 
 ```js
 my_menu = [
-  {"test1":"my_command"},
+  {"test1": def(data) -> (
+    log data
+    // "hello world"
+  )},
   "test2",
   "test3",
   ["my epic submenu",
@@ -89,11 +92,6 @@ my_menu = [
     "option 3 is epic"
   ]
 ]
-
-def "my_command" "dat"
-  log dat
-endef
-// define the command to be run
 
 square 400 400 : c#fff
 
