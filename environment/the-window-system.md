@@ -153,7 +153,7 @@ if window.parent.file_uuid == window.file.uuid (
     // get the parent window's variables by reference
     vars.hello += 1
     // increment the hello variable
-    window "stop"
+    window.close()
   )
 )
 
