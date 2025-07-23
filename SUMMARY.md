@@ -86,10 +86,6 @@
 * [Classes](custom-syntax/classes.md)
 * [Promises](custom-syntax/promises.md)
 
-## External
-
-* [Make An Iframe App](external/make-an-iframe-app.md)
-
 ## Commands
 
 * [Debugging](commands/debugging/README.md)
