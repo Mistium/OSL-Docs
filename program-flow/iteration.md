@@ -41,21 +41,21 @@ In this example, the robot will move forward and then turn left three times.
 
 ```js
 // Generate Fibonacci sequence up to n terms
-def "total_loops.fibonacci()"
-  a = 0
-  b = 0
-  c = 1
+def fibonacci(total_loops) (
+  local a = 0
+  local b = 0
+  local c = 1
   loop total_loops (
     a = b + c
     b = c
     c = a
   )
   return c
-endef
+)
 
 // Usage:
 loop 10 (
-  say 5.fibonacci()
+  log fibonacci(5)
 )
 ```
 
@@ -65,9 +65,9 @@ This example demonstrates how the `loop` command can be used to repeatedly gener
 
 ```js
 // Perform a task repeatedly for a certain duration
-def "performTask"
+def "performTask" (
   // Your task implementation goes here
-endef
+)
 
 // Usage:
 loop 10 (
