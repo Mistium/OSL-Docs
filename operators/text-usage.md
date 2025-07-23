@@ -38,23 +38,3 @@ You can use the `*` operator to repeat a string a set number of times
 log "hello" * 3
 // returns the string repeated 3 times, "hellohellohello"
 ```
-
-## Nullish Coalescence
-
-You can check if a value exists by using this operator.
-
-```javascript
-obj = {"key":1}
-
-log obj.key2 ?? 2
-// logs "2" because obj.key2 is null
-
-log null ?? 1
-// logs 1 because null is null
-
-log 1 ?? 2
-// logs 1 because the left hand operand isnt null
-
-log null ?? null
-// logs null because the left hand operand is null so it returns the right hand operand
-```
