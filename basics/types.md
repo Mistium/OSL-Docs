@@ -124,10 +124,10 @@ user = {
 
 ## Type Checking
 
-You can check the type of a value using the `.getType()` method:
+You can check the type of a value using the `typeof()` function:
 
 ```javascript
-typeof("Hello")     // "string"
+ typeof("Hello")     // "string"
 typeof(42)          // "number"
 typeof(true)        // "boolean"
 typeof([1,2,3])     // "array"
