@@ -6,206 +6,48 @@ In originOS scripting, the cursor commands allow you to control the appearance a
 
 ### Basic Cursor Styles
 
-{% tabs %}
-{% tab title="Default" %}
-Sets the cursor to the default style, typically an arrow.\
-**Use Case:** Resets the cursor to its standard appearance.
-
-```
-cursor "default"
-```
-{% endtab %}
-
-{% tab title="Pointer" %}
-Sets the cursor to a pointer style, indicating that an element is clickable or interactive.\
-**Use Case:** Ideal for UI elements like buttons or links.
-
-```
-cursor "pointer"
-```
-{% endtab %}
-
-{% tab title="Move" %}
-Indicates that the cursor is in move mode, allowing users to drag or move elements.\
-**Use Case:** Useful when dragging elements within the interface.
-
-```osl
-cursor "move"
-```
-{% endtab %}
-
-{% tab title="Grab" %}
-Sets the cursor to a grabbing hand, indicating the intention to grab or move an object.\
-**Use Case:** Enhances the visual feedback during drag-and-drop interactions.
-
-```osl
-cursor "grab"
-```
-{% endtab %}
-
-{% tab title="Grabbing" %}
-Displays a grabbing hand, indicating an active grab or move action.\
-**Use Case:** Provides real-time feedback during dragging operations.
-
-```osl
-cursor "grabbing"
-```
-{% endtab %}
-
-{% tab title="Text" %}
-Sets the cursor to a text input style, typically a vertical I-beam.\
-**Use Case:** Indicates the cursor is ready for text input.
-
-```osl
-cursor "text"
-```
-{% endtab %}
-
-{% tab title="Vertical Text" %}
-Sets the cursor to a vertical text input style, useful for vertical text input areas.\
-**Use Case:** Specifies the cursor style for vertical text entry.
-
-```osl
-cursor "vertical-text"
-```
-{% endtab %}
-
-{% tab title="Wait" %}
-Displays an hourglass or spinning wheel, indicating that the system is processing.\
-**Use Case:** Provides feedback during loading or processing tasks.
-
-```osl
-cursor "wait"
-```
-{% endtab %}
-
-{% tab title="Progress" %}
-Sets the cursor to a spinning wheel or hourglass, indicating that a process is ongoing.\
-**Use Case:** Conveys a sense of progress or loading.
-
-```osl
-cursor "progress"
-```
-{% endtab %}
-{% endtabs %}
+<table><thead><tr><th width="128">Name</th><th width="245">Code</th><th>Use</th><th>Typical Appearance</th></tr></thead><tbody><tr><td>Default</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "default"
+</code></pre></td><td>Resets the cursor to its standard appearance.</td><td>An arrow</td></tr><tr><td>Pointer</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "pointer"
+</code></pre></td><td>Ideal for UI elements like buttons or links.</td><td>A hand pointing </td></tr><tr><td>Move</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "move"
+</code></pre></td><td>Useful when dragging elements within the interface.</td><td>A cross with the ends being arrows</td></tr><tr><td>Grah</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "grab"
+</code></pre></td><td>Enhances the visual feedback during drag-and-drop interactions.</td><td>A hand about to grab something</td></tr><tr><td>Grabbing</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "grabbing"
+</code></pre></td><td>Provides real-time feedback during dragging operations.</td><td>A grabbing hand</td></tr><tr><td>Text</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "text"
+</code></pre></td><td>Indicates the cursor is ready for text input.</td><td>A capital I with 2 lines at the top and bottom</td></tr><tr><td>Vertical-Text</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "vertical-text"
+</code></pre></td><td>Specifies the cursor style for vertical text entry.</td><td>Vertical version of Text</td></tr><tr><td>Wait</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "wait"
+</code></pre></td><td>Provides feedback during loading or processing tasks.</td><td>An hourglass or spinning wheel</td></tr><tr><td>Progress</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "progress"
+</code></pre></td><td>Conveys a sense of progress or loading.</td><td>A wait icon to the bottom right of the cursor</td></tr></tbody></table>
 
 ### Extended Cursor Styles
 
+<table><thead><tr><th width="119">Name</th><th width="282">Code</th><th>Use</th><th>Typical Appearance</th></tr></thead><tbody><tr><td>Help</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "help"
+</code></pre></td><td>Suggests that additional information is accessible.</td><td>A question mark</td></tr><tr><td>Context Menu</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "context-menu"
+</code></pre></td><td>Provides visual feedback for right-click or context menu interactions.</td><td>Shows a context menu is available</td></tr><tr><td>Zoom in</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "zoom-in"
+</code></pre></td><td>Used for interfaces where zooming in is a supported action.</td><td>A magnifying glass with a +</td></tr><tr><td>Zoom out</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "zoom-in"
+</code></pre></td><td>Used for interfaces where zooming out is a supported actio</td><td>A magnifying glass with a -</td></tr><tr><td>Crosshair</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "crosshair"
+</code></pre></td><td>Provides a visual reference for precise actions.</td><td>A crosshair</td></tr><tr><td>Cell</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "cell"
+</code></pre></td><td>Used in spreadsheet-like interfaces for cell selection.</td><td>Similar to a crosshair</td></tr><tr><td>Not Allowed</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "not-allowed"
+</code></pre></td><td>Provides a visual cue that a particular action is restricted.</td><td>A red circle wih a line through it</td></tr><tr><td>Copy</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "copy"
+</code></pre></td><td>Used in interfaces where copying content is a supported action.</td><td>Shows it can copy</td></tr><tr><td>Alias</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "alias"
+</code></pre></td><td>Provides visual feedback for alias-related interactions.</td><td>Shows its an alias</td></tr><tr><td>No Drop</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "no-drop"
+</code></pre></td><td>Visualizes that dropping an object in the current location is prohibited.</td><td>A grabbing hand with a not allowed icon</td></tr><tr><td>All Scroll</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "all-scroll"
+</code></pre></td><td>Used in interfaces where vertical and horizontal scrolling is supported.</td><td>Similar to the move cursor</td></tr></tbody></table>
+
+### Resizing
+
 {% tabs %}
-{% tab title="Help" %}
-Displays a question mark, indicating that help or information is available.\
-**Use Case:** Suggests that additional information is accessible.
-
-```
-cursor "help"
-```
-{% endtab %}
-
-{% tab title="Context Menu" %}
-Sets the cursor to a context menu style, indicating that a context menu is available.\
-**Use Case:** Provides visual feedback for right-click or context menu interactions.
-
-```
-cursor "context-menu"
-```
-{% endtab %}
-
-{% tab title="Zoom In" %}
-Indicates that the cursor is in zoom-in mode, suggesting the ability to zoom in.\
-**Use Case:** Used for interfaces where zooming in is a supported action.
-
-```osl
-cursor "zoom-in"
-```
-{% endtab %}
-
-{% tab title="Zoom Out" %}
-Indicates that the cursor is in zoom-out mode, suggesting the ability to zoom out.\
-**Use Case:** Used for interfaces where zooming out is a supported action.
-
-```osl
-cursor "zoom-out"
-```
-{% endtab %}
-
-{% tab title="Crosshair" %}
-Sets the cursor to a crosshair, often used for precision targeting or drawing applications.\
-**Use Case:** Provides a visual reference for precise actions.
-
-```osl
-cursor "crosshair"
-```
-{% endtab %}
-
-{% tab title="Cell" %}
-Displays a cell or box, indicating a selection or highlighting a specific area.\
-**Use Case:** Used in spreadsheet-like interfaces for cell selection.
-
-```osl
-cursor "cell"
-```
-{% endtab %}
-
-{% tab title="Not Allowed" %}
-Displays a circle with a line through it, indicating that the action is not allowed.\
-**Use Case:** Provides a visual cue that a particular action is restricted.
-
-```osl
-cursor "not-allowed"
-```
-{% endtab %}
-
-{% tab title="Copy" %}
-Sets the cursor to a copy style, indicating the ability to copy content.\
-**Use Case:** Used in interfaces where copying content is a supported action.
-
-```osl
-cursor "copy"
-```
-{% endtab %}
-
-{% tab title="Alias" %}
-Displays an alias symbol, suggesting an alias or alternative representation.\
-**Use Case:** Provides visual feedback for alias-related interactions.
-
-```osl
-cursor "alias"
-```
-{% endtab %}
-
-{% tab title="No Drop" %}
-Indicates that dropping is not allowed, often displayed during drag-and-drop operations.\
-**Use Case:** Visualizes that dropping an object in the current location is prohibited.
-
-```
-cursor "no-drop"
-```
-{% endtab %}
-
-{% tab title="All Scroll" %}
-Sets the cursor to an all-scroll style, suggesting that the entire content can be scrolled.\
-**Use Case:** Used in interfaces where vertical and horizontal scrolling is supported.
-
-```
-cursor "all-scroll"
-```
-{% endtab %}
-
-{% tab title="Resize" %}
-## Resize a row
-
-```
+{% tab title="Row" %}
+```javascript
 cursor "row-resize"
 ```
+{% endtab %}
 
-## Resize a column
-
-```
+{% tab title="Column" %}
+```javascript
 cursor "col-resize"
 ```
+{% endtab %}
 
-## Resize Cardinal Directions
-
+{% tab title="Cardinal Directions" %}
 ```javascript
 // single direction
 cursor "n-resize" // up
@@ -235,7 +77,7 @@ cursor "nwse-resize" // left up, right down
 * Locks the cursor, preventing it from moving freely across the screen.
 * **Use Case:** Useful when you want to restrict cursor movement during specific UI interactions or gameplay elements.
 
-```osl
+```javascript
 cursor "lock"
 ```
 
@@ -244,7 +86,7 @@ cursor "lock"
 * Unlocks the cursor, allowing it to move freely again.
 * **Use Case:** Used to release the cursor from a locked state.
 
-```osl
+```javascript
 cursor "unlock"
 ```
 
@@ -253,7 +95,7 @@ cursor "unlock"
 * Hides the cursor from view.
 * **Use Case:** Often used during specific UI interactions where the cursor's visibility is not required.
 
-```osl
+```javascript
 cursor "hide"
 ```
 
