@@ -72,7 +72,7 @@ A logical xor statement will evaluate both of its operands, and if both are true
 
 You can see the truth table below
 
-| A     | B     | A nor B |
+| A     | B     | A xor B |
 | ----- | ----- | ------- |
 | true  | true  | false   |
 | true  | false | true    |
