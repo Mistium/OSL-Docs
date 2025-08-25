@@ -11,12 +11,17 @@ url = "https://raw.githubusercontent.com/Mistium/Origin-OS/main/Resources/gifs/b
 video url 300 400
 ```
 
+Note that the video needs to be rendered every frame, similar to other OSL elements. The video will play in the background, but to render it **the above command will have to be used inside the mainloop.**
+
 OSL handles all the fetching and loading of videos internally the first time a URL is used. However, videos take a while to load; you may notice that when running the example script above, the screen will be black for several frames while the video initializes. To work around this, we can initialize the video *before* it's displayed by using the "load" argument.
 
 ```javascript
 // video "load" url id
 url = "https://raw.githubusercontent.com/Mistium/Origin-OS/main/Resources/gifs/badapplefull.mp4"
-video "load" url "my_video"
+video "load" url "my_video_id"
+
+// the video can then be rendered later by replacing the url argument with the video's id
+video "my_video_id" 300 400
 ```
 
 ## Manipulating a Video Element
@@ -25,7 +30,7 @@ To manipulate a video's state, we first need to identify the video's ID. All vid
 
 ### "Pause" and "Play"
 
-You may notice that when loading a video, it doesn't begin playing right away. That's because when initialized, a video begins paused; to unpause it, the "play" command must be called. Inversely, the "pause" command can return the video to a non-playing state.
+**You may notice that when loading a video, it doesn't begin playing right away. That's because when initialized, a video begins paused; to unpause it, the "play" command must be called.** Inversely, the "pause" command can return the video to a non-playing state.
 
 ```javascript
 video "videoID_here" "play"
@@ -61,10 +66,10 @@ To clear a video from memory, the "clear" argument can be used.
 
 ```javascript
 url = "https://raw.githubusercontent.com/Mistium/Origin-OS/main/Resources/gifs/badapplefull.mp4"
-video "load" url "my_video"
+video "load" url "my_video_id"
 
 // Removes the video from memory.
-video url "clear"
+video "my_video_id" "clear"
 ```
 
 ## Video Info
