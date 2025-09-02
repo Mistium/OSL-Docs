@@ -11,13 +11,6 @@ These global variables provide information about the display, window, and UI sta
 | `is_origin_focused` | Boolean | Whether the Origin environment has focus |
 | `window_top_index` | Number | Z-index of the topmost window |
 
-## Display Size
-
-| Variable | Type | Description |
-| --- | --- | --- |
-| `background_width` | Number | Width of the application background in pixels |
-| `background_height` | Number | Height of the application background in pixels |
-
 ## Badges
 
 | Variable | Type | Description |
@@ -27,10 +20,6 @@ These global variables provide information about the display, window, and UI sta
 ## Examples
 
 ```javascript
-// Center an element on the screen
-position_x = background_width / 2 - element_width / 2
-position_y = background_height / 2 - element_height / 2
-
 // Check if application has focus
 if is_origin_focused (
   log "Origin has focus"
