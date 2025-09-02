@@ -70,8 +70,14 @@ The `user` object contains comprehensive information about the current user, inc
 | `user["sys.items"]` | Array | Items owned by the user |
 | `user["sys.purchases"]` | Array | Items purchased by the user |
 | `user["sys.transactions"]` | Array | History of currency transactions |
-| `user["sys.aura"]` | Number | An arbitrary statistic which is built by being online on OriginOS; closing the tab resets this to 0 |
-| `user["sys.roturbotMem"]` | Object | A list of AI-generated keys referenced by RoturBot, an AI Discord bot |
+
+## User Wallpaper Data
+
+| Variable | Type | Description |
+| --- | --- | --- |
+| `backgrond_url` | String | The url of the user's wallpaper |
+| `background_width` | Number | Width of the user wallpaper in pixels |
+| `background_height` | Number | Height of the user wallpaper in pixels |
 
 ## Examples
 
