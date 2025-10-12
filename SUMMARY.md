@@ -172,7 +172,7 @@
 
 * [Strings](methods/strings/README.md)
   * [.padStart(val,num)](methods/strings/.padstart-val-num.md)
-  * [.padEnd(val,num](methods/strings/.padend-val-num.md)
+  * [.padEnd(val,num)](methods/strings/.padend-val-num.md)
   * [.startsWith(val)](methods/strings/.startswith-val.md)
   * [.endsWith(val)](methods/strings/.endswith-val.md)
   * [.wrapText(characters)](methods/strings/.wraptext-characters.md)
