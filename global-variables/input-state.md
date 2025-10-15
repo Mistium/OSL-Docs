@@ -18,7 +18,6 @@ These global variables provide information about the current state of input devi
 
 | Variable | Type | Description |
 | --- | --- | --- |
-| `pressed` | String | The key that was most recently pressed |
 | `all_pressed` | Array | Array of all keys currently being pressed |
 | `all_hit` | Array | Array of keys just pressed in the current frame |
 
