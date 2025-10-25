@@ -227,8 +227,6 @@
 * [Numbers](methods/numbers/README.md)
   * [.len](methods/numbers/length.md)
   * [.newArray()](methods/numbers/.newarray.md)
-  * [.radTan()](methods/numbers/.radtan.md)
-  * [.radAsin()](methods/numbers/.radasin.md)
   * [.padStart(val,num)](methods/numbers/.padstart.md)
   * [.padEnd(val,num)](methods/numbers/.padend.md)
   * [.append(val)](methods/numbers/.append.md)
