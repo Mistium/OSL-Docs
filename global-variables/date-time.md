@@ -20,6 +20,12 @@ These global variables provide information about the current date and time.
 | `month_number` | Number | The current month as a number (1-12) |
 | `year` | Number | The current year (e.g., 2025) |
 
+## Timestamps
+
+| Variable | Type | Description |
+| `timestamp` | Number | A wrapper for JavaScript's `Date.now()` |
+| `performance` | Number | A wrapper for JavaScript's `performance.now()` |
+
 ## Timezone Information
 
 | Variable | Type | Description |
