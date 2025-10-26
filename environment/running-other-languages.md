@@ -25,7 +25,7 @@ window.permissions.contains("permission_name")
 ### Getting Permission
 
 ```javascript
-permission "request" "python"
+permission "request" "javascript"
 ```
 
 ### Example Permission Check
