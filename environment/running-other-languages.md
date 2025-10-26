@@ -1,6 +1,6 @@
 # Running Other Languages
 
-OSL provides the ability to execute code in other programming languages, specifically Python and JavaScript. This feature requires explicit permission from the user for security reasons.
+OSL provides the ability to execute code in other programming languages, specifically JavaScript. This feature requires explicit permission from the user for security reasons.
 
 ## Permissions System
 
@@ -20,9 +20,9 @@ You can check if a permission has been granted by examining `window.permissions`
 window.permissions.contains("permission_name")
 ```
 
-## Python Integration
+## Javascript Integration
 
-### Getting Python Permission
+### Getting Permission
 
 ```javascript
 permission "request" "python"
@@ -31,49 +31,27 @@ permission "request" "python"
 ### Example Permission Check
 
 ```javascript
-permission "request" "python"  // Request permission
+permission "request" "javascript"  // Request permission
 
 authorised = false  // Track permission status
 
+window.on("permission_granted", (name) -> (
+  if name == "javascript" (
+    authorised = true
+    // run some js code with your new permission
+  )
+))
+
+window.on("permission_rejected", (name) -> (
+  if name == "javascript" (
+    say "This app needs the javascript permission to run"
+  )
+))
+
 mainloop:
-    if authorised.not (
-        if window.permissions.contains("python") (
-            authorised = true
-            // Permission granted, can now run Python code
-        )
+    if authorised (
+      // only run code that requires javascript once you get the permission
     )
-```
-
-### Running Python Code
-
-Once permission is granted, use the `py` command to execute Python code:
-
-```javascript
-py "print('Hello from Python')"
-log data  // Outputs the Python print result
-```
-
-### Example Python Integration
-
-```javascript
-// Calculate Fibonacci numbers using Python
-py "
-def fib(n):
-    a, b = 0, 1
-    for _ in range(n):
-        a, b = b, a + b
-    return a
-print(fib(10))
-"
-log data  // Outputs the 10th Fibonacci number
-```
-
-## JavaScript Integration
-
-### Getting JavaScript Permission
-
-```javascript
-permission "request" "javascript"
 ```
 
 ### Running JavaScript Code
@@ -111,33 +89,10 @@ console.log(`Current time: ${date.toLocaleTimeString()}`);
    - Provide fallback behavior when permissions are denied
    - Handle syntax errors in foreign code gracefully
 
-## Example: Language Integration
-
-```javascript
-// Request both permissions
-permission "request" "python"
-permission "request" "javascript"
-
-mainloop:
-    if window.permissions.contains("python") (
-        // Use Python for computation
-        py "result = sum(range(1, 101))"
-        sum = data
-        
-        if window.permissions.contains("javascript") (
-            // Use JavaScript to display result
-            // Using ++ to concatenate without spaces, since we need exact syntax for eval
-            eval "console.log('Sum calculated by Python:', " ++ sum ++ ")"
-        )
-    )
-```
-
 ## Important Notes
 
 - Permissions must be requested at runtime
 - Permissions can be revoked by the user
-- Python and JavaScript execution environments are isolated
-- Output from Python is captured in the `data` variable
 - JavaScript console output appears in the browser's developer tools
 - Code execution in other languages may have performance implications
 - Always validate and sanitize any dynamic code before execution
