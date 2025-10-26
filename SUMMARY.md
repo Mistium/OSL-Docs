@@ -60,6 +60,7 @@
 * [Running Other Languages](environment/running-other-languages.md)
 * [Notifications](environment/notifications.md)
 * [Send Data Between Windows](environment/send-data-between-windows.md)
+* [Clipboard](environment/clipboard.md)
 * [Interfacing With Rightclick](environment/interfacing-with-rightclick.md)
 * [Permissions](environment/permissions.md)
 * [Files](environment/files/README.md)
