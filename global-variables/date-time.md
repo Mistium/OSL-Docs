@@ -23,6 +23,7 @@ These global variables provide information about the current date and time.
 ## Timestamps
 
 | Variable | Type | Description |
+| --- | --- | --- |
 | `timestamp` | Number | A wrapper for JavaScript's `Date.now()` |
 | `performance` | Number | A wrapper for JavaScript's `performance.now()` |
 
