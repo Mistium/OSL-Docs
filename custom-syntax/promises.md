@@ -39,15 +39,16 @@ myPromise.then(def() -> (
   log response
 ))
 ```
+You can also chain directly onto the promise object.
 ```javascript
 // Returns 1, 2, 3
-myPromise @= Promise.new(def() -> (
+void Promise.new(def() -> (
   log 1
 ))
-myPromise.then(def() -> (
+.then(def() -> (
   log 2
 ))
-myPromise.then(def() -> (
+.then(def() -> (
   log 3
 ))
 ```
@@ -64,16 +65,28 @@ calculate.then(def() -> (
 ))
 ```
 
+By far the cleanest way to transfer data to follow up functions is to return it.
+
+```javascript
+void Promise.new(def() -> (
+  return 10
+))
+.then(def(data) -> (
+  log data
+))
+```
+
+This script will log 10 as the returned value was passed out of the first function and into the follow-ups.
+
 ### Worker Variables
 
-Promises automatically create several variables related to their status.
+Promises internally use the osl worker api, these are some values that are accessible through this api.
 
 | Variable | Type | Description |
 |----------|------|-------------|
 | `alive` | Boolean | Returns false if the promise has concluded, otherwise return true. |
 | `createdTime` | Number | The timestamp at which the promise was first created. |
 | `processTime` | Number | How long it took to run the promise, in seconds. |
-| `return` | Any | If the previous function in a promise had a return value, return that. Otherwise, return null. For use outside of the promise, only look for a return command in the last function of that promise. |
 
 Any of these variables can also be accessed outside their respective promise by accessing the "worker" property in the referenced promise. Additionally, any variables created with the "self" object will appear here too, minus the "self" prefix.
 
