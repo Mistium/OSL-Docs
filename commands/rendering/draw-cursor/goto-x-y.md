@@ -26,4 +26,4 @@ change 20 -20
 ```
 {% endcode %}
 
-[Broken link](broken-reference "mention")
+[Broken link](/broken/pages/cmz8bxQBQllOgjBjNCli "mention")
