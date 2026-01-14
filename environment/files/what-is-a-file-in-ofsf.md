@@ -1,73 +1,88 @@
 # What is a file? (in ofsf)
 
-A file in ofsf is a collection of 14 data points, used by the system to handle the file.
+### Overview
+
+An **OFSF file record** is a fixed-length collection of **14 ordered fields** describing either a file or a folder. Records are positional (index-based), not keyed.
+
+Unless otherwise stated, all fields are required to exist by position, even if unused.
 
 ***
 
-#### **1. Type**
+### Field Layout
 
-Represents the file type, indicated by its extension (e.g., `.osl`, `.icn`, `.txt`).
+<table><thead><tr><th width="108.79052734375">#</th><th width="137.4766845703125">Name</th><th>Description</th></tr></thead><tbody><tr><td>1</td><td><strong>Type</strong></td><td>File type identifier. For regular files, this is the file extension (e.g. <code>.txt</code>, <code>.osl</code>, <code>.icn</code>). <strong>Folders MUST use the literal <code>.folder</code>.</strong></td></tr><tr><td>2</td><td><strong>Name</strong></td><td>File name <strong>without extension</strong>, stored as a string. Example: <code>"hello"</code> for <code>hello.txt</code>.</td></tr><tr><td>3</td><td><strong>Location</strong></td><td>Full path of the parent directory, expressed as a string. Example: <code>origin/(c) users/mist/documents</code>.</td></tr><tr><td>4</td><td><strong>Data</strong></td><td>Primary payload. <strong>Meaning depends on whether the record is a file or a folder</strong> (see below).</td></tr><tr><td>5</td><td><strong>Padding A</strong></td><td>Reserved / padding field. May contain <strong>any value</strong> (commonly <code>0</code> or <code>""</code>). Consumers MUST ignore it.</td></tr><tr><td>6</td><td><strong>X</strong></td><td>Auxiliary numeric or scalar field. Typically used for X position in a parent container (e.g. desktop layout).</td></tr><tr><td>7</td><td><strong>Y</strong></td><td>Auxiliary numeric or scalar field, similar to X (e.g. Y position).</td></tr><tr><td>8</td><td><strong>Padding B</strong></td><td>Reserved / padding field. May contain <strong>any value</strong> (commonly <code>0</code> or <code>""</code>). Consumers MUST ignore it.</td></tr><tr><td>9</td><td><strong>Created</strong></td><td>Creation timestamp <strong>in Unix milliseconds</strong>.</td></tr><tr><td>10</td><td><strong>Edited</strong></td><td>Last-edited timestamp <strong>in Unix milliseconds</strong>.</td></tr><tr><td>11</td><td><strong>Icon</strong></td><td>ICN code representing the file's icon.</td></tr><tr><td>12</td><td><strong>Size</strong></td><td>Size metric. For files: character count. For folders: number of contained items.</td></tr><tr><td>13</td><td><strong>Permissions</strong></td><td>JSON-encoded array of permission strings.</td></tr><tr><td>14</td><td><strong>UUID</strong></td><td>System-generated unique identifier. Primary identifier for the record.</td></tr></tbody></table>
 
-#### **2. Name**
+### Field 4: Data (Disambiguation)
 
-The name of the file, stored as a string.
+#### Files
 
-in a file called "hello.txt" this would be "hello"
+For **all non-folder items**, field 4 stores the file’s primary content.
 
-#### **3. Location**
+* No semantic meaning is derived from file type here
 
-The file's location in the system, expressed as a file path.
+Type of data is application-defined (usually string or binary-safe string).
 
-Examples of the location might be "origin/(c) users/mist/documents" that describes the file is in the user's documents folder
+#### Folders
 
-#### **4. Data**
+For `.folder` items, field 4 represents the folder’s contents.
 
-The main storage field for the file's content:
+Allowed encodings:
 
-* For `.osl` scripts, this stores the program data.
-* For folders, this is an array of file uuids contained within the folder.
-* For other file types, this holds the primary data.
+```js
+["uuid1", "uuid2", "uuid3"]
+```
 
-#### 5. null
+or JSON-string-encoded:
 
-Currently redundant storage slot, but may be used in the future
+```js
+"[\"uuid1\", \"uuid2\", \"uuid3\"]"
+```
 
-#### **6. X**
+Consumers MUST accept **both representations**.
 
-A flexible field for miscellaneous data associated with the file. Normally used to store the x position of a file in its parent folder (used for things like the position on the desktop)
+***
 
-#### **7. Y**
+### Permissions Encoding (Field 13)
 
-Another field for additional data, similar to `X`.
+Permissions are stored as a **JSON-encoded array of strings**:
 
-#### 8. null
+```js
+["file editor", "read"]
+```
 
-Used to be a unique id, now is unnecessary due to field 14
+or encoded as a string:
 
-#### **9. Created**
+```js
+"[\"file editor\", \"read\"]"
+```
 
-The timestamp (in Unix format) marking when the file was created.
+Filesystem consumers MUST decode before interpretation.
 
-#### **10. Edited**
+***
 
-The timestamp (in Unix format) indicating the last time the file was edited.
+### Padding Fields (5 & 8)
 
-#### **11. Icon**
+Fields **5** and **8** are padding / legacy fields.
 
-The icn code that represents the file's icon, used for display purposes.
+* They **do not need to be `null`**
+* Any value is valid
+* Implementations MUST NOT rely on their contents
 
-#### **12. Size**
+***
 
-The size of the file in characters.
+### Timestamp Semantics
 
-For folders this will contain the number of files inside the folder
+Fields **9 (Created)** and **10 (Edited)** are:
 
-#### **13. Permissions**
+* Unix timestamps
+* **Milliseconds**, not seconds
 
-The access permissions required for applications or users to interact with the file.
+***
 
-Example: \["file editor"]
+### Notes for Implementers
 
-#### **14. UUID**
+* OFSF is **positional**, not schema-keyed
+* Consumers should be permissive in decoding (stringified JSON vs native arrays)
+* UUID (field 14) is the **only authoritative identifier**
+* Folderness is determined **solely** by field 1 being `.folder`
 
-A system-generated unique identifier for each file. This is managed internally and does not require user interaction.

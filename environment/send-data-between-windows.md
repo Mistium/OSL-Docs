@@ -29,4 +29,4 @@ if new_transmit (
 
 ## Possibly helpful info
 
-Check out the parents and children section for useful information: [Broken link](broken-reference "mention")
+Check out the parents and children section for useful information: [Broken link](/broken/pages/cmz8bxQBQllOgjBjNCli#parents-and-children "mention")
