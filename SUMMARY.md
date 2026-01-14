@@ -29,6 +29,7 @@
 * [Bitwise operators](operators/bitwise-operators.md)
 * [Pipe Operator (|>)](operators/pipe-operator.md)
 * [Nullish Coalescing Operator (??)](operators/nullish-coalescing-operator.md)
+* [Precedence](operators/precedence.md)
 
 ## Program Flow
 

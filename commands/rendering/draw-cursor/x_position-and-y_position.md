@@ -11,17 +11,18 @@ log x_position
 
 This allows you to save the position of the cursor to return to later, for example:
 
-<pre class="language-javascript" data-full-width="false"><code class="lang-javascript"><strong>// go somewhere random
-</strong><strong>goto random(-100, 100) random(-100, 100)
-</strong><strong>// save the random position
-</strong>x = x_position
+```javascript
+// go somewhere random
+goto random(-100, 100) random(-100, 100)
+// save the random position
+x = x_position
 y = y_position
 
 // go somewhere random
 goto random(-100, 100) random(-100, 100)
 // return to the original position
 goto x y
-</code></pre>
+```
 
 These variables are accessible in every context and cannot be overwritten with other data.
 
