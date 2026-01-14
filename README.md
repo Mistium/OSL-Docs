@@ -52,7 +52,7 @@ log var == 15 and varTwo == 10
 
 ### Methods
 
-Methods return a modified value based on a singular input. Methods can follow any constant or variable, and that value will act as it's input. Values inside the parentheses will act as parameters, although not every method will require those. In cases with multiple parameters, each value is seperated by a comma.
+Methods return a modified value based on a singular input. Methods can follow any constant or variable, and that value will act as it's input. Values inside the parentheses will act as parameters, although not every method will require those. In cases with multiple parameters, each value is separated by a comma.
 
 ```javascript
 // Logs the sine of 10 to the console.
@@ -69,6 +69,12 @@ Methods don't necessarily need to be part of another statement. In cases where a
 // These two lines are functionally equivalent.
 var.method()
 var = var.method()
+```
+
+In case this behaviour is unwanted, you can prepend the method with void to throw its return value away.
+
+```javascript
+void var.method()
 ```
 
 ### Functions
