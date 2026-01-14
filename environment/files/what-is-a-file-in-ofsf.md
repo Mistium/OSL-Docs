@@ -20,7 +20,7 @@ For **all non-folder items**, field 4 stores the file’s primary content.
 
 * No semantic meaning is derived from file type here
 
-Type of data is application-defined (usually string or binary-safe string).
+Data is a string
 
 #### Folders
 
