@@ -46,15 +46,15 @@
 
 * [General](commands/general/README.md)
   * [void](commands/general/void.md)
+  * [Color Commands](commands/general/color.md)
+  * [Color Picker](commands/general/color-picker.md)
 * [Debugging](commands/debugging/README.md)
   * [log "hello world"](commands/debugging/log-hello-world.md)
   * [warn "you should change this"](commands/debugging/warn-you-should-change-this.md)
   * [error "something went wrong"](commands/debugging/error-something-went-wrong.md)
+* [Modifiers](commands/modifiers.md)
 * [Rendering](commands/rendering/README.md)
   * [Basics](commands/rendering/basics.md)
-    * [Color Commands](commands/rendering/basics/color.md)
-    * [Color Picker](commands/rendering/basics/color-picker.md)
-    * [Modifiers](commands/rendering/basics/modifiers.md)
   * [Draw Cursor](commands/rendering/draw-cursor/README.md)
     * [goto x y](commands/rendering/draw-cursor/goto-x-y.md)
     * [set\_x x](commands/rendering/draw-cursor/set_x-x.md)
@@ -82,6 +82,7 @@
   * [ICN (Icons and graphics)](https://app.gitbook.com/o/9nZwCHsOlBsktBssSXx8/s/tAc8iN6fV2lsHxnpz5yi/)
   * [Clipping And Scrolling (frames)](commands/rendering/clipping-and-scrolling-frames.md)
   * [3D Rendering](commands/rendering/3d-rendering.md)
+  * [Interacting with elements](commands/rendering/interacting-with-elements.md)
 
 ## Arrays And Objects
 
