@@ -75,7 +75,7 @@ myCanvas.toURL()
 
 // returns the canvas as an array of integers
 // equivalent to calling ctx.getImageData().data
-myCanvas.toArray()
+myCanvas.toArr()
 ```
 
 Methods can also be used to find the dimensions of the canvas.
