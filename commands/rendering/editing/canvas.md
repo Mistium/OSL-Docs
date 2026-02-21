@@ -1,123 +1,143 @@
-
 # Canvas
 The OSL canvas commands are a set of commands that internally store images that can be easily written to and read from. The canvas element is primarily used in situations where the user will directly be interacting with an image, such as drawing programs or image editors.
 
-A canvas can be initialized using one of two commands, with the latter setting the canvas's content to the image in a DataURI.
+A canvas can be initialized using one of two ways:
 
 ```js
-// "id" - the key associated with this canvas
-// x - the width of the canvas, in pixels
-// y - the height of the canvas, in pixels
-// fill - the background color of the canvas (ex. #fff)
-canv "create" "id" x y fill
+// width - the width of the canvas, in pixels
+// height - the height of the canvas, in pixels
+// background - the background color of the canvas (ex. #fff)
+canvas myCanvas @= canvas(width, height, background)
 
-// dataURI - the content of this canvas
-// will be stretched to fit the width and height
-canv "load" "id" dataURI x y
+// url - a DataURI to load as the canvas content, stretched to fit
+canvas myCanvas @= canvas.fromURL(url, width, height)
 ```
 
-Notice how both commands have an associated "id" argument. This is a string used as a key to access this canvas later through other commands. **All canvas methods and commands require a canvas ID.**
+## Canvas Type
 
-## Writing to the Canvas
-OSL provides many commands for writing to the canvas. The most primitive of these commands write to a single pixel.
+Canvases also have their own type, so using Typeof will give you "canvas"
 
 ```js
-// x and y are coordinates in pixels.
-// (0, 0) of every canvas is in the center.
-canv "set_pixel_xy" "id" x y color
+canvas myCanvas @= canvas(100, 100, "#fff")
 
-// index writes to a pixel by the position it's stored internally.
-// index flows from left to right, top to bottom.
-canv "set_pixel" "id" index color
+// will log true
+log typeof(myCanvas) == "canvas"
+```
+
+## Writing to the Canvas
+OSL provides many methods for writing to the canvas. The most primitive of these write to a single pixel.
+
+```js
+// index starts at 1 in the top left, flowing left to right, top to bottom
+myCanvas.setPixel(index, colour)
+
+// (0, 0) is in the center of the canvas
+myCanvas.setPixelAt(x, y, colour)
 ```
 
 ### Shapes
-The canvas provides commands to draw lines, squares, and triangles. When drawing shapes, the cursor's color is used as the fill color (this can be set with the color/colour/c command). They use the same coordinate system as `"set_pixel_xy"`, where (0, 0) is in the center of the canvas. **It's worth noting that these commands are not pixel perfect, at smaller canvas sizes they may appear blurry.**
+The canvas provides methods to draw lines, rectangles, and triangles. When drawing shapes, the cursor's color is used as the fill color (this can be set with the color/colour/c command). They use the same coordinate system as `setPixelAt`, where (0, 0) is in the center of the canvas. **It's worth noting that these methods are not pixel perfect; at smaller canvas sizes they may appear blurry.**
 
 ```js
-// width - the stroke width of the line in pixels.
-// cap ("butt"/"round"/"square") - determines how the end of the line is handled.
-canv "line" "id" x1 y1 x2 y2 width cap
+// draws a dot at a position using the current draw cursor colour
+myCanvas.dot(x, y, size)
 
-// rounding - how smooth the corners appear, in pixels.
-canv "rect" "id" width height x y rounding
+// size - the stroke width of the line in pixels
+// cap ("butt"/"round"/"square") - determines how the ends of the line are handled
+myCanvas.line(x1, y1, x2, y2, {size: number, cap: "round" | "butt" | "square"})
+
+// rounding - how smooth the corners appear, in pixels
+// draws a filled rectangle
+myCanvas.rect(x, y, width, height, rounding)
+
+// draws an unfilled rectangle
+myCanvas.square(x, y, width, height, rounding)
 
 // each coordinate pair is one corner of the triangle
-canv "tri" "id" x1 y1 x2 y2 x3 y3
+myCanvas.tri(x1, y1, x2, y2, x3, y3)
 ```
 
 ### Stamping
+
 Canvases can also apply other images onto themselves using DataURIs. The image is stretched to fit the provided dimensions.
 
 ```js
-canv "image" "id" dataURI x y width height
+myCanvas.image(dataURI, x, y, width, height)
 ```
 
 ## Reading the Canvas
-Of course, a canvas is only useful if you can read the data you write to it. OSL provides several methods for reading canvas data. For each of these methods, they should be used on a string containing the canvas's specified ID.
+OSL provides several methods for reading canvas data.
 
-To get the entire canvas's image as a DataURI, the `canvData()` method must be used.
+To get the entire canvas as a DataURI, use `toURL()`.
 
 ```js
-"id".canvData()
+myCanvas.toURL()
+
+// returns the canvas as an array of integers
+// equivalent to calling ctx.getImageData().data
+myCanvas.toArray()
 ```
 
 Methods can also be used to find the dimensions of the canvas.
 
 ```js
-// width and height are both in pixels
-"id".canvWidth()
-"id".canvHeight()
+myCanvas.width()
+myCanvas.height()
 
-// the total pixel count of the canvas, i.e. width x height
-"id".canvPixels()
+// total pixel count, i.e. width * height
+myCanvas.pixels()
 ```
 
-Finally, methods can be used to find the color of specific pixels in a canvas. These serve as the inverses of the `"set_pixel"` and `"set_pixel_xy"` commands, taking similar arguments but returning a value instead of setting one.
+Finally, methods can be used to find the color of specific pixels. These serve as the inverses of `setPixel` and `setPixelAt`.
 
 ```js
-"id".canvPixelXY(x, y)
-"id".canvIndex(index)
+myCanvas.getPixel(index)
+myCanvas.getPixelAt(x, y)
 ```
 
 ## Managing Canvases
+
 Most canvas management is handled internally; all stored canvases are deleted when the window is closed, and canvases are stored in such a way that prevents interference from other scripts. However, sometimes the need arises to handle these interactions manually. OSL exposes several commands for deleting and resizing canvases.
 
 ### Deleting/Clearing Canvases
-The `"remove"` and `"clear"` commands function very similarly, with the key difference being that `"remove"` entirely removes the canvas from memory, while `"clear"` simply erases its content, while still allowing it to be written to.
+
+The `delete` and `clear` methods function very similarly, with the key difference being that `delete` entirely removes the canvas from memory, while `clear` simply erases its content, while still allowing it to be written to.
+
+The `fill` method allows you to clear a canvas with a specific colour
+
 ```js
-canv "remove" "id"
-canv "clear" "id"
+// removes the canvas from memory, using the canvas variable after this may cause errors
+myCanvas.delete()
+
+// erases all content from the canvas
+myCanvas.clear()
+
+// erases all content and fills the canvas with a colour
+myCanvas.fill(colour)
 ```
 
 ### Resizing Canvases
-Despite their names, `"expand"` and `"stretch"` are used both to grow *and* shrink the canvas. However, the latter command will stretch the current content (hence the name) to fit the new canvas size, while the `"expand"` command will simply crop the image, or fill the image's new space with a specified color
+
+The stretch method will stretch the current content (hence the name) to fit the new canvas size specified in the stretch arguments.
 
 ```js
-// will crop the content
-// fill - the default pixel color for any new areas on the canvas
-canv "expand" "id" width height fill
-
-// will stretch the content to fit the new size
-canv "stretch" "id" width height
+myCanvas.stretch(width, height)
 ```
 
 ## Example: Drawing a Checker Pattern
 ```js
-id @= "my_canvas"
+canv @= Canvas(7, 7, #fff)
 
-canv "create" id 7 7 #fff
-for i 49 (
+for i canv.pixels() (
 	// check for every other pixel
-	if i % 2 == 1 (
-	  canv "set_pixel" id i #000
-	)
+    if i % 2 == 1 (
+        canv.setPixel(i, #000)
+    )
 )
 
 mainloop:
-
-// "id".canvData can be plugged directly into the image command
-image id.canvData() 256 256
+// canv.toURL() can be plugged directly into the image command
+image canv.toURL() 256 256
 
 import "win-buttons"
 ```
