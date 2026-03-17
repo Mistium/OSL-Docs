@@ -1,12 +1,5 @@
 # Lambda Functions
 
-## Advantages of Lambda Functions
-
-1. **Readability**: Lambda functions provide a concise, expressive way to write small functions inline, making shaders more readable.
-2. **Reusability**: Quick, single-expression functions can be easily reused across your shader code.
-3. **Maintainability**: Their simple syntax makes them easy to update and maintain.
-4. **Performance**: Lambda functions are typically inlined, reducing function call overhead.
-
 ### Example
 
 Here's a basic example of a lambda function that adds two numbers:
