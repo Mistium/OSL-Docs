@@ -1,12 +1,5 @@
 # Inline
 
-## Advantages of Inline Functions
-
-1. **Readability**: Inline functions promote a clean and organized code structure by encapsulating logic, making shaders easier to read and understand.
-2. **Reusability**: Encapsulating repeated code snippets in inline functions reduces redundancy and allows for straightforward reuse across multiple parts of the shader.
-3. **Maintainability**: Updates or bug fixes can be applied to the function definition once, automatically propagating improvements throughout the shader.
-4. **Performance**: Although the entire code of an inline function is inserted wherever it is called, minimizing function overhead can improve runtime performance in some cases.
-
 #### Example
 
 Here's a basic example of an inline function that adds two numbers:
