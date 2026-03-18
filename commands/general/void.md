@@ -1,6 +1,6 @@
-# void
+# `void`
 
-The `void` command evaluates its parameters but discards the result. It's useful when you want to execute a function or expression for its side effects without using the return value.
+The `void` command evaluates its parameters but discards the result. It's useful when you want to execute a function or expression for its side effects **without letting its return value overwrite an existing variable**.
 
 ## Syntax
 
@@ -10,91 +10,60 @@ void expression
 
 ## Description
 
-The `void` command takes an expression as its parameter, evaluates it completely, and then discards the result. This is particularly useful for:
+The `void` command takes an expression, evaluates it fully, and then discards the result.
 
-1. Executing functions solely for their side effects
-2. Suppressing unwanted return values
-3. Explicitly indicating that a return value is being ignored
+In this language, many methods **mutate the original value and also return a result**. That means calling a method directly can unintentionally overwrite your variable if you're not careful.
 
-## Examples
-
-### Executing Functions
+### Example of default behavior
 
 ```javascript
-// Define a function with side effects
-def logMessage(message) (
-  log message
-  return message  // Return value we don't need
-)
+myString = "HELLO WORLD"
 
-// Execute the function and discard the return value
-void logMessage("Hello, World!")
+myString.toLower()
+
+log myString
+// "hello world"
 ```
 
-### Executing Methods with Side Effects
+Here, calling `toLower()` modifies `myString`.
+
+## Preventing Overwrites with `void`
+
+If you want to execute the method **without changing the original variable**, you can use `void`:
 
 ```javascript
-// Array with a method that has side effects
-numbers = [1, 2, 3, 4, 5]
+myString = "HELLO WORLD"
 
-// Execute the sort method for its side effect (sorting the array)
+void myString.toLower()
+
+log myString
+// "HELLO WORLD"
+```
+
+The method is still evaluated, but its result is discarded and **the original value remains unchanged**.
+
+### Mutation from Methods
+
+```javascript
+numbers = [3, 1, 2]
+
+// Because .sort() mutates the value in place, this works
 void numbers.sort()
 
-// Now the array is sorted, but we didn't need the return value
-log numbers  // [1, 2, 3, 4, 5]
-```
-
-### Suppressing Unwanted Return Values
-
-```javascript
-// Function that returns a value we want to ignore
-def processData(data) (
-  // Process the data...
-  return "Processing complete"  // Return value we don't need
-)
-
-// Execute the function but ignore its return value
-void processData(userInput)
-```
-
-### Executing Multiple Expressions
-
-You can use `void` with multiple expressions by grouping them:
-
-```javascript
-// Execute multiple expressions and discard their results
-void (
-  counter++,
-  updateUI(),
-  logActivity("User action completed")
-)
-```
-
-### Using in Event Handlers
-
-```javascript
-// In an event handler where the return value doesn't matter
-if "Space".onKeyDown() (
-  void (
-    playSound("jump"),
-    character.jump(),
-    updateScore(10)
-  )
-)
+log numbers
+// [1, 2, 3]
 ```
 
 ## Use Cases
 
-The `void` command is particularly useful in these scenarios:
-
-1. **Event handlers** - When executing code in response to events
-2. **Initialization code** - When setting up components at startup
-3. **Side effect functions** - When calling functions primarily for their side effects
-4. **Cleanup operations** - When performing cleanup that returns values you don't need
+* Preventing accidental overwrites of variables
+* Running methods without mutating original data
+* Executing side-effect-only functions
+* Making it explicit that a return value is intentionally ignored
 
 ## Notes
 
-- The `void` command always evaluates its parameters fully
-- It always returns `null` (though this return value is typically ignored)
-- Using `void` can make your code more explicit about your intentions
-- It's a good practice to use `void` when you're deliberately ignoring return values 
+* `void` always evaluates the expression
+* The result is discarded and not assigned anywhere
+* It effectively preserves the original value when used with mutating methods
+* Using `void` makes your intent clearer when ignoring results
