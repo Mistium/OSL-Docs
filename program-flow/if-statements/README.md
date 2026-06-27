@@ -71,35 +71,11 @@ if condition1 (
 )
 ```
 
-## Short Forms
+## Additional Information
 
-Short forms of `if` and `if-else` statements can be used for concise syntax.
-
-### **Short Form of if Statement:**
-
-```js
-if condition (;command1;)
-```
-
-```js
-test_var = "hi"
-if 10 > 3 (;say test_var;)
-// you can use ; <== to insert a newline into the script after compilation
-```
-
-### **Short Form of if-else Statement:**
-
-```js
-if condition (;command1;) else (;command2;)
-```
-
-#### Additional Information on Conditional Statements (if):
-
-* Conditions can involve logical operators (`and`, `or`, `not`) and comparison operators (`==`, `~=`, `<`, `>`, `<=`, `>=`).
+* Conditions can involve logical operators (`and`, `or`, `nor`, `nand`) and comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
 * Conditions can also include function calls that return boolean values.
 * `if` statements can be nested within each other to create more complex decision-making structures.
-
-Now, let's look at examples for each type of statement:
 
 ## Examples:
 

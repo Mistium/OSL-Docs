@@ -47,7 +47,7 @@ The `to` operator creates an array containing sequential numbers from the first 
 
 // Common uses
 // Iterate over a range
-each value 1 to 5 (
+for value in 1 to 5 (
     log value  // Prints numbers 1 through 5
 )
 

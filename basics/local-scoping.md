@@ -1,57 +1,54 @@
 # Local Scoping
 
-### About Variables
-
-In osl all variables are global scope and to use locally scoped variables you must use the keyword `local`
-
-### Where can I use `local`?
-
-You can local scope inside of any function context
-
-### How does `local` work?
-
-The local keyword creates a key on an json object that's unique to the current context/scope that's accessible using the `this keyword`
-
-```js
-local key = "1234"
-
-log this
-// returns {"key":"1234"}
-```
-
-`this` has a different value depending on the scope of when you access it
-
-### Local variables can be re-assigned without the local keyword
+OSL uses declarations to create local variables inside functions and command
+blocks. Use a type keyword such as `any`, `string`, `number`, `boolean`, `array`,
+`object`, or `auto` before the variable name.
 
 ```javascript
-def myFunc() (
-  local v = 0
-  v ++
-  return v
+def counter() (
+  any count = 0
+  count += 1
+  return count
 )
 
-log myFunc()
-// returns 1
+log counter()
+// 1
 ```
 
-### Example script
+## Shadowing Globals
 
-```js
-def "test_cmd" (
-  local hello = "Greetings!"
-  log hello
-  // logs "Greetings!"
-  hello ++= " I'm Mistium"
-  log hello
-  // logs "Greetings! I'm Mistium"
+A local declaration can use the same name as a global variable. Inside the
+function, the local value is used first; outside the function, the global value
+is unchanged.
+
+```javascript
+any message = "global"
+
+def showMessage() (
+  any message = "local"
+  log message
 )
 
-local hello = "hello world"
-
-test_cmd
-
-log hello
-// logs "hello world"
+showMessage()
+log message
+// local
+// global
 ```
 
-If a local variable and a global variable exist with the same name, it will access the local variable first.
+## Reassignment
+
+After a local variable has been declared, reassign it without repeating the type.
+
+```javascript
+def total() (
+  number value = 1
+  value += 4
+  return value
+)
+
+log total()
+// 5
+```
+
+The old originOS `local` keyword is legacy syntax. Current OSL does not use
+`local` or a `this` object for function-local variables.

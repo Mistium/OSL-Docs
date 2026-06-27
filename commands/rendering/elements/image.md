@@ -1,25 +1,6 @@
 # Image
 
-## Image
-
 The `image` command renders an image from a raw URL with optional width and height specifications.
-
-### Load an image indirectly (more performant for bigger image urls or "data:" urls)
-
-```javascript
-image "load" "data" "name"
-```
-
-### Example:
-
-```javascript
-image "load" "data:url stuff goes here" "test_image"
-// put before mainloop to ensure its only loaded once
-
-mainloop:
-image "test_image" 200
-// render the loaded image at very low performance cost
-```
 
 ### Syntax:
 
@@ -49,4 +30,4 @@ In this example, an image from the specified URL is rendered with a width of 120
 * Images can be positioned on the screen using the draw cursor and rotated using direction commands.
 * While data URLs can be used with the `image` command, it's not recommended due to potentially large file sizes.
 * Images with alpha channels (transparency) are supported and rendered appropriately.
-* Images can be dynamically changed during runtime, similar to other UI elements.
+* The old `image "load" "data" "name"` cache mode is legacy originOS syntax and is not supported by the current compiler.

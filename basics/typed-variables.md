@@ -27,6 +27,7 @@ OSL supports the following type annotations for variables:
 * `object` - JSON objects
 * `function` - Function objects
 * `any` - Any type (default if no type is specified)
+* `auto` - Infer the variable type from the initial value
 
 You can also suffix any type with `?` to allow it to be null or that type
 
@@ -147,7 +148,7 @@ This is super useful for when you want to initialise a typed variable early and 
 ## Notes
 
 * Type annotations are optional - you can mix typed and untyped variables
-* Type checking happens at runtime when assignments occur
+* Type checking happens during compilation where the type is known, and the generated program enforces typed storage
 * Once a variable is typed, that type is enforced for the lifetime of the variable
 * Type annotations do not affect the variable's value, only what values it can accept
 * Using typed variables can help catch bugs early and make your code more robust

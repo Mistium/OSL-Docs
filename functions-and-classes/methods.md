@@ -1,17 +1,18 @@
 # Methods
 
-In osl you can define custom methods on specific types
+In OSL you can define custom methods on specific types.
 
 ```javascript
 // define on the object type
-Object.funny = def() -> (
-  return "FUNNY" self
-  // return "FUNNY" and the value that this method is called on "self": {}
+object.funny = def() -> (
+  return "FUNNY"
 )
 
 // call the method on an object
 log {}.funny()
-// FUNNY {}
+// FUNNY
 ```
 
-Works with object, array, number, boolean and string
+Inside a custom method, `self` is the value the method was called on.
+
+Custom methods work with object, array, number, boolean and string values.

@@ -1,17 +1,42 @@
 # Defining Variables
 
-In OSL when you define a variable it will always be global scoped. This means the variable can be accessed from anywhere in your program including inside of defined functions.&#x20;
+Use `name = value` to create or update an untyped variable.
 
 ```javascript
 variable = 10
 ```
 
-Variables cannot be defined anywhere other than directly at the start of a line and using an equals sign.
-
-If you attempt to access a variable that has not been defined yet, it will return the variable name as an untyped value.
+Top-level variables are global and can be read inside functions:
 
 ```javascript
-log undefined_variable
-// logs undefined_variable to the console with no quoteation marks.
+greeting = "hello"
+
+def showGreeting() (
+  log greeting
+)
+
+showGreeting()
+// hello
 ```
 
+Inside a function or block, declare local variables with a type keyword or
+`auto`. Local variables shadow globals with the same name and do not leak out of
+the function.
+
+```javascript
+any count = 1
+
+def increment() (
+  any count = 10
+  count += 1
+  log count
+)
+
+increment()
+log count
+// 11
+// 1
+```
+
+Variables must be assigned or declared before they are read. Referencing an
+undefined variable is an error in current OSL.

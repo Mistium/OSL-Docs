@@ -52,7 +52,7 @@ object user = {
 user[private_data] = "Sensitive information"
 
 // The symbol property won't show up in regular enumeration
-each key user.getKeys() (
+for key in user.getKeys() (
   log key  // Only outputs "name" and "age"
 )
 

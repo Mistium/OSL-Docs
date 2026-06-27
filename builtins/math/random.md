@@ -1,19 +1,20 @@
-# random(low,high)
+# random(low, high)
 
 ## Description
 
-Random() returns a randomly generated value between two points. This function is not cryptographically secure
+`random(low, high)` returns a randomly generated number between two bounds. This
+function is not cryptographically secure.
 
 ## Parameters
 
-Random() can be run with no parameters if you want to generate a random number between 0 and 1, or you can give it the low and high bounds for the random number you cant to generate.
+`random()` requires two parameters:
+
+* `low`: The lower bound.
+* `high`: The upper bound.
 
 ## Usage
 
 ```javascript
-log random()
-// 0.3031749628253999
-
-log random(1,10)
+log random(1, 10)
 // 4
 ```

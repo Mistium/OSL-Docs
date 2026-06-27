@@ -4,7 +4,9 @@ In OSL, you can define custom functions to modularize and reuse your code. Funct
 
 ## Defining a Custom Function
 
-To define a custom function, use the `def` keyword followed by the function name and parameters. Inside the function, use `this` to ensure variables are local to the function context.
+To define a custom function, use the `def` keyword followed by the function name
+and parameters. Declare local variables inside the function with `any`, `auto`,
+or another type keyword.
 
 ## Example: Basic Arithmetic Function
 
@@ -12,6 +14,7 @@ Here's how you can create a function that performs basic arithmetic operations a
 
 ```javascript
 def calculate(num1, num2, operation) (
+  any result = null
   switch operation (
     case "add"
       result = num1 + num2
@@ -45,8 +48,8 @@ You can also define functions to perform operations on strings. Here's an exampl
 
 ```javascript
 def reverseString(text) (
-  local reversed = ""
-  local i = text.len
+  string reversed = ""
+  number i = text.len
   loop text.len (
     reversed ++= text[i]
     i --
@@ -57,20 +60,18 @@ def reverseString(text) (
 log reverseString("hello")  // Outputs: "olleh"
 ```
 
-## Example: Combining Functions and Events
+## Example: Combining Functions
 
-You can define a function and then trigger it based on an event. Here's an example where a function is called when a specific key is pressed:
+You can define helper functions and call them from other parts of your program:
 
 ```javascript
 def greet(name) (
-  // Using ++ to concatenate without spaces
-  local message = "Hello, " ++ name ++ "!"
+  string message = "Hello, " ++ name ++ "!"
   return message
 )
 
-if "G".onKeyDown() (
-  say greet("Alice")  // Outputs: "Hello, Alice!"
-)
+say greet("Alice")
+// Outputs: "Hello, Alice!"
 ```
 
 ## Example: Complex Data Processing
@@ -79,7 +80,7 @@ Custom functions can also handle complex data processing, such as filtering an a
 
 ```javascript
 def filterEvenNumbers(nums) (
-  local even = []
+  array even = []
   for i nums.len (
     if nums[i] % 2 == 0 (
       even.append(nums[i])
@@ -108,7 +109,8 @@ log myfunc
 // logs the function object
 ```
 
-This means u can also clone functions and edit their code
+This means you can assign a function to another variable and call it through the
+new name:
 
 ```javascript
 def myfunc() (

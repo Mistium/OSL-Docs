@@ -1,142 +1,102 @@
 # Iteration
 
-## Loop
+## `loop`
 
-* The `loop` statement repeats a block of code a specified number of times.
-
-### Example
-
-```js
-loop 5 (
- command
- command
-)
-```
-
-### Syntax
-
-```js
-loop number_of_times (
-  commands
-)
-```
-
-* `number_of_times`: The number of times to repeat the block of commands.
-* `commands`: The commands to be executed within the loop.
-
-### Example
+`loop` repeats a block a fixed number of times.
 
 ```js
 loop 3 (
-  moveForward
-  turnLeft
+  log "tick"
 )
 ```
 
-In this example, the robot will move forward and then turn left three times.
+## `for` Counted Loops
 
-### Use Cases
-
-#### **Fibonacci Sequence Generation:**
+Use `for name count` when you need a one-based counter.
 
 ```js
-// Generate Fibonacci sequence up to n terms
-def fibonacci(total_loops) (
-  local a = 0
-  local b = 0
-  local c = 1
-  loop total_loops (
-    a = b + c
-    b = c
-    c = a
-  )
-  return c
-)
-
-// Usage:
-loop 10 (
-  log fibonacci(5)
-)
-```
-
-This example demonstrates how the `loop` command can be used to repeatedly generate the Fibonacci sequence with a specified number of terms.
-
-#### **Repeated Task Execution:**
-
-```js
-// Perform a task repeatedly for a certain duration
-def "performTask" (
-  // Your task implementation goes here
-)
-
-// Usage:
-loop 10 (
-  performTask
-)
-```
-
-Here, the `loop` command is used to execute a task function multiple times, which can be useful for performing repetitive tasks within a program.
-
-## For
-
-```js
-// Usage:
-for i 10 (
+for i 3 (
   log i
 )
-// logs the numbers 1-10
-
-// Usage:
-for i list.len (
-  log list[i]
-)
-// logs the items in array "list"
+// 1
+// 2
+// 3
 ```
 
-## Each
+## `for ... in`
+
+`for ... in` iterates over values. With two variable names, the first receives
+the one-based index or object key and the second receives the value.
 
 ```js
-// Usage:
-each i item list (
-  log i
-  log item
-  log list[i]
+for value in [10, 20, 30] (
+  log value
 )
-// logs the items in array "list"
+// 10
+// 20
+// 30
+
+for i, value in ["a", "b"] (
+  log i ++ ":" ++ value
+)
+// 1:a
+// 2:b
 ```
 
-## Break Statement
-
-The `break` statement allows you to exit a loop early when a certain condition is met.
-
-### Example
+Ranges also work with `for ... in`:
 
 ```js
-// Exit loop when a condition is met
-loop 10 (
-  if i > 5 (
-    break  // Exits the loop when i is greater than 5
-  )
-  log i
-)
-// Only logs numbers 1-5
-
-// Break in for loop
-for i 10 (
-  if i == 7 (
-    break  // Exits when i equals 7
-  )
-  log i
-)
-// Only logs numbers 1-6
-
-// Break in each loop
-each i item list (
-  if item == "stop" (
-    break  // Exits when finding "stop"
-  )
-  log item
+for value in 1 to 5 (
+  log value
 )
 ```
 
-The `break` statement is useful when you need to exit a loop before its normal completion, such as when searching for a specific value or when a certain condition is met.
+## `for ... of`
+
+`for ... of` iterates over keys or one-based indexes. With two variable names,
+the first receives the index/key and the second receives the value.
+
+```js
+for i of ["a", "b", "c"] (
+  log i
+)
+// 1
+// 2
+// 3
+
+for i, value of ["a", "b"] (
+  log i ++ ":" ++ value
+)
+// 1:a
+// 2:b
+```
+
+The old `each` keyword has been removed. Use `for ... in` for values or
+`for ... of` for indexes and keys.
+
+## `break` and `continue`
+
+Use `break` to exit a loop early and `continue` to skip to the next iteration.
+
+```js
+for value in [1, 2, 3, 4] (
+  if value == 3 (
+    break
+  )
+  log value
+)
+// 1
+// 2
+```
+
+```js
+for value in [1, 2, 3, 4] (
+  if value == 3 (
+    continue
+  )
+  log value
+)
+// 1
+// 2
+// 4
+```

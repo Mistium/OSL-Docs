@@ -8,9 +8,6 @@ The first `n` elements.
 #### `.right(n)` → `array`
 The last `n` elements.
 
-> Unlike string `.right(n)` (which slices from a position), array `.right(n)` returns the **last
-> `n`** elements.
-
 ```javascript
 arr = [1, 2, 3, 4, 5]
 log arr.left(2)   // [1, 2]
