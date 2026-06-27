@@ -1,21 +1,24 @@
-# Numbers — Rounding
+# Rounding
 
 Methods that round a numeric value. They return a new value and never mutate.
 
 #### `.round()` → `int`
+
 Rounds to the nearest integer.
 
 #### `.round(precision)` → `number`
+
 Rounds to `precision` decimal places.
 
 #### `.floor()` → `number`
+
 Rounds down to the nearest integer.
 
 #### `.ceiling()` → `number`
+
 Rounds up to the nearest integer.
 
-> The method is `.ceiling()`, not `ceil`. The standalone **function** form is `ceil(n)` — see
-> [Built-in functions](../../functions/builtins.md).
+> The method is `.ceiling()`, not `ceil`. The standalone **function** form is `ceil(n)` — see [Built-in functions](../../builtins/builtins.md).
 
 ```javascript
 log (2.7).round()      // 3

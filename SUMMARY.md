@@ -17,7 +17,7 @@
 * [Local Scoping](basics/local-scoping.md)
 * [The Execution Loop](basics/the-execution-loop.md)
 
-### Operators
+## Operators
 
 * [Mathematical Usage](operators/mathematical-usage/README.md)
   * [Addition (+)](operators/mathematical-usage/addition-operator-+.md)
@@ -35,14 +35,14 @@
 * [Pipe Operator (|>)](operators/pipe-operator.md)
 * [Nullish Coalescing (??)](operators/nullish-coalescing-operator.md)
 
-### Program Flow
+## Program Flow
 
 * [If Statements](program-flow/if-statements/README.md)
 * [Switch Case](program-flow/switch-case.md)
 * [Iteration](program-flow/iteration.md)
 * [While And Until](program-flow/while-and-until.md)
 
-### Arrays And Objects
+## Arrays And Objects
 
 * [Making Arrays Or Objects](arrays-and-objects/making-arrays-or-objects.md)
 * [Modifying An Array](arrays-and-objects/modifying-an-array.md)
@@ -50,30 +50,30 @@
 * [Object Operations](arrays-and-objects/object-operations.md)
 * [Object Property Shorthand](arrays-and-objects/object-property-shorthand.md)
 
-### Functions, Classes & Custom Syntax
+## Functions & Classes
 
-* [Functions](custom-syntax/functions.md)
-* [Typed Parameters](custom-syntax/typed-parameters.md)
-* [Lambda](custom-syntax/lambda.md)
-* [Inline](custom-syntax/inline.md)
-* [Spread Operator](custom-syntax/spread-operator.md)
-* [Methods](custom-syntax/methods.md)
-* [Classes](custom-syntax/classes.md)
+* [Functions](functions-and-classes/functions.md)
+* [Typed Parameters](functions-and-classes/typed-parameters.md)
+* [Lambda](functions-and-classes/lambda.md)
+* [Inline](functions-and-classes/inline.md)
+* [Spread Operator](functions-and-classes/spread-operator.md)
+* [Methods](functions-and-classes/methods.md)
+* [Classes](functions-and-classes/classes.md)
 
-## Built-in Functions & Methods
+## Builtins
 
-* [Global Built-in Functions](functions/builtins.md)
-* [Math Functions](functions/math/README.md)
-  * [random(low, high)](functions/math/random.md)
-  * [min / max](functions/math/min.md)
-* [Type Functions](functions/types/README.md)
-  * [typeof(value)](functions/types/typeof.md)
-  * [symbol(name)](functions/types/symbol.md)
-* [Encoding Functions](functions/encoding/README.md)
-  * [encodeURIComponent / decodeURIComponent](functions/encoding/encodeuricomponent.md)
-  * [btoa / atob](functions/encoding/btoa-atob.md)
+* [Global Built-in Functions](builtins/builtins.md)
+* [Math Functions](builtins/math/README.md)
+  * [random(low, high)](builtins/math/random.md)
+  * [min / max](builtins/math/min.md)
+* [Type Functions](builtins/types/README.md)
+  * [typeof(value)](builtins/types/typeof.md)
+  * [symbol(name)](builtins/types/symbol.md)
+* [Encoding Functions](builtins/encoding/README.md)
+  * [encodeURIComponent / decodeURIComponent](builtins/encoding/encodeuricomponent.md)
+  * [btoa / atob](builtins/encoding/btoa-atob.md)
 
-### Methods
+## Methods
 
 * [Strings](methods/strings/README.md)
   * [Case & Whitespace](methods/strings/case.md)
@@ -101,7 +101,7 @@
 * [Functions](methods/functions/README.md)
   * [.bind(...args)](methods/functions/bind.md)
 
-### Commands
+## Commands
 
 * [Debugging (log / warn / error)](commands/debugging/README.md)
 * [void](commands/general/void.md)
@@ -185,7 +185,7 @@
     * [change\_y y](commands/rendering/draw-cursor/change_y-y.md)
     * [change x y](commands/rendering/draw-cursor/change-x-y.md)
     * [loc a b c d](commands/rendering/draw-cursor/loc-a-b-c-d.md)
-    * [x_position and y_position](commands/rendering/draw-cursor/x_position-and-y_position.md)
+    * [x\_position and y\_position](commands/rendering/draw-cursor/x_position-and-y_position.md)
   * [Elements](commands/rendering/elements/README.md)
     * [Rectangle](commands/rendering/elements/rectangle.md)
     * [Icon](commands/rendering/elements/icon.md)
