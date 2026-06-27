@@ -1,36 +1,61 @@
 # pdf
 
-> PDF generation and manipulation
+> Generate PDF documents
+
+Use `pdf` to build PDF documents with text, lines, shapes, images, pages, metadata, and simple layout helpers.
 
 ```javascript
 import "osl/pdf"
 ```
 
-## Methods
+## Example
 
-- `pdf.create()` → `PDF`
-- `pdf.createCustom(width, height)` → `PDF`
-- `pdf.save(path)` → `boolean`
-- `pdf.addPage()`
-- `pdf.text(content)` → `string`
-- `pdf.textAt(x, y, content)` → `string`
-- `pdf.fontSize()` → `number`
-- `pdf.setFontSize(size)`
-- `pdf.setMargin(margin)`
-- `pdf.newLine()`
-- `pdf.paragraph(text)` → `string`
-- `pdf.line(x1, y1, x2, y2)` → `boolean`
-- `pdf.rectangle(x, y, width, height)` → `boolean`
-- `pdf.fillRectangle(x, y, width, height, color)` → `boolean`
-- `pdf.circle(x, y, radius)` → `boolean`
-- `pdf.image(x, y, width, height, imagePath)` → `boolean`
-- `pdf.addImageBytes(x, y, width, height, data)` → `boolean`
-- `pdf.table(headers, rows)` → `boolean`
-- `pdf.setMetadata(title, author, subject)`
-- `pdf.addWatermark(text)` → `string`
-- `pdf.getPageCount()` → `number`
-- `pdf.merge(pdfFiles)` → `PDF`
-- `pdf.split(pdfPath, outputDir)` → `boolean`
-- `pdf.addBookmark(level, title, page)` → `boolean`
-- `pdf.getPageText(pageNum)` → `string`
-- `pdf.getInfo(filePath)` → `object`
+```javascript
+import "osl/pdf"
+
+auto doc = pdf.new()
+doc.text(40, 40, "Hello")
+doc.save("hello.pdf")
+```
+
+## API reference
+
+### `pdf`
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `pdf.create()` | `*PDF` | Creates a new value. |
+| `pdf.createCustom(width: any, height: any)` | `*PDF` | Creates custom. |
+| `pdf.save(path: any)` | `boolean` | Runs the save operation. |
+| `pdf.generateContent()` | `string` | Runs the generate content operation. |
+| `pdf.generateHeader()` | `string` | Runs the generate header operation. |
+| `pdf.generateKids()` | `string` | Runs the generate kids operation. |
+| `pdf.addPage()` | `void` | Adds page. |
+| `pdf.text(content: any)` | `string` | Runs the text operation. |
+| `pdf.textAt(x: any, y: any, content: any)` | `string` | Runs the text at operation. |
+| `pdf.fontSize()` | `number` | Runs the font size operation. |
+| `pdf.setFontSize(size: any)` | `void` | Sets font size. |
+| `pdf.setMargin(margin: any)` | `void` | Sets margin. |
+| `pdf.newLine()` | `void` | Runs the new line operation. |
+| `pdf.paragraph(text: any)` | `string` | Runs the paragraph operation. |
+| `pdf.line(x1: any, y1: any, x2: any, y2: any)` | `boolean` | Runs the line operation. |
+| `pdf.rectangle(x: any, y: any, width: any, height: any)` | `boolean` | Runs the rectangle operation. |
+| `pdf.fillRectangle(x: any, y: any, width: any, height: any, color: any)` | `boolean` | Runs the fill rectangle operation. |
+| `pdf.circle(x: any, y: any, radius: any)` | `boolean` | Runs the circle operation. |
+| `pdf.image(x: any, y: any, width: any, height: any, imagePath: any)` | `boolean` | Runs the image operation. |
+| `pdf.addImageBytes(x: any, y: any, width: any, height: any, data: bytes)` | `boolean` | Adds image bytes. |
+| `pdf.table(headers: array, rows: array)` | `boolean` | Runs the table operation. |
+| `pdf.escapeString(str: string)` | `string` | Runs the escape string operation. |
+| `pdf.setMetadata(title: any, author: any, subject: any)` | `void` | Sets metadata. |
+| `pdf.addWatermark(text: any)` | `string` | Adds watermark. |
+| `pdf.getPageCount()` | `number` | Returns page count. |
+| `pdf.merge(pdfFiles: array)` | `*PDF` | Runs the merge operation. |
+| `pdf.split(pdfPath: any, outputDir: any)` | `boolean` | Runs the split operation. |
+| `pdf.addBookmark(level: any, title: any, page: any)` | `boolean` | Adds bookmark. |
+| `pdf.getPageText(pageNum: any)` | `string` | Returns page text. |
+| `pdf.getInfo(filePath: any)` | `object` | Returns info. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/pdf"` and `import "pdf"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

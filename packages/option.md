@@ -1,55 +1,37 @@
 # option
 
-> Optional values — a value that may or may not be present
+> Optional values (`some`/`none`)
 
-An `Option` wraps a value that might be missing, as a safer alternative to `null`. Create one with the
-`some(value)` and `none()` functions, then ask whether it holds a value before reading it.
+Use `option` to model a value that may be present (`some`) or absent (`none`) without relying on `null`.
 
 ```javascript
 import "osl/option"
 ```
-
-## Creating options
-
-```javascript
-auto found   = some(42)   // an option that holds 42
-auto missing = none()     // an empty option
-```
-
-## Methods
-
-Call these on an option value:
-
-- `opt.isSome()` → `boolean` — does it hold a value?
-- `opt.isNone()` → `boolean` — is it empty?
-- `opt.unwrap()` → the value (errors if the option is empty)
-- `opt.unwrapOr(default)` → the value, or `default` if empty
-- `opt.expect(message)` → the value, or fails with `message` if empty
 
 ## Example
 
 ```javascript
 import "osl/option"
 
-def find(array names, string target) (
-  for i names.len (
-    if names[i] == target (
-      return some(i)
-    )
-  )
-  return none()
-)
-
-auto result = find(["a", "b", "c"], "b")
-
-if result.isSome() (
-  log "found at index " ++ result.unwrap()
-) else (
-  log "not found"
-)
-
-// Or supply a fallback:
-log find(["a"], "z").unwrapOr(-1)   // -1
+auto value = some(42)
+log value.unwrapOr(0)
 ```
 
-See also [`result`](result.md) for success/error values.
+## API reference
+
+### `Option` values
+
+Methods available on `Option` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.isSome()` | `boolean` | Reports whether the option contains a value. |
+| `value.isNone()` | `boolean` | Reports whether the option is empty. |
+| `value.unwrap()` | `T` | Returns the contained value or fails. |
+| `value.unwrapOr(def: T)` | `T` | Returns the contained value or a fallback. |
+| `value.expect(msg: any)` | `T` | Returns the contained value or fails with a custom message. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/option"` and `import "option"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

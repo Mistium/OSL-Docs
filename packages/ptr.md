@@ -1,35 +1,48 @@
 # ptr
 
-> Low-level pointer and memory utilities
+> Low-level pointer operations
+
+Use `ptr` for low-level pointer-style references when you need explicit mutation through a handle.
 
 ```javascript
 import "osl/ptr"
 ```
 
-## Methods
+## API reference
 
-- `ptr.pointer(v)` → `number`
-- `ptr.deref(ptr)` → `any`
-- `ptr.ref(v)` → `Pointer`
-- `ptr.set(ptr, v)` → `boolean`
-- `ptr.alloc(v)` → `Pointer`
-- `ptr.allocTyped(typeName, v)` → `TypedPointer`
-- `ptr.isNull(ptr)` → `boolean`
-- `ptr.addressOf(v)` → `number`
-- `ptr.equalPointers(a, b)` → `boolean`
-- `ptr.sizeOf(v)` → `number`
-- `ptr.alignOf(v)` → `number`
-- `ptr.offsetOf(v, field)` → `number`
-- `ptr.swap(a, b)` → `boolean`
-- `ptr.copy(dst, src)` → `boolean`
-- `ptr.sliceData(arr)` → `number`
-- `ptr.stringData(s)` → `number`
-- `ptr.sliceLen(arr)` → `number`
-- `ptr.sliceCap(arr)` → `number`
+### `ptr`
 
-## Returned object: `TypedPointer`
+| Method | Returns | Description |
+| --- | --- | --- |
+| `ptr.pointer(v: any)` | `number` | Runs the pointer operation. |
+| `ptr.deref(ptr: any)` | `any` | Runs the deref operation. |
+| `ptr.ref(v: any)` | `*Ponumberer` | Runs the ref operation. |
+| `ptr.set(ptr: any, v: any)` | `boolean` | Sets a value. |
+| `ptr.alloc(v: any)` | `*Ponumberer` | Runs the alloc operation. |
+| `ptr.allocTyped(typeName: any, v: any)` | `*TypedPonumberer` | Runs the alloc typed operation. |
+| `ptr.isNull(ptr: any)` | `boolean` | Reports whether null. |
+| `ptr.addressOf(v: any)` | `number` | Runs the address of operation. |
+| `ptr.equalPointers(a: any, b: any)` | `boolean` | Runs the equal pointers operation. |
+| `ptr.sizeOf(v: any)` | `number` | Runs the size of operation. |
+| `ptr.alignOf(v: any)` | `number` | Runs the align of operation. |
+| `ptr.offsetOf(v: any, field: any)` | `number` | Runs the offset of operation. |
+| `ptr.swap(a: any, b: any)` | `boolean` | Runs the swap operation. |
+| `ptr.copy(dst: any, src: any)` | `boolean` | Runs the copy operation. |
+| `ptr.sliceData(arr: array)` | `number` | Runs the slice data operation. |
+| `ptr.stringData(s: string)` | `number` | Runs the string data operation. |
+| `ptr.sliceLen(arr: array)` | `number` | Runs the slice len operation. |
+| `ptr.sliceCap(arr: array)` | `number` | Runs the slice cap operation. |
 
-Returned by `ptr` methods; call these on the value you get back.
+### `TypedPointer` values
 
-- `typedPointer.deref()` → `any`
-- `typedPointer.setValue(v)` → `boolean`
+Methods available on `TypedPointer` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.deref()` | `any` | Runs the deref operation. |
+| `value.setValue(v: any)` | `boolean` | Sets value. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/ptr"` and `import "ptr"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

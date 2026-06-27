@@ -1,64 +1,86 @@
 # tui
 
-> Text User Interface utilities
+> Terminal UI: colours, boxes, tables, prompts, menus, charts
+
+Use `tui` to build terminal output with cursor movement, colors, boxes, tables, prompts, menus, charts, and key input.
 
 ```javascript
 import "osl/tui"
 ```
 
-## Methods
+## Example
 
-- `tui.clear()`
-- `tui.clearLine()`
-- `tui.clearLines(count)`
-- `tui.moveCursor(x, y)`
-- `tui.moveUp(n)`
-- `tui.moveDown(n)`
-- `tui.moveRight(n)`
-- `tui.moveLeft(n)`
-- `tui.saveCursor()`
-- `tui.restoreCursor()`
-- `tui.hideCursor()`
-- `tui.showCursor()`
-- `tui.color(colorName, text)` → `string`
-- `tui.bgColor(colorName, text)` → `string`
-- `tui.style(styleName, text)` → `string`
-- `tui.rgbColor(r, g, b, text)` → `string`
-- `tui.rgbBg(r, g, b, text)` → `string`
-- `tui.progress(current, total, width)` → `string`
-- `tui.spinner(finished)` → `string`
-- `tui.horizontal(width)` → `string`
-- `tui.vertical(height)` → `array`
-- `tui.box(title, content)` → `string`
-- `tui.drawBox(x, y, width, height, title)`
-- `tui.table(headers, rows)` → `string`
-- `tui.tableColored(headers, rows, colorFn)` → `string`
-- `tui.Select(prompt, options)` → `any`
-- `tui.confirm(prompt)` → `boolean`
-- `tui.menu(title, items)` → `any`
-- `tui.input(prompt)` → `string`
-- `tui.password(prompt)` → `string`
-- `tui.center(text)` → `string`
-- `tui.pad(text, width, align)` → `string`
-- `tui.divider(char, width, title)` → `string`
-- `tui.status(status, message)` → `string`
-- `tui.frame(text, width)` → `string`
-- `tui.grid(items, columns)` → `string`
-- `tui.tree(items, prefix)` → `string`
-- `tui.barChart(data, width, showLabels)` → `string`
-- `tui.width()` → `number`
-- `tui.height()` → `number`
-- `tui.size()` → `array`
-- `tui.newScreen()` → `Screen`
-- `tui.readKey()` → `string`
-- `tui.keyPressed()` → `boolean`
-- `tui.interactiveSelect(prompt, options)` → `any`
+```javascript
+import "osl/tui"
 
-## Returned object: `Screen`
+log tui.color("green", "OK")
+log tui.table(["Name"], [["Ada"]])
+```
 
-Returned by `tui` methods; call these on the value you get back.
+## API reference
 
-- `screen.Set(x, y, text)`
-- `screen.Clear()`
-- `screen.Render()`
-- `screen.WriteCenter(y, text)`
+### `tui`
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `tui.clear()` | `void` | Clears all stored values. |
+| `tui.clearLine()` | `void` | Runs the clear line operation. |
+| `tui.clearLines(count: any)` | `void` | Runs the clear lines operation. |
+| `tui.moveCursor(x: any, y: any)` | `void` | Runs the move cursor operation. |
+| `tui.moveUp(n: any)` | `void` | Runs the move up operation. |
+| `tui.moveDown(n: any)` | `void` | Runs the move down operation. |
+| `tui.moveRight(n: any)` | `void` | Runs the move right operation. |
+| `tui.moveLeft(n: any)` | `void` | Runs the move left operation. |
+| `tui.saveCursor()` | `void` | Saves cursor. |
+| `tui.restoreCursor()` | `void` | Runs the restore cursor operation. |
+| `tui.hideCursor()` | `void` | Runs the hide cursor operation. |
+| `tui.showCursor()` | `void` | Runs the show cursor operation. |
+| `tui.color(colorName: string, text: any)` | `string` | Runs the color operation. |
+| `tui.bgColor(colorName: string, text: any)` | `string` | Runs the bg color operation. |
+| `tui.style(styleName: string, text: any)` | `string` | Runs the style operation. |
+| `tui.rgbColor(r: any, g: any, b: any, text: any)` | `string` | Runs the rgb color operation. |
+| `tui.rgbBg(r: any, g: any, b: any, text: any)` | `string` | Runs the rgb bg operation. |
+| `tui.progress(current: any, total: any, width: any)` | `string` | Runs the progress operation. |
+| `tui.spinner(finished: boolean)` | `string` | Runs the spinner operation. |
+| `tui.horizontal(width: any)` | `string` | Runs the horizontal operation. |
+| `tui.vertical(height: any)` | `array` | Runs the vertical operation. |
+| `tui.box(title: any, content: any)` | `string` | Runs the box operation. |
+| `tui.drawBox(x: any, y: any, width: any, height: any, title: any)` | `void` | Runs the draw box operation. |
+| `tui.table(headers: array, rows: array)` | `string` | Runs the table operation. |
+| `tui.tableColored(headers: array, rows: array, colorFn: any)` | `string` | Runs the table colored operation. |
+| `tui.Select(prompt: any, options: array)` | `any` | Runs the select operation. |
+| `tui.confirm(prompt: any)` | `boolean` | Runs the confirm operation. |
+| `tui.menu(title: any, items: array)` | `any` | Runs the menu operation. |
+| `tui.input(prompt: any)` | `string` | Runs the input operation. |
+| `tui.password(prompt: any)` | `string` | Runs the password operation. |
+| `tui.center(text: any)` | `string` | Runs the center operation. |
+| `tui.pad(text: any, width: any, align: any)` | `string` | Runs the pad operation. |
+| `tui.divider(char: any, width: any, title: any)` | `string` | Runs the divider operation. |
+| `tui.status(status: any, message: any)` | `string` | Runs the status operation. |
+| `tui.frame(text: any, width: any)` | `string` | Runs the frame operation. |
+| `tui.grid(items: array, columns: any)` | `string` | Runs the grid operation. |
+| `tui.tree(items: array, prefix: any)` | `string` | Runs the tree operation. |
+| `tui.barChart(data: array, width: any, showLabels: any)` | `string` | Runs the bar chart operation. |
+| `tui.width()` | `number` | Runs the width operation. |
+| `tui.height()` | `number` | Runs the height operation. |
+| `tui.size()` | `array` | Returns the number of stored values. |
+| `tui.newScreen()` | `*Screen` | Runs the new screen operation. |
+| `tui.readKey()` | `string` | Reads key. |
+| `tui.keyPressed()` | `boolean` | Runs the key pressed operation. |
+| `tui.interactiveSelect(prompt: any, options: array)` | `any` | Runs the interactive select operation. |
+
+### `Screen` values
+
+Methods available on `Screen` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.Set(x: any, y: any, text: string)` | `void` | Runs the set operation. |
+| `value.Clear()` | `void` | Runs the clear operation. |
+| `value.Render()` | `void` | Runs the render operation. |
+| `value.WriteCenter(y: any, text: string)` | `void` | Writes center. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/tui"` and `import "tui"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

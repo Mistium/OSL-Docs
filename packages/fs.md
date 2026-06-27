@@ -187,3 +187,60 @@ Creates directories, returning `ok(true)` or `err(message)`.
 
 #### `fs.tryReadDir(path)` → `result`
 Lists a directory, returning `ok(names)` or `err(message)`.
+
+## Complete API reference
+
+### `fs`
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `fs.readFile(path: any)` | `string` | Reads file. |
+| `fs.readFileBytes(path: any)` | `bytes` | Reads file bytes. |
+| `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
+| `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
+| `fs.appendToFile(path: any, data: any)` | `boolean` | Runs the append to file operation. |
+| `fs.rename(oldPath: any, newPath: any)` | `boolean` | Runs the rename operation. |
+| `fs.exists(path: any)` | `boolean` | Reports whether the value or resource exists. |
+| `fs.remove(path: any)` | `boolean` | Removes a value or resource. |
+| `fs.mkdir(path: any)` | `boolean` | Runs the mkdir operation. |
+| `fs.mkdirAll(path: any)` | `boolean` | Runs the mkdir all operation. |
+| `fs.copyDir(srcPath: any, dstPath: any)` | `boolean` | Runs the copy dir operation. |
+| `fs.readDir(path: any)` | `array` | Reads dir. |
+| `fs.readDirAll(path: any)` | `array` | Reads dir all. |
+| `fs.walkDir(path: any, fn: function)` | `void` | Walks a directory tree and calls `fn` for each entry. |
+| `fs.walk(path: any)` | `array` | Runs the walk operation. |
+| `fs.isDir(path: any)` | `boolean` | Reports whether dir. |
+| `fs.getwd()` | `string` | Runs the getwd operation. |
+| `fs.chdir(path: any)` | `boolean` | Runs the chdir operation. |
+| `fs.joinPath(...path: any)` | `string` | Runs the join path operation. |
+| `fs.getBase(path: any)` | `string` | Returns base. |
+| `fs.getDir(path: any)` | `string` | Returns dir. |
+| `fs.getExt(path: any)` | `string` | Returns ext. |
+| `fs.getParts(path: any)` | `array` | Returns parts. |
+| `fs.getStem(path: any)` | `string` | Returns stem. |
+| `fs.cleanPath(path: any)` | `string` | Runs the clean path operation. |
+| `fs.isAbs(path: any)` | `boolean` | Reports whether abs. |
+| `fs.splitPath(path: any)` | `array` | Runs the split path operation. |
+| `fs.splitExt(path: any)` | `array` | Runs the split ext operation. |
+| `fs.segments(path: any)` | `array` | Runs the segments operation. |
+| `fs.withExt(path: any, ext: any)` | `string` | Runs the with ext operation. |
+| `fs.withName(path: any, name: any)` | `string` | Runs the with name operation. |
+| `fs.toPosix(path: any)` | `string` | Converts to posix. |
+| `fs.relPath(base: any, target: any)` | `string` | Runs the rel path operation. |
+| `fs.pathStartsWith(path: any, prefix: any)` | `boolean` | Runs the path starts with operation. |
+| `fs.getSize(path: any)` | `number` | Returns size. |
+| `fs.getModTime(path: any)` | `number` | Returns mod time. |
+| `fs.getStat(path: any)` | `object` | Returns stat. |
+| `fs.evalSymlinks(path: any)` | `string` | Runs the eval symlinks operation. |
+| `fs.tryReadFile(path: any)` | `*Result` | Runs the try read file operation. |
+| `fs.tryWriteFile(path: any, data: any)` | `*Result` | Runs the try write file operation. |
+| `fs.tryAppendToFile(path: any, data: any)` | `*Result` | Runs the try append to file operation. |
+| `fs.tryRename(oldPath: any, newPath: any)` | `*Result` | Runs the try rename operation. |
+| `fs.tryRemove(path: any)` | `*Result` | Runs the try remove operation. |
+| `fs.tryMkdirAll(path: any)` | `*Result` | Runs the try mkdir all operation. |
+| `fs.tryReadDir(path: any)` | `*Result` | Runs the try read dir operation. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/fs"` and `import "fs"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
