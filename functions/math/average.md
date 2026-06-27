@@ -1,19 +1,17 @@
-# average(num1,..)
+# average()
 
-## Description
+> ⚠️ **This is not a builtin function.**
 
-average() takes in an unlimited number of parameters and finds the mean average of all the values
-
-## Parameters
-
-average() takes an unlimited number of parameters
+`average()` is an **array method**, not a standalone function. See [Array aggregating methods](../../methods/arrays/aggregating.md).
 
 ## Usage
 
 ```javascript
-log average(10,10,5,3,5)
+[10, 10, 5, 3, 5].average()
 // 6.6
 
-log average(2,5)
+[2, 5].average()
 // 3.5
 ```
+
+Call `.average()` on an array to find the mean average of all the values in that array.

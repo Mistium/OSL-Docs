@@ -1,5 +1,7 @@
 # parseFilePath()
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 The `parseFilePath()` function resolves a relative file path into an absolute path, handling various file locations including user directories, packages, and current workspace paths.
 
 ```javascript

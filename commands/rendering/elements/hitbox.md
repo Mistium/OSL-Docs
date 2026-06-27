@@ -1,5 +1,7 @@
 # Hitbox
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The `hitbox` command creates an invisible collision detection area. It can be used to check if specific coordinates (like the mouse position) intersect with the defined area. Hitboxes are positioned relative to the current draw cursor position.

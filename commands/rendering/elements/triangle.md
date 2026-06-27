@@ -1,5 +1,7 @@
 # Triangle
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The `triangle` command draws a triangle by specifying three vertices and a border weight. The triangle is positioned relative to the current draw cursor position.

@@ -340,7 +340,7 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
 | `value.LoadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
 | `value.use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
-| `value.group(prefix: string, fn?: function)` | `*serveRouter` | Creates a route group with an optional setup callback. |
+| `value.group(prefix: string, ...fn?: func(router))` | `*serveRouter` | Creates a route group with optional router callback functions. |
 | `value.Use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
 | `value.Group(prefix: string, fn?: function)` | `*serveRouter` | Creates a route group with an optional setup callback. |
 | `value.Static(prefix: string, dir: string)` | `void` | Runs the static operation. |

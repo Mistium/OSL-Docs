@@ -1,6 +1,6 @@
 # String Concatenation Operator (+)
 
-The string concatenation operator (`+`) in OSL joins two strings together with a space automatically inserted between them.
+The string concatenation operator (`+`) in OSL joins two strings together without inserting any space between them.
 
 ## Syntax
 
@@ -10,9 +10,7 @@ string1 + string2
 
 ## Description
 
-Unlike many other programming languages where `+` simply joins strings without adding spaces, the OSL `+` operator automatically inserts a space between the concatenated strings. This makes it particularly useful for building readable sentences and text.
-
-If either operand is a string, the other operand will be converted to a string and the operation will use string concatenation rules.
+The `+` operator joins strings together without adding spaces. If either operand is a string, the other operand will be converted to a string and the operation will use string concatenation rules. This behavior is identical to the `++` operator.
 
 ## Examples
 
@@ -20,9 +18,9 @@ If either operand is a string, the other operand will be converted to a string a
 
 ```javascript
 result = "hello" + "world"
-log result  // Outputs: "hello world"
+log result  // Outputs: "helloworld"
 
-// Notice the space is automatically added between "hello" and "world"
+// No space is added between "hello" and "world"
 ```
 
 ### Mixed Type Concatenation
@@ -30,11 +28,11 @@ log result  // Outputs: "hello world"
 ```javascript
 // Concatenating strings with numbers
 message = "The answer is" + 42
-log message  // Outputs: "The answer is 42"
+log message  // Outputs: "The answer is42"
 
 // Concatenating multiple items
 fullName = "John" + "Doe" + "Smith"
-log fullName  // Outputs: "John Doe Smith"
+log fullName  // Outputs: "JohnDoeSmith"
 ```
 
 ### Building Sentences
@@ -45,8 +43,8 @@ verb = "sat"
 preposition = "on"
 object = "the mat"
 
-// Each + operation adds a space
-sentence = subject + verb + preposition + object
+// The + operator concatenates without spaces
+sentence = subject + " " + verb + " " + preposition + " " + object
 log sentence  // Outputs: "The cat sat on the mat"
 ```
 
@@ -54,19 +52,19 @@ log sentence  // Outputs: "The cat sat on the mat"
 
 ### + vs. ++ Operator
 
-OSL provides two different operators for string operations:
+The `+` and `++` operators behave identically in OSL—both join strings without adding spaces:
 
 ```javascript
-// + operator adds a space between strings
-log "hello" + "world"  // Outputs: "hello world"
+// + operator joins strings without a space
+log "hello" + "world"  // Outputs: "helloworld"
 
-// ++ operator joins strings without adding a space
+// ++ operator also joins strings without a space (identical behavior)
 log "hello" ++ "world"  // Outputs: "helloworld"
 ```
 
 ### + vs. .append() Method
 
-The `.append()` method attaches a string to the end without adding a space:
+The `.append()` method attaches a string to the end without adding a space, which is identical to both `+` and `++`:
 
 ```javascript
 str = "hello"
@@ -74,14 +72,12 @@ str.append("world")
 log str  // Outputs: "helloworld"
 
 // Equivalent to:
+str = "hello" + "world"   // "helloworld"
 str = "hello" ++ "world"  // "helloworld"
-
-// Different from:
-str = "hello" + "world"   // "hello world"
 ```
 
 ## Notes
 
-- The automatic space insertion is a feature specific to OSL and differs from many other programming languages.
-- When working with formats where spaces matter (like URLs or file paths), use the `++` operator instead.
+- Both `+` and `++` operators concatenate strings without adding spaces.
+- To add spaces between concatenated strings, explicitly include space strings (e.g., `"hello" + " " + "world"`).
 - The string concatenation behavior applies whenever either operand is a string.

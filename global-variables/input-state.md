@@ -8,33 +8,23 @@ These global variables provide information about the current state of input devi
 | --- | --- | --- |
 | `mouse_down` | Boolean | Whether any mouse button is currently pressed |
 | `mouse_ondown` | Boolean | Whether any mouse button was just pressed (true for only one frame) |
-| `mouse_left` | Boolean | Whether the left mouse button is currently pressed |
-| `mouse_middle` | Boolean | Whether the middle mouse button is currently pressed |
-| `mouse_right` | Boolean | Whether the right mouse button is currently pressed |
-| `mouse_moving` | Boolean | Whether the mouse cursor has changed positions since last frame. |
-| `cursor` | String | The current mouse cursor style (e.g., "default", "pointer") |
+
+> ⚠️ **Not implemented in the current OSL CLI.** The following mouse variables are not available: `mouse_left`, `mouse_middle`, `mouse_right`, `mouse_moving`, `cursor`.
 
 ## Keyboard Variables
 
-| Variable | Type | Description |
-| --- | --- | --- |
-| `all_pressed` | Array | Array of all keys currently being pressed |
-| `all_hit` | Array | Array of keys just pressed in the current frame |
+> ⚠️ **Not implemented in the current OSL CLI.** The following keyboard variables are not available: `all_pressed`, `all_hit`.
 
 ## Scroll Variables
 
-| Variable | Type | Description |
-| --- | --- | --- |
-| `scroll_velocity` | Number | The current vertical scroll velocity |
-| `scroll.x.velocity` | Number | The current horizontal scroll velocity |
-| `scroll.y.velocity` | Number | The current vertical scroll velocity (same as scroll_velocity) |
-| `scroll.multiplier` | Number | The user's scroll speed multiplier preference |
+> ⚠️ **Not implemented in the current OSL CLI.** The following scroll variables are not available: `scroll_velocity`, `scroll.x.velocity`, `scroll.y.velocity`, `scroll.multiplier`.
 
 ## Other Variables
 
+> ⚠️ **Not implemented in the current OSL CLI.** The following variables are not available: `picker_color`.
+
 | Variable | Type | Description |
 | --- | --- | --- |
-| `picker_color` | String | Currently selected color in the [color picker](../commands/basics/color-picker.md) (hex format) |
 | `getGamepads` | Function | Function to get information about connected gamepads |
 
 ## Examples

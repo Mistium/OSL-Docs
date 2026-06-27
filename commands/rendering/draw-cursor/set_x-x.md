@@ -1,5 +1,7 @@
 # set\_x x
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 Set\_x moves the draw cursor, keeping the y position the same but setting the x position to the value you pass it

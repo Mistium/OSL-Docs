@@ -142,5 +142,4 @@ log "42".toNum()        // 42   (string → number)
 log 42.toStr()          // "42" (number → string)
 log 0.toBool()          // false
 log value.getType()     // the type name of any value
-log value.isType("string")
 ```

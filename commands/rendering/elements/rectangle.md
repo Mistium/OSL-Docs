@@ -1,5 +1,7 @@
 # Rectangle
 
+> **Note:** This documentation describes the `square` command (not `rectangle`). Use `square` in OSL code to draw rectangles.
+
 The `square` command draws a centered rectangle with specified dimensions and border weight on the draw cursor.
 
 ### Syntax:

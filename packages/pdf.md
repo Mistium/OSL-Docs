@@ -13,8 +13,8 @@ import "osl/pdf"
 ```javascript
 import "osl/pdf"
 
-auto doc = pdf.new()
-doc.text(40, 40, "Hello")
+auto doc = pdf.create()
+doc.textAt(40, 40, "Hello")
 doc.save("hello.pdf")
 ```
 

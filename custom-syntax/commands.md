@@ -12,6 +12,8 @@ def "my_command" "input1" (
 
 ## Example
 
+> ⚠️ **Custom command definitions are not fully implemented in the current OSL CLI.** The syntax shown below may not work as expected. This feature is under development.
+
 ```javascript
 def "logtimes" "times, string" (
   loop times (

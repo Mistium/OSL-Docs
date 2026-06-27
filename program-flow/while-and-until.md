@@ -99,3 +99,25 @@ until objectDetected (
 ```
 
 Here, the `until` statement is used to wait until a sensor detects an object before proceeding with the next set of commands.
+
+## Incrementing Loop Counters
+
+When using counters in loops, note that the `++` operator cannot be used as a standalone statement. Instead, use assignment operators like `+=` or full assignment:
+
+```js
+i = 0
+while i < 5 (
+  log i
+  i += 1      // Valid: increment with assignment operator
+)
+
+// Alternative
+i = 0
+while i < 5 (
+  log i
+  i = i + 1   // Also valid: explicit assignment
+)
+
+// NOT valid:
+// i++         // SyntaxError: Cannot use '+' here
+```

@@ -1,5 +1,7 @@
 # Video
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Creating a Video Element
 
 By using the `video` [command](https://osl.mistium.com/#commands), videos can be displayed an OSL program. To initialize a video, simply render it using the following syntax:

@@ -16,14 +16,11 @@ log ["hello"] + "world"
 
 ## Removing A Value From An Array
 
-You can use the `-` operator to remove a value at an index or a value in the array
+You can use the `-` operator to remove a value at a numeric index from an array. The `-` operator does not support removing array elements by value (string comparison is not supported).
 
 ```javascript
-log ["hello"] - "hello"
-// This removes all items of the array that are equal to "hello" and returns, []
-
-array_result2 = ["hello"] - 1
-// This removes the item at index 1 of the array and returns, []
+array_result = ["a", "b", "c"] - 1
+// This removes the item at index 1 and returns ["a", "c"]
 ```
 
 ## Concatenating Arrays

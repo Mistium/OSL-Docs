@@ -10,22 +10,33 @@ import "osl/canvas"
 
 ## API reference
 
-### `canvas`
+### Factory
+
+Call `canvas(w, h, bgHex)` to create a new canvas instance, then call methods on it:
+
+```javascript
+auto c = canvas(100, 100, "#fff")
+log c.width()
+```
+
+### Canvas instance
+
+After calling `canvas(w, h, bgHex)` to create a canvas, call these methods on the instance:
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `canvas.width()` | `number` | Runs the width operation. |
-| `canvas.height()` | `number` | Runs the height operation. |
-| `canvas.pixels()` | `number` | Runs the pixels operation. |
-| `canvas.setPixel(idx: any, hexColor: any)` | `void` | Sets pixel. |
-| `canvas.getPixel(idx: any)` | `string` | Returns pixel. |
-| `canvas.setPixelAt(x: any, y: any, hexColor: any)` | `void` | Sets pixel at. |
-| `canvas.getPixelAt(x: any, y: any)` | `string` | Returns pixel at. |
-| `canvas.fill(hexColor: any)` | `void` | Runs the fill operation. |
-| `canvas.clear()` | `void` | Clears all stored values. |
-| `canvas.stretch(newW: any, newH: any)` | `void` | Runs the stretch operation. |
-| `canvas.toURL()` | `string` | Converts to url. |
-| `canvas.toArr()` | `array` | Converts the value to an array. |
+| `c.width()` | `number` | Returns canvas width. |
+| `c.height()` | `number` | Returns canvas height. |
+| `c.pixels()` | `number` | Returns number of pixels. |
+| `c.setPixel(idx: any, hexColor: any)` | `void` | Sets pixel at index. |
+| `c.getPixel(idx: any)` | `string` | Returns pixel at index. |
+| `c.setPixelAt(x: any, y: any, hexColor: any)` | `void` | Sets pixel at x, y. |
+| `c.getPixelAt(x: any, y: any)` | `string` | Returns pixel at x, y. |
+| `c.fill(hexColor: any)` | `void` | Fills entire canvas with color. |
+| `c.clear()` | `void` | Clears all pixels. |
+| `c.stretch(newW: any, newH: any)` | `void` | Resizes canvas. |
+| `c.toURL()` | `string` | Converts to data URL. |
+| `c.toArr()` | `array` | Converts to array. |
 
 ## Notes
 

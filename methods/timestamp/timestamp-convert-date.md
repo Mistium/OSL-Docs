@@ -1,5 +1,7 @@
 # .timestamp("to-date/to-time/to-full/to-relative")
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 Converts a timestamp to various date and time formats.
 
 ## Syntax

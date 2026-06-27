@@ -1,8 +1,7 @@
 # Arrays — Adding & Removing
 
 These methods change the array **in place**. The mutating ones (`append`, `prepend`, `insert`,
-`swap`) return `null`, so discard the result with `void` or just call them as a statement. `pop` and
-`shift` return the removed element.
+`swap`) return the modified array. `pop` and `shift` return the removed element.
 
 #### `.append(item)` — mutates
 Adds `item` to the end.
@@ -43,8 +42,8 @@ arr = [1, 2, 3]
 log arr.pop()  // 3, arr is now [1, 2]
 ```
 
-#### `.delete(item)` → `unknown`
-Removes `item` from the array.
+#### `.delete(item)` → `array`
+Removes `item` from the array and returns the modified array.
 
 #### `.trim(start, end)` → `array`
 Returns the slice from position `start` to `end` (inclusive, 1-indexed).

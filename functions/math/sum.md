@@ -1,19 +1,17 @@
-# sum(num1,..)
+# sum()
 
-## Description
+> ⚠️ **This is not a builtin function.**
 
-sum() takes in an unlimited number of parameters and finds the total value of them all as a number
-
-## Parameters
-
-sum() takes an unlimited number of parameters
+`sum()` is an **array method**, not a standalone function. See [Array aggregating methods](../../methods/arrays/aggregating.md).
 
 ## Usage
 
 ```javascript
-log sum(10,10,5,3,5)
+[10, 10, 5, 3, 5].sum()
 // 33
 
-log sum(2,5)
+[2, 5].sum()
 // 7
 ```
+
+Call `.sum()` on an array to find the total value of all the numbers in that array.

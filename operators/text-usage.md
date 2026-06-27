@@ -4,30 +4,21 @@ Operators will use their text variant if either of their operands are strings.
 
 ## Join Strings
 
-You can use the simple `+` operator when you want to join two values together with a space
+You can use the simple `+` operator when you want to join two values together
 
 ```javascript
 log "hello" + "world"
-// joins the two input strings using a space, returning "hello world"
+// joins the two input strings, returning "helloworld"
 
 log "10 + 5 =" + 15
-// this will also work and the number will be appended to the string with a space
+// this will also work and the number will be appended to the string, returning "10 + 5 =15"
 ```
 
-You can join two strings without a space using the `++` operator
+You can also use the `++` operator, which produces identical output to `+`
 
 ```javascript
 log "hello" ++ "world"
 // joins the two input strings, returning "helloworld"
-```
-
-## Remove From String
-
-You can use the simple `-` operator when you want to remove a value from another
-
-```javascript
-log "hello world" - " world"
-// removes the string " world" from "hello world", returning "hello"
 ```
 
 ## Repeat A String

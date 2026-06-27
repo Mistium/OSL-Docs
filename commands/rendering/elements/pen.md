@@ -1,5 +1,7 @@
 # Pen
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The pen commands allow you to draw various types of lines on the screen. The pen can be configured with different properties like size, opacity, and brightness.

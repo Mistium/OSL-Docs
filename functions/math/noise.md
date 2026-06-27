@@ -1,5 +1,7 @@
 # noise(x, y, z)
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 The `noise()` function generates coherent pseudo-random values using Perlin noise. It takes up to three coordinates and returns a value between -1 and 1, creating smooth transitions between adjacent coordinates.
 
 ## Syntax

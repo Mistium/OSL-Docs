@@ -1,5 +1,7 @@
 # Slider
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The `slider` command creates an interactive slider control that allows users to select a value by dragging a handle along a track. The slider is positioned relative to the current draw cursor position and automatically maintains its own state.

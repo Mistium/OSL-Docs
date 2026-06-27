@@ -26,6 +26,7 @@ log u["host"]
 | `url.parse(raw: any)` | `object` | Parses input data. |
 | `url.build(parts: object)` | `string` | Runs the build operation. |
 | `url.encode(m: object)` | `string` | Runs the encode operation. |
+| `url.decode(query: any)` | `object` | Decodes a URL-encoded query string into an object. |
 | `url.escape(s: any)` | `string` | Runs the escape operation. |
 | `url.unescape(s: any)` | `string` | Runs the unescape operation. |
 | `url.isValid(raw: any)` | `boolean` | Reports whether the input is valid. |

@@ -23,6 +23,7 @@ auto transparent = colors.RGBA(0, 0, 0, 128)
 
 | Method | Returns | Description |
 | --- | --- | --- |
+| `colors.RGBA(r: any, g: any, b: any, a: any)` | `color.RGBA` | Runs the rgba operation. |
 | `colors.rgb(r: any, g: any, b: any)` | `color.RGBA` | Runs the rgb operation. |
 | `colors.gray(v: any)` | `color.Gray` | Runs the gray operation. |
 | `colors.nrgba(r: any, g: any, b: any, a: any)` | `color.NRGBA` | Runs the nrgba operation. |

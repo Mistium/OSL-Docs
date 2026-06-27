@@ -1,5 +1,7 @@
 # input
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The `input` command renders an input field that users can type text into. The input's value can be accessed through a variable with the prefix `input_` followed by the input's ID.
