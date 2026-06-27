@@ -10,7 +10,7 @@ log fs.readFile("notes.txt")
 ```
 
 Each package exposes a single global value named after the package (`fs`, `crypto`, `serve`, …) whose
-methods you call. The `osl/` prefix is optional for standard-library packages — `import "fs"` and
+methods you call. The `osl/` prefix is optional for standard-library packages - `import "fs"` and
 `import "osl/fs"` are equivalent.
 
 ## How imports work
@@ -67,7 +67,7 @@ On each package page these are listed under **"Returned object"** headings.
 ### Databases & storage
 | Package | Description |
 | --- | --- |
-| [db](db.md) | Embedded SQLite — SQL plus a document/collection API. |
+| [db](db.md) | Embedded SQLite - SQL plus a document/collection API. |
 | [save](save.md) | Simple persistent key-value storage. |
 | [cache](cache.md) | In-memory LRU cache with TTLs. |
 | [env](env.md) | Environment variables and `.env` files. |

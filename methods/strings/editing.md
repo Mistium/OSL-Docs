@@ -1,6 +1,6 @@
-# Strings — Building & Editing
+# Strings - Building & Editing
 
-Methods that produce a modified copy of the string — concatenating, inserting, replacing, stripping
+Methods that produce a modified copy of the string - concatenating, inserting, replacing, stripping
 and padding. The original is never mutated.
 
 #### `.append(...parts)` → `string`

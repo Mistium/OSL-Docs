@@ -1,4 +1,4 @@
-# Arrays — Transforming
+# Arrays - Transforming
 
 Methods that produce a new array from an existing one. Lambdas use the arrow form
 `param -> expression`.

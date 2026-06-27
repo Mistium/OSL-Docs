@@ -1,6 +1,6 @@
 # What is OSL?
 
-**OSL** is a small, fast, compiled programming language. You write `.osl` source files in a clean, readable syntax and the OSL compiler turns them into a **single self-contained native binary** — no runtime, no interpreter, no dependencies to ship.
+**OSL** is a small, fast, compiled programming language. You write `.osl` source files in a clean, readable syntax and the OSL compiler turns them into a **single self-contained native binary** - no interpreter, no dependencies to ship.
 
 ```javascript
 import "osl/serve"
@@ -25,13 +25,13 @@ osl compile server.osl   # produces ./server
 
 ## What is it good for?
 
-OSL is designed for writing **servers, command-line tools, scripts, and small applications** quickly, with a batteries-included standard library. Out of the box you get HTTP servers and clients, WebSockets, an embedded SQL database, JSON/YAML/CSV/XML, cryptography, file-system and process utilities, a terminal-UI toolkit, image/PDF/QR generation, and much more — all documented in the [Packages](packages/) section.
+OSL is designed for writing **servers, command-line tools, scripts, and small applications** quickly, with a batteries-included standard library. Out of the box you get HTTP servers and clients, WebSockets, an embedded SQL database, JSON/YAML/CSV/XML, cryptography, file-system and process utilities, a terminal-UI toolkit, image/PDF/QR generation, and much more - all documented in the [Packages](packages/) section.
 
 Because programs compile to a native binary, they start instantly and run fast, while the language itself stays approachable and dynamic-feeling.
 
 ## Key ideas
 
-* **Readable, command-style syntax.** Code reads top-to-bottom. There is no `main()` to write — the file _is_ the program (see [The Execution Model](getting-started/#the-execution-model)).
+* **Readable, command-style syntax.** Code reads top-to-bottom. There is no `main()` to write - the file _is_ the program (see [The Execution Model](getting-started/#the-execution-model)).
 * **Optional types.** Variables and function parameters can be untyped (`x = 5`) or typed (`int x = 5`). Types are checked at compile time when you use them.
 * **A rich standard library.** Capabilities are grouped into [packages](packages/) you pull in with `import "osl/<name>"`.
 * **Methods and functions everywhere.** Values have methods (`"hi".toUpper()`, `[1,2,3].map(...)`), and there is a large set of built-in [functions](builtins/math/).

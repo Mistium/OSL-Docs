@@ -57,7 +57,7 @@ log "{\"a\":1}".toObject()  // {a: 1}
 
 #### `.len` → `int`
 
-The length of a string, array or object. **It is a property — no parentheses.**
+The length of a string, array or object. **It is a property - no parentheses.**
 
 ```javascript
 arr = [1, 2, 3]

@@ -30,7 +30,7 @@ log addBound(3)              // 6
 
 ## Chaining
 
-`.bind` can be chained — each call fixes the next leading argument:
+`.bind` can be chained - each call fixes the next leading argument:
 
 ```javascript
 auto add3 = (a, b, c) -> a + b + c
@@ -40,7 +40,7 @@ log step.call(3)                  // 6
 
 ## Works on any function value
 
-`.bind` (like `.call`) works on function values of any type — `auto`/unknown values, lambdas with a
+`.bind` (like `.call`) works on function values of any type - `auto`/unknown values, lambdas with a
 concrete signature, named functions, and functions returned from `.bind` itself.
 
 ```javascript

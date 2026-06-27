@@ -1,4 +1,4 @@
-# math — Package, not a function
+# math - Package, not a function
 
 > ⚠️ **`Math()` is not a callable function.**
 

@@ -4,7 +4,7 @@ OSL programming is made up of 6 different types of syntax.
 
 ### Commands
 
-Commands are the backbone of most OSL scripts— generally, any operation involving modifying the program's state is done through them. They accept multiple inputs after the initial command, seperated by spaces. These inputs can be constants, such as raw strings or numbers, operators (which are defined later), or variables. Commands have no return value.
+Commands are the backbone of most OSL scripts- generally, any operation involving modifying the program's state is done through them. They accept multiple inputs after the initial command, seperated by spaces. These inputs can be constants, such as raw strings or numbers, operators (which are defined later), or variables. Commands have no return value.
 
 ```javascript
 command input1 input2 input3...
@@ -79,7 +79,7 @@ void var.method()
 
 ### Functions
 
-Functions are similar to methods, with the main difference being that functions do not take an input. Functions typically return a value, however this isn't strictly required— functions lacking an output won't throw an error, but instead output [null](../basics/types.md#null). Similarly to methods, functions can be run on their own, however no values will be modified.
+Functions are similar to methods, with the main difference being that functions do not take an input. Functions typically return a value, however this isn't strictly required- functions lacking an output won't throw an error, but instead output [null](../basics/types.md#null). Similarly to methods, functions can be run on their own, however no values will be modified.
 
 ```javascript
 // Logs a random number 1 through 10.

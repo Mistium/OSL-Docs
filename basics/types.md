@@ -1,6 +1,6 @@
 # Types
 
-Every value in OSL has a type. You usually don't have to think about it — variables can hold any value and the language keeps track for you — but you _can_ annotate variables and function parameters with types, and the compiler will check them.
+Every value in OSL has a type. You usually don't have to think about it - variables can hold any value and the language keeps track for you - but you _can_ annotate variables and function parameters with types, and the compiler will check them.
 
 ```javascript
 x = 5            // dynamic: x holds a number
@@ -108,7 +108,7 @@ object meta = { author: "Mist" }
 views = "lots"   // compile error: cannot assign string to int
 ```
 
-`auto` (or `unknown`) means "any type" — the same as leaving a variable untyped:
+`auto` (or `unknown`) means "any type" - the same as leaving a variable untyped:
 
 ```javascript
 auto anything = 5
@@ -128,7 +128,7 @@ See [Typed Variables](typed-variables.md) and [Typed Parameters](../functions-an
 | Collections | `array`, `object`                             |
 | Any         | `auto`, `unknown`                             |
 
-There are also **package types** — handles returned by standard-library packages, which you can use as annotations once the package is imported: `map`, `set`, `result`, `canvas`, `xml`, `promise`, `thread`, `regex`, and the struct types a package exposes (for example `*serve.Router`).
+There are also **package types** - handles returned by standard-library packages, which you can use as annotations once the package is imported: `map`, `set`, `result`, `canvas`, `xml`, `promise`, `thread`, `regex`, and the struct types a package exposes (for example `*serve.Router`).
 
 ## Inspecting and converting types
 

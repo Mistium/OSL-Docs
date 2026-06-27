@@ -1,4 +1,4 @@
-# Arrays — Aggregating
+# Arrays - Aggregating
 
 Reduce an array to a single value. Numeric aggregates ignore non-numeric elements.
 

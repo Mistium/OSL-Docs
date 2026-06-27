@@ -21,7 +21,7 @@ auto add = (a, b) -> a + b
 log add.call(3, 4)   // 7
 ```
 
-`.call` works on any function value — `auto`/unknown values, lambdas with a concrete signature, named functions, and bound functions.
+`.call` works on any function value - `auto`/unknown values, lambdas with a concrete signature, named functions, and bound functions.
 
 #### `.bind(...args)` → function
 
@@ -50,7 +50,7 @@ f = x -> x * 2
 log f(5)  // 10
 ```
 
-> OSL has no `this`. Functions are plain values and **closures** capture the variables in scope where they were defined; object and prototype methods refer to their receiver with `self` (see [Methods](../../functions-and-classes/methods.md)). The [`.bind`](bind.md) method exists, but it does partial application of arguments — it does not rebind a context.
+> OSL has no `this`. Functions are plain values and **closures** capture the variables in scope where they were defined; object and prototype methods refer to their receiver with `self` (see [Methods](../../functions-and-classes/methods.md)). The [`.bind`](bind.md) method exists, but it does partial application of arguments - it does not rebind a context.
 
 ## Passing functions around
 

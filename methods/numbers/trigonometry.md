@@ -1,4 +1,4 @@
-# Numbers — Logarithms & Trigonometry
+# Numbers - Logarithms & Trigonometry
 
 Logarithms and trigonometric functions. Trig comes in **degree** and **radian** variants.
 

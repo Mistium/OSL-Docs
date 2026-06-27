@@ -1,7 +1,7 @@
 # Types
 
 Built-in functions for inspecting and creating values by type. They are always
-available — no import required.
+available - no import required.
 
 * `typeof(value)` returns the name of a value's type as a string.
 * `symbol()` creates a unique symbol value.

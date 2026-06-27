@@ -14,8 +14,8 @@ import "osl/window"
 
 A windowed program has two parts:
 
-1. **Setup** — top-level statements that run once. Configure the window and load assets here.
-2. **The main loop** — everything after the `mainloop:` label runs **once per frame**. This is where
+1. **Setup** - top-level statements that run once. Configure the window and load assets here.
+2. **The main loop** - everything after the `mainloop:` label runs **once per frame**. This is where
    you read input and draw.
 
 ```javascript
@@ -35,7 +35,7 @@ goto x window.top - 40
 centext "hello world" 10 : c#000
 ```
 
-`mainloop:` is a bare label — it has no parentheses and no body brackets. Everything below it is the
+`mainloop:` is a bare label - it has no parentheses and no body brackets. Everything below it is the
 per-frame loop, and it keeps running until the window closes.
 
 ## Window properties & methods
@@ -76,7 +76,7 @@ text "hello" 10          // draw text from the cursor
 centext "hello" 10       // draw text centred on the cursor
 ```
 
-Many commands accept an inline modifier after a colon — for example `: c#000` sets the colour just
+Many commands accept an inline modifier after a colon - for example `: c#000` sets the colour just
 for that element:
 
 ```javascript
@@ -146,8 +146,8 @@ centext "use WASD" 10 : c#000
 
 ## Companion packages
 
-- [`win-buttons`](../packages/README.md) — add clickable buttons to a window (`import "osl/win-buttons"`).
-- [`sound`](sound.md) — play audio in a windowed app.
+- [`win-buttons`](../packages/README.md) - add clickable buttons to a window (`import "osl/win-buttons"`).
+- [`sound`](sound.md) - play audio in a windowed app.
 
 > **Heads-up:** the `window` package depends on native graphics libraries, so the first compile pulls
 > in extra dependencies. Server and CLI programs don't need any of this.

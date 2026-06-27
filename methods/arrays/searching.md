@@ -1,7 +1,7 @@
-# Arrays — Searching & Testing
+# Arrays - Searching & Testing
 
 Find elements, test positions and check predicates. Positions are **1-indexed**; "not found" is `0`.
-Equality is **strict** — no type coercion.
+Equality is **strict** - no type coercion.
 
 #### `.contains(value)` → `boolean`
 Whether the array contains `value` (strict equality).

@@ -193,7 +193,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 - `app.use(...handlers)` → `*serve.Router`
 - `app.group(prefix, fn?)` → `*serve.Router`
 - `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
-- `app.serve(addr)` — start the server (blocks)
+- `app.serve(addr)` - start the server (blocks)
 - `app.serveTLS(addr, certFile, keyFile)`
 - `app.handler()` → the underlying HTTP handler
 

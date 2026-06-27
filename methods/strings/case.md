@@ -1,4 +1,4 @@
-# Strings — Case & Whitespace
+# Strings - Case & Whitespace
 
 Methods that change letter case or strip surrounding whitespace. None mutate the original string.
 

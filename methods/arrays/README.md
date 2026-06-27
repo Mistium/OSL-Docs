@@ -1,6 +1,6 @@
 # Array Methods
 
-Arrays in OSL are **1-indexed** — the first element is at index 1. Index `0` and out-of-range
+Arrays in OSL are **1-indexed** - the first element is at index 1. Index `0` and out-of-range
 indices return `null`; negative indices count from the end (`arr[-1]` is the last element).
 
 ```javascript
@@ -22,14 +22,14 @@ arr = [1, 2] ++ [3, 4]   // concatenate → [1, 2, 3, 4]
 
 ## In this section
 
-- **[Transforming](transforming.md)** — `map`, `filter`, `sort`, `sortBy`, `reverse`, `deDupe`,
+- **[Transforming](transforming.md)** - `map`, `filter`, `sort`, `sortBy`, `reverse`, `deDupe`,
   `fill`, `concat`.
-- **[Adding & Removing](mutating.md)** — `append`, `prepend`, `insert`, `swap`, `pop`, `shift`,
+- **[Adding & Removing](mutating.md)** - `append`, `prepend`, `insert`, `swap`, `pop`, `shift`,
   `delete`, `trim`.
-- **[Searching & Testing](searching.md)** — `contains`, `index`, `lastIndex`, `some`, `every`,
+- **[Searching & Testing](searching.md)** - `contains`, `index`, `lastIndex`, `some`, `every`,
   `first`, `last`, `randomOf`.
-- **[Aggregating](aggregating.md)** — `sum`, `product`, `average`, `max`, `min`, `join`.
-- **[Slicing & Converting](converting.md)** — `left`, `right`, `clone`, `getKeys`, `toSet`,
+- **[Aggregating](aggregating.md)** - `sum`, `product`, `average`, `max`, `min`, `join`.
+- **[Slicing & Converting](converting.md)** - `left`, `right`, `clone`, `getKeys`, `toSet`,
   `toEntriesObj`.
 
 ## Custom array methods
