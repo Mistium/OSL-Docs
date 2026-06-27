@@ -1,44 +1,49 @@
 # img
 
-> Memory-efficient image utilities following Go idioms
+> Load, transform and save images
+
+Use `img` for loading, creating, resizing, drawing, encoding, and saving raster images.
 
 ```javascript
 import "osl/img"
 ```
 
-## Methods
+## API reference
 
-- `img.open(path)` → `imgImage`
-- `img.decode(r)` → `imgImage`
-- `img.decodeBytes(data)` → `imgImage`
-- `img.openSize(path)`
-- `img.decodeSize(r)`
-- `img.encodePNG(w, i)` → `boolean`
-- `img.encodeJPEG(w, i, q)` → `boolean`
-- `img.encodePNGBytes(i)` → `bytes`
-- `img.encodeJPEGBytes(i, q)` → `bytes`
-- `img.new(w, h)` → `imgImage`
-- `img.clone(i)` → `imgImage`
-- `img.resize(i, w, h)` → `imgImage`
-- `img.resizeFast(i, w, h)` → `imgImage`
-- `img.resizeWidth(i, w)` → `imgImage`
-- `img.resizeHeight(i, h)` → `imgImage`
-- `img.resizeFit(i, maxW, maxH)` → `imgImage`
-- `img.draw(dst, src, x, y)` → `boolean`
-- `img.drawOver(dst, src, x, y)` → `boolean`
-- `img.rotate(i, angle)` → `imgImage`
-- `img.rotate90(src, a)` → `imgImage`
-- `img.rotateAny(src, angle)` → `imgImage`
-- `img.normalizeOrientation(i, r)` → `imgImage`
-- `img.fill(i, r, g, b, a)` → `boolean`
-- `img.savePNG(i, path)` → `boolean`
-- `img.saveJPEG(i, path, quality)` → `boolean`
+### `img`
 
-## Returned object: `imgImage`
+| Method | Returns | Description |
+| --- | --- | --- |
+| `img.open(path: string)` | `*imgImage` | Opens a resource. |
+| `img.openSize(path: string)` | `number, number` | Opens size. |
+| `img.new(w: number, h: number)` | `*imgImage` | Creates a new value. |
+| `img.clone(i: *imgImage)` | `*imgImage` | Runs the clone operation. |
+| `img.resize(i: *imgImage, w: number, h: number)` | `*imgImage` | Runs the resize operation. |
+| `img.resizeFast(i: *imgImage, w: number, h: number)` | `*imgImage` | Runs the resize fast operation. |
+| `img.resizeWidth(i: *imgImage, w: number)` | `*imgImage` | Runs the resize width operation. |
+| `img.resizeHeight(i: *imgImage, h: number)` | `*imgImage` | Runs the resize height operation. |
+| `img.resizeFit(i: *imgImage, maxW: number, maxH: number)` | `*imgImage` | Runs the resize fit operation. |
+| `img.draw(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Runs the draw operation. |
+| `img.drawOver(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Runs the draw over operation. |
+| `img.rotate(i: *imgImage, angle: number)` | `*imgImage` | Runs the rotate operation. |
+| `img.rotate90(src: *_image.RGBA, a: number)` | `*imgImage` | Runs the rotate90 operation. |
+| `img.rotateAny(src: *_image.RGBA, angle: number)` | `*imgImage` | Runs the rotate any operation. |
+| `img.normalizeOrientation(i: *imgImage, r: io.Reader)` | `*imgImage` | Runs the normalize orientation operation. |
+| `img.fill(i: *imgImage, r: unumber8, g: unumber8, b: unumber8, a: unumber8)` | `boolean` | Runs the fill operation. |
+| `img.savePNG(i: *imgImage, path: string)` | `boolean` | Saves png. |
+| `img.saveJPEG(i: *imgImage, path: string, quality: number)` | `boolean` | Saves jpeg. |
 
-Returned by `img` methods; call these on the value you get back.
+### `imgImage` values
 
-- `imgImage.Close()`
-- `imgImage.Width()` → `number`
-- `imgImage.Height()` → `number`
-- `imgImage.Size()` → `object`
+Methods available on `imgImage` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.Close()` | `void` | Runs the close operation. |
+| `value.Width()` | `number` | Runs the width operation. |
+| `value.Height()` | `number` | Runs the height operation. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/img"` and `import "img"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

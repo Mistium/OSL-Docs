@@ -2,56 +2,46 @@
 
 > Success/error result values
 
-A `Result` represents either success (a value) or failure (an error), so functions can report problems
-without throwing. Create one with `result.ok(value)` or `result.err(error)`, then check it before
-reading.
+Use `result` to return either a success value or an error value from APIs that should not throw immediately.
 
 ```javascript
 import "osl/result"
 ```
-
-## Creating results
-
-```javascript
-auto good = result.ok(42)
-auto bad  = result.err("something went wrong")
-```
-
-## Methods
-
-Call these on a result value:
-
-- `r.isOk()` → `boolean` — did it succeed?
-- `r.isErr()` → `boolean` — did it fail?
-- `r.unwrap()` → the success value (errors if it's an error result)
-- `r.unwrapOr(default)` → the success value, or `default` on error
-- `r.expect(message)` → the success value, or fails with `message`
-- `r.unwrapErr()` → the error value (errors if it's a success result)
-- `r.expectErr(message)` → the error value, or fails with `message`
 
 ## Example
 
 ```javascript
 import "osl/result"
 
-def divide(number a, number b) (
-  if b == 0 (
-    return result.err("cannot divide by zero")
-  )
-  return result.ok(a / b)
-)
-
-auto r = divide(10, 2)
-
-if r.isOk() (
-  log "result: " ++ r.unwrap()
-) else (
-  log "error: " ++ r.unwrapErr()
-)
-
-// Or with a fallback:
-log divide(1, 0).unwrapOr(0)   // 0
+auto ok = result.ok(42)
+log ok.unwrapOr(0)
 ```
 
-Some standard-library packages return a `Result` directly — for example
-[`json`](json.md)`.parse(...)`. See also [`option`](option.md) for values that may simply be absent.
+## API reference
+
+### `result`
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `result.ok(v: any)` | `*Result` | Runs the ok operation. |
+| `result.err(e: any)` | `*Result` | Runs the err operation. |
+
+### `Result` values
+
+Methods available on `Result` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.isOk()` | `boolean` | Reports whether the result is successful. |
+| `value.isErr()` | `boolean` | Reports whether the result is an error. |
+| `value.unwrap()` | `any` | Returns the contained value or fails. |
+| `value.unwrapOr(def: any)` | `any` | Returns the contained value or a fallback. |
+| `value.expect(msg: any)` | `any` | Returns the contained value or fails with a custom message. |
+| `value.unwrapErr()` | `any` | Returns the error value or fails. |
+| `value.expectErr(msg: any)` | `any` | Runs the expect err operation. |
+| `value.fromGo(val: any, err: error)` | `*Result` | Creates from go. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/result"` and `import "result"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

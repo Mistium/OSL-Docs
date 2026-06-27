@@ -218,3 +218,143 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 
 **Flow & state:** `next()`, `abort(...)`, `isAborted()`, `set(k, v)`, `get(k)`, `getString(k)`,
 `getInt(k)`, `getBool(k)`, `getFloat(k)`.
+
+## Complete API reference
+
+### `serve`
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `serve.new()` | `*serveRouter` | Creates a new value. |
+| `serve.New()` | `*serveRouter` | Runs the new operation. |
+| `serve.logger()` | `serveHandler` | Runs the logger operation. |
+| `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serveHandler` | Runs the cors operation. |
+| `serve.corsOpen()` | `serveHandler` | Runs the cors open operation. |
+| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serveHandler` | Runs the rate limit operation. |
+| `serve.requireBearer(token: string)` | `serveHandler` | Runs the require bearer operation. |
+| `serve.requireHeader(key: string, value: string)` | `serveHandler` | Runs the require header operation. |
+| `serve.maxBodySize(maxBytes: number)` | `serveHandler` | Runs the max body size operation. |
+| `serve.recover()` | `serveHandler` | Runs the recover operation. |
+| `serve.timeout(seconds: number)` | `serveHandler` | Runs the timeout operation. |
+| `serve.setKey(key: string, value: any)` | `serveHandler` | Sets key. |
+| `serve.basicAuth(username: string, password: string)` | `serveHandler` | Runs the basic auth operation. |
+| `serve.requestID()` | `serveHandler` | Runs the request id operation. |
+| `serve.secureHeaders()` | `serveHandler` | Runs the secure headers operation. |
+| `serve.noCache()` | `serveHandler` | Runs the no cache operation. |
+
+### `serveContext` values
+
+Methods available on `serveContext` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.status(code: number)` | `void` | Runs the status operation. |
+| `value.string(code: number, format: string, ...values: any)` | `void` | Runs the string operation. |
+| `value.json(code: number, obj: any)` | `void` | Runs the json operation. |
+| `value.html(code: number, body: string, ...data: any)` | `void` | Runs the html operation. |
+| `value.HTML(code: number, name: string, data: any)` | `void` | Runs the html operation. |
+| `value.data(code: number, contentType: string, body: bytes)` | `void` | Runs the data operation. |
+| `value.redirect(code: number, url: string)` | `void` | Runs the redirect operation. |
+| `value.noContent()` | `void` | Runs the no content operation. |
+| `value.ok(obj: any)` | `void` | Runs the ok operation. |
+| `value.created(obj: any)` | `void` | Runs the created operation. |
+| `value.next()` | `void` | Runs the next operation. |
+| `value.abort(...values: any)` | `void` | Runs the abort operation. |
+| `value.isAborted()` | `boolean` | Reports whether aborted. |
+| `value.badRequest(message: string)` | `void` | Runs the bad request operation. |
+| `value.unauthorized(message: string)` | `void` | Runs the unauthorized operation. |
+| `value.forbidden(message: string)` | `void` | Runs the forbidden operation. |
+| `value.notFound(message: string)` | `void` | Runs the not found operation. |
+| `value.internalError(message: string)` | `void` | Runs the internal error operation. |
+| `value.flush()` | `void` | Runs the flush operation. |
+| `value.method()` | `string` | Runs the method operation. |
+| `value.path()` | `string` | Runs the path operation. |
+| `value.host()` | `string` | Runs the host operation. |
+| `value.remoteAddr()` | `string` | Runs the remote addr operation. |
+| `value.ip()` | `string` | Runs the ip operation. |
+| `value.isWebSocket()` | `boolean` | Reports whether web socket. |
+| `value.contentType()` | `string` | Runs the content type operation. |
+| `value.isJSON()` | `boolean` | Reports whether json. |
+| `value.isForm()` | `boolean` | Reports whether form. |
+| `value.query(key: string)` | `string` | Runs the query operation. |
+| `value.queryDefault(key: string, def: string)` | `string` | Runs the query default operation. |
+| `value.queryInt(key: string, def: number)` | `number` | Runs the query int operation. |
+| `value.queryBool(key: string, def: boolean)` | `boolean` | Runs the query bool operation. |
+| `value.queryAll()` | `object` | Runs the query all operation. |
+| `value.param(key: string)` | `string` | Runs the param operation. |
+| `value.paramInt(key: string, def: number)` | `number` | Runs the param int operation. |
+| `value.header(key: string)` | `string` | Runs the header operation. |
+| `value.hasHeader(key: string, value: string)` | `boolean` | Reports whether header. |
+| `value.setHeader(key: string, value: string)` | `void` | Sets header. |
+| `value.addHeader(key: string, value: string)` | `void` | Adds header. |
+| `value.bearer()` | `string` | Runs the bearer operation. |
+| `value.body()` | `string` | Runs the body operation. |
+| `value.bodyBytes()` | `bytes` | Runs the body bytes operation. |
+| `value.bodyJSON()` | `object` | Runs the body json operation. |
+| `value.bodyJSONArray()` | `array` | Runs the body jsonarray operation. |
+| `value.bindJSON(out: any)` | `error` | Runs the bind json operation. |
+| `value.formValue(key: string)` | `string` | Runs the form value operation. |
+| `value.formValueDefault(key: string, def: string)` | `string` | Runs the form value default operation. |
+| `value.formFile(key: string)` | `*Result` | Runs the form file operation. |
+| `value.cookie(name: string)` | `string` | Runs the cookie operation. |
+| `value.setCookie(name: string, value: string, maxAge: number, path: string, domain: string, secure: boolean, httpOnly: boolean)` | `void` | Sets cookie. |
+| `value.clearCookie(name: string)` | `void` | Runs the clear cookie operation. |
+| `value.set(key: string, value: any)` | `void` | Sets a value. |
+| `value.get(key: string)` | `any` | Returns a value. |
+| `value.getString(key: string)` | `string` | Returns string. |
+| `value.getBool(key: string)` | `boolean` | Returns bool. |
+| `value.getInt(key: string)` | `number` | Returns int. |
+| `value.written()` | `boolean` | Runs the written operation. |
+| `value.text(code: number, body: string)` | `void` | Runs the text operation. |
+| `value.file(filepath: string)` | `void` | Runs the file operation. |
+| `value.attachment(filepath: string, filename: string)` | `void` | Runs the attachment operation. |
+| `value.queryArray(key: string)` | `array` | Runs the query array operation. |
+| `value.cookies()` | `object` | Runs the cookies operation. |
+| `value.userAgent()` | `string` | Runs the user agent operation. |
+| `value.referer()` | `string` | Runs the referer operation. |
+| `value.isAjax()` | `boolean` | Reports whether ajax. |
+| `value.scheme()` | `string` | Runs the scheme operation. |
+| `value.fullURL()` | `string` | Runs the full url operation. |
+| `value.accepts(mimeType: string)` | `boolean` | Runs the accepts operation. |
+| `value.getFloat(key: string)` | `number` | Returns float. |
+| `value.redirectPermanent(url: string)` | `void` | Runs the redirect permanent operation. |
+| `value.basicAuth()` | `object` | Runs the basic auth operation. |
+
+### `serveRouter` values
+
+Methods available on `serveRouter` values returned by this package or constructed by the language.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `value.GET(pattern: string, ...handlers: serveHandler)` | `void` | Registers a GET route handler. |
+| `value.POST(pattern: string, ...handlers: serveHandler)` | `void` | Registers a POST route handler. |
+| `value.PUT(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PUT route handler. |
+| `value.PATCH(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PATCH route handler. |
+| `value.DELETE(pattern: string, ...handlers: serveHandler)` | `void` | Registers a DELETE route handler. |
+| `value.OPTIONS(pattern: string, ...handlers: serveHandler)` | `void` | Registers a OPTIONS route handler. |
+| `value.HEAD(pattern: string, ...handlers: serveHandler)` | `void` | Registers a HEAD route handler. |
+| `value.ANY(pattern: string, ...handlers: serveHandler)` | `void` | Registers a ANY route handler. |
+| `value.WS(pattern: string, server: *wsServer)` | `void` | Runs the ws operation. |
+| `value.static(prefix: string, dir: string)` | `void` | Runs the static operation. |
+| `value.staticFile(pattern: string, filepath: string)` | `void` | Runs the static file operation. |
+| `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
+| `value.LoadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
+| `value.use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
+| `value.group(prefix: string, fn?: function)` | `*serveRouter` | Creates a route group with an optional setup callback. |
+| `value.Use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
+| `value.Group(prefix: string, fn?: function)` | `*serveRouter` | Creates a route group with an optional setup callback. |
+| `value.Static(prefix: string, dir: string)` | `void` | Runs the static operation. |
+| `value.StaticFile(pattern: string, filepath: string)` | `void` | Runs the static file operation. |
+| `value.Run(addr: string)` | `error` | Runs the run operation. |
+| `value.run(addr: string)` | `error` | Runs the run operation. |
+| `value.RunTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
+| `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
+| `value.Handler()` | `http.Handler` | Runs the handler operation. |
+| `value.serve(addr: string)` | `error` | Runs the serve operation. |
+| `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs the serve tls operation. |
+| `value.handler()` | `http.Handler` | Runs the handler operation. |
+
+## Notes
+
+- Standard-library imports accept both `import "osl/serve"` and `import "serve"`.
+- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
