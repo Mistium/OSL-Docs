@@ -7,7 +7,7 @@ a permission system.
 This documentation covers **OSL.go**, the standalone compiler. Most of the language carries over
 unchanged, but some originOS *environment* features have **no equivalent** in compiled OSL, because
 there is no surrounding desktop OS to provide them. Those pages are collected here so the knowledge
-isn't lost — they describe how things worked in originOS and remain useful if you're reading or
+isn't lost - they describe how things worked in originOS and remain useful if you're reading or
 porting old originOS programs.
 
 > The pages below describe **originOS behaviour** and generally do **not** work in compiled OSL.go
@@ -17,13 +17,13 @@ porting old originOS programs.
 
 | originOS feature | Modern replacement |
 | --- | --- |
-| [Camera](../environment/camera.md) | — (no equivalent) |
+| [Camera](../environment/camera.md) | - (no equivalent) |
 | [Mouse cursor control](../environment/mouse-cursor.md) | [`osl/window`](../packages/window.md) input, within a window |
-| [Input simulation](../environment/input-simulation.md) | — (no equivalent) |
-| [Send data between windows](../environment/send-data-between-windows.md) | — (use [`net`](../packages/net.md)/[`serve`](../packages/serve.md)) |
-| [Interfacing with right-click](../environment/interfacing-with-rightclick.md) | — (no equivalent) |
-| [Permissions](../environment/permissions.md) | — (the OS sandbox is gone) |
-| [OFSF file model](../environment/files/README.md) — `open()`, `fileGet()`, `listFiles()` | [`osl/fs`](../packages/fs.md) |
+| [Input simulation](../environment/input-simulation.md) | - (no equivalent) |
+| [Send data between windows](../environment/send-data-between-windows.md) | - (use [`net`](../packages/net.md)/[`serve`](../packages/serve.md)) |
+| [Interfacing with right-click](../environment/interfacing-with-rightclick.md) | - (no equivalent) |
+| [Permissions](../environment/permissions.md) | - (the OS sandbox is gone) |
+| [OFSF file model](../environment/files/README.md) - `open()`, `fileGet()`, `listFiles()` | [`osl/fs`](../packages/fs.md) |
 | [`import()` as a function](../functions/import.md) | the [`import` statement](../getting-started/README.md#project-structure--imports) |
 
 ## Replaced by a package, kept for reference

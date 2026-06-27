@@ -1,4 +1,4 @@
-# Strings — Searching & Testing
+# Strings - Searching & Testing
 
 Methods that inspect a string's contents. Positions are **1-indexed**; "not found" is `0`.
 

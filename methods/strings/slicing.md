@@ -1,4 +1,4 @@
-# Strings — Slicing & Splitting
+# Strings - Slicing & Splitting
 
 Methods that extract parts of a string or break it into an array.
 

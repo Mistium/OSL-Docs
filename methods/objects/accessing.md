@@ -1,4 +1,4 @@
-# Objects — Keys, Values & Membership
+# Objects - Keys, Values & Membership
 
 Read the contents of an object. None of these mutate.
 

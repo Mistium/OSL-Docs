@@ -36,7 +36,7 @@ osl uninstall   # remove OSL
 ```
 
 > **Note:** OSL compiles your program by generating Go and building it, so the **Go toolchain must be
-> installed** on the machine where you compile. It is only needed at *compile* time — the binaries you
+> installed** on the machine where you compile. It is only needed at *compile* time - the binaries you
 > produce are standalone and need nothing extra to run.
 
 ## Your first program
@@ -57,7 +57,7 @@ osl run hello.osl
 Hello, OSL!
 ```
 
-`osl run` compiles to a temporary binary and runs it in one step — perfect while developing. When
+`osl run` compiles to a temporary binary and runs it in one step - perfect while developing. When
 you're ready to ship, compile to a real binary instead:
 
 ```bash
@@ -82,7 +82,7 @@ osl compile hello.osl     # produces ./hello
 
 ## The execution model
 
-An OSL file has **no `main` function** — in fact, defining `def main()` is an error. The file's
+An OSL file has **no `main` function** - in fact, defining `def main()` is an error. The file's
 top-level statements *are* the program, and they run top to bottom:
 
 ```javascript
@@ -117,7 +117,7 @@ if fs.exists(path) (
     log "  - " ++ names[i]
   )
 ) else (
-  log "No names file yet — creating one."
+  log "No names file yet - creating one."
   fs.writeFile(path, "Ada\nGrace\nLin")
 )
 ```

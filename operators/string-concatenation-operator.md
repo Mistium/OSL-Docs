@@ -52,7 +52,7 @@ log sentence  // Outputs: "The cat sat on the mat"
 
 ### + vs. ++ Operator
 
-The `+` and `++` operators behave identically in OSL—both join strings without adding spaces:
+The `+` and `++` operators behave identically in OSL-both join strings without adding spaces:
 
 ```javascript
 // + operator joins strings without a space

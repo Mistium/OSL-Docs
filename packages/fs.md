@@ -12,7 +12,7 @@ import "osl/fs"
 
 #### `fs.readFile(path)` → `string`
 Returns the entire contents of the file at `path` as a string. Returns an empty string if the file
-can't be read — use [`fs.tryReadFile`](#result-returning-variants) if you need to distinguish errors.
+can't be read - use [`fs.tryReadFile`](#result-returning-variants) if you need to distinguish errors.
 
 ```javascript
 string text = fs.readFile("notes.txt")
@@ -96,7 +96,7 @@ Resolves any symbolic links in `path` to a real path.
 
 ## Path utilities
 
-These operate purely on path strings — they don't touch the filesystem.
+These operate purely on path strings - they don't touch the filesystem.
 
 #### `fs.joinPath(...path)` → `string`
 Joins path segments with the OS separator: `fs.joinPath("a", "b", "c.txt")` → `a/b/c.txt`.

@@ -1,11 +1,11 @@
-# Objects — Modifying & Converting
+# Objects - Modifying & Converting
 
 Add, remove and reshape keys, or convert the object to another type.
 
-#### `.insert(key, value)` — mutates
+#### `.insert(key, value)` - mutates
 Sets `key` to `value` on the object.
 
-#### `.delete(key)` — mutates
+#### `.delete(key)` - mutates
 Removes `key` from the object.
 
 ```javascript

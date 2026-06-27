@@ -1,4 +1,4 @@
-# Universal — Utility
+# Universal - Utility
 
 General-purpose methods available on every value.
 
@@ -10,7 +10,7 @@ mutating the copy never affects the original.
 a = [1, 2, 3]
 b = a.clone()
 void b.append(4)
-log a  // [1, 2, 3] — unchanged
+log a  // [1, 2, 3] - unchanged
 ```
 
 #### `.item(key)` → `unknown`
@@ -46,7 +46,7 @@ Returns the matches of a string against `pattern`. See also the
 
 ## Type assertions (advanced)
 
-These perform a **runtime downcast** — they do not parse or convert. The value must already be
+These perform a **runtime downcast** - they do not parse or convert. The value must already be
 exactly the named type or the program errors.
 
 #### `.assert(type)` → *type*
@@ -56,7 +56,7 @@ Asserts the value is `type` and returns it as that type; errors at runtime if it
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
 
 ```javascript
-auto n = "x".assertElse("number", 0)  // 0 — "x" is not a number
+auto n = "x".assertElse("number", 0)  // 0 - "x" is not a number
 ```
 
 > These are strict about the underlying type: an integer literal is `int`, not `number`, so

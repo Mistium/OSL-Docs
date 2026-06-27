@@ -1,4 +1,4 @@
-# Strings — Encoding, Hashing & Character Codes
+# Strings - Encoding, Hashing & Character Codes
 
 Methods for character codes, Base64/hex/binary encoding, cryptographic digests and reading input.
 

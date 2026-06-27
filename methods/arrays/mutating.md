@@ -1,12 +1,12 @@
-# Arrays — Adding & Removing
+# Arrays - Adding & Removing
 
 These methods change the array **in place**. The mutating ones (`append`, `prepend`, `insert`,
 `swap`) return the modified array. `pop` and `shift` return the removed element.
 
-#### `.append(item)` — mutates
+#### `.append(item)` - mutates
 Adds `item` to the end.
 
-#### `.prepend(item)` — mutates
+#### `.prepend(item)` - mutates
 Adds `item` to the front.
 
 ```javascript
@@ -15,7 +15,7 @@ void arr.append(4)   // arr is now [2, 3, 4]
 void arr.prepend(1)  // arr is now [1, 2, 3, 4]
 ```
 
-#### `.insert(index, item)` — mutates
+#### `.insert(index, item)` - mutates
 Inserts `item` before position `index` (1-indexed).
 
 ```javascript
@@ -23,7 +23,7 @@ arr = [1, 3, 4]
 void arr.insert(2, 2)  // arr is now [1, 2, 3, 4]
 ```
 
-#### `.swap(i, j)` — mutates
+#### `.swap(i, j)` - mutates
 Swaps the elements at positions `i` and `j` (1-indexed).
 
 ```javascript

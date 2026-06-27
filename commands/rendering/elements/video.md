@@ -42,7 +42,7 @@ video "videoID_here" "pause"
 
 ### "Seek"
 
-To seek (or jump to a specific part of) a video, the aptly named "seek" argument is used. By specifying a time in seconds, we can start the video at that point. Note that if the video was paused before calling "seek," this command resumes playback—the video can be paused after using "seek" to mitigate this.
+To seek (or jump to a specific part of) a video, the aptly named "seek" argument is used. By specifying a time in seconds, we can start the video at that point. Note that if the video was paused before calling "seek," this command resumes playback-the video can be paused after using "seek" to mitigate this.
 
 ```javascript
 // Starts the video at 10 seconds

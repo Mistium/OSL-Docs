@@ -1,4 +1,4 @@
-# Arrays — Slicing & Converting
+# Arrays - Slicing & Converting
 
 Take slices of an array or convert it to another shape.
 
@@ -35,5 +35,5 @@ Treats the array as a list of `[key, value]` pairs and builds an object from the
 log [["a", 1], ["b", 2]].toEntriesObj()  // {a: 1, b: 2}
 ```
 
-Arrays also support the universal methods `.len` (a property), `.toStr()`, `.getType()`, `.item(i)` — see
+Arrays also support the universal methods `.len` (a property), `.toStr()`, `.getType()`, `.item(i)` - see
 [Type & conversion methods](../types/README.md).

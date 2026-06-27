@@ -18,7 +18,7 @@ Rounds down to the nearest integer.
 
 Rounds up to the nearest integer.
 
-> The method is `.ceiling()`, not `ceil`. The standalone **function** form is `ceil(n)` — see [Built-in functions](../../builtins/builtins.md).
+> The method is `.ceiling()`, not `ceil`. The standalone **function** form is `ceil(n)` - see [Built-in functions](../../builtins/builtins.md).
 
 ```javascript
 log (2.7).round()      // 3

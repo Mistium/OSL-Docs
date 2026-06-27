@@ -1,12 +1,12 @@
 # Global Built-in Functions
 
-These functions are built into the compiler — you can call them anywhere without importing
+These functions are built into the compiler - you can call them anywhere without importing
 anything. They are distinct from **methods** (called on a value with a dot, like `"hi".toUpper()`,
 documented under [Methods](../methods/strings/README.md)) and from **packages** (imported with
 `import`, documented under [Packages](../packages/README.md)).
 
 > Many of the maths and conversion helpers also exist as methods. Where a method form exists it is
-> usually the idiomatic choice — for example prefer `value.toNum()` over `number(value)`.
+> usually the idiomatic choice - for example prefer `value.toNum()` over `number(value)`.
 
 ## Type & reflection
 
@@ -26,7 +26,7 @@ Returns a fresh, globally-unique symbol value. Useful as an unforgeable key or s
 ## Type conversion & construction
 
 These cast a value to another type. The method forms (`.toNum()`, `.toStr()`, `.toInt()`,
-`.toBool()`, `.toArray()`, `.toObject()`) are preferred in most code — see
+`.toBool()`, `.toArray()`, `.toObject()`) are preferred in most code - see
 [Type methods](../methods/types/README.md).
 
 | Function | Result | Notes |
@@ -75,8 +75,8 @@ log max(...[4, 9, 2])  // 9
 log dist(0, 0, 3, 4)   // 5
 ```
 
-Other maths (powers, roots, trigonometry, logarithms) are available as **number methods** —
-`n.sqrt()`, `n.sin()`, `n.clamp(lo, hi)`, … — see [Number methods](../methods/numbers/README.md), or
+Other maths (powers, roots, trigonometry, logarithms) are available as **number methods** -
+`n.sqrt()`, `n.sin()`, `n.clamp(lo, hi)`, … - see [Number methods](../methods/numbers/README.md), or
 via the [`math`](../packages/math.md) package for the full set.
 
 ## Encoding
@@ -110,7 +110,7 @@ if r.isOk() (
 ```
 
 #### `some(value)` → `option` / `none()` → `option`
-Construct an [optional](../packages/option.md) value — `some(v)` for a present value, `none()` for
+Construct an [optional](../packages/option.md) value - `some(v)` for a present value, `none()` for
 absence. Importing `osl/option` happens automatically.
 
 #### `ask(prompt)` → `result`
@@ -124,7 +124,7 @@ auto name = ask("What is your name? ").unwrapOr("anonymous")
 ## Advanced
 
 #### `raw(goCode)`
-Emits `goCode` verbatim into the generated Go program — an escape hatch for dropping to Go. Use
+Emits `goCode` verbatim into the generated Go program - an escape hatch for dropping to Go. Use
 sparingly; it bypasses OSL's type checks.
 
 ---
@@ -132,7 +132,7 @@ sparingly; it bypasses OSL's type checks.
 ### See also
 
 - **Statements** like `log` / `say`, `wait(ms)`, `return`, `throw`, `defer` are *commands*, not
-  functions — see [Commands](../commands/debugging/README.md).
+  functions - see [Commands](../commands/debugging/README.md).
 - **Methods** on values: [Strings](../methods/strings/README.md),
   [Numbers](../methods/numbers/README.md), [Arrays](../methods/arrays/README.md),
   [Objects](../methods/objects/README.md), [Types & conversion](../methods/types/README.md).

@@ -71,7 +71,7 @@ def add3(a, b, c) (
 )
 
 auto xs = [1, 2, 3]
-log add3(...xs)        // 6 — same as add3(1, 2, 3)
+log add3(...xs)        // 6 - same as add3(1, 2, 3)
 ```
 
 It can be combined with fixed leading arguments, and used to forward a rest

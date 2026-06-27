@@ -1,4 +1,4 @@
-# Numbers — Arithmetic & Conversion
+# Numbers - Arithmetic & Conversion
 
 Sign, magnitude, roots, clamping, primality and character-code conversion.
 
@@ -35,4 +35,4 @@ log (65).chr()  // "A"
 ```
 
 Numbers also support the universal conversion methods `.toStr()`, `.toInt()`, `.toNum()`,
-`.toBool()`, `.getType()`, `.clone()` — see [Type & conversion methods](../types/README.md).
+`.toBool()`, `.getType()`, `.clone()` - see [Type & conversion methods](../types/README.md).
