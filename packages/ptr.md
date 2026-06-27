@@ -16,10 +16,10 @@ import "osl/ptr"
 | --- | --- | --- |
 | `ptr.pointer(v: any)` | `number` | Runs the pointer operation. |
 | `ptr.deref(ptr: any)` | `any` | Runs the deref operation. |
-| `ptr.ref(v: any)` | `*Ponumberer` | Runs the ref operation. |
+| `ptr.ref(v: any)` | `*Pointer` | Runs the ref operation. |
 | `ptr.set(ptr: any, v: any)` | `boolean` | Sets a value. |
-| `ptr.alloc(v: any)` | `*Ponumberer` | Runs the alloc operation. |
-| `ptr.allocTyped(typeName: any, v: any)` | `*TypedPonumberer` | Runs the alloc typed operation. |
+| `ptr.alloc(v: any)` | `*Pointer` | Runs the alloc operation. |
+| `ptr.allocTyped(typeName: any, v: any)` | `*TypedPointer` | Runs the alloc typed operation. |
 | `ptr.isNull(ptr: any)` | `boolean` | Reports whether null. |
 | `ptr.addressOf(v: any)` | `number` | Runs the address of operation. |
 | `ptr.equalPointers(a: any, b: any)` | `boolean` | Runs the equal pointers operation. |

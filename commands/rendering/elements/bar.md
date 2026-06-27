@@ -1,5 +1,7 @@
 # Bar
 
+> ⚠️ **Not implemented in the current OSL CLI.** This command is not available in the current version.
+
 ## Description
 
 The `bar` command draws a progress bar with customizable dimensions, corner rounding, and fill percentage. The bar is positioned relative to the current draw cursor position and uses the current color for both the outline and fill.

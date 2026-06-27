@@ -78,18 +78,6 @@ combined = arr1 ++ arr2  // [1, 2, 3, 4]
 doubled = arr.map(def(x) -> (return x * 2))
 ```
 
-### Array Destructuring
-
-```javascript
-// Assign multiple variables from array elements
-var1, var2, var3 = [1, 2, 3]
-// var1 = 1, var2 = 2, var3 = 3
-
-// Skip elements using empty slots
-first, , third = [1, 2, 3]
-// first = 1, third = 3
-```
-
 ## Objects
 
 ### Creating Objects
@@ -149,18 +137,16 @@ merged = obj1 ++ obj2    // {a: 1, b: 2, c: 4}
 ### Cloning vs Referencing
 
 ```javascript
-// Deep clone (creates a new copy)
+// Reference: `=` makes both names point to the same data
 obj1 = {x: 1, y: {z: 2}}
-obj2 = obj1  // Creates a deep copy
+obj2 = obj1  // obj2 references the same object as obj1
 
-// Reference (points to the same object)
-obj3 @= obj1  // Creates a reference
+// Modifying through the reference affects the original
+obj2.x = 10  // Also changes obj1.x to 10
 
-// Modifying through reference affects original
-obj3.x = 10  // Also changes obj1.x to 10
-
-// Modifying clone doesn't affect original
-obj2.x = 20  // Only changes obj2.x
+// Independent copy: use .clone()
+obj3 = obj1.clone()  // obj3 is a deep copy of obj1
+obj3.x = 20          // Only changes obj3.x
 ```
 
 ## Important Notes
@@ -172,8 +158,6 @@ obj2.x = 20  // Only changes obj2.x
 - Expressions and variables are evaluated when the array/object is created
 - Nested structures are supported to any depth
 - All OSL data types can be stored in arrays and objects
-- Assignment with `=` creates deep clones
-- Assignment with `@=` creates references
-- Array destructuring allows easy unpacking of array elements
+- Assignment with `=` creates a reference (both names share the same data); use `.clone()` for an independent deep copy
 - Use `.contains()` to check for object keys
 - Use `.trim()` for array slicing 

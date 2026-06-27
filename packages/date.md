@@ -14,6 +14,7 @@ import "osl/date"
 
 | Method | Returns | Description |
 | --- | --- | --- |
+| `date.now()` | `dateDateTime` | Returns current date/time. |
 | `date.fromUnix(s: number)` | `dateDateTime` | Creates from unix. |
 | `date.fromUnixMs(ms: number)` | `dateDateTime` | Creates from unix ms. |
 | `date.duration(value: number)` | `dateDuration` | Runs the duration operation. |

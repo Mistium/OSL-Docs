@@ -1,5 +1,7 @@
 # .timestamp("component")
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 Returns a specific component of a timestamp.
 
 ## Syntax

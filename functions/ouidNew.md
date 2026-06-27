@@ -1,5 +1,7 @@
 # ouidNew()
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 The `ouidNew()` function generates a unique identifier string suitable for use as database keys, session IDs, or any other scenario requiring unique values.
 
 ```javascript

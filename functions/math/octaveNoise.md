@@ -1,5 +1,7 @@
 # octaveNoise(x, y, z, octaves, persistence)
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 The `octaveNoise()` function generates fractal Perlin noise by combining multiple layers (octaves) of noise at different frequencies and amplitudes. This creates more complex and natural-looking patterns than basic Perlin noise.
 
 ## Syntax

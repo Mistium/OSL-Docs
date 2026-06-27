@@ -1,5 +1,7 @@
 # formatFileSize()
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 The `formatFileSize()` function converts a file size in bytes to a human-readable string representation with appropriate units.
 
 ```javascript

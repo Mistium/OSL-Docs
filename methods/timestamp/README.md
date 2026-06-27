@@ -1,5 +1,7 @@
 # Timestamp Methods
 
+> ⚠️ **Not implemented in the current OSL CLI.**
+
 OSL provides powerful methods for working with timestamps and date/time conversions.
 
 ## Converting Timestamps

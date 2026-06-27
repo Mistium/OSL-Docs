@@ -30,12 +30,12 @@ class Person (
   
   def greet() (
     // Using ++ to concatenate strings without spaces where needed
-    return "Hello, my name is " ++ name ++ " and I am " ++ age ++ " years old."
+    return "Hello, my name is " ++ self.name ++ " and I am " ++ self.age ++ " years old."
   )
   
   def birthday() (
     self.age ++
-    return age
+    return self.age
   )
 )
 
@@ -60,12 +60,12 @@ class Counter (
   
   def increment() (
     self.count ++
-    return count
+    return self.count
   )
   
   def reset() (
     self.count = 0
-    return count
+    return self.count
   )
 )
 
@@ -89,14 +89,14 @@ class User (
   _password = "secret"
   
   def login(pass) (
-    if pass == _password (
+    if pass == self._password (
       return true
     )
     return false
   )
   
   def getPassword() (
-    return _password
+    return self._password
     // Accessible within class methods
   )
 )
@@ -159,14 +159,14 @@ class Calculator (
   result = 0
   
   def add(num) (
-    self.result = result + num
+    self.result = self.result + num
     // Directly access the result property
-    return result
+    return self.result
   )
   
   def subtract(num) (
-    self.result = result - num
-    return result
+    self.result = self.result - num
+    return self.result
   )
 )
 
@@ -226,14 +226,14 @@ class Character (
   
   def takeDamage(amount) (
     self.health -= amount
-    if health < 0 (
+    if self.health < 0 (
       self.health = 0
     )
-    return health
+    return self.health
   )
   
   def isAlive() (
-    return health > 0
+    return self.health > 0
   )
 )
 
@@ -264,11 +264,11 @@ class SecureStorage (
   )
   
   def get(key) (
-    return _data[key] ?? null
+    return self._data[key] ?? null
   )
   
   def has(key) (
-    return _data.contains(key)
+    return self._data.contains(key)
   )
 )
 

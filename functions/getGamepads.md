@@ -85,3 +85,9 @@ if gamepads.len > 0 (
 * If no gamepads are connected, the function returns an empty array.
 * Gamepad support varies by browser and device.
 * The haptic function may not work on all controllers or platforms.
+
+## Related Functions
+
+- `gamepadPressed(i, btn)` — Check if a button is currently pressed
+- `gamepadJustPressed(i, btn)` — Check if a button was just pressed this frame
+- `gamepadAxis(i, axis)` — Get the current value of an analog axis

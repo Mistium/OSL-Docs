@@ -46,6 +46,5 @@ log [1, 2, 3].double()  // [2, 4, 6]
 
 ## Notes
 
-- Methods that modify in place (`append`, `prepend`, `insert`, `swap`) return `null` — discard with
-  `void`.
+- Methods that modify in place (`append`, `prepend`, `insert`, `swap`) return the modified array.
 - Equality in `contains` / `index` is strict: `[1].contains("1")` is `false`.

@@ -63,7 +63,7 @@ log tui.table(["Name"], [["Ada"]])
 | `tui.barChart(data: array, width: any, showLabels: any)` | `string` | Runs the bar chart operation. |
 | `tui.width()` | `number` | Runs the width operation. |
 | `tui.height()` | `number` | Runs the height operation. |
-| `tui.size()` | `array` | Returns the number of stored values. |
+| `tui.size()` | `array` | Returns terminal width and height as [width, height]. |
 | `tui.newScreen()` | `*Screen` | Runs the new screen operation. |
 | `tui.readKey()` | `string` | Reads key. |
 | `tui.keyPressed()` | `boolean` | Runs the key pressed operation. |

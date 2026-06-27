@@ -13,8 +13,8 @@ import "osl/regex"
 ```javascript
 import "osl/regex"
 
-auto r = regex.new("[a-z]+")
-log r.match("hello123")
+log regex.match("[a-z]+", "hello123")
+log regex.findAll("[0-9]+", "abc123def456")
 ```
 
 ## API reference

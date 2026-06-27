@@ -1,4 +1,4 @@
-# radToDeg(radians)
+# radtodeg(radians)
 
 ## Description
 
@@ -16,13 +16,13 @@ Returns the angle converted to degrees.
 
 ```javascript
 // Convert π radians to degrees
-angle = radToDeg(3.14159)
+angle = radtodeg(3.14159)
 // returns approximately 180
 
 // Convert π/2 radians to degrees
-angle = radToDeg(1.5708)
+angle = radtodeg(1.5708)
 // returns approximately 90
 
 // Use with trigonometric functions
-direction = radToDeg(direction.atan())
+direction = radtodeg(direction.atan())
 ``` 
