@@ -120,90 +120,68 @@
 ## Packages
 
 * [Overview](packages/README.md)
-
-### Web & Networking
-
-* [serve](packages/serve.md)
-* [ws](packages/ws.md)
-* [requests](packages/requests.md)
-* [net](packages/net.md)
-* [url](packages/url.md)
-* [ftp](packages/ftp.md)
-* [ssh](packages/ssh.md)
-* [s3](packages/s3.md)
-* [webpush](packages/webpush.md)
-
-### Data & Serialization
-
-* [json](packages/json.md)
-* [yaml](packages/yaml.md)
-* [csv](packages/csv.md)
-* [xml](packages/xml.md)
-* [template](packages/template.md)
-* [mime](packages/mime.md)
-* [diff](packages/diff.md)
-
-### Databases & Storage
-
-* [db](packages/db.md)
-* [save](packages/save.md)
-* [cache](packages/cache.md)
-* [env](packages/env.md)
-
-### Filesystem & System
-
-* [fs](packages/fs.md)
-* [sys](packages/sys.md)
-* [process](packages/process.md)
-* [zip](packages/zip.md)
-
-### Crypto & Security
-
-* [crypto](packages/crypto.md)
-* [jwt](packages/jwt.md)
-
-### Text, Math & Time
-
-* [regex](packages/regex.md)
-* [semver](packages/semver.md)
-* [math](packages/math.md)
-* [random](packages/random.md)
-* [date](packages/date.md)
-* [cron](packages/cron.md)
-
-### Terminal & Logging
-
-* [tui](packages/tui.md)
-* [log](packages/log.md)
-* [notify](packages/notify.md)
-
-### Media & Documents
-
-* [img](packages/img.md)
-* [qr](packages/qr.md)
-* [pdf](packages/pdf.md)
-* [canvas](packages/canvas.md)
-* [colors](packages/colors.md)
-* [sound](packages/sound.md)
-
-### Scripting & Concurrency
-
-* [lua](packages/lua.md)
-* [thread](packages/thread.md)
-* [sync](packages/sync.md)
-
-### Utilities & Data Structures
-
-* [map](packages/map.md)
-* [set](packages/set.md)
-* [option](packages/option.md)
-* [result](packages/result.md)
-* [ptr](packages/ptr.md)
-
-### More
-
-* [email](packages/email.md)
-* [torrent](packages/torrent.md)
+  * [Web & Networking](packages/README.md)
+    * [serve](packages/serve.md)
+    * [ws](packages/ws.md)
+    * [requests](packages/requests.md)
+    * [net](packages/net.md)
+    * [url](packages/url.md)
+    * [ftp](packages/ftp.md)
+    * [ssh](packages/ssh.md)
+    * [s3](packages/s3.md)
+    * [webpush](packages/webpush.md)
+  * [Data & Serialization](packages/README.md)
+    * [json](packages/json.md)
+    * [yaml](packages/yaml.md)
+    * [csv](packages/csv.md)
+    * [xml](packages/xml.md)
+    * [template](packages/template.md)
+    * [mime](packages/mime.md)
+    * [diff](packages/diff.md)
+  * [Databases & Storage](packages/README.md)
+    * [db](packages/db.md)
+    * [save](packages/save.md)
+    * [cache](packages/cache.md)
+    * [env](packages/env.md)
+  * [Filesystem & System](packages/README.md)
+    * [fs](packages/fs.md)
+    * [sys](packages/sys.md)
+    * [process](packages/process.md)
+    * [zip](packages/zip.md)
+  * [Crypto & Security](packages/README.md)
+    * [crypto](packages/crypto.md)
+    * [jwt](packages/jwt.md)
+  * [Text, Math & Time](packages/README.md)
+    * [regex](packages/regex.md)
+    * [semver](packages/semver.md)
+    * [math](packages/math.md)
+    * [random](packages/random.md)
+    * [date](packages/date.md)
+    * [cron](packages/cron.md)
+  * [Terminal & Logging](packages/README.md)
+    * [tui](packages/tui.md)
+    * [log](packages/log.md)
+    * [notify](packages/notify.md)
+  * [Media & Documents](packages/README.md)
+    * [img](packages/img.md)
+    * [qr](packages/qr.md)
+    * [pdf](packages/pdf.md)
+    * [canvas](packages/canvas.md)
+    * [colors](packages/colors.md)
+    * [sound](packages/sound.md)
+  * [Scripting & Concurrency](packages/README.md)
+    * [lua](packages/lua.md)
+    * [thread](packages/thread.md)
+    * [sync](packages/sync.md)
+  * [Utilities & Data Structures](packages/README.md)
+    * [map](packages/map.md)
+    * [set](packages/set.md)
+    * [option](packages/option.md)
+    * [result](packages/result.md)
+    * [ptr](packages/ptr.md)
+  * [More](packages/README.md)
+    * [email](packages/email.md)
+    * [torrent](packages/torrent.md)
 
 ## Graphics (osl/window)
 
