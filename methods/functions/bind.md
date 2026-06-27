@@ -1,97 +1,52 @@
-# .bind(context)
+# `.bind(...args)`
 
-The `.bind()` method creates a new function that, when called, has its `this` keyword set to the provided value. This allows you to control what object the function operates on when it references `this`.
+`.bind` performs **partial application**: it returns a new function with the given arguments
+pre-filled from the left. Calling the new function supplies the remaining arguments.
 
-## Syntax
+OSL has no `this`, so `.bind` is about fixing arguments, not rebinding a context.
 
 ```javascript
-functionObject.bind(contextObject)
+auto add = (a, b) -> a + b
+auto add10 = add.bind(10)   // a is fixed to 10
+
+log add10.call(5)  // 15
+log add10.call(1)  // 11
 ```
 
 ## Parameters
 
-- `contextObject` - The object to be used as the `this` value when the function is called
+Any number of leading arguments to fix. `f.bind()` with no arguments returns an equivalent function.
 
-## Return Value
+## Return value
 
-A new function with the same body but bound to the specified context.
-
-## Description
-
-When a function uses variables or properties from its context (using `this`), the `.bind()` method allows you to specify what object those references should point to. This is particularly useful when:
-
-- You want to use a method from one object in the context of another object
-- You want to ensure a function always has a specific context, regardless of how it's called
-- You need to override the default context of a method
-
-The original function is not modified; instead, a new function is created with the bound context.
-
-## Examples
-
-### Basic Usage
+A new function. The original is untouched. The bound function can be called with
+[`.call(...)`](README.md) or, if it is held in a plain variable, directly.
 
 ```javascript
-obj = {
-  getVal: def() -> (
-    return val
-  ),
-  val: 10
-}
-
-log obj.getVal()
-// 10
-
-obj.getVal = obj.getVal.bind({val: 20})
-
-log obj.getVal()
-// 20
+add5 = (a, b, c) -> a + b + c
+addBound = add5.bind(1, 2)   // a=1, b=2 fixed
+log addBound(3)              // 6
 ```
 
-### Binding to a Different Object
+## Chaining
+
+`.bind` can be chained — each call fixes the next leading argument:
 
 ```javascript
-person = {
-  name: "Alice",
-  greet: def() -> (
-    return "Hello, my name is " + this.name
-  )
-}
-
-company = {
-  name: "Acme Corp"
-}
-
-// Create a new function bound to the company object
-companyGreeter = person.greet.bind(company)
-
-log person.greet()    // "Hello, my name is Alice"
-log companyGreeter()  // "Hello, my name is Acme Corp"
+auto add3 = (a, b, c) -> a + b + c
+auto step = add3.bind(1).bind(2)  // a=1, then b=2
+log step.call(3)                  // 6
 ```
 
-### Preserving Context in Callbacks
+## Works on any function value
+
+`.bind` (like `.call`) works on function values of any type — `auto`/unknown values, lambdas with a
+concrete signature, named functions, and functions returned from `.bind` itself.
 
 ```javascript
-counter = {
-  count: 0,
-  increment: def() -> (
-    this.count++
-    return this.count
-  )
-}
-
-// Without bind, 'this' would refer to the global context
-unboundIncrement = counter.increment
-// This would not work as expected because 'this' is not counter
-
-// With bind, 'this' refers to counter
-boundIncrement = counter.increment.bind(counter)
-
-log boundIncrement()  // 1
-log boundIncrement()  // 2
+mul = (a, b) -> a * b
+dbl = mul.bind(2)
+log [1, 2, 3].map(x -> dbl.call(x))  // [2, 4, 6]
 ```
 
-## Notes
-
-- The `.bind()` method does not execute the function it's called on; it creates a new function with the bound context
-- Once a function has been bound to a context, that binding cannot be overridden
-- You can use `.bind()` to create partially applied functions by providing additional arguments after the context 
+> Calling `.bind` on a non-function value is a `TypeError`.
