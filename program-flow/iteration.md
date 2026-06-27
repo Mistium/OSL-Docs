@@ -10,6 +10,17 @@ loop 3 (
 )
 ```
 
+The count is evaluated **once** before the loop starts, so mutating any variable
+it depends on inside the body does not change how many times the body runs.
+
+```js
+n = 3
+loop n (
+  n = n + 1 // does not extend the loop
+)
+// runs exactly 3 times
+```
+
 ## `for` Counted Loops
 
 Use `for name count` when you need a one-based counter.
@@ -22,6 +33,9 @@ for i 3 (
 // 2
 // 3
 ```
+
+Like `loop`, the count is evaluated once before the first iteration; changing a
+variable it was computed from inside the body has no effect on the iteration count.
 
 ## `for ... in`
 
