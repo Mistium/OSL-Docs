@@ -40,8 +40,6 @@ numbers = {
   num3: 1.5 * 2
 }
 
-log product.final()
-
 // Object with methods
 multiplier = 2
 product = {

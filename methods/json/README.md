@@ -26,7 +26,7 @@ data = {
 multiplier = 10
 obj = {
     base: 5,
-    computed: self.base * multiplier,  // References other properties
+    computed: 5 * multiplier,
     dynamic: "pre" ++ "fix"  // String concatenation
 }
 

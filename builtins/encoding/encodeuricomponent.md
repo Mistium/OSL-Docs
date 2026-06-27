@@ -21,5 +21,5 @@ encodedString = encodeURIComponent(urlString)
 
 // Log the result to the console
 log encodedString
-// Output: Hello%20World!%20How%20are%20you%
+// Output: Hello%20World!%20How%20are%20you%3F
 ```
