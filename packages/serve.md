@@ -159,6 +159,34 @@ app.static("/assets", "./public")           // serve a directory
 app.staticFile("/favicon.ico", "./fav.ico") // serve a single file
 ```
 
+## HTML templates
+
+Load Go `html/template` files with `loadHTMLGlob`, then render one by name with
+`c.html(code, name, data)`. Custom template functions can be registered with `setFuncMap` —
+call it **before** `loadHTMLGlob` so the parsed templates can see them:
+
+```javascript
+def upper(string s) string (
+  return s.toUpper()
+)
+
+*serve.Router app = serve.new()
+app.setFuncMap({"upper": upper})
+app.loadHTMLGlob("templates/**/*.html")
+
+app.GET("/", def(*serve.Context c) -> (
+  c.html(200, "home.html", { name: "world" })
+))
+```
+
+Templates are named by their base filename, plus any `{{define "name"}}` blocks.
+
+## CORS preflight
+
+An `OPTIONS` request to a route with no explicit `OPTIONS` handler runs the router's
+middleware chain (so `serve.cors(...)` / `serve.corsOpen()` can answer the preflight) and
+responds `204` with an `Allow` header if no middleware wrote a response.
+
 ## WebSockets
 
 Attach a [`ws`](ws.md) server to a route:
@@ -193,6 +221,8 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 - `app.use(...handlers)` → `*serve.Router`
 - `app.group(prefix, fn?)` → `*serve.Router`
 - `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
+- `app.setFuncMap(funcs)` - register template functions (call before `loadHTMLGlob`)
+- `app.loadHTMLGlob(pattern)` - parse HTML templates for `c.html(code, name, data)`
 - `app.serve(addr)` - start the server (blocks)
 - `app.serveTLS(addr, certFile, keyFile)`
 - `app.handler()` → the underlying HTTP handler
