@@ -35,4 +35,5 @@ log res["status"]
 ## Notes
 
 - Standard-library imports accept both `import "osl/requests"` and `import "requests"`.
+- `requests` can be imported alongside `osl/url` in the same program.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
