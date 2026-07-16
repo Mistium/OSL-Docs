@@ -15,6 +15,15 @@ void arr.append(4)   // arr is now [2, 3, 4]
 void arr.prepend(1)  // arr is now [1, 2, 3, 4]
 ```
 
+`append` and `prepend` return the same array reference, so they can be chained -
+each call mutates the original array, and `pop`/`shift` can end the chain:
+
+```javascript
+arr = []
+arr.append(1).append(2).append(3)  // arr is now [1, 2, 3]
+log arr.append(4).pop()            // 4, arr is now [1, 2, 3]
+```
+
 #### `.insert(index, item)` - mutates
 Inserts `item` before position `index` (1-indexed).
 

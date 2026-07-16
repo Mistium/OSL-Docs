@@ -24,10 +24,10 @@ log zip.list("dist.zip")
 | Method | Returns | Description |
 | --- | --- | --- |
 | `zip.compress(sourcePath: any, outputPath: any)` | `boolean` | Runs the compress operation. |
-| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Runs the decompress operation. |
+| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts an archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
 | `zip.list(zipPath: any)` | `any` | Runs the list operation. |
 | `zip.tar(sourcePath: any, outputPath: any)` | `boolean` | Runs the tar operation. |
-| `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Runs the untar operation. |
+| `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Extracts a tar archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
 | `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gzip operation. |
 | `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gunzip operation. |
 | `zip.compressString(data: any)` | `string` | Runs the compress string operation. |
