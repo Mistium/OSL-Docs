@@ -102,22 +102,21 @@ Here, the `until` statement is used to wait until a sensor detects an object bef
 
 ## Incrementing Loop Counters
 
-When using counters in loops, note that the `++` operator cannot be used as a standalone statement. Instead, use assignment operators like `+=` or full assignment:
+Counters can be incremented with the postfix `i++` / `i--` statements, or with assignment
+operators:
 
 ```js
 i = 0
 while i < 5 (
   log i
-  i += 1      // Valid: increment with assignment operator
+  i++         // postfix increment statement
 )
 
-// Alternative
-i = 0
-while i < 5 (
-  log i
-  i = i + 1   // Also valid: explicit assignment
-)
-
-// NOT valid:
-// i++         // SyntaxError: Cannot use '+' here
+// Equivalent forms
+i += 1        // increment with assignment operator
+i = i + 1     // explicit assignment
+i--           // postfix decrement
 ```
+
+Note that `++` between two values is the string concatenation operator (`a ++ b`); the postfix
+increment form only applies when `x++` stands alone as a statement.
