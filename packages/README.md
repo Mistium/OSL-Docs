@@ -45,6 +45,7 @@ On each package page these are listed under **"Returned object"** headings.
 | --- | --- |
 | [serve](serve.md) | HTTP server / web framework (routing, middleware, contexts). |
 | [ws](ws.md) | WebSocket client and server. |
+| [originchats](originchats.md) | Bot framework for OriginChats servers. |
 | [requests](requests.md) | HTTP client (`get`/`post`/`put`/…). |
 | [net](net.md) | Low-level TCP/UDP sockets and DNS lookups. |
 | [url](url.md) | URL parsing, building and query-string handling. |
