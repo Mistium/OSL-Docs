@@ -114,6 +114,7 @@
 * [Web & Networking](packages/categories/web.md)
   * [serve](packages/serve.md)
   * [ws](packages/ws.md)
+  * [originchats](packages/originchats.md)
   * [requests](packages/requests.md)
   * [net](packages/net.md)
   * [url](packages/url.md)
