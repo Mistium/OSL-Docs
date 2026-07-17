@@ -1,7 +1,8 @@
 # Arrays - Transforming
 
 Methods that produce a new array from an existing one. Lambdas use the arrow form
-`param -> expression`.
+`param -> expression`. Any function value works as a callback, including typed
+lambdas like `(number x) number -> x * 2` and named functions.
 
 #### `.map(fn)` → `array`
 Applies `fn` to every element and collects the results.
