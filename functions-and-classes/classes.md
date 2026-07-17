@@ -47,12 +47,12 @@ log Person.birthday()
 // 1
 
 log Person.age
-// 1
+// null (properties cannot be read directly on the class name - see Class Properties)
 ```
 
 ## Class Properties
 
-Properties are variables defined within a class. They store the state of the class and can be accessed and modified through class methods or directly.
+Properties are variables defined within a class. They store the state of the class and can be accessed and modified through class methods (via `self`), or directly through a variable the class has been assigned to. Reading a property directly on the class name itself (e.g. `Counter.count`) always returns `null` - assign the class to a variable first if you need direct property access.
 
 ```javascript
 class Counter (
@@ -70,18 +70,22 @@ class Counter (
 )
 
 log Counter.count
-// 0
+// null (direct reads on the class name return null)
 log Counter.increment()
 // 1
 log Counter.increment()
 // 2
 log Counter.reset()
 // 0
+
+c = Counter
+log c.count
+// 0 (reads through a variable work)
 ```
 
 ## Private Properties
 
-Properties that start with an underscore (`_`) are considered private and can only be accessed from within the class's methods. This provides a way to encapsulate internal state.
+Properties that start with an underscore (`_`) are considered private and can only be accessed from within the class's methods. Accessing a private property from outside the class does not raise an error - it silently returns `null`. This provides a way to encapsulate internal state.
 
 ```javascript
 class User (
@@ -102,9 +106,9 @@ class User (
 )
 
 log User.username
-// "guest"
+// null (direct reads on the class name return null)
 log User._password
-// Error: Cannot access private property
+// null (private reads from outside silently return null - no error)
 log User.login("secret")
 // true
 log User.getPassword()
@@ -137,7 +141,7 @@ class Dog extends Animal (
 )
 
 log Dog.type
-// "Dog"
+// null (direct reads on the class name return null)
 log Dog.makeSound()
 // "Woof"
 log Dog.fetch()
@@ -176,9 +180,9 @@ log Calculator.subtract(2)
 // 3
 ```
 
-## Cloning vs. Referencing Classes
+## Assigning Classes to Variables
 
-When assigning a class to a variable, the default behavior is to create a clone (a copy) of the class. To create a reference instead, use the `@=` operator.
+Assigning a class to a variable does **not** create a copy. Every variable assigned from the class refers to the same shared state - changes made through one variable are visible through every other variable and through the class's own methods.
 
 ```javascript
 // Define a class
@@ -187,28 +191,24 @@ class Counter (
   
   def increment() (
     self.count ++
-    return count
+    return self.count
   )
 )
 
-// Clone the class (creates a separate copy)
 myCounter = Counter
 myCounter.count = 10
 
-log Counter.count
-// 0 (original unchanged)
 log myCounter.count
 // 10
+log Counter.increment()
+// 11 (the class shares the same state)
 
-// Create a reference to the class
-sharedCounter @= Counter
-sharedCounter.count = 5
-
-log Counter.count
-// 5 (original changed)
-log sharedCounter.count
-// 5
+other = Counter
+log other.count
+// 11 (every variable sees the shared state)
 ```
+
+Note that the `@=` reference operator (which creates references for regular objects) does not work with classes - accessing any property or method through a name bound with `sharedCounter @= Counter` raises a TypeError.
 
 ## Examples
 
@@ -277,13 +277,14 @@ storage.set("username", "admin")
 log storage.get("username")
 // "admin"
 log storage._data
-// Error: Cannot access private property
+// null (private reads from outside silently return null - no error)
 ```
 
 ## Notes
 
 * Classes in OSL are first-class objects
 * Class names typically use PascalCase by convention
-* Private properties (starting with `_`) provide encapsulation
+* Private properties (starting with `_`) provide encapsulation; reading them from outside returns `null`
+* Reading a property directly on the class name returns `null`; use a variable or a method
 * Inheritance allows for code reuse through the `extends` keyword
-* By default, assigning a class creates a clone; use `@=` for references
+* Assigning a class to a variable shares the class state; it does not create a copy
