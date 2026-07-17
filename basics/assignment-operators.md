@@ -2,7 +2,7 @@
 
 In osl you can use an assignment operator to set a variable to itself but modified by an operator. This allows you to compact code into a simpler format.&#x20;
 
-An example of an assignment operator is `+=` where it adds a number to the variable or joins a string to the variable with a space
+An example of an assignment operator is `+=` where it adds a number to the variable or joins a string directly onto the variable (no separator is added)
 
 ```javascript
 variable = 10
@@ -19,7 +19,8 @@ variable += number
 // adds a number to the variable value
 
 variable += string
-// joins a string to the variable value with a space
+// joins a string directly onto the variable value
+// "hello" += "world" gives "helloworld"
 
 variable -= number
 // subtracts a number from the variable value

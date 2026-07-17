@@ -18,7 +18,7 @@ Constrains the value to the range `[min, max]`.
 Square root.
 
 #### `.isPrime()` → `boolean`
-Whether the (integer) value is prime.
+Whether the (integer) value is prime. Fractional values are truncated toward zero first, so `(3.7).isPrime()` is `true` (it checks `3`).
 
 ```javascript
 log (-8).sign()        // "-"

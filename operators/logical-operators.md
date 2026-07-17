@@ -8,7 +8,7 @@ Logical operators like `and` and `or` are evaluated **after** all other comparis
 
 ## AND
 
-A logical and statement will evaluate both of its operands, and if they are both true, then it will return true, otherwise it will return false. The way you write an `and` operator in osl is simply a lowercase `and`.
+A logical and statement will evaluate both of its operands, and if they are both truthy, then it will return true, otherwise it will return false. Unlike `or`, `and` always returns a boolean, not one of its operands. The way you write an `and` operator in osl is simply a lowercase `and`.
 
 You can see the truth table below
 
@@ -32,9 +32,9 @@ log 10 == 10 and true
 
 ## OR
 
-A logical or statement will evaluate both of its operands, and if either or both of them are true, then it will return true, otherwise it will return false. The way you write an `or` operator in osl is simply a lowercase `or`.
+A logical or statement returns its **first operand if it is truthy, otherwise its second operand** - like JavaScript's `||`, it returns one of the operands rather than always returning a boolean. This makes it useful for fallback values. The way you write an `or` operator in osl is simply a lowercase `or`.
 
-You can see the truth table below
+When both operands are booleans this matches the classic truth table below
 
 | A     | B     | A or B |
 | ----- | ----- | ------ |
@@ -45,8 +45,21 @@ You can see the truth table below
 
 ```javascript
 log true or false
-// this returns true
+// true
+
+log 0 or 5
+// 5 - the left operand is falsy, so the right operand is returned
+
+log "a" or "b"
+// "a" - the left operand is truthy, so it is returned
+
+log null or "fallback"
+// "fallback"
 ```
+
+Note that `and` and `or` are asymmetric: `and` always returns a boolean, while `or` returns one of its operands.
+
+Be careful with numeric truthiness: a whole number is only considered truthy when it equals exactly `1` (fractional non-zero values like `5.5` are also truthy). So `2 or 3` returns `3`, because `2` is not treated as truthy. To fall back only on `null`, use the [nullish coalescing operator](nullish-coalescing-operator.md) (`??`) instead.
 
 ## NOR
 

@@ -51,8 +51,12 @@ arr = [1, 2, 3]
 log arr.pop()  // 3, arr is now [1, 2]
 ```
 
-#### `.delete(item)` → `array`
-Removes `item` from the array and returns the modified array.
+#### `.delete(index)` → `array`
+Removes the item at 1-based `index` and returns the modified array. Note this takes an index, not an item to search for — a non-numeric argument casts to `0` and is a silent no-op.
+
+```javascript
+log ["a", "b", "c"].delete(2)  // ["a", "c"]
+```
 
 #### `.trim(start, end)` → `array`
 Returns the slice from position `start` to `end` (inclusive, 1-indexed).

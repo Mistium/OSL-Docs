@@ -2,6 +2,8 @@
 
 Arrays in OSL are **1-indexed** - the first element is at index 1. Index `0` and out-of-range
 indices return `null`; negative indices count from the end (`arr[-1]` is the last element).
+Writes follow the same rules: assigning to index `0` or past the end is silently ignored, while
+a negative index writes from the end (`arr[-1] = x` replaces the last element).
 
 ```javascript
 arr = [10, 20, 30, 40, 50]
@@ -43,6 +45,8 @@ Array.double = def() -> (
 
 log [1, 2, 3].double()  // [2, 4, 6]
 ```
+
+A custom method may reuse a built-in name — from its definition onward it overrides the built-in.
 
 ## Notes
 
