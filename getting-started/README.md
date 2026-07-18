@@ -128,7 +128,7 @@ A project can be a single file, or many. There are three kinds of `import`:
 
 ```javascript
 import "osl/fs"            // a standard-library package (the osl/ prefix is optional: import "fs")
-import "./helpers.osl"     // another OSL file in your project (path is relative to this file)
+import "./helpers.osl"     // another OSL file in your project (relative to this file; ./ optional for same-dir: import "helpers.osl")
 import "go/strings"        // a raw Go package, for advanced interop
 ```
 
