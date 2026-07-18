@@ -62,6 +62,7 @@ On each package page these are listed under **"Returned object"** headings.
 | [csv](csv.md) | CSV parsing plus a small dataframe-style toolkit. |
 | [xml](xml.md) | XML parsing and querying. |
 | [template](template.md) | Lightweight `{{ }}` templating with HTML escaping. |
+| [md](md.md) | Markdown to HTML (CommonMark + GFM via goldmark). |
 | [mime](mime.md) | MIME-type lookup and parsing. |
 | [diff](diff.md) | Text/line/word diffing. |
 

@@ -128,6 +128,7 @@
   * [csv](packages/csv.md)
   * [xml](packages/xml.md)
   * [template](packages/template.md)
+  * [md](packages/md.md)
   * [mime](packages/mime.md)
   * [diff](packages/diff.md)
 * [Databases & Storage](packages/categories/storage.md)
