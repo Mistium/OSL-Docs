@@ -2,7 +2,8 @@
 
 > Markdown to HTML (CommonMark + GFM via goldmark)
 
-Use `md` to turn Markdown into HTML. It is built for serving pages with
+Use `md` to turn Markdown into HTML (and back with
+[`md.fromHTML`](#mdfromhtmlsource--string)). It is built for serving pages with
 [`serve`](serve.md) and composing markup with [`template`](template.md).
 
 ```javascript
@@ -91,6 +92,17 @@ left as-is. Only use this with trusted input.
 ```javascript
 string html = md.toHTMLUnsafe("Hello <em>world</em>")
 // contains a real <em> element
+```
+
+#### `md.fromHTML(source)` → `string`
+The inverse of [`md.toHTML`](#mdtohtmlsource--string): converts an HTML `source`
+string into Markdown. Headings, emphasis, links, lists, and other common
+elements map to their Markdown equivalents; unconvertible input yields an empty
+string.
+
+```javascript
+string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
+// # Hello\n\na **bold** word
 ```
 
 ## Notes
