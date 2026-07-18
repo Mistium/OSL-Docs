@@ -181,6 +181,38 @@ app.GET("/", def(*serve.Context c) -> (
 
 Templates are named by their base filename, plus any `{{define "name"}}` blocks.
 
+## OSL-native pages (`render` + layouts)
+
+For OSL apps, prefer [`osl/template`](template.md) over Go's `html/template`. Point the
+router at a views directory with `views(dir)`, optionally set a wrapping `layout(name)`,
+then respond with `c.render(name, data)`. Views are `<dir>/<name>.html` and render through
+`template.renderHTML` — values are **HTML-escaped by default**; use `{{& field}}` for
+trusted raw HTML (e.g. Markdown you rendered with [`md`](md.md)).
+
+The layout receives the rendered page as `body`; emit it raw with `{{& body}}`.
+
+```javascript
+import "osl/serve"
+import "osl/md"
+
+// views/layout.html →  <!doctype html><title>{{ title }}</title><main>{{& body}}</main>
+// views/post.html   →  <h1>{{ title }}</h1><article>{{& html}}</article>
+
+*serve.Router app = serve.new()
+app.views("views")
+app.layout("layout")
+
+app.GET("/", def(*serve.Context c) -> (
+  c.render("post", {
+    title: "Hello",
+    html:  md.toHTML("**bold** and _italic_")   // composed, not reimplemented
+  })
+))
+```
+
+`render` always responds `200`. Set other statuses with `c.html`/`c.string`, or render the
+body yourself and pass it to `c.send(code, "text/html", body)`.
+
 ## CORS preflight
 
 An `OPTIONS` request to a route with no explicit `OPTIONS` handler runs the router's
@@ -223,6 +255,8 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 - `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
 - `app.setFuncMap(funcs)` - register template functions (call before `loadHTMLGlob`)
 - `app.loadHTMLGlob(pattern)` - parse HTML templates for `c.html(code, name, data)`
+- `app.views(dir)` - set the directory for `c.render` views (`<dir>/<name>.html`)
+- `app.layout(name)` - wrap `c.render` output in `views/<name>.html` via `{{& body}}`
 - `app.serve(addr)` - start the server (blocks)
 - `app.serveTLS(addr, certFile, keyFile)`
 - `app.handler()` → the underlying HTTP handler
@@ -283,6 +317,7 @@ Methods available on `serveContext` values returned by this package or construct
 | `value.json(code: number, obj: any)` | `void` | Runs the json operation. |
 | `value.html(code: number, body: string, ...data: any)` | `void` | Runs the html operation. |
 | `value.HTML(code: number, name: string, data: any)` | `void` | Runs the html operation. |
+| `value.render(name: string, data: object)` | `void` | Renders `views/<name>.html` via `osl/template` (escaped; `{{& x}}` for raw), wraps in the layout if set, responds `200`. |
 | `value.data(code: number, contentType: string, body: bytes)` | `void` | Runs the data operation. |
 | `value.redirect(code: number, url: string)` | `void` | Runs the redirect operation. |
 | `value.noContent()` | `void` | Runs the no content operation. |
@@ -369,6 +404,8 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.staticFile(pattern: string, filepath: string)` | `void` | Runs the static file operation. |
 | `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
 | `value.LoadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
+| `value.views(dir: string)` | `*serveRouter` | Sets the views directory for `c.render`. |
+| `value.layout(name: string)` | `*serveRouter` | Sets the layout template wrapping `c.render` output. |
 | `value.use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
 | `value.group(prefix: string, ...fn?: func(router))` | `*serveRouter` | Creates a route group with optional router callback functions. |
 | `value.Use(...handlers: serveHandler)` | `*serveRouter` | Runs the use operation. |
