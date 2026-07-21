@@ -8,6 +8,34 @@ To define a custom function, use the `def` keyword followed by the function name
 and parameters. Declare local variables inside the function with `any`, `auto`,
 or another type keyword.
 
+## Return Types
+
+A return type can be written between the parameter list and the body. It may be
+any type keyword, including collection types such as `object[]`, `string[]`, or
+`number[]`. When a return type is declared, OSL checks every `return` and coerces
+array/object literals to match it — so `return []` and `return [{...}]` both
+satisfy an `object[]` return type.
+
+```javascript
+def handleAuth(object msg) object[] (
+  return [{cmd: "ok", val: msg.key}]
+)
+
+def handleCmd(object msg) object[] (
+  switch msg.cmd (
+    case "auth"
+      return handleAuth(msg)
+    default
+      return []
+  )
+)
+
+object[] resp = handleCmd({cmd: "auth", key: "abc"})
+```
+
+Returning a value whose type can't match the declared return type (for example a
+`number` from an `object[]` function) raises a compile error at the `return`.
+
 ## Example: Basic Arithmetic Function
 
 Here's how you can create a function that performs basic arithmetic operations and returns a result:
