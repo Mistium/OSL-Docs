@@ -11,10 +11,11 @@ or another type keyword.
 ## Return Types
 
 A return type can be written between the parameter list and the body. It may be
-any type keyword, including collection types such as `object[]`, `string[]`, or
-`number[]`. When a return type is declared, OSL checks every `return` and coerces
-array/object literals to match it — so `return []` and `return [{...}]` both
-satisfy an `object[]` return type.
+any type keyword, including collection types at any nesting depth — `object[]`,
+`string[]`, `number[]`, `object[][]`, `string[][][]`, and so on. When a return
+type is declared, OSL checks every `return` and coerces array/object literals to
+match it — so `return []`, `return [{...}]`, and `return [[{...}]]` all satisfy
+the matching array return type.
 
 ```javascript
 def handleAuth(object msg) object[] (
