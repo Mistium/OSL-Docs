@@ -29,6 +29,41 @@ standard-library packages: to import a local directory literally named `osl`, wr
 
 Missing third-party Go dependencies are fetched automatically when you compile.
 
+## Modules — `import(...)` as a value
+
+The statement `import "./x.osl"` merges another file's functions into the current scope.
+The **expression** form `import("./x.osl")` instead returns that file as a **module object**
+whose fields are its public functions:
+
+```javascript
+object math = import("./math.osl")
+
+log math.add(2, 3)
+log math.square(4)
+```
+
+Top-level names that start with `_` are **private**: they are not exposed on the module
+object, but the module's own functions can still call them.
+
+```javascript
+// math.osl
+def _double(number n) number (
+  return n * 2
+)
+
+def square(number n) number (
+  return n * n
+)
+
+def quadruple(number n) number (
+  return _double(_double(n))
+)
+```
+
+Here `math.square` and `math.quadruple` are callable from outside, but `math._double` is not
+— it exists only for the module's internal use. `import(...)` works with local `.osl` files
+whose path is a string literal.
+
 ## Returned objects
 
 Some packages give you an **object** to keep working with. For example, `db.open()` returns a
