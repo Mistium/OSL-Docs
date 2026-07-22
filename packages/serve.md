@@ -221,20 +221,30 @@ responds `204` with an `Allow` header if no middleware wrote a response.
 
 ## WebSockets
 
-Attach a [`ws`](ws.md) server to a route:
+Attach a [`ws`](ws.md) server to a route with `app.WS`. HTTP and websockets can share a
+path — upgrade requests go to the socket, everything else hits the HTTP handlers. You can
+also upgrade from inside a handler with `c.isWebsocket()` / `c.upgrade(socket)`.
 
 ```javascript
 import "osl/serve"
 import "osl/ws"
 
 *serve.Router app = serve.new()
-*ws.Server chat = ws.NewServer(":8080", "/chat")
+auto socket = ws.New()   // no listen address — serve owns the port
 
-chat.OnMessage(def(*ws.Connection conn, string msg) -> (
+socket.OnMessage(def(*ws.Connection conn, string msg) -> (
   conn.Send("echo: " ++ msg)
 ))
 
-app.WS("/chat", chat)
+// Dedicated path
+app.WS("/chat", socket)
+
+// Same path for HTTP + WS — no manual upgrade needed:
+app.GET("/", def(*serve.Context c) -> (
+  c.string(200, "open a websocket on /")
+))
+app.WS("/", socket)
+
 app.serve(":8080")
 ```
 
@@ -270,15 +280,16 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 ### Context (`*serve.Context`)
 
 **Read:** `method()`, `path()`, `host()`, `ip()`, `param(k)`, `query(k)`, `queryDefault(k, d)`,
-`queryInt(k, d)`, `queryBool(k, d)`, `queryArray(k)`, `header(k)`, `bearer()`, `body()`, `bodyBytes()`,
-`bodyJSON()`, `bodyJSONArray()`, `formValue(k)`, `formFile(k)`, `cookie(k)`, `cookies()`, `userAgent()`,
-`referer()`, `isJSON()`, `isForm()`, `isWebSocket()`, `isAjax()`, `contentType()`, `fullURL()`.
+`queryInt(k, d)`, `queryBool(k, d)`, `queryArray(k)`, `header(k)`, `headers()`, `bearer()`, `body()`,
+`bodyBytes()`, `bodyJSON()`, `bodyJSONArray()`, `formValue(k)`, `formFile(k)`, `cookie(k)`, `cookies()`,
+`userAgent()`, `referer()`, `isJSON()`, `isForm()`, `isWebSocket()` / `isWebsocket()`, `isAjax()`,
+`contentType()`, `fullURL()`.
 
 **Write:** `status(code)`, `string(code, text)`, `json(code, obj)`, `html(code, body)`, `text(code, body)`,
 `data(code, contentType, bytes)`, `redirect(code, url)`, `noContent()`, `ok(obj)`, `created(obj)`,
 `badRequest(msg)`, `unauthorized(msg)`, `forbidden(msg)`, `notFound(msg)`, `internalError(msg)`,
 `file(path)`, `attachment(path, name)`, `setHeader(k, v)`, `addHeader(k, v)`, `setCookie(...)`,
-`clearCookie(name)`.
+`clearCookie(name)`, `upgrade(wsServer)` / `Upgrade(wsServer)`.
 
 **Flow & state:** `next()`, `abort(...)`, `isAborted()`, `set(k, v)`, `get(k)`, `getString(k)`,
 `getInt(k)`, `getBool(k)`, `getFloat(k)`.
@@ -337,7 +348,10 @@ Methods available on `serveContext` values returned by this package or construct
 | `value.host()` | `string` | Runs the host operation. |
 | `value.remoteAddr()` | `string` | Runs the remote addr operation. |
 | `value.ip()` | `string` | Runs the ip operation. |
-| `value.isWebSocket()` | `boolean` | Reports whether web socket. |
+| `value.isWebSocket()` | `boolean` | `true` when the request is a WebSocket upgrade. |
+| `value.isWebsocket()` | `boolean` | Same as `isWebSocket()` with the more natural OSL casing. |
+| `value.upgrade(server: *wsServer)` | `boolean` | Hijacks this request into the given websocket server. Returns `false` if already written, not an upgrade, or server is nil. |
+| `value.Upgrade(server: *wsServer)` | `boolean` | Alias of `upgrade`. |
 | `value.contentType()` | `string` | Runs the content type operation. |
 | `value.isJSON()` | `boolean` | Reports whether json. |
 | `value.isForm()` | `boolean` | Reports whether form. |
@@ -349,6 +363,8 @@ Methods available on `serveContext` values returned by this package or construct
 | `value.param(key: string)` | `string` | Runs the param operation. |
 | `value.paramInt(key: string, def: number)` | `number` | Runs the param int operation. |
 | `value.header(key: string)` | `string` | Runs the header operation. |
+| `value.headers()` | `object` | Every request header as an object (single values are strings; multi-value headers become arrays). |
+| `value.Headers()` | `object` | Alias of `headers`. |
 | `value.hasHeader(key: string, value: string)` | `boolean` | Reports whether header. |
 | `value.setHeader(key: string, value: string)` | `void` | Sets header. |
 | `value.addHeader(key: string, value: string)` | `void` | Adds header. |
@@ -399,7 +415,7 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.OPTIONS(pattern: string, ...handlers: serveHandler)` | `void` | Registers a OPTIONS route handler. |
 | `value.HEAD(pattern: string, ...handlers: serveHandler)` | `void` | Registers a HEAD route handler. |
 | `value.ANY(pattern: string, ...handlers: serveHandler)` | `void` | Registers a ANY route handler. |
-| `value.WS(pattern: string, server: *wsServer)` | `void` | Runs the ws operation. |
+| `value.WS(pattern: string, server: *wsServer)` | `void` | Mounts a websocket server on `pattern`. Safe alongside HTTP handlers on the same path — upgrades go to the socket, everything else keeps hitting HTTP. |
 | `value.static(prefix: string, dir: string)` | `void` | Runs the static operation. |
 | `value.staticFile(pattern: string, filepath: string)` | `void` | Runs the static file operation. |
 | `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
