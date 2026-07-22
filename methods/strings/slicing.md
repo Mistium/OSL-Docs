@@ -2,6 +2,19 @@
 
 Methods that extract parts of a string or break it into an array.
 
+#### Slice syntax `[from:to]`
+`value[from:to]` is shorthand for `value.trim(from, to)` and works on both
+strings and arrays. Indices are 1-based; either side may be omitted to run to
+the start or the end.
+
+```javascript
+log "hello"[1:3]   // "hel"
+log "hello"[:3]    // "hel"   (from the start)
+log "hello"[2:]    // "ello"  (to the end)
+log "hello"[:]     // "hello" (whole copy)
+log [1, 2, 3, 4, 5][2:4]  // [2, 3, 4]
+```
+
 #### `.left(n)` → `string`
 The first `n` characters.
 
