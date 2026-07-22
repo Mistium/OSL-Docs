@@ -159,8 +159,8 @@ Creates a single directory. Fails if the parent directory doesn't exist.
 Creates `path` and any missing parent directories.
 
 #### `fs.copy(srcPath, dstPath)` → `boolean`
-Copies the file `srcPath` to `dstPath`, streaming so large files aren't loaded into memory. Fails if
-`dstPath` already exists.
+Copies the file `srcPath` to `dstPath`, streaming so large files aren't loaded into memory and
+preserving the file's permissions. Fails if `dstPath` already exists.
 
 #### `fs.copyDir(srcPath, dstPath)` → `boolean`
 Recursively copies the directory `srcPath` to `dstPath`.
