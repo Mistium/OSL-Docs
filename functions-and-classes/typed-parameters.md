@@ -59,6 +59,54 @@ log double(10)    // Works correctly, outputs: 20
 log double("10")  // Error: Expected number but got string
 ```
 
+### Optional Parameters (`type?`)
+
+Adding `?` to a parameter's type makes it **nullable and optional**. A `?` parameter
+accepts `null`, and if it is a trailing parameter, callers may omit it entirely — the
+value defaults to `null`.
+
+```javascript
+def silly(number value, number? add) number (
+  if add == null (
+    return value
+  )
+  return value + add
+)
+
+log silly(10, 10)   // 20
+log silly(10, null) // 10
+log silly(10)       // 10 — omitted, add is null
+```
+
+Multiple trailing optionals fill left to right:
+
+```javascript
+def multi(number a, number? b, number? c) number (
+  out = a
+  if b != null (
+    out += b
+  )
+  if c != null (
+    out += c
+  )
+  return out
+)
+
+log multi(1)       // 1
+log multi(1, 2)    // 3
+log multi(1, 2, 3) // 6
+```
+
+Notes:
+
+- Only **trailing** `?` parameters may be omitted. A `?` parameter followed by a
+  required one (e.g. `def f(number? a, number b)`) is still nullable, but must be
+  passed explicitly.
+- This differs from passing `null` to a plain typed parameter: a plain `number`
+  parameter coerces `null` to `0`, while a `number?` parameter preserves the `null`
+  so you can test for it with `== null`.
+- `?` works in lambdas too: `silly = def(number value, number? add) -> ( ... )`.
+
 ### Complex Type Annotations
 
 You can also use type annotations with more complex function signatures:
