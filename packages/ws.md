@@ -14,8 +14,9 @@ import "osl/ws"
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `ws.Connect(url: string, ...protocols: string)` | `*wsConnection` | Runs the connect operation. |
-| `ws.NewServer(addr: string, path: string)` | `*wsServer` | Runs the new server operation. |
+| `ws.Connect(url: string, ...protocols: string)` | `*wsConnection` | Opens a WebSocket client connection. |
+| `ws.New(...args: string)` | `*wsServer` | Builds a server meant to be mounted on `serve` (`app.WS`, `c.upgrade`). No listen address. Optional: `New(path)` or `New(addr, path)`. Path defaults to `"/"`. |
+| `ws.NewServer(addr: string, path: string)` | `*wsServer` | Builds a standalone server that can `Start`/`StartTLS` on `addr+path`, or still be mounted on serve like `New()`. |
 
 ### `wsConnection` values
 
@@ -50,6 +51,25 @@ Methods available on `wsServer` values returned by this package or constructed b
 | `value.StartTLS(certFile: string, keyFile: string)` | `error` | Starts tls. |
 | `value.HandleWebSocket()` | `http.HandlerFunc` | Runs the handle web socket operation. |
 | `value.Stop()` | `error` | Runs the stop operation. |
+
+## Mounting on serve
+
+Prefer `ws.New()` when the HTTP server owns the listener:
+
+```javascript
+import "osl/serve"
+import "osl/ws"
+
+auto socket = ws.New()
+socket.OnMessage(def(*ws.Connection conn, string msg) -> (
+  conn.Send("echo: " ++ msg)
+))
+*serve.Router app = serve.new()
+app.WS("/ws", socket)
+app.serve(":8080")
+```
+
+`ws.NewServer(addr, path)` is for standalone servers that call `Start()` themselves.
 
 ## Notes
 
