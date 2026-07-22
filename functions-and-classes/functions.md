@@ -37,6 +37,18 @@ object[] resp = handleCmd({cmd: "auth", key: "abc"})
 Returning a value whose type can't match the declared return type (for example a
 `number` from an `object[]` function) raises a compile error at the `return`.
 
+A return type with a trailing `?` (e.g. `number?`) is nullable — the function may
+return either the base type or `null`:
+
+```javascript
+def pick(boolean which) number? (
+  if which (
+    return 42
+  )
+  return null
+)
+```
+
 ## Optional Parameters
 
 A parameter typed with a trailing `?` (e.g. `number? add`) is nullable and, when

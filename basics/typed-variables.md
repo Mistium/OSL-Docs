@@ -137,6 +137,25 @@ string? myString = null
 
 This is super useful for when you want to initialise a typed variable early and set its value later.
 
+Assigning a value of the wrong base type to an optional variable is still a compile error:
+
+```typescript
+number? x = 5
+x = null    // fine
+x = "hello" // TypeError: Cannot assign string to variable of type number?
+```
+
+`?` types work everywhere types are written — [function parameters](../functions-and-classes/typed-parameters.md#optional-parameters-type) (where trailing `?` parameters may also be omitted by the caller) and function return types:
+
+```typescript
+def pick(boolean which) number? (
+  if which (
+    return 42
+  )
+  return null
+)
+```
+
 ## Benefits of Typed Variables
 
 1. **Error Prevention** - Catch type-related errors early
