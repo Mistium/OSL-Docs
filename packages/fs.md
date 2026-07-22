@@ -35,6 +35,108 @@ Writes raw bytes (a `bytes` value or an array of byte numbers) to `path`. Return
 #### `fs.appendToFile(path, data)` → `boolean`
 Appends `data` to the end of `path`, creating the file if it doesn't exist. Returns `true` on success.
 
+## Streaming
+
+For large files, stream instead of loading everything into memory. `fs.open`, `fs.create` and
+`fs.append` return a buffered file handle; on failure they return `null`, and every handle method is
+null-safe (reads return `""`, writes return `false`), so a missing file can't crash a stream loop.
+
+#### `fs.eachLine(path, fn)` → `void`
+The simplest way to stream a file: calls `fn(line)` for every line (line endings stripped), reading
+one buffered chunk at a time. Does nothing if the file can't be opened.
+
+```javascript
+fs.eachLine("big.log", def(line) -> (
+  log line
+))
+```
+
+#### `fs.head(path, n?)` / `fs.tail(path, n?)` / `fs.grep(path, pattern)` → `array`
+One-shot conveniences that open the file, run the matching [file handle method](#file-handle-methods)
+and close it. `n` defaults to 10.
+
+```javascript
+log fs.tail("app.log", 20).join("\n")
+for line fs.grep("app.log", "^ERROR") ( log line )
+```
+
+#### `fs.open(path)` → `file`
+Opens `path` for buffered reading. Returns `null` if the file can't be opened.
+
+```javascript
+auto f = fs.open("big.log")
+while !f.eof() (
+  log f.readLine()
+)
+f.close()
+```
+
+#### `fs.create(path)` → `file`
+Creates (or truncates) `path` and returns a buffered write handle. Returns `null` on failure.
+
+```javascript
+auto out = fs.create("out.txt")
+for i 1000 (
+  out.write("row " + i + "\n")
+)
+out.close() // flushes automatically
+```
+
+#### `fs.append(path)` → `file`
+Like `fs.create` but appends to the end of `path`, creating it if needed.
+
+### File handle methods
+
+#### `file.readLine()` → `string`
+Returns the next line with its line ending stripped, or `""` at end of file. A blank line also
+returns `""`, so loop on `file.eof()` rather than on the return value.
+
+#### `file.read(n?)` → `string`
+Returns the next `n` bytes, or everything remaining when called with no argument. Returns `""` at
+end of file.
+
+```javascript
+auto f = fs.open("data.bin")
+while !f.eof() (
+  chunk = f.read(65536)
+  // process chunk
+)
+f.close()
+```
+
+#### `file.eof()` → `boolean`
+Reports whether the read handle has reached the end of the file. `true` for write handles and failed
+opens.
+
+#### `file.head(n?)` → `array`
+Returns the next `n` lines (default 10) from the current position, stopping early at end of file. On
+a fresh handle that's the first `n` lines, read without touching the rest of the file.
+
+#### `file.tail(n?)` → `array`
+Returns the last `n` lines (default 10) of the file, reading backwards from the end in 64&nbsp;KB
+chunks — a multi-gigabyte log costs the same as a tiny one. Doesn't move the read position, so you
+can `tail` and then still read from the top.
+
+#### `file.grep(pattern)` → `array`
+Streams the rest of the file and returns the lines matching `pattern` — a regular expression, or a
+plain substring if the pattern doesn't compile as one. Only matching lines are held in memory.
+
+```javascript
+auto f = fs.open("app.log")
+errors = f.grep("^ERROR")
+f.close()
+```
+
+#### `file.write(data)` → `boolean`
+Buffers `data` (a string, `bytes` value, or array of byte numbers) for writing. Returns `true` on
+success. Data is flushed when the buffer fills, on `flush()`, and on `close()`.
+
+#### `file.flush()` → `boolean`
+Forces buffered writes to disk without closing — useful for long-lived logs.
+
+#### `file.close()` → `boolean`
+Flushes any buffered writes and closes the file. Always call this when done with a handle.
+
 ## Files & directories
 
 #### `fs.exists(path)` → `boolean`
@@ -56,6 +158,10 @@ Creates a single directory. Fails if the parent directory doesn't exist.
 #### `fs.mkdirAll(path)` → `boolean`
 Creates `path` and any missing parent directories.
 
+#### `fs.copy(srcPath, dstPath)` → `boolean`
+Copies the file `srcPath` to `dstPath`, streaming so large files aren't loaded into memory. Fails if
+`dstPath` already exists.
+
 #### `fs.copyDir(srcPath, dstPath)` → `boolean`
 Recursively copies the directory `srcPath` to `dstPath`.
 
@@ -70,6 +176,9 @@ for i fs.readDir(".").len (
 
 #### `fs.readDirAll(path)` → `array`
 Returns the entries inside `path` as objects with details (name, size, isDir, …).
+
+#### `fs.glob(pattern)` → `array`
+Returns the paths matching a shell glob pattern, e.g. `fs.glob("src/*.osl")`.
 
 #### `fs.walk(path)` → `array`
 Recursively walks `path` and returns every file and directory beneath it.
@@ -199,6 +308,15 @@ Lists a directory, returning `ok(names)` or `err(message)`.
 | `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
 | `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
 | `fs.appendToFile(path: any, data: any)` | `boolean` | Runs the append to file operation. |
+| `fs.open(path: any)` | `file` | Opens a buffered read stream, `null` on failure. |
+| `fs.create(path: any)` | `file` | Opens a buffered write stream (truncates), `null` on failure. |
+| `fs.append(path: any)` | `file` | Opens a buffered append stream, `null` on failure. |
+| `fs.eachLine(path: any, fn: function)` | `void` | Calls `fn` for each line of the file. |
+| `fs.head(path: any, n?: number)` | `array` | First `n` lines (default 10). |
+| `fs.tail(path: any, n?: number)` | `array` | Last `n` lines (default 10), read from the end. |
+| `fs.grep(path: any, pattern: any)` | `array` | Lines matching a regex (or substring). |
+| `fs.copy(srcPath: any, dstPath: any)` | `boolean` | Streams a file copy; fails if dst exists. |
+| `fs.glob(pattern: any)` | `array` | Paths matching a glob pattern. |
 | `fs.rename(oldPath: any, newPath: any)` | `boolean` | Runs the rename operation. |
 | `fs.exists(path: any)` | `boolean` | Reports whether the value or resource exists. |
 | `fs.remove(path: any)` | `boolean` | Removes a value or resource. |
@@ -239,6 +357,23 @@ Lists a directory, returning `ok(names)` or `err(message)`.
 | `fs.tryRemove(path: any)` | `*Result` | Runs the try remove operation. |
 | `fs.tryMkdirAll(path: any)` | `*Result` | Runs the try mkdir all operation. |
 | `fs.tryReadDir(path: any)` | `*Result` | Runs the try read dir operation. |
+
+### `file` (stream handle)
+
+Returned by `fs.open`, `fs.create` and `fs.append`; `null` on failure, and all methods are safe to
+call on a failed handle.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `file.read(n?: number)` | `string` | Next `n` bytes, or everything remaining. |
+| `file.readLine()` | `string` | Next line, ending stripped. |
+| `file.eof()` | `boolean` | Whether the read side is exhausted. |
+| `file.head(n?: number)` | `array` | Next `n` lines (default 10). |
+| `file.tail(n?: number)` | `array` | Last `n` lines of the file, read from the end. |
+| `file.grep(pattern: any)` | `array` | Remaining lines matching a regex (or substring). |
+| `file.write(data: any)` | `boolean` | Buffered write of a string, bytes or byte array. |
+| `file.flush()` | `boolean` | Forces buffered writes to disk. |
+| `file.close()` | `boolean` | Flushes and closes the handle. |
 
 ## Notes
 
