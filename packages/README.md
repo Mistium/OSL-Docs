@@ -19,7 +19,13 @@ methods you call. The `osl/` prefix is optional for standard-library packages - 
 | --- | --- |
 | `import "osl/fs"` / `import "fs"` | A standard-library package (listed below). |
 | `import "./helpers.osl"` | Another OSL file in your project (path relative to the current file). |
+| `import "utils"` / `import "./utils"` | A **directory** — imports every `.osl` file inside it (path relative to the current file). |
 | `import "go/net/http"` | A raw Go package, for advanced interop. |
+
+Directory imports pull in all the `.osl` files in the named folder, so you can split a
+module across several files and import the folder once. The `osl/` prefix is reserved for
+standard-library packages: to import a local directory literally named `osl`, write
+`import "./osl"` — a bare `import "osl"` always looks for a standard-library package.
 
 Missing third-party Go dependencies are fetched automatically when you compile.
 
