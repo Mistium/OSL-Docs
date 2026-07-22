@@ -82,13 +82,24 @@ osl compile hello.osl     # produces ./hello
 
 ## The execution model
 
-An OSL file has **no `main` function** - in fact, defining `def main()` is an error. The file's
-top-level statements *are* the program, and they run top to bottom:
+An OSL file needs **no `main` function**. The file's top-level statements *are* the
+program, and they run top to bottom:
 
 ```javascript
 log "first"
 log "second"
 log "third"
+```
+
+If you prefer an explicit entry point, you *can* define `def main()` — it takes no
+parameters and is called automatically after the top-level statements run:
+
+```javascript
+log "setup runs first"
+
+def main() (
+  log "then main runs"
+)
 ```
 
 Function and class definitions are *hoisted*, so you can call a function before it appears in the
