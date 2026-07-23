@@ -133,7 +133,7 @@ There are also **package types** - handles returned by standard-library packages
 ## Inspecting and converting types
 
 ```javascript
-log typeof(42)          // number
+log typeof(42)          // int (whole numbers are ints; typeof(4.2) is "number")
 log typeof("hi")        // string
 log typeof([1, 2])      // array
 log typeof({})          // object

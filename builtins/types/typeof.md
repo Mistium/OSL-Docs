@@ -17,6 +17,9 @@ log typeof("hello")
 // "string"
 
 log typeof(123)
+// "int" — whole-number values are ints
+
+log typeof(3.14)
 // "number"
 
 log typeof([1,2,3])
