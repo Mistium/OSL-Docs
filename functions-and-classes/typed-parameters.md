@@ -19,6 +19,7 @@ You can use any of the following types for parameter type annotations:
 - `boolean` - Logical values (true/false)
 - `array` - JSON arrays
 - `object` - JSON objects
+- `function` - A function value (lambda or named function); `fnc` is accepted as a shorthand
 - `any` - Any type (default if no type is specified)
 
 ## Examples
@@ -106,6 +107,55 @@ Notes:
   parameter coerces `null` to `0`, while a `number?` parameter preserves the `null`
   so you can test for it with `== null`.
 - `?` works in lambdas too: `silly = def(number value, number? add) -> ( ... )`.
+
+### Function Signature Types (`fnc(...)`)
+
+A parameter typed `function` (or `fnc`) accepts any function value. To require a
+*specific* signature, write the parameter types in parentheses followed by an optional
+return type — the same shape as a `def` header, without the body:
+
+```javascript
+def apply(fnc(number) number f, number x) number (
+  return f(x)
+)
+
+double = def(number n) number -> (n * 2)
+log apply(double, 21) // 42
+```
+
+`fnc(number, number) number` means "takes two numbers, returns a number". Omit the
+return type (`fnc(number)`) to accept any return value.
+
+Signature types are checked at compile time, in both directions:
+
+```javascript
+shout = def(string s) string -> (s.toUpper())
+apply(shout, 21) // TypeError: expects fnc(number) number, got fnc(string) string
+
+def apply2(fnc(number) number f) number (
+  return f("hi") // TypeError: Argument 1 to f expects number, got string
+)
+```
+
+Calls *through* the typed parameter are checked against the signature, and the call's
+return type is known to the compiler, so results flow into typed expressions without
+casting.
+
+Untyped lambdas passed where a signature is expected have their parameter types
+inferred from it:
+
+```javascript
+log apply(def(n) -> (n * 2), 10) // n is inferred as number → 20
+```
+
+Notes:
+
+- A bare `function`/`fnc` parameter still accepts any function, including
+  signature-typed ones, and vice versa — signatures only tighten checking where you
+  ask for it.
+- Signatures compare structurally: parameter counts must match and each type must be
+  compatible; an untyped lambda parameter is compatible with anything.
+- `.call()` and `.bind()` work on signature-typed values as usual.
 
 ### Complex Type Annotations
 
