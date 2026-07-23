@@ -127,6 +127,11 @@ app.use(serve.requestID())
 Other built-in middleware: `corsOpen()`, `requireHeader(key, value)`, `maxBodySize(bytes)`,
 `timeout(seconds)`, `basicAuth(user, pass)`, `noCache()`, `setKey(key, value)`.
 
+Even without `serve.recover()`, a handler that throws never crashes the server: the error is
+printed to stderr as a formatted OSL runtime error (with the source line that caused it) and the
+client gets a plain `500 Internal Server Error`. Use `serve.recover()` when you want the error
+text in the response body instead.
+
 Writing your own is just a handler:
 
 ```javascript
