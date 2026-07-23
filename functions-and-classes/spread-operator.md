@@ -94,6 +94,18 @@ log max(...nums)   // 9
 log min(...nums)   // 1
 ```
 
+And into methods that accept a variable number of arguments, such as
+`.containsAny()`:
+
+```javascript
+view = ["admin", "mod"]
+roles = ["mod", "user"]
+log view.containsAny(...roles)       // true
+log view.containsAny("x", ...roles)  // true - fixed args mix with spread
+```
+
+Spreading into a method that takes a fixed number of arguments is an error.
+
 ## Important Notes
 
 - The rest parameter must be the last (and often only) parameter in the function definition
