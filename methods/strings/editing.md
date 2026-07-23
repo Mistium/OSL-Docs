@@ -15,7 +15,8 @@ log "ab".prepend("XY")       // "XYab"
 ```
 
 #### `.insert(index, str)` → `string`
-Inserts `str` before position `index` (1-indexed).
+Inserts `str` before position `index` (1-indexed). Out-of-range indexes are clamped to the
+start or end of the string.
 
 ```javascript
 log "abc".insert(2, "X")  // "aXbc"
