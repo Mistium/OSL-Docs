@@ -131,7 +131,7 @@ hasKey = obj.contains("x")  // true
 // Merging objects
 obj1 = {a: 1, b: 2}
 obj2 = {b: 3, c: 4}
-merged = obj1 ++ obj2    // {a: 1, b: 2, c: 4}
+merged = obj1 ++ obj2    // {a: 1, b: 3, c: 4}
 ```
 
 ### Cloning vs Referencing
@@ -153,7 +153,7 @@ obj3.x = 20          // Only changes obj3.x
 
 - Arrays are always 1-indexed in OSL
 - Most operations create new copies rather than modifying in place
-- The `++` operator preserves values from the left operand on key conflicts
+- The `++` operator merges objects; the right operand wins on key conflicts
 - Objects can contain functions and reference their own properties with `self`
 - Expressions and variables are evaluated when the array/object is created
 - Nested structures are supported to any depth

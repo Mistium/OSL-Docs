@@ -29,15 +29,19 @@ exists = obj.contains("x")  // Returns true/false
 
 ## Object Merging
 
-The `++` operator combines objects, preserving values from the left operand:
+The `++` operator combines objects into a new object. On key conflicts the right
+operand wins (like object spread in JavaScript); neither operand is modified:
 
 ```javascript
 obj1 = {a: 1, b: 2}
 obj2 = {b: 3, c: 4}
-merged = obj1 ++ obj2    // {a: 1, b: 2, c: 4}
+merged = obj1 ++ obj2    // {a: 1, b: 3, c: 4}
 
 // Multiple merges
-final = obj1 ++ obj2 ++ {d: 5}
+final = obj1 ++ obj2 ++ {d: 5}  // {a: 1, b: 3, c: 4, d: 5}
+
+// Update in place with ++=
+obj1 ++= {b: 10}  // obj1 is now {a: 1, b: 10}
 ```
 
 ## Using Self Reference
