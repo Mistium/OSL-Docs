@@ -25,10 +25,12 @@ log zip.list("dist.zip")
 | --- | --- | --- |
 | `zip.compress(sourcePath: any, outputPath: any)` | `boolean` | Runs the compress operation. |
 | `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts an archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
+| `zip.decompressLimited(zipPath: any, outputPath: any, maxBytes: number, maxFiles: number)` | `boolean` | Extracts an archive while enforcing total expanded-byte and entry-count limits. |
 | `zip.list(zipPath: any)` | `any` | Runs the list operation. |
 | `zip.tar(sourcePath: any, outputPath: any)` | `boolean` | Runs the tar operation. |
 | `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Extracts a tar archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
 | `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gzip operation. |
+| `zip.gzipLimited(sourcePath: any, outputPath: any, maxInputBytes: number, maxOutputBytes: number)` | `boolean` | Gzips a file while enforcing input and compressed-output limits. Removes an oversized output. |
 | `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gunzip operation. |
 | `zip.compressString(data: any)` | `string` | Runs the compress string operation. |
 | `zip.decompressString(data: any)` | `string` | Runs the decompress string operation. |
