@@ -31,6 +31,19 @@ if parsed.isOk() (
 | `json.isValid(data: any)` | `boolean` | Reports whether the input is valid. |
 | `json.isObject(data: any)` | `boolean` | Reports whether object. |
 | `json.isArray(data: any)` | `boolean` | Reports whether array. |
+| `json.inspectFile(path: any, keys: array, maxBytes: number, maxValues: number)` | `*Result` | Validates a JSON file without loading its object tree and collects up to `maxValues` string values stored directly under the selected keys. The successful value is `{values, counts, root, size}`. |
+
+## Inspecting large files
+
+```javascript
+import "osl/json"
+
+result inspected = json.inspectFile("project.json", ["md5ext"], 1073741824, 2000)
+if inspected.isOk() (
+  object details = inspected.unwrap()
+  log details.values.assert(object).md5ext
+)
+```
 
 ## Notes
 
