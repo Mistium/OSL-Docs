@@ -39,3 +39,6 @@ When you pass a [`regex`](../../packages/regex.md) value, strings gain regex-awa
 Strings also support the methods shared by all values - `.len` (a property), `.toNum()`, `.toInt()`,
 `.toBool()`, `.toStr()`, `.getType()`, `.clone()`, `.item(i)`. See
 [Type & conversion methods](../types/README.md).
+
+`.len` is the only string property. Accessing any other property is a `TypeError`; string operations
+must be called as methods.
