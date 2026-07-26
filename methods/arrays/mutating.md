@@ -40,10 +40,10 @@ arr = [1, 2, 3]
 void arr.swap(1, 3)  // arr is now [3, 2, 1]
 ```
 
-#### `.pop()` → `unknown`
+#### `.pop()` → element type
 Removes and returns the **last** element.
 
-#### `.shift()` → `unknown`
+#### `.shift()` → element type
 Removes and returns the **first** element.
 
 ```javascript
