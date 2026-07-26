@@ -14,3 +14,8 @@ below with examples and edge cases.
 
 Note that `+` adds numbers; to join strings without spacing use the
 [`++`](../string-concatenation-operator.md) operator instead.
+
+Integer `+`, `-`, and `*` are checked. A result outside the platform integer
+range raises `OverflowError` rather than wrapping. OSL does not automatically
+promote integers to arbitrary-precision values; use ordinary `number` values
+when floating-point range is appropriate.

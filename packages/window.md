@@ -242,6 +242,7 @@ Methods available on `winRender` values returned by this package or constructed 
 | `value.Turnleft(angle: number)` | `void` | Runs the turnleft operation. |
 | `value.Pointat(x: number, y: number)` | `void` | Runs the pointat operation. |
 | `value.Image(key: string, w: any, h: any)` | `void` | Runs the image operation. |
+| `window.off(name: any, callback: any)` | `boolean` | Removes one event callback without disturbing other listeners. |
 
 ## Notes
 

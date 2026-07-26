@@ -71,7 +71,22 @@ app.serve(":8080")
 
 `ws.NewServer(addr, path)` is for standalone servers that call `Start()` themselves.
 
+#### `ws.send(connection, message)` → `boolean`
+
+Sends through an untyped connection value and returns `false` for a closed or
+non-connection value.
+
+#### `ws.closeConn(connection)` → `boolean`
+
+Closes an untyped connection value safely. Repeated closes are harmless.
+
 ## Notes
 
 - Standard-library imports accept both `import "osl/ws"` and `import "ws"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+TLS uses normal certificate verification and servers enforce same-origin
+upgrades by default. Callback panics are contained, close/stop are idempotent,
+and shutdown closes active and mounted connections.

@@ -60,3 +60,8 @@ Methods available on `UDPConn` values returned by this package or constructed by
 
 - Standard-library imports accept both `import "osl/net"` and `import "net"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Ports, addresses, deadlines, closed sockets, partial reads, and concurrent
+close/read/write calls return controlled results.

@@ -34,6 +34,7 @@ Methods available on `SSHClient` values returned by this package or constructed 
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.exec(command: any)` | `object` | Runs the exec operation. |
+| `value.execTimeout(command: any, timeout: any)` | `object` | Runs a command with a bounded timeout. |
 | `value.startCommand(command: any)` | `boolean` | Starts command. |
 | `value.sendInput(input: any)` | `boolean` | Sends input. |
 | `value.readOutput(timeout: any)` | `string` | Reads output. |
@@ -44,3 +45,10 @@ Methods available on `SSHClient` values returned by this package or constructed 
 
 - Standard-library imports accept both `import "osl/ssh"` and `import "ssh"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Security and transfer behavior
+
+Hosts are verified against `SSH_KNOWN_HOSTS`, or `~/.ssh/known_hosts` when the
+variable is unset. A missing or mismatched key fails closed. File transfers use
+SFTP over the verified connection, preserve exact remote paths, and remove
+partial local files on failure. Saved private keys use mode `0600`.

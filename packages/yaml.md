@@ -39,3 +39,8 @@ log data["name"]
 
 - Standard-library imports accept both `import "osl/yaml"` and `import "yaml"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Anchors, aliases, duplicate keys, non-string map keys, multi-document input,
+and deep nesting return deterministic results or controlled errors.

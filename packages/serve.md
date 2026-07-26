@@ -441,8 +441,15 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.serve(addr: string)` | `error` | Runs the serve operation. |
 | `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs the serve tls operation. |
 | `value.handler()` | `http.Handler` | Runs the handler operation. |
+| `value.stop()` | `boolean` | Gracefully stops the active server and mounted WebSockets; repeated calls are safe. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/serve"` and `import "serve"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Request bodies remain readable across body, JSON, and form helpers. Static
+serving rejects symlink escapes, client IP parsing supports IPv6, and panic and
+shutdown paths are bounded.

@@ -72,3 +72,5 @@ contend with each other, and reads run in parallel.
 - Standard-library imports accept both `import "osl/thread"` and `import "thread"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`) — handy for releasing an `osl/sync` lock you took inside a thread.
+- Panicking tasks still complete their handle, so `wait`, `timeout`, and
+  `waitAll` cannot wedge indefinitely.

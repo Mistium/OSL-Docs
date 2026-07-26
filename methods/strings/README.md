@@ -42,3 +42,8 @@ Strings also support the methods shared by all values - `.len` (a property), `.t
 
 `.len` is the only string property. Accessing any other property is a `TypeError`; string operations
 must be called as methods.
+
+## Unicode behavior
+
+String indexing, slicing, item lookup, and iteration operate on Unicode
+characters rather than UTF-8 bytes.

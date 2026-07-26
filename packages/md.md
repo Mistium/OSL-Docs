@@ -111,3 +111,8 @@ string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
 - Rendering is powered by [goldmark](https://github.com/yuin/goldmark).
 - Return values are ordinary OSL strings — pass them to `ctx.html`, `ctx.send`,
   or template slots as needed.
+
+#### `md.sanitize(source)` → `string`
+
+Sanitizes an HTML string using the same allow-list as `md.toHTML`. Repeated
+sanitization is idempotent.

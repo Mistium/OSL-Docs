@@ -22,3 +22,8 @@ log user.len         // 2
 Objects also support the universal methods `.len` (a property), `.getType()`, `.item(key)` - see
 [Type & conversion methods](../types/README.md). For richer key/value structures with insertion
 order and non-string keys, see the [`map`](../../packages/map.md) package.
+
+## Cyclic values
+
+Object equality and cloning preserve graph structure and terminate for cyclic
+objects instead of recursing forever.

@@ -33,3 +33,8 @@ import "osl/xml"
 
 - Standard-library imports accept both `import "osl/xml"` and `import "xml"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Malformed/truncated input, namespaces, attributes, mixed content, entities, and
+deep nesting are handled without leaking partial parser state.

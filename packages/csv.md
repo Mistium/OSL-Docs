@@ -65,3 +65,9 @@ log rows[0]["name"]
 
 - Standard-library imports accept both `import "osl/csv"` and `import "csv"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+BOMs and ragged rows are supported, duplicate headers are rejected, and
+generated headers are sorted deterministically. Sampling and transpose handle
+empty and uneven data.

@@ -76,3 +76,9 @@ Methods available on `Process` values returned by this package or constructed by
 
 - Standard-library imports accept both `import "osl/process"` and `import "process"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Missing commands, failed starts, timeouts, invalid PIDs, and repeated
+wait/kill/signal calls return controlled results instead of dereferencing
+missing process state.

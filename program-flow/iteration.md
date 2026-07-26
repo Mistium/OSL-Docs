@@ -57,6 +57,9 @@ for i, value in ["a", "b"] (
 // 2:b
 ```
 
+Use `_` for an index or value you intentionally do not use. This works for
+arrays, strings, ranges, and objects.
+
 Ranges also work with `for ... in`:
 
 ```js

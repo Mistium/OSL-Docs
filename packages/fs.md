@@ -379,3 +379,9 @@ call on a failed handle.
 
 - Standard-library imports accept both `import "osl/fs"` and `import "fs"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Recursive copies reject copying a directory into itself. Reads are bounded,
+walk callbacks accept OSL functions, closed handles are null-safe, and symlink
+and permission failures return controlled results.

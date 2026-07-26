@@ -38,8 +38,14 @@ import "osl/qr"
 | `qr.writeBarcode(barcode: string, data: any)` | `boolean` | Writes barcode. |
 | `qr.scanBarcode(imagePath: any)` | `string` | Runs the scan barcode operation. |
 | `qr.getInfo(filePath: any)` | `object` | Returns info. |
+| `qr.decode(imagePath: any)` | `string` | Decodes a QR image, returning an empty string for invalid input. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/qr"` and `import "qr"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+QR and barcode helpers validate empty, oversized, malformed, and checksum-invalid
+input, and report image decode/write failures.

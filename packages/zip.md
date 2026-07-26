@@ -40,8 +40,15 @@ log zip.list("dist.zip")
 | `zip.removeFile(zipPath: any, filePath: any)` | `boolean` | Removes file. |
 | `zip.create(path: string)` | `boolean` | Creates a new value. |
 | `zip.statistics(zipPath: any)` | `any` | Runs the statistics operation. |
+| `zip.gunzipLimited(sourcePath: any, outputPath: any, maxOutputBytes: any)` | `boolean` | Decompresses with an output-size limit and removes partial output on failure. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/zip"` and `import "zip"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Extraction rejects traversal and symlink escapes. Corrupt/truncated archives,
+oversized input/output, duplicate paths, and write failures remove partial
+results. Empty archives and statistics remain valid.

@@ -30,8 +30,14 @@ log jwt.verify(token, "secret")
 | `jwt.getClaim(token: any, claim: any)` | `any` | Returns claim. |
 | `jwt.isExpired(token: any)` | `boolean` | Reports whether expired. |
 | `jwt.refresh(token: any, secret: any, expiresIn: any)` | `string` | Runs the refresh operation. |
+| `jwt.decode(token: any)` | `object` | Decodes claims without accepting an invalid token as verified. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/jwt"` and `import "jwt"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Verification rejects malformed tokens, algorithm confusion, invalid signatures,
+and invalid or expired time claims.

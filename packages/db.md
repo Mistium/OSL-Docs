@@ -210,3 +210,9 @@ Methods available on `dbQuery` values returned by this package or constructed by
 
 - Standard-library imports accept both `import "osl/db"` and `import "db"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Identifiers are validated, closed handles fail safely, transactions route all
+operations through the transaction, nested transaction attempts are rejected,
+and scan/negative limit/offset errors are controlled.

@@ -34,3 +34,9 @@ import "osl/sound"
 
 - Standard-library imports accept both `import "osl/sound"` and `import "sound"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Audio sources are bounded and HTTP responses are validated. Speaker setup is
+lazy, differing sample rates are resampled, and pause state is per sound value.
+Repeated unload and clear calls are safe.

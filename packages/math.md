@@ -156,3 +156,8 @@ import "osl/math"
 
 - Standard-library imports accept both `import "osl/math"` and `import "math"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Statistics reject non-finite input consistently; prime helpers handle zero,
+negative, and large boundary values without hanging.

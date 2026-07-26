@@ -29,3 +29,9 @@ log template.render("Hello {{name}}", {name: "Ada"})
 
 - Standard-library imports accept both `import "osl/template"` and `import "template"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+False, zero, and null remain distinct from missing values. Invalid loops,
+unclosed directives, callback failures, recursion, and all HTML-sensitive
+characters have controlled behavior.

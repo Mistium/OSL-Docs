@@ -59,3 +59,8 @@ log.warn("cache is empty")
 
 - Standard-library imports accept both `import "osl/log"` and `import "log"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Level changes, history mutation, formatting, and concurrent writes are
+synchronized. Export failures return false.

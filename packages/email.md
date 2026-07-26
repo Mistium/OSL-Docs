@@ -52,8 +52,14 @@ import "osl/email"
 | `email.preview()` | `string` | Runs the preview operation. |
 | `email.wrapText(width: any)` | `boolean` | Runs the wrap text operation. |
 | `email.getHeaders()` | `object` | Returns headers. |
+| `email.hasRecipient(recipient: string)` | `boolean` | Reports whether any To, Cc, or Bcc entry matches the recipient. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/email"` and `import "email"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Recipient state is kept per email value and guarded for concurrent access.
+Headers reject newline injection and attachment failures are reported.

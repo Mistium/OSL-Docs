@@ -39,3 +39,8 @@ log random.between(1, 10)  // integer in [1, 10] (inclusive)
 
 - Standard-library imports accept both `import "osl/random"` and `import "random"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Empty collections, reversed bounds, invalid weights, and deterministic seeds
+have explicit, tested behavior.

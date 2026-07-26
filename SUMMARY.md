@@ -163,6 +163,7 @@
   * [colors](packages/colors.md)
   * [sound](packages/sound.md)
 * [Scripting & Concurrency](packages/categories/concurrency.md)
+  * [js](packages/js.md)
   * [lua](packages/lua.md)
   * [thread](packages/thread.md)
   * [sync](packages/sync.md)
@@ -179,6 +180,7 @@
 ## Graphics (osl/window)
 
 * [window](packages/window.md)
+* [win-buttons](packages/win-buttons.md)
 * [Rendering](commands/rendering/README.md)
   * [Basics](commands/rendering/basics.md)
     * [Color Commands](commands/general/color.md)

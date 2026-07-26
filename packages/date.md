@@ -69,3 +69,9 @@ Methods available on `dateZonedDateTime` values returned by this package or cons
 
 - Standard-library imports accept both `import "osl/date"` and `import "date"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Negative Unix milliseconds use floor semantics. Calendar arithmetic covers
+month ends, leap days, and DST transitions; non-finite and overflowing
+durations are rejected.

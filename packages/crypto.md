@@ -67,3 +67,8 @@ log digest
 
 - Standard-library imports accept both `import "osl/crypto"` and `import "crypto"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Key, nonce, salt, iteration, file, and ciphertext sizes are validated. Invalid
+authentication data fails closed and partial output is removed.

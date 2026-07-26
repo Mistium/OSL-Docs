@@ -61,3 +61,8 @@ Methods available on `Cache` values returned by this package or constructed by t
 
 - Standard-library imports accept both `import "osl/cache"` and `import "cache"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Expiry is inclusive at its deadline, null values remain distinguishable from
+missing keys, and `getOrSetFunc` performs one load per key under concurrency.

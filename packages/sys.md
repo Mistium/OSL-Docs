@@ -26,6 +26,7 @@ log sys.getCwd()
 | `sys.getArgs()` | `array` | Returns args. |
 | `sys.getEnv(key: string)` | `string` | Returns env. |
 | `sys.setEnv(key: string, value: string)` | `boolean` | Sets env. |
+| `sys.unsetEnv(key: string)` | `boolean` | Removes an environment variable. |
 | `sys.getCwd()` | `string` | Returns cwd. |
 | `sys.chdir(path: string)` | `boolean` | Runs the chdir operation. |
 | `sys.getPid()` | `number` | Returns pid. |
@@ -42,3 +43,8 @@ log sys.getCwd()
 
 - Standard-library imports accept both `import "osl/sys"` and `import "sys"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Environment and working-directory changes are synchronized. UID/GID zero is
+reported correctly, and `openURL` rejects malformed or unsupported URLs.

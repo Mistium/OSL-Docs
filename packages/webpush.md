@@ -20,8 +20,14 @@ import "osl/webpush"
 | `webpush.sendWebPush(endpoint: any, p256dh: any, auth: any, data: any, vapidPrivateKey: any, vapidClaimsEmail: any, ttl: any)` | `object` | Sends web push. |
 | `webpush.verifySubscription(endpoint: any, p256dh: any, auth: any)` | `boolean` | Verifies subscription. |
 | `webpush.ensureVAPIDKeys(configPath: any, privateKeyPath: any)` | `object` | Runs the ensure vapidkeys operation. |
+| `webpush.verifyVapidJWT(token: any, publicKey: any)` | `boolean` | Verifies the signature and required VAPID claim shape. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/webpush"` and `import "webpush"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Malformed subscriptions, VAPID keys, JWTs, and HTTP failures return controlled
+false/error values. Expiry and payload sizes are bounded.

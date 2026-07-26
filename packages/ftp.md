@@ -50,3 +50,11 @@ Methods available on `FTP` values returned by this package or constructed by the
 
 - Standard-library imports accept both `import "osl/ftp"` and `import "ftp"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Connection and transfer behavior
+
+`connect` opens and logs into the server directly; it does not shell out to a
+system `ftp` executable. The returned client owns its connection state.
+Credentials and remote paths cannot inject FTP commands. Failed or partial
+downloads remove their local partial file, and recursive uploads reject
+symlinks.
