@@ -37,7 +37,7 @@ log [1, 2, 3].some(x -> x > 2)   // true
 log [1, 2, 3].every(x -> x > 0)  // true
 ```
 
-#### `.first()` → `unknown` / `.last()` → `unknown`
+#### `.first()` → element type / `.last()` → element type
 The first / last element.
 
 ```javascript
@@ -46,5 +46,5 @@ log arr.first()  // 10
 log arr.last()   // 30
 ```
 
-#### `.randomOf()` → `unknown`
+#### `.randomOf()` → element type
 A random element from the array.

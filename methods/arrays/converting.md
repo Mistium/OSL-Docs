@@ -2,10 +2,10 @@
 
 Take slices of an array or convert it to another shape.
 
-#### `.left(n)` → `array`
+#### `.left(n)` → same array type
 The first `n` elements.
 
-#### `.right(n)` → `array`
+#### `.right(n)` → same array type
 The last `n` elements.
 
 ```javascript
@@ -14,7 +14,7 @@ log arr.left(2)   // [1, 2]
 log arr.right(2)  // [4, 5]
 ```
 
-#### `.clone()` → `array`
+#### `.clone()` → same array type
 An independent deep copy. (Plain `=` shares a reference; `.clone()` does not.)
 
 #### `.getKeys(field)` → `array`

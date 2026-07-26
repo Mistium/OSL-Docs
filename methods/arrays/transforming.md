@@ -11,17 +11,17 @@ Applies `fn` to every element and collects the results.
 log [1, 2, 3].map(x -> x * 2)  // [2, 4, 6]
 ```
 
-#### `.filter(fn)` → `array`
+#### `.filter(fn)` → same array type
 Keeps only the elements for which `fn` returns true.
 
 ```javascript
 log [1, 2, 3, 4].filter(x -> x > 2)  // [3, 4]
 ```
 
-#### `.sort()` → `array`
+#### `.sort()` → same array type
 Returns the elements sorted ascending.
 
-#### `.sortBy(key)` → `array`
+#### `.sortBy(key)` → same array type
 Sorts an array of objects by the named field. Pass `"descending"` as a second argument to reverse.
 
 ```javascript
@@ -32,14 +32,14 @@ log arr.sortBy("age", "descending").getKeys("name") // ["bob", "alice"]
 
 `.sortBy(fn)` also accepts an arrow function that returns the value to sort on.
 
-#### `.reverse()` → `array`
+#### `.reverse()` → same array type
 Returns the elements in reverse order.
 
 ```javascript
 log [3, 1, 2].sort().reverse()  // [3, 2, 1]
 ```
 
-#### `.deDupe()` → `array`
+#### `.deDupe()` → same array type
 Removes duplicate values, keeping first occurrences.
 
 ```javascript
@@ -53,7 +53,7 @@ Returns an array of the same length with every element set to `value`.
 log (1 to 3).fill("hi")  // ["hi", "hi", "hi"]
 ```
 
-#### `.concat(other)` → `array`
+#### `.concat(other)` → same array type
 Returns a new array with `other` appended. (Non-mutating; `++` does the same.)
 
 ```javascript
