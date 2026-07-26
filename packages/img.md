@@ -55,3 +55,9 @@ Methods available on `imgImage` values returned by this package or constructed b
 
 - Standard-library imports accept both `import "osl/img"` and `import "img"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Images are dimension-checked before full decode. Invalid or enormous sizes,
+non-finite rotations, corrupt data, and write failures return controlled
+failure values.

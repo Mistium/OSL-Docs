@@ -31,9 +31,16 @@ log res["status"]
 | `requests.delete(url: any, ...data: object)` | `object` | Sends an HTTP DELETE request. |
 | `requests.options(url: any, ...data: object)` | `object` | Sends an HTTP OPTIONS request. |
 | `requests.head(url: any, ...data: object)` | `object` | Sends an HTTP HEAD request. |
+| `requests.stream(method: any, url: any, ...data: object)` | `*requestsStream` | Opens a bounded streaming response with idempotent close. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/requests"` and `import "requests"`.
 - `requests` can be imported alongside `osl/url` in the same program.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Requests have finite timeouts and bounded bodies. Read failures set
+`success: false`; streaming close is idempotent, and SSE parsing supports
+multiline and final unterminated events.

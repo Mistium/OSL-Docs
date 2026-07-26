@@ -46,3 +46,8 @@ Methods available on `TypedPointer` values returned by this package or construct
 
 - Standard-library imports accept both `import "osl/ptr"` and `import "ptr"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Nil pointers, empty slice data, wrong pointee types, out-of-range offsets, and
+overlapping memory operations are guarded.

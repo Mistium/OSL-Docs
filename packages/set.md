@@ -37,3 +37,6 @@ Methods available on `Set` values returned by this package or constructed by the
 
 - Standard-library imports accept both `import "osl/set"` and `import "set"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+Composite and cyclic values are compared safely, and shared sets synchronize
+concurrent reads and writes.

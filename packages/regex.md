@@ -69,3 +69,8 @@ log regex.findAll("[0-9]+", "abc123def456")
 
 - Standard-library imports accept both `import "osl/regex"` and `import "regex"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Invalid patterns and callback failures are reported cleanly. Empty matches,
+Unicode classes, capture replacement, and zero-width progress are bounded.

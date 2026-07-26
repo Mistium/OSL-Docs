@@ -51,8 +51,14 @@ Methods available on `Torrent` values returned by this package or constructed by
 | `value.clone()` | `*Torrent` | Runs the clone operation. |
 | `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Runs the merge operation. |
 | `value.strip(metadata: any)` | `*Torrent` | Runs the strip operation. |
+| `value.buildTorrent()` | `string` | Builds the bencoded torrent after validating its file and piece metadata. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/torrent"` and `import "torrent"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Directory scans avoid symlink loops and disappearing files. `validate` checks
+piece length, piece count, total size, and the binary piece hashes.

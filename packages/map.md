@@ -38,3 +38,6 @@ Methods available on `Map` values returned by this package or constructed by the
 
 - Standard-library imports accept both `import "osl/map"` and `import "map"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+Composite and cyclic keys are compared safely, and shared maps synchronize
+concurrent reads and writes.

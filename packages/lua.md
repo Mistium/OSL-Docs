@@ -22,6 +22,7 @@ import "osl/lua"
 | `lua.eval(code: any)` | `any` | Runs the eval operation. |
 | `lua.newTable()` | `any` | Runs the new table operation. |
 | `lua.version()` | `string` | Runs the version operation. |
+| `lua.runTimeout(code: any, timeout: any)` | `result` | Runs code with a bounded timeout and returns an error result on timeout. |
 
 ### `State` values
 
@@ -44,3 +45,8 @@ Methods available on `State` values returned by this package or constructed by t
 
 - Standard-library imports accept both `import "osl/lua"` and `import "lua"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Lua execution has a finite default timeout and bounded source size. A timed-out
+state can be reused or closed safely.

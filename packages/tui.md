@@ -84,3 +84,8 @@ Methods available on `Screen` values returned by this package or constructed by 
 
 - Standard-library imports accept both `import "osl/tui"` and `import "tui"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Non-interactive terminals and invalid dimensions do not panic; interactive
+helpers still require a real TTY.

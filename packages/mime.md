@@ -29,3 +29,8 @@ import "osl/mime"
 
 - Standard-library imports accept both `import "osl/mime"` and `import "mime"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+MIME parsing handles parameters, quoted values, case variants, unknown
+extensions, and malformed media types without panicking.

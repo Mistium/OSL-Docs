@@ -344,3 +344,10 @@ extra clients with `connect` first:
 dms.connect(token)
 main_chat.run(token)
 ```
+
+## Reliability and security
+
+`wss://` connections use normal TLS certificate verification. Malformed frames
+are ignored, callback panics are contained, duplicate listeners run
+independently, and client state is synchronized for concurrent handlers.
+`stop()` is idempotent and releases pending requests with a stopped error.

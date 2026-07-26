@@ -35,3 +35,8 @@ Methods available on `Option` values returned by this package or constructed by 
 
 - Standard-library imports accept both `import "osl/option"` and `import "option"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+`some(null)` remains a present option; presence is not inferred from whether
+the stored value is null.

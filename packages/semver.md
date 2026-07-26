@@ -42,3 +42,8 @@ log semver.satisfies("1.2.3", ">=1.0.0")
 
 - Standard-library imports accept both `import "osl/semver"` and `import "semver"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Parsing and comparison cover prerelease identifiers, build metadata, leading
+zeros, malformed versions, and range boundaries.

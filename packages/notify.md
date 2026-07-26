@@ -23,3 +23,8 @@ import "osl/notify"
 
 - Standard-library imports accept both `import "osl/notify"` and `import "notify"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Notification text is passed as process arguments rather than interpolated into
+a shell script. Availability uses executable lookup and failures return false.

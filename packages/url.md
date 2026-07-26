@@ -38,3 +38,8 @@ log u["host"]
 
 - Standard-library imports accept both `import "osl/url"` and `import "url"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Parsing preserves encoded paths and repeated query keys while rejecting
+malformed escapes and invalid ports.

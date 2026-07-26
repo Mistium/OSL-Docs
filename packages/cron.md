@@ -40,3 +40,8 @@ import "osl/cron"
 
 - Standard-library imports accept both `import "osl/cron"` and `import "cron"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Cron parsing supports names, ranges, lists, and steps with controlled errors.
+Jobs are safe to mutate concurrently, and repeated stops are harmless.

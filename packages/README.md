@@ -160,10 +160,12 @@ On each package page these are listed under **"Returned object"** headings.
 | Package | Description |
 | --- | --- |
 | [window](window.md) | Open a window and draw to it (the originOS graphics model). |
+| [win-buttons](win-buttons.md) | Install native window controls. |
 
 ### Scripting & concurrency
 | Package | Description |
 | --- | --- |
+| [js](js.md) | Run sandboxed JavaScript with hard resource limits. |
 | [lua](lua.md) | Embed and run Lua scripts. |
 | [thread](thread.md) | Background threads. |
 | [sync](sync.md) | Named locks for synchronisation. |

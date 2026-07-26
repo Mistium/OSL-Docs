@@ -107,3 +107,9 @@ Closes the file and returns whether closing succeeded.
 
 - Standard-library imports accept both `import "osl/json"` and `import "json"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Parsing supports any JSON root value, rejects trailing data and excessive
+nesting, and bounds stream reads. Numbers outside the supported exact range are
+not silently corrupted.

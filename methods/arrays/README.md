@@ -55,3 +55,8 @@ A custom method may reuse a built-in name — from its definition onward it over
   `left`, `right`, and `clone`; element methods such as `first`, `last`, `pop`, `shift`, and
   `randomOf` return that element type.
 - Equality in `contains` / `index` is strict: `[1].contains("1")` is `false`.
+
+## Cyclic values
+
+Array equality and cloning preserve graph structure and terminate for cyclic
+arrays instead of recursing forever.

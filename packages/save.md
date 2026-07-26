@@ -29,8 +29,14 @@ log save.get("theme")
 | `save.getItem(filename: string)` | `object` | Returns item. |
 | `save.exists(filename: string)` | `boolean` | Reports whether the value or resource exists. |
 | `save.all()` | `array` | Runs the all operation. |
+| `save.create()` | `*save` | Creates an isolated save value; call `init` before reading or writing. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/save"` and `import "save"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Operations before `init` fail safely instead of reading or writing an
+unresolved path.

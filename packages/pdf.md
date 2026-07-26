@@ -59,3 +59,8 @@ doc.save("hello.pdf")
 
 - Standard-library imports accept both `import "osl/pdf"` and `import "pdf"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Text is escaped before PDF serialization. Invalid dimensions, corrupt images,
+empty documents, and write failures are rejected.

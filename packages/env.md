@@ -167,3 +167,8 @@ Methods available on `envValue` values returned by this package or constructed b
 
 - Standard-library imports accept both `import "osl/env"` and `import "env"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Loads handle BOM/CRLF, quoted values, expansion cycles, and duplicate-key
+precedence. Missing typed values use the documented fallback.
