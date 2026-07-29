@@ -168,7 +168,7 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled language server for autocomplete, inline errors, go-to-definition and hover docs:
+Run the bundled language server for autocomplete, inline errors, go-to-definition, hover docs and document formatting:
 
 ```bash
 osl lsp
