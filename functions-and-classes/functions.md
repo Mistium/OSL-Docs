@@ -67,6 +67,19 @@ log silly(10, 10) // 20
 log silly(10)     // 10
 ```
 
+## Multiline Calls
+
+Function arguments can span lines. Line breaks are formatting only and are not
+included in the values passed to the function.
+
+```javascript
+register(
+  "ban",
+  [{name: "username", required: true}],
+  handleBan
+)
+```
+
 ## Example: Basic Arithmetic Function
 
 Here's how you can create a function that performs basic arithmetic operations and returns a result:
