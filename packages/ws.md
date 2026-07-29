@@ -45,6 +45,7 @@ Methods available on `wsServer` values returned by this package or constructed b
 | `value.OnConnect(handler: function)` | `void` | Registers a callback for new connections. |
 | `value.OnMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
 | `value.OnDisconnect(handler: function)` | `void` | Registers a callback for disconnected clients. |
+| `value.AllowAllOrigins()` | `void` | Allows browser WebSocket upgrades from any origin. Call only for intentionally public cross-origin endpoints. |
 | `value.Broadcast(message: string)` | `void` | Runs the broadcast operation. |
 | `value.GetConnections()` | `array` | Returns connections. |
 | `value.Start()` | `error` | Runs the start operation. |
@@ -88,5 +89,7 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 ## Edge-case behavior
 
 TLS uses normal certificate verification and servers enforce same-origin
-upgrades by default. Callback panics are contained, close/stop are idempotent,
-and shutdown closes active and mounted connections.
+upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
+server when it intentionally accepts browser clients from other origins.
+Callback panics are contained, close/stop are idempotent, and shutdown closes
+active and mounted connections.
