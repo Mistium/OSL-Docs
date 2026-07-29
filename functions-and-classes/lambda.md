@@ -24,7 +24,7 @@ The syntax consists of the following parts:
 
 1. **Parameters**: The input parameters are enclosed in parentheses.
 2. **Arrow**: The arrow `->` separates the parameters from the function body.
-3. **Body**: The function body is enclosed in parentheses.
+3. **Body**: Use a concise expression, or parentheses for a multi-statement body.
 
 ## Return Value
 
@@ -61,4 +61,13 @@ expected, including array methods:
 ```javascript
 [1, 2, 3].map((number x) number -> x * 2)  // returns [2, 4, 6]
 [1, 2, 3].filter((number x) -> x > 1)      // returns [2, 3]
+```
+
+Long concise expressions can continue on following lines:
+
+```javascript
+matches = handlers.filter(handler ->
+  handler.name == command and
+  (username == null or handler.registeredBy == username)
+)
 ```
