@@ -23,6 +23,7 @@ log tui.table(["Name"], [["Ada"]])
 
 | Method | Returns | Description |
 | --- | --- | --- |
+| `tui.write(value: any)` | `void` | Writes to stdout without adding a newline. |
 | `tui.clear()` | `void` | Clears all stored values. |
 | `tui.clearLine()` | `void` | Runs the clear line operation. |
 | `tui.clearLines(count: any)` | `void` | Runs the clear lines operation. |

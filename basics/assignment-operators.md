@@ -37,6 +37,14 @@ variable %= number
 variable ^= number
 // sets the varable value to "variable ^ number"
 
+variable |= number
+variable &= number
+variable <<= number
+variable >>= number
+variable >>>= number
+variable ^^= number
+// applies the matching bitwise operator to the variable
+
 variable ++= value
 // concatonate the value onto the variable
 ```

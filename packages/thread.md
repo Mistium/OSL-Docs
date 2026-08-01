@@ -32,10 +32,10 @@ log t.wait()
 
 ## Thread safety
 
-OSL automatically makes concurrent programs memory-safe. As soon as a program can run
-more than one thread (it imports `osl/thread`, `osl/serve`, `osl/ws`, `osl/cron`,
-`osl/ssh`, `osl/sound`, or uses `worker`), the compiler guards every shared value
-operation with automatic locking. This means:
+OSL automatically makes concurrent programs memory-safe. The compiler identifies values
+captured by named thread functions, and arguments passed to `thread.new`, then guards
+operations on those shared values with automatic locking. Dynamic callbacks use a safe
+whole-program fallback. This means:
 
 - Two threads touching the **same** object, array, `map()`, or `set()` will never crash
   the program or corrupt memory — the "concurrent map writes" fatal error can't happen.
@@ -64,8 +64,9 @@ can still lose updates, because each step is individually atomic but the pair is
 Guard those critical sections yourself with [`osl/sync`](sync.md).
 
 **Performance:** programs that never start a thread pay nothing — the locking is compiled
-out entirely. Threaded programs lock per value, so threads working on different data don't
-contend with each other, and reads run in parallel.
+out entirely. Named thread functions lock only their captured values and arguments, so an
+idle input thread does not slow down unrelated work. Threads working on different data do
+not contend with each other, and reads run in parallel.
 
 ## Notes
 
