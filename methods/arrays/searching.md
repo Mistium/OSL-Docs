@@ -32,6 +32,9 @@ Whether `fn` returns true for **any** element.
 #### `.every(fn)` → `boolean`
 Whether `fn` returns true for **every** element.
 
+On typed arrays, callbacks with a matching parameter type are called directly
+without dynamic dispatch.
+
 ```javascript
 log [1, 2, 3].some(x -> x > 2)   // true
 log [1, 2, 3].every(x -> x > 0)  // true
