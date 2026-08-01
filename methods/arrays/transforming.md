@@ -5,10 +5,13 @@ Methods that produce a new array from an existing one. Lambdas use the arrow for
 lambdas like `(number x) number -> x * 2` and named functions.
 
 #### `.map(fn)` → `array`
-Applies `fn` to every element and collects the results.
+Applies `fn` to every element and collects the results. A typed callback on a
+typed array preserves its return type, so no dynamic conversion is needed.
 
 ```javascript
-log [1, 2, 3].map(x -> x * 2)  // [2, 4, 6]
+int[] values = [1, 2, 3]
+int[] doubled = values.map((int x) int -> x * 2)
+log doubled  // [2, 4, 6]
 ```
 
 #### `.filter(fn)` → same array type
@@ -31,6 +34,7 @@ log arr.sortBy("age", "descending").getKeys("name") // ["bob", "alice"]
 ```
 
 `.sortBy(fn)` also accepts an arrow function that returns the value to sort on.
+Typed callbacks on typed arrays use direct calls instead of dynamic dispatch.
 
 #### `.reverse()` → same array type
 Returns the elements in reverse order.
