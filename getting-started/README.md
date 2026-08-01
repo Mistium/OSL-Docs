@@ -80,6 +80,8 @@ osl compile hello.osl     # produces ./hello
 | `osl todo` | List every `// TODO:` comment in the current project. |
 | `osl version` | Show the compiler version. |
 
+`osl transpile` stops after parsing and Go generation; it does not invoke the Go compiler.
+
 ## The execution model
 
 An OSL file needs **no `main` function**. The file's top-level statements *are* the
