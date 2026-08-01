@@ -26,6 +26,18 @@ vals = [1 + 1, "pre" ++ "fix", 10 * 2]  // [2, "prefix", 20]
 
 Objects are collections of key-value pairs that can include computed values and methods.
 
+Keys can be expressions. Their results are converted to strings:
+
+```osl
+prefix = "user_"
+users = {
+  prefix ++ 1: "Alice",
+  prefix ++ 2: "Bob"
+}
+
+log users.user_1 // Alice
+```
+
 ```javascript
 // Simple object
 person = {
