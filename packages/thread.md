@@ -64,9 +64,16 @@ can still lose updates, because each step is individually atomic but the pair is
 Guard those critical sections yourself with [`osl/sync`](sync.md).
 
 **Performance:** programs that never start a thread pay nothing — the locking is compiled
-out entirely. Named thread functions lock only their captured values and arguments, so an
-idle input thread does not slow down unrelated work. Threads working on different data do
-not contend with each other, and reads run in parallel.
+out entirely. Named thread functions use a constant-time scope lookup and lock only their
+current captured values and arguments, so reassigned captures stay safe without slowing
+unrelated work. Shared arrays retain the same lock when they grow, threads working on
+different data do not contend except for rare lock-stripe collisions, and reads run in
+parallel.
+
+Automatic locking holds at most one value lock at a time. Cyclic arrays and objects are
+registered without nested lock acquisition, so the automatic safety layer cannot create a
+lock-order deadlock. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
+always release them and use a consistent order when acquiring more than one.
 
 ## Notes
 
