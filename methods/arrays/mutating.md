@@ -3,8 +3,8 @@
 These methods change the array **in place**. The mutating ones (`append`, `prepend`, `insert`,
 `swap`) return the modified array. `pop` and `shift` return the removed element.
 
-#### `.append(item)` - mutates
-Adds `item` to the end.
+#### `.append(...items)` - mutates
+Adds one or more items to the end.
 
 #### `.prepend(item)` - mutates
 Adds `item` to the front.
