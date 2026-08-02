@@ -142,11 +142,11 @@ A project can be a single file, or many. There are three kinds of `import`:
 ```javascript
 import "osl/fs"            // a standard-library package (the osl/ prefix is optional: import "fs")
 import "./helpers.osl"     // another OSL file in your project (relative to this file; ./ optional for same-dir: import "helpers.osl")
+import "./utils"           // every .osl file directly inside a project directory
 import "go/strings"        // a raw Go package, for advanced interop
 ```
 
-Splitting code across files is just a matter of defining functions in one file and importing it in
-another:
+A directory import is sorted by filename, is not recursive, and follows the same resolution rules in the compiler and editor. Splitting code across files is just a matter of defining functions in one file and importing it in another:
 
 ```javascript
 // helpers.osl
