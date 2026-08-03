@@ -75,12 +75,17 @@ osl compile hello.osl     # produces ./hello
 | `osl compile <file.osl> [-o name]` | Compile to a native binary (default name = the file's stem). |
 | `osl transpile <file.osl>` | Print the generated Go code to stdout (useful for debugging). |
 | `osl ast <file.osl>` | Print the parsed syntax tree as JSON. |
+| `osl fmt <path> [...]` | Parse, format, and rewrite OSL files or whole project directories in place. |
 | `osl package <name>` | Print the source of a standard-library package (omit `<name>` to list them all). |
 | `osl lsp` | Start the language server for editor integration (autocomplete, errors, hover). |
 | `osl todo` | List every `// TODO:` comment in the current project. |
 | `osl version` | Show the compiler version. |
 
 `osl transpile` stops after parsing and Go generation; it does not invoke the Go compiler.
+
+`osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation and stable spacing,
+preserves comments and literal contents, and leaves a file unchanged when parsing fails. Pass a
+project directory, such as `osl fmt .`, to format every `.osl` file below it recursively.
 
 ## The execution model
 
