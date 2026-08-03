@@ -22,6 +22,20 @@ class ClassName (
 
 Classes in OSL are defined using the `class` keyword followed by the class name and a block of code enclosed in parentheses. Once defined, you can create instances of the class and access its properties and methods.
 
+Call a class to create an independent instance. If the class defines or inherits an `init()` method, OSL calls it with the constructor arguments.
+
+```javascript
+class Person (
+  name = ""
+
+  def init(string name) (
+    self.name = name
+  )
+)
+
+ada = Person("Ada")
+```
+
 ```javascript
 // Define a class
 class Person (

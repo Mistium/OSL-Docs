@@ -20,8 +20,8 @@ showGreeting()
 ```
 
 Inside a function or block, declare local variables with a type keyword or
-`auto`. Local variables shadow globals with the same name and do not leak out of
-the function.
+`auto`. Local variables shadow globals, functions, and class methods with the
+same name and do not leak out of the function.
 
 ```javascript
 any count = 1
