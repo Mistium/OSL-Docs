@@ -104,6 +104,8 @@ text "Points: " + (points > 100 ? "max" points)
 // Note: The + operator here adds a space between "Points: " and the result
 ```
 
+When both values have the same known type, the ternary expression keeps that type. For example, `ready ? "yes" "no"` can be passed directly to a `string` parameter or used with string methods.
+
 ## Inverting A Comparison
 
 You can simply place a ! infront of any comparison below to make it do the opposite of the norm.
