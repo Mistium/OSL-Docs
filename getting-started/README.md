@@ -81,7 +81,7 @@ osl compile hello.osl     # produces ./hello
 | `osl todo` | List every `// TODO:` comment in the current project. |
 | `osl version` | Show the compiler version. |
 
-`osl transpile` stops after parsing and Go generation; it does not invoke the Go compiler.
+`osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, then uses one-pass raw Go import detection during code generation; it does not invoke the Go compiler.
 
 `osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation, stable spacing, one blank
 line between top-level declarations, and no leading or repeated blank lines. It preserves comments
@@ -111,7 +111,7 @@ def main() (
 ```
 
 Function and class definitions are *hoisted*, so you can call a function before it appears in the
-file:
+file. Other top-level statements still run once in source order:
 
 ```javascript
 log greet("world")          // works, even though greet is defined below
@@ -154,6 +154,9 @@ import "go/strings"        // a raw Go package, for advanced interop
 
 A directory import is sorted by filename, is not recursive, and follows the same resolution rules in the compiler and editor. Splitting code across files is just a matter of defining functions in one file and importing it in another:
 
+Package dependencies are read from the package's leading `// requires:` header during compilation;
+Go dependencies may use `package/path as alias`.
+
 ```javascript
 // helpers.osl
 def greet(string name) string (
@@ -176,7 +179,7 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled language server for autocomplete, inline errors, go-to-definition, hover docs and document formatting:
+Run the bundled language server for prefix-filtered keyword, builtin and method autocomplete, inline errors, go-to-definition, hover docs and document formatting:
 
 ```bash
 osl lsp
