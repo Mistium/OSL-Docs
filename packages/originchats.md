@@ -172,13 +172,16 @@ Builder methods (all chainable):
 
 #### `client.slash(schema, handler)`
 Protocol-level registration for when you already have a full slash command schema object
-(`name`, `description`, `options`, `whitelistRoles`, `blacklistRoles`, `ephemeral`).
+(`name`, `description`, `options`, `whitelistRoles`, `blacklistRoles`, `ephemeral`). Adding a
+command after `ready` resends the client's complete command set because registration replaces
+the server-side set for that connection.
 `slashCommand(...)` is sugar over this.
 
 ## Sending & editing
 
 Sending methods wait for the server's response (up to `timeout`) and return the created
-message, so you can chain edits or reactions onto it.
+message, so you can chain edits or reactions onto it. They return `null` if the request fails
+or the server rejects the message.
 
 #### `client.send(channel, content)` → `*originchats.message`
 Sends a message to a channel.
