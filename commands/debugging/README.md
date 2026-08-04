@@ -66,4 +66,5 @@ logging, see the [`osl/log`](../../packages/log.md) package.
 Runtime errors include the nearest mapped OSL source line and up to eight OSL stack frames.
 Compile errors scan their source once for token relocation and caret placement.
 Parser line markers are applied in one compaction pass while preserving blank-line positions.
+String lint diagnostics use the same scanner for single- and double-quoted literals.
 Translated compiler diagnostics omit Go-only type and location annotations.
