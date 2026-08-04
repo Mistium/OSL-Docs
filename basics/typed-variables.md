@@ -2,6 +2,9 @@
 
 OSL allows you to declare variables with specific types, providing type safety and better code clarity. This feature enables you to enforce that a variable or object property can only hold values of a specified type.
 
+Typed and inferred top-level assignments use the same exported Go reference detection.
+The language server preserves the same declared names and types for indexing, completion and hover.
+
 ## Syntax
 
 For variables:
@@ -23,7 +26,10 @@ OSL supports the following type annotations for variables:
 * `string` - Text values
 * `number` - Numeric values (integers and decimals)
 * `boolean` - Logical values (true/false)
+* `byte`, `int`, `int8`, `int16`, `int32`, `int64` - Integer values
+* `number`, `number32`, `number64` - Numeric values
 * `array` - JSON arrays
+* `type[]` - Compact arrays whose elements use one specific type, such as `byte[]` or `int[]`
 * `object` - JSON objects
 * `function` - Function objects
 * `any` - Any type (default if no type is specified)
@@ -42,6 +48,8 @@ number age = 30
 boolean isActive = true
 array items = [1, 2, 3]
 object settings = { theme: "dark" }
+byte[] data = [0, 127, 255]
+int[] counters = make(int[], 100)
 
 // Attempting to assign the wrong type will cause an error
 name = 42
@@ -156,6 +164,22 @@ def pick(boolean which) number? (
 )
 ```
 
+## Typed Arrays
+
+Appending `[]` to a type creates a native Go slice of that element type. This uses substantially less memory than a dynamic `array` and avoids interface conversions when values are read:
+
+```javascript
+byte[] memory = make(byte[], 64 * 1024 * 1024)
+memory[1] = 255
+log memory[1]
+```
+
+Typed arrays use the same 1-based and negative indexing rules as normal OSL arrays. Number indexes are truncated to integers, so `values[2.9]` accesses item `2`. Literal values, indexed writes, and dynamic arrays assigned to a typed array are converted to the declared element type. Integer conversion follows Go-width wrapping, so assigning `258` to a `byte[]` stores `2`.
+
+The size passed to `make(type[], size)` may be any integer expression. Concatenating two arrays of the same typed-array type preserves that type.
+
+Use a dynamic `array` for mixed element types or a typed array for homogeneous, memory-sensitive data. Homogeneous literals and nested inferred shapes retain precise types until a mutation requires widening them; object inference and mutation share the same literal-key decoding.
+
 ## Benefits of Typed Variables
 
 1. **Error Prevention** - Catch type-related errors early
@@ -167,7 +191,8 @@ def pick(boolean which) number? (
 ## Notes
 
 * Type annotations are optional - you can mix typed and untyped variables
+* Type annotations are preserved across cached local imports
 * Type checking happens during compilation where the type is known, and the generated program enforces typed storage
 * Once a variable is typed, that type is enforced for the lifetime of the variable
 * Type annotations do not affect the variable's value, only what values it can accept
-* Using typed variables can help catch bugs early and make your code more robust
+* Typed variables are tracked directly in compiler scopes; the nearest declaration wins and helps catch bugs early
