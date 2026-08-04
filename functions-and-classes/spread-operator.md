@@ -106,6 +106,15 @@ log view.containsAny("x", ...roles)  // true - fixed args mix with spread
 
 Spreading into a method that takes a fixed number of arguments is an error.
 
+## Spreading objects
+
+Object literals may mix normal entries and object spreads. Entries are evaluated left-to-right, and later entries replace earlier keys.
+
+```javascript
+base = { a: 1 }
+merged = { before: 0, ...base, after: 2 }
+```
+
 ## Important Notes
 
 - The rest parameter must be the last (and often only) parameter in the function definition
