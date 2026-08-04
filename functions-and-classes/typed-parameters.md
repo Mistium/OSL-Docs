@@ -2,6 +2,8 @@
 
 In OSL, you can specify the expected type of a function parameter to improve code clarity and enable better error checking. This feature allows you to declare what type of data a function expects, making your code more robust and self-documenting.
 
+Editor signature inference reads the function name, parameter types and return type from the same header.
+
 ## Syntax
 
 ```javascript
@@ -186,6 +188,8 @@ log processData(numbers, double)  // Outputs: [2, 4, 6, 8, 10]
 ## Notes
 
 - Type annotations are optional - you can mix typed and untyped parameters
-- If no type is specified, the parameter accepts any type
+- If no type is specified, the parameter accepts any type; an omitted parameter list is empty
 - Type checking happens at runtime when the function is called
 - Type annotations do not affect the function's return value
+- Function declarations and imported function assignments share parameter-type resolution and signature registration; local imports use the same file and directory path rules as normal imports
+- Cached local imports reuse parsed signatures across parallel workers while returning isolated deep-cloned syntax trees.
