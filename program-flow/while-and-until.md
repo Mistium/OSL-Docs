@@ -24,6 +24,8 @@ while condition (
 * `condition`: The condition that determines whether to continue executing the block of commands.
 * `commands`: The commands to be executed within the loop.
 
+Condition and body arguments are assigned by position, even when their source text is identical.
+
 ### Example
 
 ```js
