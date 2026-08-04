@@ -36,6 +36,7 @@ for i 3 (
 
 Like `loop`, the count is evaluated once before the first iteration; changing a
 variable it was computed from inside the body has no effect on the iteration count.
+Nested loops use independent compiler-generated counters.
 
 ## `for ... in`
 
@@ -72,6 +73,7 @@ for value in 1 to 5 (
 
 `for ... of` iterates over keys or one-based indexes. With two variable names,
 the first receives the index/key and the second receives the value.
+All counted, `in`, and `of` loops compile the same parenthesized block representation.
 
 ```js
 for i of ["a", "b", "c"] (
