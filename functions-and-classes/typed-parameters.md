@@ -2,7 +2,7 @@
 
 In OSL, you can specify the expected type of a function parameter to improve code clarity and enable better error checking. This feature allows you to declare what type of data a function expects, making your code more robust and self-documenting.
 
-Editor signature inference and signature help read the function name, parameter types and return type from the same header.
+Editor signature inference, signature help and typed hover read the function name, parameter types and return type from the same header.
 
 ## Syntax
 
