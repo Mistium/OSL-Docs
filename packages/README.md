@@ -36,7 +36,8 @@ Missing third-party Go dependencies are fetched automatically when you compile.
 ## Modules — `import(...)` as a value
 
 The statement `import "./x.osl"` merges another file's globals and functions into the current
-scope. Its top-level statements run once, at the position of the first import.
+scope. Imported top-level variables share the entry file's global scope, so functions in either
+file can use them. Top-level statements still run once, at the position of the first import.
 The **expression** form `import("./x.osl")` instead returns that file as a **module object**
 whose fields are its public functions:
 
