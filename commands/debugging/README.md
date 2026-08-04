@@ -69,4 +69,6 @@ Parser line markers are applied in one compaction pass while preserving blank-li
 String lint diagnostics use the same scanner for single- and double-quoted literals.
 Lint rules share one token-range formatter for consistent line and highlight positions.
 Unclosed single- and double-quoted strings share the same validation and one-character opener highlight.
+
+Cold test runs link compiled cases from all selected test files into one batch runner, avoiding repeated linker startup.
 Translated compiler diagnostics omit Go-only type and location annotations.
