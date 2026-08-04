@@ -72,7 +72,7 @@ osl compile hello.osl     # produces ./hello
 | Command | What it does |
 | --- | --- |
 | `osl run <file.osl>` | Compile and immediately run a file. |
-| `osl compile <file.osl> [-o name]` | Compile with cached Go-module preparation and live TTY progress (default name = the file's stem). |
+| `osl compile <file.osl> [-o name]` | Compile through shared temporary-workspace and cached-module preparation with live TTY progress. |
 | `osl transpile <file.osl>` | Print the generated Go code to stdout (useful for debugging). |
 | `osl ast <file.osl>` | Print the parsed syntax tree as JSON. |
 | `osl fmt <path> [...]` | Validate nested AST errors, format, and rewrite OSL files or whole project directories in place. |
