@@ -155,7 +155,7 @@ import "go/strings"        // a raw Go package, for advanced interop
 A directory import is sorted by filename, is not recursive, and follows the same resolution rules in the compiler and editor. Splitting code across files is just a matter of defining functions in one file and importing it in another:
 
 Package dependencies are read from the package's leading `// requires:` header during compilation;
-Go dependencies may use `package/path as alias`.
+Go dependencies may use `package/path as alias`; missing modules are installed once per distinct path.
 
 ```javascript
 // helpers.osl
