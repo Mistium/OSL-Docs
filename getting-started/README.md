@@ -179,7 +179,7 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled language server for prefix-filtered keyword, builtin and method autocomplete, inline errors, go-to-definition, hover docs and document formatting:
+Run the bundled language server for prefix-filtered keyword, builtin, method and snippet autocomplete, inline errors, go-to-definition, hover docs and document formatting:
 
 ```bash
 osl lsp
