@@ -19,7 +19,7 @@ import "osl/webpush"
 | `webpush.signVapidJWT(audience: any, expiresIn: any, privateKeyPEM: any, claimsEmail: any)` | `string` | Signs a VAPID JWT using shared private-key parsing and JSON/base64 encoding. |
 | `webpush.sendWebPush(endpoint: any, p256dh: any, auth: any, data: any, vapidPrivateKey: any, vapidClaimsEmail: any, ttl: any)` | `object` | Sends web push through the shared bounded HTTP client. |
 | `webpush.verifySubscription(endpoint: any, p256dh: any, auth: any)` | `boolean` | Verifies endpoint, P-256 key, and auth secret through the shared parsers. |
-| `webpush.ensureVAPIDKeys(configPath: any, privateKeyPath: any)` | `object` | Runs the ensure vapidkeys operation. |
+| `webpush.ensureVAPIDKeys(configPath: any, privateKeyPath: any)` | `object` | Reuses matching keys or generates replacement files under a process-wide lock. |
 | `webpush.verifyVapidJWT(token: any, publicKey: any)` | `boolean` | Verifies the signature and required VAPID claim shape. |
 
 ## Notes
