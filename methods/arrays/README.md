@@ -54,6 +54,7 @@ A custom method may reuse a built-in name — from its definition onward it over
 - Typed arrays keep their element type through same-type methods such as `filter`, `sort`, `concat`,
   `left`, `right`, and `clone`; element methods such as `first`, `last`, `pop`, `shift`, and
   `randomOf` return that element type.
+- Concatenating arrays with different element types returns a dynamic `array`.
 - Equality in `contains` / `index` is strict: `[1].contains("1")` is `false`.
 
 ## Cyclic values
