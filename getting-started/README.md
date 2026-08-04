@@ -75,7 +75,7 @@ osl compile hello.osl     # produces ./hello
 | `osl compile <file.osl> [-o name]` | Compile with cached Go-module preparation and live TTY progress (default name = the file's stem). |
 | `osl transpile <file.osl>` | Print the generated Go code to stdout (useful for debugging). |
 | `osl ast <file.osl>` | Print the parsed syntax tree as JSON. |
-| `osl fmt <path> [...]` | Validate, parse, format, and rewrite OSL files or whole project directories in place. |
+| `osl fmt <path> [...]` | Validate nested AST errors, format, and rewrite OSL files or whole project directories in place. |
 | `osl package <name>` | Print the source of a standard-library package (omit `<name>` to list them all). |
 | `osl lsp` | Start the language server for editor integration (autocomplete, errors, hover). |
 | `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
