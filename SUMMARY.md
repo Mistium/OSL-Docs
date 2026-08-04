@@ -138,6 +138,7 @@
   * [env](packages/env.md)
 * [Filesystem & System](packages/categories/system.md)
   * [fs](packages/fs.md)
+  * [mem](packages/mem.md)
   * [sys](packages/sys.md)
   * [process](packages/process.md)
   * [zip](packages/zip.md)
