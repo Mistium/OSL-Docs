@@ -31,7 +31,7 @@ Because programs compile to a native binary, they start instantly and run fast, 
 
 ## Key ideas
 
-* **Readable, command-style syntax.** Code reads top-to-bottom. There is no `main()` to write - the file _is_ the program (see [The Execution Model](getting-started/#the-execution-model)).
+* **Readable, command-style syntax.** Command keywords are recognized consistently at top level and in nested parser contexts. Code reads top-to-bottom. There is no `main()` to write - the file _is_ the program (see [The Execution Model](getting-started/#the-execution-model)).
 * **Optional types.** Variables and function parameters can be untyped (`x = 5`) or typed (`int x = 5`). Types are checked at compile time when you use them.
 * **A rich standard library.** Capabilities are grouped into [packages](packages/) you pull in with `import "osl/<name>"`.
 * **Methods and functions everywhere.** Values have methods (`"hi".toUpper()`, `[1,2,3].map(...)`), and there is a large set of built-in [functions](builtins/math/).
