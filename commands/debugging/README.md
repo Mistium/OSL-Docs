@@ -71,4 +71,6 @@ Lint rules share one token-range formatter for consistent line and highlight pos
 Unclosed single- and double-quoted strings share the same validation and one-character opener highlight.
 
 Cold test runs link compiled cases from all selected test files into one batch runner, avoiding repeated linker startup.
+
+Test suite declarations use the lightweight `defineSuite` function and its `test` shorthands without constructing helper classes.
 Translated compiler diagnostics omit Go-only type and location annotations.
