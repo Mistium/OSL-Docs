@@ -39,7 +39,7 @@ log "x is " ++ x       // x is 5
 ## warn and error
 
 `warn` and `error` work exactly like `log` - they take any number of values and
-format them the same way - but they write to **standard error** instead of
+use the same writer-based formatter - but they write to **standard error** instead of
 standard output. Use them for diagnostics so they stay out of a program's normal
 output and can be redirected separately.
 
@@ -62,3 +62,7 @@ def check(n) (
 `warn` and `error` are identical; the two names just signal intent. Both let the
 script keep running - to stop execution, use `throw`. For structured or levelled
 logging, see the [`osl/log`](../../packages/log.md) package.
+
+Runtime errors include the nearest mapped OSL source line and up to eight OSL stack frames.
+Compile errors use the same token search for source-line relocation and caret placement.
+Translated compiler diagnostics omit Go-only type and location annotations.
