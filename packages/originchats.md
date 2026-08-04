@@ -345,7 +345,7 @@ client.command("!ping", def(*originchats.message msg) -> (
 - `call.has(name)` → `boolean` - whether an argument was provided
 - `call.raw()` → `object` - the whole `slash_call` event
 - `call.client()` → `*originchats.client` - the client
-- `call.respond(text)` - send the command response (routed to the invoking thread automatically)
+- `call.respond(text)` - send the command response, correlated with the incoming `slash_call` id
 
 ## Multiple servers
 
