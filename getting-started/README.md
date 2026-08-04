@@ -179,7 +179,7 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled project-aware language server for indexed symbol and prefix-filtered keyword, builtin, method and snippet autocomplete, inline errors, UTF-16-accurate go-to-definition, hover docs and document formatting:
+Run the bundled project-aware language server for indexed symbol and prefix-filtered keyword, builtin, method and snippet autocomplete, inline errors, UTF-16-accurate go-to-definition, Markdown hover docs and document formatting:
 
 ```bash
 osl lsp
