@@ -191,7 +191,7 @@ log processData(numbers, double)  // Outputs: [2, 4, 6, 8, 10]
 - If no type is specified, the parameter accepts any type; an omitted parameter list is empty
 - Type checking happens at runtime when the function is called
 - Type annotations do not affect the function's return value
-- Function declarations and imported function assignments share parameter-type resolution and signature registration; local imports use the same file and directory path rules as normal imports
+- Function compilation and signature registration share parameter splitting and type resolution; local imports use the same file and directory path rules as normal imports
 - Source and serialized-AST function declarations use the same parameter-list conversion before signature inference.
 - Index assignments and object insertion share the same inferred-container widening rules.
 - Cached local imports reuse parsed signatures across parallel workers while returning isolated deep-cloned syntax trees.
