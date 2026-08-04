@@ -64,5 +64,5 @@ script keep running - to stop execution, use `throw`. For structured or levelled
 logging, see the [`osl/log`](../../packages/log.md) package.
 
 Runtime errors include the nearest mapped OSL source line and up to eight OSL stack frames.
-Compile errors use the same token search for source-line relocation and caret placement.
+Compile errors scan their source once for token relocation and caret placement.
 Translated compiler diagnostics omit Go-only type and location annotations.
