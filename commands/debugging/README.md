@@ -67,4 +67,5 @@ Runtime errors include the nearest mapped OSL source line and up to eight OSL st
 Compile errors scan their source once for token relocation and caret placement.
 Parser line markers are applied in one compaction pass while preserving blank-line positions.
 String lint diagnostics use the same scanner for single- and double-quoted literals.
+Lint rules share one token-range formatter for consistent line and highlight positions.
 Translated compiler diagnostics omit Go-only type and location annotations.
