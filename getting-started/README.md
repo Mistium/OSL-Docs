@@ -179,7 +179,7 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled project-aware language server for indexed symbol and prefix-filtered keyword, builtin, method and snippet autocomplete, inline errors, UTF-16-accurate go-to-definition, Markdown hover docs and document formatting:
+Run the bundled project-aware language server for indexed symbol and prefix-filtered keyword, builtin, method and snippet autocomplete, inline errors, UTF-16-accurate go-to-definition, Markdown hover docs, multiline folding and document formatting:
 
 Editor messages use Content-Length-framed JSON-RPC and encode each payload once.
 Diagnostics reuse the typed parser result instead of parsing the document twice.
