@@ -20,7 +20,7 @@ class ClassName (
 
 ## Creating and Using Classes
 
-Classes in OSL are defined using the `class` keyword followed by the class name and a block of code enclosed in parentheses. Once defined, you can create instances of the class and access its properties and methods.
+Classes in OSL are defined using the `class` keyword followed by the class name and a block of code enclosed in parentheses. Once defined, you can create instances of the class and access its properties and methods. Normal `def` methods and function-valued class properties use the same parameter, return and `self` handling.
 
 Call a class to create an independent instance. If the class defines or inherits an `init()` method, OSL calls it with the constructor arguments.
 
@@ -100,6 +100,7 @@ log c.count
 ## Private Properties
 
 Properties that start with an underscore (`_`) are considered private and can only be accessed from within the class's methods. Accessing a private property from outside the class does not raise an error - it silently returns `null`. This provides a way to encapsulate internal state.
+Public and private `self` fields use the same typed field-resolution path.
 
 ```javascript
 class User (
