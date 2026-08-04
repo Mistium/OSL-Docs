@@ -28,11 +28,11 @@ log rows[0]["name"]
 | `csv.stringify(data: object)` | `string` | Serialises a value to text. |
 | `csv.stringifyRows(data: array)` | `string` | Runs the stringify rows operation. |
 | `csv.stringifyArray(data: array)` | `string` | Runs the stringify array operation. |
-| `csv.readFile(path: any)` | `array` | Reads file. |
-| `csv.readFileRaw(path: any)` | `array` | Reads file raw. |
-| `csv.writeFile(path: any, data: object)` | `boolean` | Writes file. |
-| `csv.writeFileRows(path: any, data: array)` | `boolean` | Writes file rows. |
-| `csv.writeFileArray(path: any, data: array)` | `boolean` | Writes file array. |
+| `csv.readFile(path: any)` | `array` | Reads and parses keyed rows, returning an empty array on failure. |
+| `csv.readFileRaw(path: any)` | `array` | Reads and parses raw rows, returning an empty array on failure. |
+| `csv.writeFile(path: any, data: object)` | `boolean` | Stringifies one object and writes it to a file. |
+| `csv.writeFileRows(path: any, data: array)` | `boolean` | Stringifies keyed rows and writes them to a file. |
+| `csv.writeFileArray(path: any, data: array)` | `boolean` | Stringifies raw rows and writes them to a file. |
 | `csv.toRows(data: array)` | `array` | Converts to rows. |
 | `csv.fromRows(rows: array)` | `array` | Creates from rows. |
 | `csv.getColumn(data: array, column: any)` | `array` | Returns column. |
@@ -69,5 +69,5 @@ log rows[0]["name"]
 ## Edge-case behavior
 
 BOMs and ragged rows are supported, duplicate headers are rejected, and
-generated headers are sorted deterministically. Sampling and transpose handle
-empty and uneven data.
+parsing, writing, deterministic headers, sorting, and non-mutating column edits use shared or standard-library paths. Sampling returns distinct source
+rows for partial samples, while sampling and transpose handle empty and uneven data.
