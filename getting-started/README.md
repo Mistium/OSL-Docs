@@ -83,9 +83,10 @@ osl compile hello.osl     # produces ./hello
 
 `osl transpile` stops after parsing and Go generation; it does not invoke the Go compiler.
 
-`osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation and stable spacing,
-preserves comments and literal contents, and leaves a file unchanged when parsing fails. Pass a
-project directory, such as `osl fmt .`, to format every `.osl` file below it recursively.
+`osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation, stable spacing, one blank
+line between top-level declarations, and no leading or repeated blank lines. It preserves comments
+and literal contents, and leaves a file unchanged when parsing fails. Pass a project directory,
+such as `osl fmt .`, to format every `.osl` file below it recursively.
 
 ## The execution model
 
