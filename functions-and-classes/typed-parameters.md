@@ -194,4 +194,5 @@ log processData(numbers, double)  // Outputs: [2, 4, 6, 8, 10]
 - Function compilation and signature registration share parameter splitting and type resolution; local imports use the same file and directory path rules as normal imports
 - Source and serialized-AST function declarations use the same parameter-list conversion before signature inference.
 - Index assignments and object insertion share the same inferred-container widening rules.
+- Inferred array element types are normalized once before compatibility checks.
 - Cached local imports reuse parsed signatures across parallel workers while returning isolated deep-cloned syntax trees.
