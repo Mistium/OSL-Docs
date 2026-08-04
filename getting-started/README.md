@@ -78,7 +78,7 @@ osl compile hello.osl     # produces ./hello
 | `osl fmt <path> [...]` | Parse, format, and rewrite OSL files or whole project directories in place. |
 | `osl package <name>` | Print the source of a standard-library package (omit `<name>` to list them all). |
 | `osl lsp` | Start the language server for editor integration (autocomplete, errors, hover). |
-| `osl todo` | List every `// TODO:` comment in the current project. |
+| `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
 | `osl version` | Show the compiler version. |
 
 `osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, then uses one-pass raw Go import detection during code generation; it does not invoke the Go compiler.
