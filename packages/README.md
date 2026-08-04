@@ -26,7 +26,7 @@ Directory imports pull in all the `.osl` files in the named folder, so you can s
 module across several files and import the folder once. The `osl/` prefix is reserved for
 standard-library packages: to import a local directory literally named `osl`, write
 `import "./osl"` — a bare `import "osl"` always looks for a standard-library package.
-Directory files use the operating system's already-sorted directory listing, and bare-package
+Directory imports reuse the resolver's already-sorted file slice directly, and bare-package
 resolution checks embedded file metadata without loading package source. Repeated core and package
 imports reuse their first registration instead of rebuilding import state or reparsing package signatures.
 Package and returned-object methods are registered from the same parsed Go method declarations.
