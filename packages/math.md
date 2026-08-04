@@ -113,9 +113,9 @@ import "osl/math"
 | `math.avg(numbers: array)` | `number` | Runs the avg operation. |
 | `math.median(numbers: array)` | `number` | Runs the median operation. |
 | `math.mode(numbers: array)` | `array` | Runs the mode operation. |
-| `math.stdDev(numbers: array)` | `number` | Runs the std dev operation. |
-| `math.variance(numbers: array)` | `number` | Runs the variance operation. |
-| `math.rangeOf(numbers: array)` | `number` | Runs the range of operation. |
+| `math.stdDev(numbers: array)` | `number` | Returns sample standard deviation, or `0` with fewer than two values. |
+| `math.variance(numbers: array)` | `number` | Returns population variance, or `0` with fewer than two values. |
+| `math.rangeOf(numbers: array)` | `number` | Returns maximum minus minimum, or `0` for an empty array. |
 | `math.factorial(n: any)` | `number` | Runs the factorial operation. |
 | `math.fibonacci(n: any)` | `number` | Runs the fibonacci operation. |
 | `math.gcd(a: any, b: any)` | `number` | Runs the gcd operation. |
@@ -143,8 +143,8 @@ import "osl/math"
 | `math.quartiles(numbers: array)` | `object` | Runs the quartiles operation. |
 | `math.iqr(numbers: array)` | `number` | Runs the iqr operation. |
 | `math.product(numbers: array)` | `number` | Runs the product operation. |
-| `math.minOf(numbers: array)` | `number` | Runs the min of operation. |
-| `math.maxOf(numbers: array)` | `number` | Runs the max of operation. |
+| `math.minOf(numbers: array)` | `number` | Returns the minimum, or `0` for an empty array. |
+| `math.maxOf(numbers: array)` | `number` | Returns the maximum, or `0` for an empty array. |
 | `math.geometricMean(numbers: array)` | `number` | Runs the geometric mean operation. |
 | `math.harmonicMean(numbers: array)` | `number` | Runs the harmonic mean operation. |
 | `math.covariance(a: array, b: array)` | `number` | Runs the covariance operation. |
@@ -159,5 +159,6 @@ import "osl/math"
 
 ## Edge-case behavior
 
-Statistics reject non-finite input consistently; prime helpers handle zero,
-negative, and large boundary values without hanging.
+Statistics share sorted floating-point conversion, variance/covariance, positive-mean,
+and zero-safe scaling kernels; non-finite values follow Go floating-point propagation. Prime helpers
+handle zero, negative, and large boundary values without hanging, while clamping and random ranges share ordered-bound normalization.
