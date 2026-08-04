@@ -29,15 +29,16 @@ log zip.list("dist.zip")
 | `zip.list(zipPath: any)` | `any` | Runs the list operation. |
 | `zip.tar(sourcePath: any, outputPath: any)` | `boolean` | Runs the tar operation. |
 | `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Extracts a tar archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
-| `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gzip operation. |
+| `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Compresses through the shared checked file-copy path. |
 | `zip.gzipLimited(sourcePath: any, outputPath: any, maxInputBytes: number, maxOutputBytes: number)` | `boolean` | Gzips a file while enforcing input and compressed-output limits. Removes an oversized output. |
-| `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Runs the gunzip operation. |
+| `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Decompresses through the shared checked file-copy path. |
 | `zip.compressString(data: any)` | `string` | Runs the compress string operation. |
 | `zip.decompressString(data: any)` | `string` | Runs the decompress string operation. |
-| `zip.fileInfo(zipPath: any, filePath: any)` | `any` | Runs the file info operation. |
-| `zip.extractFile(zipPath: any, filePath: any, outputPath: any)` | `boolean` | Runs the extract file operation. |
-| `zip.addFile(zipPath: any, filePath: any)` | `boolean` | Adds file. |
-| `zip.removeFile(zipPath: any, filePath: any)` | `boolean` | Removes file. |
+| `zip.fileInfo(zipPath: any, filePath: any)` | `any` | Finds an entry through the shared archive lookup and returns its metadata. |
+| `zip.extractFile(zipPath: any, filePath: any, outputPath: any)` | `boolean` | Finds and extracts one entry through the shared archive lookup. |
+| `zip.addFile(zipPath: any, filePath: any)` | `boolean` | Atomically rewrites the archive and adds a file or directory tree using the same traversal as `compress`. |
+| `zip.removeFile(zipPath: any, filePath: any)` | `boolean` | Atomically rewrites the archive without the named entry. |
+| `zip.copyFile(sourcePath: string, outputPath: string)` | `boolean` | Copies a file without compression through the same checked stream path. |
 | `zip.create(path: string)` | `boolean` | Creates a new value. |
 | `zip.statistics(zipPath: any)` | `any` | Runs the statistics operation. |
 | `zip.gunzipLimited(sourcePath: any, outputPath: any, maxOutputBytes: any)` | `boolean` | Decompresses with an output-size limit and removes partial output on failure. |
@@ -49,6 +50,8 @@ log zip.list("dist.zip")
 
 ## Edge-case behavior
 
-Extraction rejects traversal and symlink escapes. Corrupt/truncated archives,
+ZIP, limited ZIP, and TAR extraction share the same resolved-destination checks
+and reject traversal and symlink escapes. Corrupt/truncated archives,
 oversized input/output, duplicate paths, and write failures remove partial
-results. Empty archives and statistics remain valid.
+results. ZIP, TAR, and archive addition share one source-tree traversal; add and remove share one temporary-archive rewrite. Limited GZIP output stops at the configured byte boundary. Empty
+archives and statistics remain valid.
