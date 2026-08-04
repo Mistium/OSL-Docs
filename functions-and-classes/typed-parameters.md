@@ -110,14 +110,13 @@ Notes:
   so you can test for it with `== null`.
 - `?` works in lambdas too: `silly = def(number value, number? add) -> ( ... )`.
 
-### Function Signature Types (`fnc(...)`)
+### Function Types (`def(...)`)
 
-A parameter typed `function` (or `fnc`) accepts any function value. To require a
-*specific* signature, write the parameter types in parentheses followed by an optional
-return type — the same shape as a `def` header, without the body:
+A parameter typed `function` accepts any function value. To require a specific
+signature, use `def(parameterTypes) returnType`:
 
 ```javascript
-def apply(fnc(number) number f, number x) number (
+def apply(def(number) number f, number x) number (
   return f(x)
 )
 
@@ -125,16 +124,41 @@ double = def(number n) number -> (n * 2)
 log apply(double, 21) // 42
 ```
 
-`fnc(number, number) number` means "takes two numbers, returns a number". Omit the
-return type (`fnc(number)`) to accept any return value.
+`def(number, number) number` means "takes two numbers and returns a number". Omit
+the return type (`def(number)`) to accept any return value. The older `fnc(...)`
+spelling remains supported.
+
+Declare a reusable function type with `type name def(...) returnType`, then use its
+name anywhere a type is accepted:
+
+```javascript
+type stringy def() string
+
+def takesStringy(stringy f) (
+  log f()
+)
+
+def makeStringy() stringy (
+  return def() string -> "made by a function"
+)
+
+takesStringy(makeStringy())
+
+stringy f = makeStringy()
+log f()
+```
+
+Named function types are structural: independently declared types with the same
+parameter and return types are compatible. They work for named functions, lambdas,
+parameters, returns, variables, and direct calls.
 
 Signature types are checked at compile time, in both directions:
 
 ```javascript
 shout = def(string s) string -> (s.toUpper())
-apply(shout, 21) // TypeError: expects fnc(number) number, got fnc(string) string
+apply(shout, 21) // TypeError: incompatible function signature
 
-def apply2(fnc(number) number f) number (
+def apply2(def(number) number f) number (
   return f("hi") // TypeError: Argument 1 to f expects number, got string
 )
 ```
