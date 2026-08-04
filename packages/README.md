@@ -26,6 +26,10 @@ Directory imports pull in all the `.osl` files in the named folder, so you can s
 module across several files and import the folder once. The `osl/` prefix is reserved for
 standard-library packages: to import a local directory literally named `osl`, write
 `import "./osl"` — a bare `import "osl"` always looks for a standard-library package.
+Directory files use the operating system's already-sorted directory listing, and bare-package
+resolution checks embedded file metadata without loading package source. Repeated core and package
+imports reuse their first registration instead of rebuilding import state or reparsing package signatures.
+Package and returned-object methods are registered from the same parsed Go method declarations.
 
 Missing third-party Go dependencies are fetched automatically when you compile.
 
@@ -44,7 +48,8 @@ log math.square(4)
 ```
 
 Top-level names that start with `_` are **private**: they are not exposed on the module
-object, but the module's own functions can still call them.
+object, but the module's own functions can still call them. Both `def` declarations and
+function-valued assignments are exported through the same module-function path.
 
 ```javascript
 // math.osl
@@ -78,7 +83,8 @@ handle.exec("CREATE TABLE users (id INTEGER, name TEXT)")
 array rows = handle.query("SELECT * FROM users")
 ```
 
-On each package page these are listed under **"Returned object"** headings.
+On each package page these are listed under **"Returned object"** headings. Pointer and value
+receiver methods are merged by the same direct returned-object lookup.
 
 ## The standard library at a glance
 
