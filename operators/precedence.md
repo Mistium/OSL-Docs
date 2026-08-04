@@ -2,6 +2,8 @@
 
 OSL evaluates expressions using a fixed operator precedence hierarchy. Operators with **higher precedence bind tighter** and are evaluated before lower-precedence operators. Operators at the same precedence level are evaluated **left-to-right**, unless otherwise stated.
 
+Each binary operator consumes its left and right operands once while preserving that order.
+
 Parentheses `(...)` may always be used to override precedence.
 
 #### Precedence Table
