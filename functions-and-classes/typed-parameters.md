@@ -192,4 +192,5 @@ log processData(numbers, double)  // Outputs: [2, 4, 6, 8, 10]
 - Type checking happens at runtime when the function is called
 - Type annotations do not affect the function's return value
 - Function declarations and imported function assignments share parameter-type resolution and signature registration; local imports use the same file and directory path rules as normal imports
+- Source and serialized-AST function declarations use the same parameter-list conversion before signature inference.
 - Cached local imports reuse parsed signatures across parallel workers while returning isolated deep-cloned syntax trees.
