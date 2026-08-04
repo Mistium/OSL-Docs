@@ -38,7 +38,7 @@ log "x is " ++ x       // x is 5
 
 ## warn and error
 
-`warn` and `error` work exactly like `log` - they take any number of values and
+`warn` and `error` work exactly like `log` - they evaluate any number of values left-to-right and
 use the same writer-based formatter - but they write to **standard error** instead of
 standard output. Use them for diagnostics so they stay out of a program's normal
 output and can be redirected separately.
