@@ -26,6 +26,7 @@ These global variables provide information about the current date and time.
 | --- | --- | --- |
 | `timestamp` | Number | A wrapper for JavaScript's `Date.now()` |
 | `performance` | Number | A wrapper for JavaScript's `performance.now()` |
+| `timer` | Number | Fractional seconds elapsed since the program started, refreshed for each window frame |
 
 ## Timezone Information
 
