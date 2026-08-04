@@ -32,6 +32,8 @@ switch value (
 
 You can use the default case to handle when none of the cases are met.
 
+Like a normal case, its body may be inline or enclosed in parentheses.
+
 It must be placed at the bottom of the switch case statement
 
 Example shown below
