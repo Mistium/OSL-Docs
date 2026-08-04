@@ -99,7 +99,7 @@ raw event object: `def(*originchats.client c, object event)`.
 
 - `client.onMessageEdit(handler)` - a message was edited
 - `client.onMessageDelete(handler)` - a message was deleted
-- `client.onReactionAdd(handler)` - a reaction was added (`event.channel`, `event.id`, `event.emoji`, `event.user`)
+- `client.onReactionAdd(handler)` - a reaction was added (`event.channel`, `event.id`, `event.emoji`, `event.from`)
 - `client.onReactionRemove(handler)` - a reaction was removed
 - `client.onTyping(handler)` - a user is typing
 - `client.onUserConnect(handler)` - a user connected
@@ -214,10 +214,6 @@ Pins or unpins a message.
 #### `client.typing(channel)`
 Shows the bot's typing indicator in a channel.
 
-#### `client.setStatus(status, text)`
-Sets the bot's presence. `status` is `"online"`, `"idle"`, `"dnd"` or `"offline"`; `text` is a
-custom status message.
-
 ## Queries
 
 Each of these performs a round-trip to the server and returns the useful part of the response.
@@ -256,6 +252,27 @@ object res = client.request({cmd: "unreads_get"})
 Fire-and-forget raw packet - like `request` without waiting for a response.
 
 ## Client info & state
+
+#### `client.details()` → `object`
+Returns the complete server handshake details as a defensive copy. This includes `server`,
+`limits`, `uploads`, `attachments`, `version`, `validator_key`, `capabilities`, and `permissions`,
+plus any fields added by newer servers.
+
+```javascript
+object details = client.details()
+log details.limits.post_content
+log details.attachments.max_size
+```
+
+#### `client.supports(command)` → `boolean`
+Whether the server advertised `command` in its handshake capability list. Use this before
+calling newer commands through `request()` or `sendCmd()`.
+
+```javascript
+if client.supports("messages_search") (
+  object response = client.request({cmd: "messages_search", query: "release"})
+)
+```
 
 #### `client.username()` → `string`
 The bot's username (from `ready`).
