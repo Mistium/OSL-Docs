@@ -24,23 +24,25 @@ log t.wait()
 | Method | Returns | Description |
 | --- | --- | --- |
 | `thread.new(fn: any, ...args: any)` | `*Thread` | Creates a new value. |
-| `thread.wait()` | `any` | Runs the wait operation. |
-| `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. The task keeps running in the background — a timeout stops waiting, it does not cancel. |
+| `thread.wait()` | `any` | Waits for the result. If the task failed, rethrows its error with the original task and spawn locations. |
+| `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. If a completed task failed, rethrows its error. A timeout stops waiting; it does not cancel the task. |
 | `thread.isDone()` | `boolean` | Reports whether done. |
 | `thread.age()` | `number` | Runs the age operation. |
-| `thread.waitAll(threads: array)` | `array` | Runs the wait all operation. |
+| `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with the additional failures attached. |
 
 ## Thread safety
 
 OSL automatically makes concurrent programs memory-safe. The compiler identifies values
-captured by named thread functions, and arguments passed to `thread.new`, then guards
-operations on those shared values with automatic locking. Dynamic callbacks use a safe
+captured by named thread functions, including through named functions they call, and arguments passed to `thread.new`, then guards
+operations on those shared values with automatic read/write locking through one lock-selection path. Dynamic callbacks use a safe
 whole-program fallback. This means:
+
+Values passed through `auto`/interface wrappers retain the same shared lock identity.
 
 - Two threads touching the **same** object, array, `map()`, or `set()` will never crash
   the program or corrupt memory — the "concurrent map writes" fatal error can't happen.
-- Every individual operation (an index write, a `.append`, a `.set`, a key read) is
-  atomic.
+- Every OSL statement is atomic, including an index write, `.append`, `.set`, key read,
+  or scalar read-modify-write such as `count += 1`.
 
 ```javascript
 import "osl/thread"
@@ -58,17 +60,16 @@ void thread.waitAll(threads)
 log shared.len   // 8000, deterministic
 ```
 
-What automatic safety does **not** do is make a multi-step sequence atomic. A
-read-modify-write spread across threads (e.g. `count = count + 1` on a shared value)
-can still lose updates, because each step is individually atomic but the pair is not.
-Guard those critical sections yourself with [`osl/sync`](sync.md).
+Automatic safety does **not** combine multiple statements into one transaction. For
+example, another thread can change `count` between an `if count < limit` check and the
+assignment inside its block. Guard multi-statement critical sections with
+[`osl/sync`](sync.md).
 
-**Performance:** programs that never start a thread pay nothing — the locking is compiled
-out entirely. Named thread functions use a constant-time scope lookup and lock only their
-current captured values and arguments, so reassigned captures stay safe without slowing
-unrelated work. Shared arrays retain the same lock when they grow, threads working on
-different data do not contend except for rare lock-stripe collisions, and reads run in
-parallel.
+**Performance:** programs that never start a thread skip capture analysis and pay nothing — the
+locking is compiled out entirely. Named thread functions use deterministic standard-library key ordering, a constant-time function-only scope lookup, and lock only their
+current captured values and arguments, including package values; both decisions reuse one call-graph scan and transitive walker, while generic, typed, read, and write array locks share one selection path. Shared arrays retain the same lock when they grow, and
+read-only statements can run in parallel. Mutable statements use a shared statement
+boundary so scalar and collection updates remain atomic.
 
 Automatic locking holds at most one value lock at a time. Cyclic arrays and objects are
 registered without nested lock acquisition, so the automatic safety layer cannot create a
@@ -80,5 +81,5 @@ always release them and use a consistent order when acquiring more than one.
 - Standard-library imports accept both `import "osl/thread"` and `import "thread"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`) — handy for releasing an `osl/sync` lock you took inside a thread.
-- Panicking tasks still complete their handle, so `wait`, `timeout`, and
-  `waitAll` cannot wedge indefinitely.
+- Panicking tasks still complete their handle. `wait` and a completed `timeout` rethrow
+  the failure; `waitAll` waits for every task before rethrowing.
