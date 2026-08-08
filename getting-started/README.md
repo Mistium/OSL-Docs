@@ -81,7 +81,7 @@ osl compile hello.osl     # produces ./hello
 | `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
 | `osl version` | Show the compiler version. |
 
-`osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, then uses one-pass raw Go import detection during code generation; it does not invoke the Go compiler.
+`osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, scans generated and imported code for runtime dependencies, and emits only the helper files the program references. It does not invoke the Go compiler.
 
 `osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation, stable spacing, one blank
 line between top-level declarations, and no leading or repeated blank lines. It preserves comments
