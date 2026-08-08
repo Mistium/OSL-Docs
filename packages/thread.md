@@ -69,7 +69,9 @@ assignment inside its block. Guard multi-statement critical sections with
 locking is compiled out entirely. Named thread functions use deterministic standard-library key ordering, a constant-time function-only scope lookup, and lock only their
 current captured values and arguments, including package values; both decisions reuse one call-graph scan and transitive walker, while generic, typed, read, and write array locks share one selection path. Shared arrays retain the same lock when they grow, and
 read-only statements can run in parallel. Mutable statements use a shared statement
-boundary so scalar and collection updates remain atomic.
+boundary so scalar and collection updates remain atomic. Method and package calls use
+their own value/package synchronization and run outside that boundary, allowing HTTP,
+WebSocket, and similar callbacks to update captured values without deadlocking their caller.
 
 Automatic locking holds at most one value lock at a time. Cyclic arrays and objects are
 registered without nested lock acquisition, so the automatic safety layer cannot create a
