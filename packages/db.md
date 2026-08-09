@@ -213,6 +213,7 @@ Methods available on `dbQuery` values returned by this package or constructed by
 
 ## Edge-case behavior
 
+Connection, collection, and query lifecycle checks share named guards.
 Identifiers are validated, closed handles fail safely, transactions route all
 operations through the transaction, nested transaction attempts are rejected,
 and scan/negative limit/offset errors are controlled.
