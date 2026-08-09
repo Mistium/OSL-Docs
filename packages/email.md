@@ -35,7 +35,7 @@ import "osl/email"
 | `email.isHTML()` | `boolean` | Reports whether html. |
 | `email.attachFile(filePath: any)` | `boolean` | Runs the attach file operation. |
 | `email.attachContent(files: object)` | `boolean` | Runs the attach content operation. |
-| `email.sendWithSmtp(host: any, port: any, username: any, password: any, auth: any)` | `object` | Sends with smtp. |
+| `email.sendWithSmtp(host: any, port: any, username: any, password: any, auth: any)` | `object` | Sends with SMTP and returns the shared success or error result shape. |
 | `email.sendGmail(username: any, password: any)` | `object` | Sends gmail. |
 | `email.sendOutlook(username: any, password: any)` | `object` | Sends outlook. |
 | `email.sendOffice365(username: any, password: any)` | `object` | Sends office365. |
