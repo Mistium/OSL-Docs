@@ -4,6 +4,8 @@
 
 typeof returns a string representing the type of the given value.
 
+Comparing a dynamic variable with `typeof(value) == "object"` (or the reversed strict-equality form) narrows that variable to the matched object, array, string, number, or boolean type inside the matching `if`/`else if` branch. Outside the branch it keeps its original type.
+
 ## Parameters
 
 typeof needs one parameter:

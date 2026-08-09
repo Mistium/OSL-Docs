@@ -157,17 +157,17 @@ Methods available on `dbCollection` values returned by this package or construct
 | --- | --- | --- |
 | `value.insertOne(doc: object)` | `any` | Runs the insert one operation. |
 | `value.insertMany(docs: array)` | `array` | Runs the insert many operation. |
-| `value.find(filter: object, ...opts: object)` | `array` | Runs the find operation. |
-| `value.findOne(filter: object)` | `object` | Runs the find one operation. |
+| `value.find(filter: object, ...opts: object)` | `array` | Returns every matching document after optional sorting and paging. |
+| `value.findOne(filter: object)` | `object` | Returns the first document from the shared matcher, or an empty object. |
 | `value.findById(id: any)` | `object` | Runs the find by id operation. |
 | `value.all()` | `array` | Runs the all operation. |
 | `value.count(filter: object)` | `number` | Runs the count operation. |
 | `value.exists(filter: object)` | `boolean` | Reports whether the value or resource exists. |
-| `value.updateOne(filter: object, changes: object)` | `number` | Runs the update one operation. |
-| `value.updateMany(filter: object, changes: object)` | `number` | Runs the update many operation. |
-| `value.replaceOne(filter: object, doc: object)` | `number` | Runs the replace one operation. |
-| `value.deleteOne(filter: object)` | `number` | Deletes one. |
-| `value.deleteMany(filter: object)` | `number` | Deletes many. |
+| `value.updateOne(filter: object, changes: object)` | `number` | Updates at most one matching document and returns the count. |
+| `value.updateMany(filter: object, changes: object)` | `number` | Updates all matching documents and returns the count. |
+| `value.replaceOne(filter: object, doc: object)` | `number` | Replaces at most one matching document, preserving its ID. |
+| `value.deleteOne(filter: object)` | `number` | Deletes at most one matching document and returns the count. |
+| `value.deleteMany(filter: object)` | `number` | Deletes all matching documents and returns the count. |
 | `value.drop()` | `boolean` | Runs the drop operation. |
 | `value.save(doc: object)` | `void` | Runs the save operation. |
 | `value.query()` | `*dbQuery` | Runs the query operation. |
@@ -214,6 +214,8 @@ Methods available on `dbQuery` values returned by this package or constructed by
 ## Edge-case behavior
 
 Connection, collection, and query lifecycle checks share named guards.
-Identifiers are validated, closed handles fail safely, transactions route all
-operations through the transaction, nested transaction attempts are rejected,
-and scan/negative limit/offset errors are controlled.
+Disk and memory databases share one initialization path. Validated SQL
+mutations share the guarded execution path, row projections and nested document
+paths each share one traversal, closed handles fail safely, and transaction
+completion shares one locked path. Nested transactions and negative windows are
+controlled.

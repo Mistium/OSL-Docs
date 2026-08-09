@@ -13,7 +13,7 @@ import "osl/json"
 ```javascript
 import "osl/json"
 
-auto parsed = json.parse("{\"ok\":true}")
+auto parsed = json.parse("{\"ok\":true}", {})
 if parsed.isOk() (
   log parsed.unwrap()["ok"]
 )
@@ -25,9 +25,11 @@ if parsed.isOk() (
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `json.parse(data: any, options: object)` | `*Result` | Parses input data. |
-| `json.stringify(data: any)` | `string` | Serialises a value to text. |
-| `json.format(data: any)` | `string` | Formats a value for display. |
+| `json.parse(data: any, options: object)` | `*Result` | Parses one root value using the same trailing-data validation as streams. |
+| `json.parseObject(data: any)` | `*Result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
+| `json.parseArray(data: any)` | `*Result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
+| `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. |
+| `json.format(data: any)` | `string` | Serialises the same value as two-space-indented JSON. |
 | `json.isValid(data: any)` | `boolean` | Reports whether the input is valid. |
 | `json.isObject(data: any)` | `boolean` | Reports whether object. |
 | `json.isArray(data: any)` | `boolean` | Reports whether array. |
@@ -56,7 +58,7 @@ stream.close()
 
 ### Stream tokens
 
-`stream.next()` returns an object with `type`, `value`, and `depth` fields.
+`stream.next()` returns an object with `type`, `value`, and `depth` fields. Object and array boundaries share one container-event path.
 
 | Type | Value |
 | --- | --- |
@@ -110,6 +112,6 @@ Closes the file and returns whether closing succeeded.
 
 ## Edge-case behavior
 
-Parsing supports any JSON root value, rejects trailing data and excessive
-nesting, and bounds stream reads. Numbers outside the supported exact range are
-not silently corrupted.
+Parsing supports any JSON root value, rejects trailing data, numeric overflow,
+and excessive nesting, and bounds stream reads. Numbers decode as `float64`, so
+large integers outside its exact range may lose precision.
