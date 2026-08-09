@@ -166,9 +166,9 @@ centext "use WASD" 10 : c#000
 | `window.hide()` | `void` | Runs the hide operation. |
 | `window.resize(width: any, height: any)` | `void` | Runs the resize operation. |
 | `window.close()` | `void` | Closes the resource. |
-| `window.minimise()` | `void` | Runs the minimise operation. |
-| `window.fullscreen()` | `void` | Runs the fullscreen operation. |
-| `window.isFullscreen()` | `boolean` | Reports whether fullscreen. |
+| `window.minimise()` | `void` | Minimises through the shared safe native-window resolver. |
+| `window.fullscreen()` | `void` | Toggles fullscreen through the shared safe native-window resolver. |
+| `window.isFullscreen()` | `boolean` | Queries fullscreen through the shared safe native-window resolver. |
 | `window.color()` | `string` | Runs the color operation. |
 | `window.setColor(col: any)` | `void` | Sets color. |
 | `window.setTitle(title: any)` | `void` | Sets title. |
