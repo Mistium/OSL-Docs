@@ -35,8 +35,8 @@ Methods available on `Cache` values returned by this package or constructed by t
 | --- | --- | --- |
 | `value.set(key: any, value: any)` | `boolean` | Sets a value. |
 | `value.get(key: any)` | `any` | Returns a value. |
-| `value.getOrSet(key: any, value: any)` | `any` | Returns the existing value or stores and returns a fallback. |
-| `value.getOrSetFunc(key: any, fn: any)` | `any` | Returns the existing value or computes, stores, and returns one. |
+| `value.getOrSet(key: any, value: any)` | `any` | Returns the existing value or stores a fallback through the shared lookup path. |
+| `value.getOrSetFunc(key: any, fn: any)` | `any` | Returns the existing value or computes and stores one through the shared lookup path. |
 | `value.delete(key: any)` | `boolean` | Deletes a value. |
 | `value.clear()` | `boolean` | Clears all stored values. |
 | `value.has(key: any)` | `boolean` | Reports whether the value exists. |
@@ -65,4 +65,5 @@ Methods available on `Cache` values returned by this package or constructed by t
 ## Edge-case behavior
 
 Expiry is inclusive at its deadline, null values remain distinguishable from
-missing keys, and `getOrSetFunc` performs one load per key under concurrency.
+missing keys, and both fallback methods use the same presence-sensitive lookup.
+`getOrSetFunc` additionally performs one load per key under concurrency.
