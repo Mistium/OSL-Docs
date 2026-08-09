@@ -23,7 +23,7 @@ log rows[0]["name"]
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `csv.parse(data: any)` | `array` | Parses input data. |
+| `csv.parse(data: any)` | `array` | Maps each data row to the header names, filling missing fields with empty strings. |
 | `csv.parseRaw(data: any)` | `array` | Parses raw. |
 | `csv.stringify(data: object)` | `string` | Serialises a value to text. |
 | `csv.stringifyRows(data: array)` | `string` | Runs the stringify rows operation. |
@@ -33,7 +33,7 @@ log rows[0]["name"]
 | `csv.writeFile(path: any, data: object)` | `boolean` | Stringifies one object and writes it to a file. |
 | `csv.writeFileRows(path: any, data: array)` | `boolean` | Stringifies keyed rows and writes them to a file. |
 | `csv.writeFileArray(path: any, data: array)` | `boolean` | Stringifies raw rows and writes them to a file. |
-| `csv.toRows(data: array)` | `array` | Converts to rows. |
+| `csv.toRows(data: array)` | `array` | Converts keyed objects through the same ordered row mapping used by parsing. |
 | `csv.fromRows(rows: array)` | `array` | Creates from rows. |
 | `csv.getColumn(data: array, column: any)` | `array` | Returns column. |
 | `csv.filter(data: array, fn: any)` | `array` | Returns values accepted by a callback. |
