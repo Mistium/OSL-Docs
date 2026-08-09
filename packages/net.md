@@ -26,8 +26,8 @@ log addrs
 | `net.dial(network: any, address: any)` | `*TCPConn` | Runs the dial operation. |
 | `net.listen(protocol: any, address: any)` | `*TCPConn` | Runs the listen operation. |
 | `net.listenUDP(network: any, address: any)` | `*UDPConn` | Runs the listen udp operation. |
-| `net.lookupHost(hostname: any)` | `array` | Runs the lookup host operation. |
-| `net.lookupIP(hostname: any)` | `array` | Runs the lookup ip operation. |
+| `net.lookupHost(hostname: any)` | `array` | Resolves hostnames through the shared string-result lookup path. |
+| `net.lookupIP(hostname: any)` | `array` | Resolves IP addresses through the shared string-result lookup path. |
 | `net.lookupPort(service: any, network: any)` | `number` | Runs the lookup port operation. |
 | `net.getAddressInfo(hostname: any)` | `object` | Returns address info. |
 
