@@ -24,9 +24,9 @@ log zip.list("dist.zip")
 | Method | Returns | Description |
 | --- | --- | --- |
 | `zip.compress(sourcePath: any, outputPath: any)` | `boolean` | Runs the compress operation. |
-| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts an archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
+| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts through the shared scoped archive reader. Entries whose names would escape outputPath are skipped. |
 | `zip.decompressLimited(zipPath: any, outputPath: any, maxBytes: number, maxFiles: number)` | `boolean` | Extracts an archive while enforcing total expanded-byte and entry-count limits. |
-| `zip.list(zipPath: any)` | `any` | Runs the list operation. |
+| `zip.list(zipPath: any)` | `any` | Lists entry metadata through the shared scoped archive reader. |
 | `zip.tar(sourcePath: any, outputPath: any)` | `boolean` | Runs the tar operation. |
 | `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Extracts a tar archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
 | `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Compresses through the shared checked file-copy path. |
@@ -40,7 +40,7 @@ log zip.list("dist.zip")
 | `zip.removeFile(zipPath: any, filePath: any)` | `boolean` | Atomically rewrites the archive without the named entry. |
 | `zip.copyFile(sourcePath: string, outputPath: string)` | `boolean` | Copies a file without compression through the same checked stream path. |
 | `zip.create(path: string)` | `boolean` | Creates a new value. |
-| `zip.statistics(zipPath: any)` | `any` | Runs the statistics operation. |
+| `zip.statistics(zipPath: any)` | `any` | Computes archive totals through the shared scoped archive reader. |
 | `zip.gunzipLimited(sourcePath: any, outputPath: any, maxOutputBytes: any)` | `boolean` | Decompresses with an output-size limit and removes partial output on failure. |
 
 ## Notes
