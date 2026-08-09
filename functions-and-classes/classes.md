@@ -20,7 +20,7 @@ class ClassName (
 
 ## Creating and Using Classes
 
-Classes in OSL are defined using the `class` keyword followed by the class name and a block of code enclosed in parentheses. Once defined, you can create instances of the class and access its properties and methods. Normal `def` methods and function-valued class properties use the same parameter, return and `self` handling.
+Classes in OSL are defined using the `class` keyword followed by the class name and a block of code enclosed in parentheses. Once defined, you can create instances of the class and access its properties and methods. Normal `def` methods and function-valued class properties use the same parameter, return and `self` handling, including preserving declared return types in concurrent programs.
 
 Call a class to create an independent instance. If the class defines or inherits an `init()` method, OSL calls it with the constructor arguments.
 
