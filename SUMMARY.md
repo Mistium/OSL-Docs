@@ -125,6 +125,7 @@
 * [Data & Serialization](packages/categories/data.md)
   * [json](packages/json.md)
   * [yaml](packages/yaml.md)
+  * [schema](packages/schema.md)
   * [csv](packages/csv.md)
   * [xml](packages/xml.md)
   * [template](packages/template.md)
