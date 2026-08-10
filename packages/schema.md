@@ -156,4 +156,6 @@ object user = profile.parse(input)
 #### `value.isValid(input)` → `boolean`
 
 Returns whether `input` passes the schema without returning the normalized value or throwing.
-
+This uses a validation-only fast path: it does not copy arrays or objects, construct normalized
+values, or allocate successful error paths. Define reusable schemas once rather than rebuilding
+them inside a frequently called function.
