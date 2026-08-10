@@ -36,6 +36,7 @@ log arr.min()  // 1
 #### `.join(sep)` → `string`
 Joins the elements into a string separated by `sep`.
 Common scalar values are formatted directly, making this suitable for large output arrays.
+Null elements are formatted as `"null"`.
 
 ```javascript
 log [1, 2, 3].join("-")  // "1-2-3"
