@@ -9,8 +9,8 @@ immutable: constraint methods return a new schema, leaving the original unchange
 import "osl/schema"
 
 auto createUser = schema.object({
-  name: schema.string().trim().nonempty(),
-  age: schema.integer().nonnegative().optional(),
+  name: schema.string().trim().minLen(1),
+  age: schema.integer().min(0).optional(),
   roles: schema.array(schema.enum(["admin", "member"]))
 })
 
@@ -65,7 +65,7 @@ Accepts an array and validates every element with `itemSchema`. Errors include t
 such as `roles[1]`.
 
 ```javascript
-auto tags = schema.array(schema.string().nonempty())
+auto tags = schema.array(schema.string().minLen(1))
 ```
 
 #### `schema.object(shape)` → `schema.Schema`
@@ -75,9 +75,17 @@ shape are preserved unless `.strict()` is used. Nested error paths use dot notat
 
 ```javascript
 auto profile = schema.object({
-  id: schema.string().nonempty(),
+  id: schema.string().minLen(1),
   settings: schema.object({dark: schema.boolean().defaultValue(false)})
 })
+```
+
+#### `schema.record(valueSchema)` → `schema.Schema`
+
+Accepts an object with arbitrary string keys and validates every value with `valueSchema`.
+
+```javascript
+auto scores = schema.record(schema.integer().min(0))
 ```
 
 #### `schema.union(schemas)` → `schema.Schema`
@@ -85,7 +93,7 @@ auto profile = schema.object({
 Accepts a value when any supplied schema accepts it.
 
 ```javascript
-auto id = schema.union([schema.string(), schema.integer().positive()])
+auto id = schema.union([schema.string(), schema.integer().gt(0)])
 ```
 
 ## Schema modifiers
@@ -111,17 +119,42 @@ Trims leading and trailing whitespace from a string in the normalized output.
 
 #### `value.min(limit)` / `value.max(limit)` → `schema.Schema`
 
-Sets an inclusive minimum or maximum. For numbers this checks the numeric value; for strings it
-checks Unicode character count; for arrays and objects it checks item or field count.
+Sets an inclusive numeric minimum or maximum on number and integer schemas.
 
-#### `value.nonempty()` → `schema.Schema`
+#### `value.minLen(limit)` / `value.maxLen(limit)` → `schema.Schema`
 
-Requires a string, array, or object to contain at least one character, item, or field. This is equivalent to
-`.min(1)` and is commonly combined with `.trim()`.
+Sets an inclusive length bound. Strings use Unicode character count; arrays and objects use item
+or field count.
 
-#### `value.positive()` / `value.nonnegative()` → `schema.Schema`
+#### `value.length(size)` → `schema.Schema`
 
-Requires a number to be greater than zero or at least zero.
+Requires an exact string character count, array item count, or object field count.
+
+#### `value.gt(limit)` / `value.lt(limit)` → `schema.Schema`
+
+Sets an exclusive numeric bound. For example, `.gt(0)` accepts positive numbers while `.min(0)`
+also accepts zero.
+
+#### `value.partial()` → `schema.Schema`
+
+Returns an object schema where every declared field is optional. This is useful for update payloads.
+
+```javascript
+auto user = schema.object({name: schema.string(), age: schema.integer()})
+auto userUpdate = user.partial()
+```
+
+#### `value.extend(shape)` → `schema.Schema`
+
+Returns an object schema containing its existing fields plus the supplied fields. Supplied fields
+replace existing fields with the same name.
+
+```javascript
+auto account = user.extend({active: schema.boolean()})
+```
+
+Modifier misuse is reported as a schema configuration error instead of silently doing nothing. For
+example, `schema.string().min(2)` returns `Invalid schema: min() cannot be used with string schemas`.
 
 #### `value.strict()` → `schema.Schema`
 
