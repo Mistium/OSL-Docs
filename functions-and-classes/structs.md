@@ -49,8 +49,9 @@ Struct arrays retain their concrete representation rather than becoming dynamic 
 Point[] points = []
 points.append(Point(1, 2))
 points.append(Point(3, 4))
+points[2].y = 8
 
-log points[2].y  // 4
+log points[2].y  // 8
 ```
 
 Generated Go uses `[]OSL_Point`, avoiding maps, interfaces, pointers, and per-element allocations.
