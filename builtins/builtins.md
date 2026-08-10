@@ -4,6 +4,7 @@ These functions are built into the compiler - you can call them anywhere without
 anything. They are distinct from **methods** (called on a value with a dot, like `"hi".toUpper()`,
 documented under [Methods](../methods/strings/README.md)) and from **packages** (imported with
 `import`, documented under [Packages](../packages/README.md)).
+Built-in names take precedence over same-named user functions at call sites.
 
 > Many of the maths and conversion helpers also exist as methods. Where a method form exists it is
 > usually the idiomatic choice - for example prefer `value.toNum()` over `number(value)`.
@@ -49,6 +50,8 @@ Constructors for package-backed types (these import their package automatically)
 | `make(type, n)` | `type` | Preallocates an array or object of capacity `n`, e.g. `make(array, 10)`. |
 
 ## Maths
+
+Unary maths functions take one value; paired `min`/`max` accept either two values or one spread array.
 
 | Function | Result | Description |
 | --- | --- | --- |
@@ -96,6 +99,17 @@ log encodeURIComponent("a b") // "a%20b"
 
 ## Control & error handling
 
+#### `expression catch ( ... )`
+Unwraps a successful `result`. On error, runs its block with `_` bound to that result, including
+inside nested blocks. The block must transfer control; otherwise the original error is rethrown.
+
+```javascript
+auto value = operation() catch (
+  log _.unwrapErr()
+  return null
+)
+```
+
 #### `try(expression)` → `result`
 Runs `expression`, catching any error. Returns a [`result`](../packages/result.md): `ok(value)` if it
 succeeded, or `err(message)` if it threw. Importing `osl/result` happens automatically.
@@ -133,6 +147,8 @@ sparingly; it bypasses OSL's type checks.
 
 - **Statements** like `log` / `say`, `wait(ms)`, `return`, `throw`, `defer` are *commands*, not
   functions - see [Commands](../commands/debugging/README.md).
+  In concurrent programs, `wait` releases the shared statement barrier while sleeping so other
+  threads can continue reading and updating shared values.
 - **Methods** on values: [Strings](../methods/strings/README.md),
   [Numbers](../methods/numbers/README.md), [Arrays](../methods/arrays/README.md),
   [Objects](../methods/objects/README.md), [Types & conversion](../methods/types/README.md).
