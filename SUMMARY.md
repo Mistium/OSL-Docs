@@ -59,6 +59,8 @@
 * [Spread Operator](functions-and-classes/spread-operator.md)
 * [Methods](functions-and-classes/methods.md)
 * [Classes](functions-and-classes/classes.md)
+* [Structs](functions-and-classes/structs.md)
+* [Enums](functions-and-classes/enums.md)
 
 ## Builtins
 
