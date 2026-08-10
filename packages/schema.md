@@ -112,11 +112,11 @@ Trims leading and trailing whitespace from a string in the normalized output.
 #### `value.min(limit)` / `value.max(limit)` → `schema.Schema`
 
 Sets an inclusive minimum or maximum. For numbers this checks the numeric value; for strings it
-checks Unicode character count; for arrays it checks item count.
+checks Unicode character count; for arrays and objects it checks item or field count.
 
 #### `value.nonempty()` → `schema.Schema`
 
-Requires a string or array to contain at least one character or item. This is equivalent to
+Requires a string, array, or object to contain at least one character, item, or field. This is equivalent to
 `.min(1)` and is commonly combined with `.trim()`.
 
 #### `value.positive()` / `value.nonnegative()` → `schema.Schema`
@@ -140,7 +140,7 @@ stops at the first issue.
 auto checked = profile.safeParse(input)
 if checked.isErr() (
   object problem = checked.unwrapErr()
-  log problem.message // settings.dark: Expected boolean
+  log problem.message // settings.dark: Expected boolean, received string
   log problem.path    // ["settings", "dark"]
 )
 ```
