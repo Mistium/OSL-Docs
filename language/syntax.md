@@ -120,3 +120,6 @@ Below are some helpful pages to learn more about:
 * [String Methods](../methods/strings/)
 * [Math Functions](../builtins/math/)
 * [Utility Methods](/broken/pages/qyCf2pYs8jr2u5zZ9shs)
+Lambda parameters may have the same name as a declared type. For example,
+`channels.filter(channel -> channel.name != "")` treats `channel` as the
+parameter; lambda return types follow an explicit parameter list.

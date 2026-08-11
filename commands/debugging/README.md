@@ -77,3 +77,7 @@ Cold test runs link compiled cases from all selected test files into one batch r
 
 Test suite declarations use the lightweight `defineSuite` function and its `test` shorthands without constructing helper classes.
 Translated compiler diagnostics omit Go-only type and location annotations.
+Syntax diagnostics include the source file and line, including incomplete inline
+functions such as `value ->` with no body.
+Unused top-level variable checks include references from local imports and point
+to the variable's declaration line.
