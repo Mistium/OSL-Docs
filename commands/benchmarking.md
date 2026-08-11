@@ -6,11 +6,12 @@ Use `osl bench` to find the functions and OSL source lines consuming the most CP
 osl bench app.osl
 ```
 
-The command compiles an instrumented benchmark binary, automatically repeats the program for about one second, collects a Go CPU profile, and prints:
+The command compiles an instrumented benchmark binary, automatically repeats the program for about one second, collects a CPU profile, and prints an OSL-only report:
 
 * the number of measured runs;
 * total and mean execution time;
-* the hottest functions and source lines, including `.osl` file names and line numbers.
+* the hottest `.osl` source locations, including the file, line number, and original source text;
+* flat time spent directly on each line and cumulative time spent in work called by that line.
 
 Program output is discarded during measurement so logging does not dominate the profile. Log arguments are still evaluated. The program is run once to estimate a useful repetition count before the measured runs, so benchmark programs should be safe to execute repeatedly.
 
@@ -39,4 +40,4 @@ For a program with external side effects, explicitly select one run:
 osl bench import-data.osl --runs 1 --profile import.pprof
 ```
 
-The profile includes OSL functions, compiler runtime helpers, and source locations. A hot helper such as `OSLmodFloat` means the corresponding OSL operation is expensive across its callers; entries ending in `.osl:<line>` point directly to user code.
+The default terminal table hides generated Go and runtime internals. Their cost is still included in the cumulative time attributed to the OSL lines that called them. Use `--profile` when you deliberately want the complete raw profile for `go tool pprof`.
