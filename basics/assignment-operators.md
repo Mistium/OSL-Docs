@@ -2,6 +2,17 @@
 
 In osl you can use an assignment operator to set a variable to itself but modified by an operator. This allows you to compact code into a simpler format.&#x20;
 
+An assignment operator may start on the line after its target. This works for variables,
+object properties, and index targets:
+
+```osl
+obj.timestamp
+  = now()
+
+obj.count
+  += 1
+```
+
 An example of an assignment operator is `+=` where it adds a number to the variable or joins a string directly onto the variable (no separator is added)
 
 ```javascript
