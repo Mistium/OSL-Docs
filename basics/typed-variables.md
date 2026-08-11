@@ -178,6 +178,17 @@ Typed arrays use the same 1-based and negative indexing rules as normal OSL arra
 
 The size passed to `make(type[], size)` may be any integer expression. Concatenating two arrays of the same typed-array type preserves that type.
 
+Use `type[size]` when the length is known at compile time. It creates a native fixed-size Go array, initializes omitted items to the element type's zero value, and avoids the slice header and allocation used by a dynamic typed array:
+
+```javascript
+int[4] counters = []
+counters[1] = 10
+counters[-1] = 40
+log counters.len // 4
+```
+
+Fixed-size arrays use the same 1-based and negative indexing rules. Methods that change the collection length, such as `append`, `prepend`, `pop`, and `shift`, are compile errors. Use `type[]` with `make(type[], size)` when the size is only known at runtime or must change.
+
 Use a dynamic `array` for mixed element types or a typed array for homogeneous, memory-sensitive data. Homogeneous literals and nested inferred shapes retain precise types until a mutation requires widening them; object inference and mutation share the same literal-key decoding.
 
 ## Benefits of Typed Variables
