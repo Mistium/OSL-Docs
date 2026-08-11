@@ -10,7 +10,9 @@ string1 + string2
 
 ## Description
 
-The `+` operator joins strings together without adding spaces. If either operand is a string, the other operand will be converted to a string and the operation will use string concatenation rules. This behavior is identical to the `++` operator.
+The `+` operator joins two strings without adding spaces. Both operands must be
+strings. Use `++` when values should be converted to strings before joining.
+Between two values `++` concatenates; after a variable as a statement (`x ++`) it increments that variable.
 
 ## Examples
 
@@ -26,8 +28,8 @@ log result  // Outputs: "helloworld"
 ### Mixed Type Concatenation
 
 ```javascript
-// Concatenating strings with numbers
-message = "The answer is" + 42
+// ++ converts the number before concatenating it
+message = "The answer is" ++ 42
 log message  // Outputs: "The answer is42"
 
 // Concatenating multiple items
@@ -52,19 +54,23 @@ log sentence  // Outputs: "The cat sat on the mat"
 
 ### + vs. ++ Operator
 
-The `+` and `++` operators behave identically in OSL-both join strings without adding spaces:
+Both operators join strings without adding spaces, but only `++` converts mixed
+operand types:
 
 ```javascript
 // + operator joins strings without a space
 log "hello" + "world"  // Outputs: "helloworld"
 
-// ++ operator also joins strings without a space (identical behavior)
+// ++ also joins strings without a space
 log "hello" ++ "world"  // Outputs: "helloworld"
+
+log "answer: " ++ 42     // Outputs: "answer: 42"
+log "answer: " + 42      // TypeError
 ```
 
 ### + vs. .append() Method
 
-The `.append()` method attaches a string to the end without adding a space, which is identical to both `+` and `++`:
+The `.append()` method attaches a string to the end without adding a space:
 
 ```javascript
 str = "hello"
@@ -78,6 +84,7 @@ str = "hello" ++ "world"  // "helloworld"
 
 ## Notes
 
-- Both `+` and `++` operators concatenate strings without adding spaces.
+- Both `+` and `++` concatenate two strings without adding spaces.
 - To add spaces between concatenated strings, explicitly include space strings (e.g., `"hello" + " " + "world"`).
-- The string concatenation behavior applies whenever either operand is a string.
+- Mixed string and number operands are a type error with `+`; use `++` to convert and join them.
+- Known incompatible types fail at compile time. Incompatible `any` values fail at runtime.

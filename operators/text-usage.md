@@ -1,24 +1,28 @@
 # Text Usage
 
-Operators will use their text variant if either of their operands are strings.
+The `+` operator joins two strings. It does not convert a number or another type
+to text automatically.
 
 ## Join Strings
 
-You can use the simple `+` operator when you want to join two values together
+Use `+` when both values are strings:
 
 ```javascript
 log "hello" + "world"
 // joins the two input strings, returning "helloworld"
 
 log "10 + 5 =" + 15
-// this will also work and the number will be appended to the string, returning "10 + 5 =15"
+// TypeError: + cannot join a string and a number
 ```
 
-You can also use the `++` operator, which produces identical output to `+`
+Use `++` to convert mixed values and concatenate them:
 
 ```javascript
 log "hello" ++ "world"
 // joins the two input strings, returning "helloworld"
+
+log "10 + 5 =" ++ 15
+// converts 15 to text, returning "10 + 5 =15"
 ```
 
 ## Repeat A String
