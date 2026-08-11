@@ -76,8 +76,6 @@ Returned by `db` methods; call these on the value you get back.
 - `dbQuery.where(field, op, value)` → `dbQuery`
 - `dbQuery.and(field, op, value)` → `dbQuery`
 - `dbQuery.sort(field, dir)` → `dbQuery`
-
-Sorting uses a deterministic total order across unlike values: null or missing, boolean, number, string, object, then array. Descending order reverses this order. Values equal on every requested sort key retain insertion order.
 - `dbQuery.fields(...cols)` → `dbQuery`
 - `dbQuery.limit(n)` → `dbQuery`
 - `dbQuery.skip(n)` → `dbQuery`
