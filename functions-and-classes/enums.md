@@ -41,6 +41,44 @@ log number.number  // 7
 
 Check the variant before reading its payload. Reading a payload field from another variant returns that payload type's zero value.
 
+## Exhaustive matching
+
+`match` is an expression that checks an enum's variant and binds the payload of
+payload-carrying variants. Every declared variant must be listed.
+
+```javascript
+match value (
+  FizzValue.Number(number): number
+  FizzValue.Fizz: "Fizz"
+  FizzValue.Buzz: "Buzz"
+  FizzValue.FizzBuzz: "FizzBuzz"
+)
+```
+
+The expression after `:` is returned implicitly. Use a block when an arm needs multiple
+statements; the block must return a value explicitly.
+
+```javascript
+FizzValue.Number(number): (
+  log number
+  return number
+)
+```
+
+Payload bindings are scoped to their arm. Duplicate variants, variants from another enum,
+missing payload bindings, and non-exhaustive matches are compile-time errors.
+
+`match` also supports switch-like scalar cases. Since arbitrary values cannot be proven
+exhaustive, these matches require an `_` arm:
+
+```javascript
+label = match status (
+  200: "ok"
+  404: "missing"
+  _: "other"
+)
+```
+
 When converted to text, variants use `Variant` or `Variant(payload)` notation.
 
 ## Typed arrays
