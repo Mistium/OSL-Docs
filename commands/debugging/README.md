@@ -64,6 +64,8 @@ script keep running - to stop execution, use `throw`. For structured or levelled
 logging, see the [`osl/log`](../../packages/log.md) package.
 
 Runtime errors include the nearest mapped OSL source line and up to eight OSL stack frames.
+The sparse source lookup table is embedded directly in generated Go as a package-level map literal, so it requires no runtime `init()` function.
+Generated Go line directives use paths relative to the entry script's parent directory (`main.osl`, `folder/helper.osl`) rather than absolute filesystem paths, keeping transpiled output portable.
 Compile errors scan their source once for token relocation and caret placement.
 CLI source and serialized-AST compilation share the same panic-to-error translation.
 Parser line markers are applied in one compaction pass while preserving blank-line positions.
