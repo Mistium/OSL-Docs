@@ -32,12 +32,10 @@ log t.wait()
 
 ## Thread safety
 
-OSL automatically makes concurrent programs memory-safe. The compiler identifies values
-captured by named thread functions, including through named functions they call, and arguments passed to `thread.new`, then guards
-operations on those shared values with automatic read/write locking through one lock-selection path. Dynamic callbacks use a safe
-whole-program fallback. This means:
-
-Values passed through `auto`/interface wrappers retain the same shared lock identity.
+OSL automatically makes concurrent programs memory-safe. The compiler identifies named
+functions that can run as scoped threads, including their transitive calls, and guards
+concurrent operations with shared read/write statement and collection locks. Dynamic
+callbacks use a safe whole-program fallback. This means:
 
 - Two threads touching the **same** object, array, `map()`, or `set()` will never crash
   the program or corrupt memory — the "concurrent map writes" fatal error can't happen.
@@ -66,16 +64,17 @@ assignment inside its block. Guard multi-statement critical sections with
 [`osl/sync`](sync.md).
 
 **Performance:** programs that never start a thread skip capture analysis and pay nothing — the
-locking is compiled out entirely. Named thread functions use deterministic standard-library key ordering, a constant-time function-only scope lookup, and lock only their
-current captured values and arguments, including package values; both decisions reuse one call-graph scan and transitive walker, while generic, typed, read, and write array locks share one selection path. Shared arrays retain the same lock when they grow, and
-read-only statements can run in parallel. Mutable statements use a shared statement
+locking is compiled out entirely. Named thread functions use a constant-time function-only
+scope lookup without reading their captured globals during thread creation. Generic, typed,
+read, and write array operations share the same lock path, and read-only statements can run
+in parallel. Mutable statements use a shared statement
 boundary so scalar and collection updates remain atomic. Method and package calls use
 their own value/package synchronization and run outside that boundary, allowing HTTP,
 WebSocket, and similar callbacks to update captured values without deadlocking their caller.
 
-Automatic locking holds at most one value lock at a time. Cyclic arrays and objects are
-registered without nested lock acquisition, so the automatic safety layer cannot create a
-lock-order deadlock. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
+Automatic collection locking uses a single world lock, so growing or replacing an array's
+backing storage needs no lock-identity propagation and cyclic values need no recursive
+registration. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
 always release them and use a consistent order when acquiring more than one.
 
 ## Notes
