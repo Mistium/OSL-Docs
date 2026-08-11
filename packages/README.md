@@ -30,6 +30,8 @@ Directory imports reuse the resolver's already-sorted file slice directly, and b
 resolution checks embedded file metadata without loading package source. Repeated core and package
 imports reuse their first registration instead of rebuilding import state or reparsing package signatures.
 Package and returned-object methods are registered from the same parsed Go method declarations.
+In the compiler source tree, embedded standard-library implementations use `.gotpl` because they
+are Go fragments assembled into generated programs rather than standalone Go compilation units.
 
 Missing third-party Go dependencies are fetched automatically when you compile.
 
