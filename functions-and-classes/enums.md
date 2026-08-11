@@ -48,18 +48,18 @@ payload-carrying variants. Every declared variant must be listed.
 
 ```javascript
 match value (
-  FizzValue.Number(number): number
-  FizzValue.Fizz: "Fizz"
-  FizzValue.Buzz: "Buzz"
-  FizzValue.FizzBuzz: "FizzBuzz"
+  FizzValue.Number(number) -> number
+  FizzValue.Fizz -> "Fizz"
+  FizzValue.Buzz -> "Buzz"
+  FizzValue.FizzBuzz -> "FizzBuzz"
 )
 ```
 
-The expression after `:` is returned implicitly. Use a block when an arm needs multiple
+The expression after `->` is returned implicitly. Use a block when an arm needs multiple
 statements; the block must return a value explicitly.
 
 ```javascript
-FizzValue.Number(number): (
+FizzValue.Number(number) -> (
   log number
   return number
 )
@@ -73,9 +73,9 @@ exhaustive, these matches require an `_` arm:
 
 ```javascript
 label = match status (
-  200: "ok"
-  404: "missing"
-  _: "other"
+  200 -> "ok"
+  404 -> "missing"
+  _ -> "other"
 )
 ```
 
