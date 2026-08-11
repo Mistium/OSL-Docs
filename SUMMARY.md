@@ -105,6 +105,7 @@
 
 ## Commands
 
+* [Benchmarking and CPU profiling](commands/benchmarking.md)
 * [Debugging (log / say)](commands/debugging/README.md)
   * [log value](commands/debugging/log-hello-world.md)
 * [void](commands/general/void.md)
