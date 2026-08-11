@@ -47,8 +47,11 @@ parameter list and the arrow. Untyped parameters and return values default to `a
 
 ```javascript
 double = (number x) number -> x * 2
+maybeDouble = (number x) number? -> x > 0 ? x * 2 null
 
-double(3)  // returns 6
+double(3)       // returns 6
+maybeDouble(3)   // returns 6
+maybeDouble(-1)  // returns null
 
 add = (number x, number y) -> x + y
 
@@ -61,6 +64,15 @@ expected, including array methods:
 ```javascript
 [1, 2, 3].map((number x) number -> x * 2)  // returns [2, 4, 6]
 [1, 2, 3].filter((number x) -> x > 1)      // returns [2, 3]
+```
+
+The `def(...)` spelling supports the same parameter and return annotations,
+including user-defined classes, structs, and enums:
+
+```javascript
+values.map(def(FizzValue value) any -> (
+  return value
+))
 ```
 
 Long concise expressions can continue on following lines:
