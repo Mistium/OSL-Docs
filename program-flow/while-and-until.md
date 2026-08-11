@@ -24,6 +24,10 @@ while condition (
 * `condition`: The condition that determines whether to continue executing the block of commands.
 * `commands`: The commands to be executed within the loop.
 
+Assignments are not allowed anywhere inside a condition. Use `==` to compare values; an `=`
+inside a nested logical or function expression is still treated as assignment and produces a
+compile-time error.
+
 Condition and body arguments are assigned by position, even when their source text is identical.
 
 ### Example
