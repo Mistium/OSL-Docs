@@ -74,17 +74,20 @@ osl compile hello.osl     # produces ./hello
 | `osl run <file.osl>` | Compile and immediately run a file. |
 | `osl compile <file.osl> [-o name]` | Compile through shared temporary-workspace and cached-module preparation with live TTY progress. |
 | `osl transpile <file.osl>` | Print the generated Go code to stdout (useful for debugging). |
-| `osl ast <file.osl>` | Print the parsed syntax tree as JSON. |
 | `osl fmt <path> [...]` | Validate nested AST errors, format, and rewrite OSL files or whole project directories in place. |
 | `osl package <name>` | Print the source of a standard-library package (omit `<name>` to list them all). |
 | `osl lsp` | Start the language server for editor integration (autocomplete, errors, hover). |
+| `osl lsp check <file.osl>` | Print the same project-aware diagnostics the language server reports. |
 | `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
 | `osl version` | Show the compiler version. |
 
 `osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, scans generated and imported code for runtime dependencies, and emits only the helper files the program references. It does not invoke the Go compiler.
 
-`osl fmt` is OSL's equivalent of `gofmt`. It uses two-space indentation, stable spacing, one blank
-line between top-level declarations, and no leading or repeated blank lines. It preserves comments
+> **Migration:** `osl ast` and compiling serialized `.json` token trees were removed. They exposed an unstable compiler-internal representation; source tools should use `.osl` input, and compiler integrations should call the Go compiler packages directly.
+
+`osl fmt` is OSL's equivalent of `gofmt`. It deterministically applies two-space indentation,
+canonical operator and delimiter spacing, multiline command blocks, one blank line between top-level
+declarations, and no leading or repeated blank lines. The editor uses this same formatter. It preserves comments
 and literal contents, and leaves a file unchanged when parsing fails. Pass a project directory,
 such as `osl fmt .`, to format every `.osl` file below it recursively.
 
@@ -179,10 +182,10 @@ See the [Packages](../packages/README.md) section for everything the standard li
 
 ## Editor support
 
-Run the bundled project-aware language server for indexed symbol and deduplicated, prefix-filtered keyword, builtin, method and snippet autocomplete, incremental document synchronization, inline errors, UTF-16-accurate definitions and document highlights, Markdown hover docs, multiline folding and configurable document formatting:
+Run the bundled project-aware language server for indexed completion, inline semantic errors, hover and signature help, definitions and type definitions, references and rename, semantic highlighting, inferred-type hints, document symbols and links, folding and selection ranges, call hierarchy, safe import organization, and deterministic formatting:
 
 Editor messages use Content-Length-framed JSON-RPC and encode each payload once.
-Diagnostics reuse the typed parser result instead of parsing the document twice.
+Diagnostics compile imported leaf files through the `main.osl` that includes them and overlay live editor buffers, so shared project symbols resolve without hiding errors in unsaved changes. Use `osl lsp check <file.osl>` from the project root to reproduce editor diagnostics in a terminal.
 
 ```bash
 osl lsp

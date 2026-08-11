@@ -6,6 +6,10 @@ The `window` package brings OSL's original graphical model to compiled programs:
 desktop window and draw into it every frame using OSL's **rendering commands** (the "draw cursor",
 shapes, text, icons and 3D). This is the same drawing model that powered originOS apps.
 
+> **Migration:** renderer plumbing such as `batch*`, `icn*`, `drawIconCached`, and
+> `executeIconCommands` is now internal. Use the stable drawing commands and methods such as
+> `line`, `rect`, `window.Icon`, and `window.Text`.
+
 ```javascript
 import "osl/window"
 ```
@@ -209,7 +213,7 @@ Methods available on `winRender` values returned by this package or constructed 
 | `value.Loc(a: any, b: any, c: any, d: any)` | `void` | Runs the loc operation. |
 | `value.toScreen(x: number, y: number)` | `pixel.Vec` | Converts to screen. |
 | `value.drawColor()` | `color.Color` | Runs the draw color operation. |
-| `value.Effect(name: any, value: any)` | `void` | Runs the effect operation. |
+| `value.Effect(name: any, value: any)` | `void` | Sets an effect; transparency is clamped when rendered. |
 | `value.penSize()` | `number` | Runs the pen size operation. |
 | `value.beginElement()` | `void` | Runs the begin element operation. |
 | `value.updateLast(minX: number, minY: number, maxX: number, maxY: number)` | `void` | Runs the update last operation. |
@@ -217,22 +221,6 @@ Methods available on `winRender` values returned by this package or constructed 
 | `value.LineTo(endX: number, endY: number)` | `void` | Runs the line to operation. |
 | `value.Rect(...args: any)` | `void` | Runs the rect operation. |
 | `value.Icon(icon: any, size: number)` | `void` | Runs the icon operation. |
-| `value.batchIcon(iconStr: string, size: number, offsetX: number, offsetY: number)` | `void` | Runs the batch icon operation. |
-| `value.drawIconCached(iconStr: string, size: number, offsetX: number, offsetY: number)` | `void` | Runs the draw icon cached operation. |
-| `value.executeIconCommands(cmds: array, size: number, offsetX: number, offsetY: number)` | `void` | Runs the execute icon commands operation. |
-| `value.batchLine(startX: number, startY: number, endX: number, endY: number, thickness: number, col: color.Color)` | `void` | Runs the batch line operation. |
-| `value.batchDot(cx: number, cy: number, thickness: number, col: color.Color)` | `void` | Runs the batch dot operation. |
-| `value.batchSquare(cx: number, cy: number, hw: number, hh: number, thickness: number, col: color.Color)` | `void` | Runs the batch square operation. |
-| `value.batchRect(cx: number, cy: number, w: number, h: number, col: color.Color)` | `void` | Runs the batch rect operation. |
-| `value.batchTri(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, col: color.Color)` | `void` | Runs the batch tri operation. |
-| `value.batchCutcircle(cx: number, cy: number, radius: number, dir: number, arclen: number, thickness: number, col: color.Color)` | `void` | Runs the batch cutcircle operation. |
-| `value.batchEllipse(cx: number, cy: number, w: number, mult: number, dir: number, thickness: number, col: color.Color)` | `void` | Runs the batch ellipse operation. |
-| `value.icnDot(cx: number, cy: number)` | `void` | Runs the icn dot operation. |
-| `value.icnSquare(cx: number, cy: number, hw: number, hh: number)` | `void` | Runs the icn square operation. |
-| `value.icnRect(cx: number, cy: number, w: number, h: number)` | `void` | Runs the icn rect operation. |
-| `value.icnTri(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number)` | `void` | Runs the icn tri operation. |
-| `value.icnCutcircle(cx: number, cy: number, radius: number, dir: number, arclen: number)` | `void` | Runs the icn cutcircle operation. |
-| `value.icnEllipse(cx: number, cy: number, w: number, mult: number, dir: number)` | `void` | Runs the icn ellipse operation. |
 | `value.Text(text: string, size: any)` | `void` | Runs the text operation. |
 | `value.Centext(text: string, size: any)` | `void` | Runs the centext operation. |
 | `value.SetThickness(thickness: number)` | `void` | Sets thickness. |
@@ -248,3 +236,11 @@ Methods available on `winRender` values returned by this package or constructed 
 
 - Standard-library imports accept both `import "osl/window"` and `import "window"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+## Edge-case behavior
+
+Empty colours and image data are controlled without panics. PNG and JPEG data
+use Go's registered standard image decoder, and failed asynchronous image loads
+always release their inflight slot. Icon tokenization uses the standard field
+splitter, numeric opcodes share one arity parser, and immediate icon primitives
+reuse the batch drawing implementations.
