@@ -4,7 +4,8 @@
 
 The `testing` package provides assertion helpers that stop the current test with an
 `AssertionError`. Test files conventionally end in `.test.osl` or `_test.osl` and can be run
-with `osl test`.
+with `osl test`. Reserve those suffixes for executable assertion suites; name ordinary demos
+and manually run programs with the plain `.osl` suffix so test discovery does not run them.
 
 ```javascript
 import "osl/testing"
