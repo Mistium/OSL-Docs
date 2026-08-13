@@ -40,3 +40,7 @@ log count
 
 Variables must be assigned or declared before they are read. Referencing an
 undefined variable is an error in current OSL.
+
+Declaring a variable that is never read produces a compiler warning but does
+not prevent the program from building. Use `_` when a value is intentionally
+discarded.
