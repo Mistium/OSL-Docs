@@ -8,6 +8,7 @@
 ## The Language
 
 * [Syntax Overview](language/syntax.md)
+* [Compiler Diagnostics](language/compiler-diagnostics.md)
 * [Types](basics/types.md)
 * [Defining Variables](basics/defining-variables.md)
   * [Clone Objects (=)](basics/defining-variables/clone-objects.md)
