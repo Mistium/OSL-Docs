@@ -176,6 +176,10 @@ log memory[1]
 
 Typed arrays use the same 1-based and negative indexing rules as normal OSL arrays. Number indexes are truncated to integers, so `values[2.9]` accesses item `2`. Literal values, indexed writes, and dynamic arrays assigned to a typed array are converted to the declared element type. Integer conversion follows Go-width wrapping, so assigning `258` to a `byte[]` stores `2`.
 
+An indexed write outside the array's bounds is an error. The compiler reports it when both the
+array length and the index bounds are known; otherwise the runtime reports it when the write is
+attempted. Index `0` is never valid.
+
 The size passed to `make(type[], size)` may be any integer expression. Concatenating two arrays of the same typed-array type preserves that type.
 
 Use `type[size]` when the length is known at compile time. It creates a native fixed-size Go array, initializes omitted items to the element type's zero value, and avoids the slice header and allocation used by a dynamic typed array:

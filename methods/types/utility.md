@@ -46,19 +46,23 @@ Returns the matches of a string against `pattern`. See also the
 
 ## Type assertions (advanced)
 
-These perform a **runtime downcast** - they do not parse or convert. The value must already be
-exactly the named type or the program errors.
+These perform a **runtime downcast** of an `any` value - they do not parse or convert. The value must
+already be exactly the named type or the program errors.
 
 #### `.assert(type)` → *type*
 Asserts the value is `type` and returns it as that type; errors at runtime if it is not.
+If the compiler already knows the value's type, a matching assertion is removed and produces a
+redundant-assertion warning; a mismatched assertion is a compile error.
 
 #### `.assertElse(type, default)` → *type*
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
+Using it on a statically known type produces a warning because either the value is already that type
+or the fallback is always selected. It is intended for `any` values.
 
 ```javascript
-auto n = "x".assertElse("number", 0)  // 0 - "x" is not a number
+any value = "x"
+auto n = value.assertElse("number", 0)  // 0 - value is not a number
 ```
 
-> These are strict about the underlying type: an integer literal is `int`, not `number`, so
-> `(123).assert("number")` errors. Prefer `.toNum()` / `.toInt()` when you want conversion rather than
-> a checked cast.
+> These are strict about the underlying runtime type. Prefer `.toNum()` / `.toInt()` when you want
+> conversion rather than a checked cast.
