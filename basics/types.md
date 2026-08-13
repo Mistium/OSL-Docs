@@ -29,6 +29,19 @@ The compiler rejects assignments, arguments, and returns that do not match any m
 `typeof` guard narrows a union automatically inside the matching branch. Use `.assert(type)`
 when runtime control flow proves a member in a way the compiler cannot infer.
 
+A union may contain any number of members. Give a commonly reused union a name with an
+equals-style type alias:
+
+```javascript
+type myNum = number | int | int64 | int32
+
+myNum count = 1
+def addOne(myNum value) myNum ( return value + 1 )
+```
+
+The alias is semantic: it accepts exactly the members of its target union and adds no runtime
+wrapper or conversion.
+
 ```javascript
 x = 5            // dynamic: x holds a number
 int y = 5        // typed: y must always be an integer
