@@ -56,6 +56,9 @@ redundant-assertion warning; a mismatched assertion is a compile error.
 
 Nullable values are the exception: `.assert(T)` on `T?` performs a runtime non-null assertion and
 narrows the result to `T`.
+Values narrowed by a runtime type guard, and typed array elements that may be missing at runtime,
+also retain their assertion: their static type describes the successful value, not a guarantee that
+the runtime check is unnecessary.
 #### `.assertElse(type, default)` → *type*
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
 Using it on a statically known type produces a warning because either the value is already that type
