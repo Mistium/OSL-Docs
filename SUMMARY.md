@@ -110,6 +110,7 @@
 * [Debugging (log / say)](commands/debugging/README.md)
   * [log value](commands/debugging/log-hello-world.md)
 * [void](commands/general/void.md)
+* [exit](commands/general/exit.md)
 * [Modifiers](commands/modifiers.md)
 
 ## Packages
@@ -133,6 +134,7 @@
   * [csv](packages/csv.md)
   * [xml](packages/xml.md)
   * [template](packages/template.md)
+  * [testing](packages/testing.md)
   * [md](packages/md.md)
   * [mime](packages/mime.md)
   * [diff](packages/diff.md)

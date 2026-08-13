@@ -177,6 +177,7 @@ receiver methods are merged by the same direct returned-object lookup.
 ### Scripting & concurrency
 | Package | Description |
 | --- | --- |
+| [testing](testing.md) | Assertions and the `osl test` workflow. |
 | [js](js.md) | Run sandboxed JavaScript with hard resource limits. |
 | [lua](lua.md) | Embed and run Lua scripts. |
 | [thread](thread.md) | Background threads. |
