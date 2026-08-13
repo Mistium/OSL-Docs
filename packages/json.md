@@ -28,8 +28,8 @@ if parsed.isOk() (
 | `json.parse(data: any, options: object)` | `*Result` | Parses one root value using the same trailing-data validation as streams. |
 | `json.parseObject(data: any)` | `*Result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
 | `json.parseArray(data: any)` | `*Result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
-| `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. |
-| `json.format(data: any)` | `string` | Serialises the same value as two-space-indented JSON. |
+| `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. Safe while another OSL thread mutates shared data. |
+| `json.format(data: any)` | `string` | Serialises the same value as two-space-indented JSON. Safe while another OSL thread mutates shared data. |
 | `json.isValid(data: any)` | `boolean` | Reports whether the input is valid. |
 | `json.isObject(data: any)` | `boolean` | Reports whether object. |
 | `json.isArray(data: any)` | `boolean` | Reports whether array. |
@@ -109,6 +109,7 @@ Closes the file and returns whether closing succeeded.
 
 - Standard-library imports accept both `import "osl/json"` and `import "json"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+- Serialisation observes a consistent traversal of shared OSL objects and arrays. Concurrent OSL mutations wait until encoding finishes.
 
 ## Edge-case behavior
 
