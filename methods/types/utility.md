@@ -62,6 +62,8 @@ Using it on a statically known type produces a warning because either the value 
 or the fallback is always selected. It is intended for `any` values.
 As with `.assert(T)`, calling `.assertElse(T, default)` on `T?` is valid narrowing: it returns the
 non-null value or `default`, without a redundant-assertion warning.
+Assertion type arguments accept package-qualified pointers and arrays, such as
+`value.assertElse(*ws.Connection[], [])`.
 
 ```javascript
 any value = "x"
