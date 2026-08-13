@@ -81,9 +81,14 @@ osl compile hello.osl     # produces ./hello
 | `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
 | `osl version` | Show the compiler version. |
 
+Commands return a non-zero process status when compilation, validation, execution, or editor
+diagnostics fail. Usage errors return status 2. `osl run` preserves the status selected by an OSL
+`exit status` command, so OSL programs compose correctly with shell scripts and CI pipelines.
+
 `osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, scans generated and imported code for runtime dependencies, and emits only the helper files the program references. It does not invoke the Go compiler.
 
-> **Migration:** `osl ast` and compiling serialized `.json` token trees were removed. They exposed an unstable compiler-internal representation; source tools should use `.osl` input, and compiler integrations should call the Go compiler packages directly.
+`osl ast <file.osl>` emits the parsed token tree as JSON. The `compile`, `run`, and `transpile`
+commands also accept that JSON representation when integrations need to provide an AST directly.
 
 `osl fmt` is OSL's equivalent of `gofmt`. It deterministically applies two-space indentation,
 canonical operator and delimiter spacing, multiline command blocks, one blank line between top-level
