@@ -2,6 +2,34 @@
 
 OSL programming is made up of 6 different types of syntax.
 
+### Warning comments
+
+Use a comment immediately before a line to suppress its compiler warnings:
+
+```javascript
+// osl-disable-next-line
+log knownValue.assert(number)
+```
+
+Use a file comment to suppress warnings throughout that source file:
+
+```javascript
+// osl-disable-file
+```
+
+Both directives accept one or more warning codes, separated by spaces or commas, so unrelated
+warnings remain visible:
+
+```javascript
+// osl-disable-next-line OSL-REDUNDANT-ASSERT
+log knownValue.assert(number)
+
+// osl-disable-file OSL-UNUSED-VARIABLE, OSL-KNOWN-ASSERT-ELSE
+```
+
+Omitting codes, or using `all`, suppresses every warning in the selected scope. Errors cannot be
+suppressed with these comments.
+
 ### Commands
 
 Commands are the backbone of most OSL scripts- generally, any operation involving modifying the program's state is done through them. They accept multiple inputs after the initial command, seperated by spaces. These inputs can be constants, such as raw strings or numbers, operators (which are defined later), or variables. Commands have no return value.
