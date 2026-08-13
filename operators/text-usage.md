@@ -33,3 +33,6 @@ You can use the `*` operator to repeat a string a set number of times
 log "hello" * 3
 // returns the string repeated 3 times, "hellohellohello"
 ```
+
+A negative repeat count is invalid. When the compiler can see that the count is negative, it reports
+the error during compilation; otherwise the runtime reports it when the expression is evaluated.
