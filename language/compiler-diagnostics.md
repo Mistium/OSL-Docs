@@ -9,7 +9,7 @@ but is very likely accidental.
 
 The compiler currently reports these high-confidence safety diagnostics:
 
-- Division or remainder by a value known to be zero is an error.
+- Division by a value known to be zero, and integer remainder by a known integer zero, are errors. Floating-point remainder by zero evaluates to `NaN`.
 - Assigning a variable directly to itself produces `OSL-SELF-ASSIGNMENT`.
 - Comparing a value known to be non-null with `null` produces
   `OSL-CONSTANT-CONDITION` and states whether the comparison is always true or false.
