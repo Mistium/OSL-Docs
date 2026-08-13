@@ -2,10 +2,32 @@
 
 Every value in OSL has a type. You usually don't have to think about it - variables can hold any value and the language keeps track for you - but you _can_ annotate variables and function parameters with types, and the compiler will check them.
 
+Aliases, package-qualified types, and collection shapes use the same canonical compatibility rules throughout compilation.
+Package method signatures use the same top-level parameter splitting as user functions.
+
 The compiler also propagates facts about individual values without changing their declared type.
 It tracks exact literals, possible null values, integer ranges, and known collection lengths through
 assignments and type-preserving methods. This permits early diagnostics such as provably invalid
 indexed writes while retaining runtime checks when an indexed value may still be absent.
+
+## Union types
+
+Use `|` when a value may intentionally have one of several types. Unions work on variables,
+parameters, and function return types:
+
+```javascript
+string | int id = "temporary"
+id = 42
+
+def label(string | int value) string (
+  if typeof(value) == "string" ( return value )
+  return value.toStr()
+)
+```
+
+The compiler rejects assignments, arguments, and returns that do not match any member. A
+`typeof` guard narrows a union automatically inside the matching branch. Use `.assert(type)`
+when runtime control flow proves a member in a way the compiler cannot infer.
 
 ```javascript
 x = 5            // dynamic: x holds a number
