@@ -60,6 +60,8 @@ narrows the result to `T`.
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
 Using it on a statically known type produces a warning because either the value is already that type
 or the fallback is always selected. It is intended for `any` values.
+As with `.assert(T)`, calling `.assertElse(T, default)` on `T?` is valid narrowing: it returns the
+non-null value or `default`, without a redundant-assertion warning.
 
 ```javascript
 any value = "x"
