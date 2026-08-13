@@ -26,7 +26,7 @@ log "Hello".left(2)   // "He"
 log "Hello".right(2)  // "lo"
 ```
 
-#### `.split(delim)` → `array`
+#### `.split(delim)` → `string[]`
 Splits the string on `delim` into an array of substrings.
 
 ```javascript
