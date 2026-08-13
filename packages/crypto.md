@@ -49,6 +49,9 @@ log digest
 | `crypto.binDecode(data: any)` | `string` | Runs the bin decode operation. |
 | `crypto.base64Encode(data: any)` | `string` | Runs the base64 encode operation. |
 | `crypto.base64Decode(data: any)` | `string` | Runs the base64 decode operation. |
+| `crypto.ed25519GenerateKeyPair()` | `object` | Generates an Ed25519 key pair encoded as unpadded base64url. |
+| `crypto.ed25519Sign(privateKey: any, data: any)` | `string` | Signs data with an Ed25519 seed or private key and returns an unpadded base64url signature. |
+| `crypto.ed25519Verify(publicKey: any, data: any, signature: any)` | `boolean` | Verifies an unpadded base64url Ed25519 signature. |
 | `crypto.hashPassword(password: any)` | `string` | Runs the hash password operation. |
 | `crypto.verifyPassword(password: any, storedHash: any)` | `boolean` | Verifies password. |
 | `crypto.generateKeyPair()` | `object` | Runs the generate key pair operation. |
@@ -62,6 +65,38 @@ log digest
 | `crypto.hashFile(filePath: any)` | `string` | Runs the hash file operation. |
 | `crypto.hashDirectory(dirPath: any)` | `string` | Runs the hash directory operation. |
 | `crypto.secureErase(filePath: any)` | `boolean` | Runs the secure erase operation. |
+
+## Ed25519 signatures
+
+#### `crypto.ed25519GenerateKeyPair()` → `object`
+
+Generates an Ed25519 key pair. The returned object contains `private`, a
+32-byte private seed, and `public`, a 32-byte public key. Both values use
+unpadded base64url encoding.
+
+```javascript
+object keys = crypto.ed25519GenerateKeyPair()
+```
+
+#### `crypto.ed25519Sign(privateKey, data)` → `string`
+
+Signs the string representation of `data`. `privateKey` may be either a
+32-byte Ed25519 seed or a 64-byte private key encoded as unpadded base64url.
+Returns an unpadded base64url signature, or `""` if the key is malformed.
+
+```javascript
+string signature = crypto.ed25519Sign(keys.private, "hello")
+```
+
+#### `crypto.ed25519Verify(publicKey, data, signature)` → `boolean`
+
+Verifies the signature against the string representation of `data`. The
+public key and signature must use unpadded base64url encoding. Malformed keys
+and signatures return `false`.
+
+```javascript
+boolean genuine = crypto.ed25519Verify(keys.public, "hello", signature)
+```
 
 ## Notes
 
