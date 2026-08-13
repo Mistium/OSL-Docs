@@ -31,8 +31,8 @@ Methods available on `Map` values returned by this package or constructed by the
 | `value.delete(k: any)` | `void` | Deletes a value. |
 | `value.size()` | `number` | Returns the number of stored values. |
 | `value.clear()` | `void` | Clears all stored values. |
-| `value.getKeys()` | `array` | Returns keys. |
-| `value.getValues()` | `array` | Returns values. |
+| `value.getKeys()` | `K[]` | Returns keys while preserving the map's key type. |
+| `value.getValues()` | `V[]` | Returns values while preserving the map's value type. |
 
 ## Notes
 
