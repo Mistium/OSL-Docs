@@ -54,6 +54,8 @@ Asserts the value is `type` and returns it as that type; errors at runtime if it
 If the compiler already knows the value's type, a matching assertion is removed and produces a
 redundant-assertion warning; a mismatched assertion is a compile error.
 
+Nullable values are the exception: `.assert(T)` on `T?` performs a runtime non-null assertion and
+narrows the result to `T`.
 #### `.assertElse(type, default)` → *type*
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
 Using it on a statically known type produces a warning because either the value is already that type
