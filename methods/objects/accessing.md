@@ -2,8 +2,9 @@
 
 Read the contents of an object. None of these mutate.
 
-#### `.getKeys()` → `array`
-The object's keys.
+#### `.getKeys()` → `string[]`
+The object's keys. Object keys are always strings, so this remains `string[]` even when the object
+values are dynamic.
 
 #### `.getValues()` → `array`
 The object's values.
