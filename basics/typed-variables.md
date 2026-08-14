@@ -193,7 +193,7 @@ log counters.len // 4
 
 Fixed-size arrays use the same 1-based and negative indexing rules. Methods that change the collection length, such as `append`, `prepend`, `pop`, and `shift`, are compile errors. Use `type[]` with `make(type[], size)` when the size is only known at runtime or must change.
 
-Use a dynamic `array` for mixed element types or a typed array for homogeneous, memory-sensitive data. Homogeneous literals and nested inferred shapes retain precise types until a mutation requires widening them; object inference and mutation share the same literal-key decoding.
+Use a dynamic `array` for mixed element types or a typed array for homogeneous, memory-sensitive data. A typed array widens implicitly to `array` when passed to a function that accepts the generic type. Homogeneous literals and nested inferred shapes retain precise types until a mutation requires widening them; object inference and mutation share the same literal-key decoding.
 
 ## Benefits of Typed Variables
 
