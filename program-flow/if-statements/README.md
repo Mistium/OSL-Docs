@@ -51,6 +51,18 @@ if condition (
 )
 ```
 
+## Inline flow guards
+
+An `if` condition can directly precede `return`, `continue`, or `break` when the body contains only that flow statement:
+
+```js
+if user == null return {error: "User not found"}
+if message == null continue
+if complete break
+```
+
+`return` may include a value or return without one. `continue` and `break` do not accept values. Inline flow guards do not support `else`; use a normal block when an alternative branch is required.
+
 ## else if Statements
 
 `else-if` statements allow for multiple conditions to be checked sequentially. If one condition is true, the corresponding block of code is executed.
