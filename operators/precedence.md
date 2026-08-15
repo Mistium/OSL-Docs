@@ -2,6 +2,8 @@
 
 OSL evaluates expressions using a fixed operator precedence hierarchy. Operators with **higher precedence bind tighter** and are evaluated before lower-precedence operators. Operators at the same precedence level are evaluated **left-to-right**, unless otherwise stated.
 
+All arithmetic operators share one precedence level. Mixing different arithmetic operators without parentheses produces a compiler warning because the result may differ from languages where multiplication and division bind more tightly than addition and subtraction.
+
 Each binary operator consumes its left and right operands once while preserving that order.
 
 Parentheses `(...)` may always be used to override precedence.
@@ -28,4 +30,11 @@ log 1 + 1 == 5 * 4
 
 // the code above is functionally equivalent to
 log (1 + 1) == (5 * 4)
+```
+
+Parenthesize mixed arithmetic even when the current left-to-right order is intentional:
+
+```javascript
+log (75 - 2) * 10
+log 75 - (2 * 10)
 ```
