@@ -107,6 +107,8 @@
 ## Commands
 
 * [Benchmarking and CPU profiling](commands/benchmarking.md)
+* [WebAssembly builds](commands/web.md)
+* [Package manager](commands/packages.md)
 * [Debugging (log / say)](commands/debugging/README.md)
   * [log value](commands/debugging/log-hello-world.md)
 * [void](commands/general/void.md)
@@ -164,6 +166,7 @@
   * [log](packages/log.md)
   * [notify](packages/notify.md)
 * [Media & Documents](packages/categories/media.md)
+  * [raylib](packages/raylib.md)
   * [img](packages/img.md)
   * [qr](packages/qr.md)
   * [pdf](packages/pdf.md)
@@ -176,6 +179,7 @@
   * [thread](packages/thread.md)
   * [sync](packages/sync.md)
 * [Utilities & Data Structures](packages/categories/utilities.md)
+  * [box2d](packages/box2d.md)
   * [map](packages/map.md)
   * [set](packages/set.md)
   * [option](packages/option.md)

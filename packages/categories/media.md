@@ -2,6 +2,7 @@
 
 Packages for image, PDF, and graphics operations.
 
+- [raylib](../raylib.md) - Native windowing, input, 2D drawing, collision helpers, and textures.
 - [img](../img.md) - Load, transform and save images.
 - [qr](../qr.md) - QR codes and barcodes.
 - [pdf](../pdf.md) - Generate PDF documents.

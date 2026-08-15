@@ -38,6 +38,15 @@ testing.equal([1, 2].map(def(n) -> ( n * 2 )), [2, 4])
 
 Requires the two values not to be equal.
 
+#### `testing.near(actual, expected, tolerance, message?)` → `boolean`
+
+Requires two numeric values to differ by no more than `tolerance`. This is useful for floating-point
+results and simulations.
+
+```javascript
+testing.near(0.1 + 0.2, 0.3, 0.000001)
+```
+
 #### `testing.isNull(value, message?)` → `boolean`
 
 Requires `value` to be `null`.
