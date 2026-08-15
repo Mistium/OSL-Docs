@@ -20,6 +20,7 @@ methods you call. The `osl/` prefix is optional for standard-library packages - 
 | `import "osl/fs"` / `import "fs"` | A standard-library package (listed below). |
 | `import "./helpers.osl"` | Another OSL file in your project (path relative to the current file). |
 | `import "utils"` / `import "./utils"` | A **directory** — imports every `.osl` file inside it (path relative to the current file). |
+| `import "github.com/me/tools"` | A Git-backed module installed by `osl pkg`. |
 | `import "go/net/http"` | A raw Go package, for advanced interop. |
 
 Directory imports pull in all the `.osl` files in the named folder, so you can split a
@@ -171,6 +172,7 @@ receiver methods are merged by the same direct returned-object lookup.
 ### Graphics & windowing
 | Package | Description |
 | --- | --- |
+| [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, and textures. |
 | [window](window.md) | Open a window and draw to it (the originOS graphics model). |
 | [win-buttons](win-buttons.md) | Install native window controls. |
 
@@ -186,6 +188,7 @@ receiver methods are merged by the same direct returned-object lookup.
 ### Utilities & data structures
 | Package | Description |
 | --- | --- |
+| [box2d](box2d.md) | Box2D-compatible rigid-body worlds, bodies, and fixtures. |
 | [map](map.md) | An ordered key-value map type. |
 | [set](set.md) | A set type. |
 | [option](option.md) | Optional values (`some`/`none`). |
