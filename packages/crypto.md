@@ -54,6 +54,8 @@ log digest
 | `crypto.ed25519Verify(publicKey: any, data: any, signature: any)` | `boolean` | Verifies an unpadded base64url Ed25519 signature. |
 | `crypto.hashPassword(password: any)` | `string` | Runs the hash password operation. |
 | `crypto.verifyPassword(password: any, storedHash: any)` | `boolean` | Verifies password. |
+| `crypto.bcryptHash(password: any, cost?: any)` | `string` | Creates a bcrypt password hash using cost 10 by default. |
+| `crypto.bcryptVerify(password: any, storedHash: any)` | `boolean` | Verifies a password against a bcrypt hash. |
 | `crypto.generateKeyPair()` | `object` | Runs the generate key pair operation. |
 | `crypto.sign(key: any, data: any)` | `string` | Runs the sign operation. |
 | `crypto.verify(key: any, data: any, signature: any)` | `boolean` | Runs the verify operation. |
@@ -65,6 +67,28 @@ log digest
 | `crypto.hashFile(filePath: any)` | `string` | Runs the hash file operation. |
 | `crypto.hashDirectory(dirPath: any)` | `string` | Runs the hash directory operation. |
 | `crypto.secureErase(filePath: any)` | `boolean` | Runs the secure erase operation. |
+
+## Bcrypt password hashing
+
+#### `crypto.bcryptHash(password, cost?)` → `string`
+
+Hashes the string representation of `password` with bcrypt. The optional cost
+must be between 4 and 31 and defaults to 10. Invalid costs and passwords longer
+than bcrypt's 72-byte limit return `""`.
+
+```javascript
+string stored = crypto.bcryptHash("secret")
+```
+
+#### `crypto.bcryptVerify(password, storedHash)` → `boolean`
+
+Verifies the string representation of `password` against a standard bcrypt
+hash. Both `$2a$` and `$2b$` hashes are accepted. Malformed hashes return
+`false`.
+
+```javascript
+boolean valid = crypto.bcryptVerify("secret", stored)
+```
 
 ## Ed25519 signatures
 
