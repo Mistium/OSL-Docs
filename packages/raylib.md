@@ -1,6 +1,6 @@
 # raylib
 
-> Native windowing, input, 2D drawing, collision helpers, and managed textures
+> Native windowing, input, 2D and 3D drawing, collision helpers, and managed textures
 
 `osl/raylib` wraps raylib-go with OSL values and a compact frame-loop API. It is for native desktop
 builds. Use `osl compile` or `osl run`; browser builds intentionally reject this package.
@@ -21,10 +21,13 @@ raylib.run({width: 800, height: 450, title: "OSL raylib", fps: 60}, def(dt) -> (
 ## Values and window lifecycle
 
 - `raylib.color(value)` accepts named colours, `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, arrays, or `{r, g, b, a}` objects.
-- `raylib.vec(x, y)` and `raylib.rect(x, y, width, height)` create geometry objects.
+- `raylib.vec(x, y)`, `raylib.vec3(x, y, z)`, and `raylib.rect(x, y, width, height)` create geometry objects.
 - `initWindow(width, height, title)`, `closeWindow()`, `windowReady()`, and `windowShouldClose()` expose manual lifecycle control.
 - `run(options, update, draw)` manages the window and frame loop.
 - `setTargetFPS(fps)`, `fps()`, `frameTime()`, `time()`, `screenSize()`, `setWindowTitle(title)`, and `setWindowSize(width, height)` manage timing and the window.
+- `disableCursor()`, `enableCursor()`, and `cursorHidden()` manage captured mouse input.
+- `setGPUPreference(pref)` sets GPU power mode (`"integrated"` or `"discrete"`). Defaults to `"integrated"`.
+- `gpuPreference()` returns the current GPU preference.
 
 ## Drawing
 
@@ -32,13 +35,41 @@ Use `clear`, `drawPixel`, `drawLine`, `drawRectangle`, `drawRectangleLines`, `dr
 `drawCircleLines`, `drawTriangle`, `drawText`, and `measureText`. For manual loops,
 `beginDrawing()`, `endDrawing()`, and `draw(fn)` are available.
 
+## 3D cameras and drawing
+
+Create a perspective camera with `raylib.camera(options)`. Options may include `position`, `target`,
+`up`, `fovy`, and `projection`. The returned camera provides `update(mode)`, `position()`,
+`target()`, `setPosition(value)`, and `setTarget(value)`. Camera modes are `custom`, `free`,
+`orbital`, `first_person`, and `third_person`.
+
+Use `begin3D(camera)` and `end3D()` around 3D drawing, or call `draw3D(camera, frame)`. The 3D
+drawing helpers are `drawCube(center, size, color)`, `drawCubeWires(center, size, color)`,
+`drawSphere(center, radius, color)`, `drawSphereWires(center, radius, rings, slices, color)`,
+`drawCylinder(position, radiusTop, radiusBottom, height, slices, color)`,
+`drawPlane(center, size, color)`, `drawLine3D(start, end, color)`,
+`drawBillboard(camera, texture, position, size, tint)`, and `drawGrid(slices, spacing)`.
+
+## Rays and box picking
+
+- `raylib.ray(origin, direction)` creates a ray from two 3D vectors.
+- `raylib.screenRay(point, camera)` creates a world ray through a screen position.
+- `raylib.centerRay(camera)` creates a ray through the center of the window.
+- `ray.box(center, size)` tests an axis-aligned box and returns `{hit, distance, point, normal}`.
+
 ## Input and collision
 
 - Keyboard: `keyPressed`, `keyDown`, and `keyReleased`
-- Mouse: `mousePosition`, `mousePressed`, `mouseDown`, `mouseReleased`, and `mouseWheel`
+- Mouse: `mousePosition`, `mouseDelta()`, `setMousePosition(x, y)`, `mousePressed`, `mouseDown`, `mouseReleased`, and `mouseWheel`
 - Collision: `rectanglesCollide`, `circlesCollide`, and `pointInRectangle`
 
 Key names include letters, arrows, space, escape, enter, modifiers, and F1 through F12.
+
+## Audio
+
+- `initAudioDevice()` and `closeAudioDevice()` manage native audio device lifecycle.
+- `audioReady()` checks if audio device is initialized.
+- `setMasterVolume(volume)` adjusts master volume between `0.0` and `1.0`.
+- `loadSound(path)` loads a WAV/OGG/MP3 sound handle with `play()`, `stop()`, `setVolume(vol)`, `setPitch(pitch)`, `unload()`, and `valid()`.
 
 ## Textures
 
