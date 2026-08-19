@@ -26,9 +26,9 @@ Methods available on `Set` values returned by this package or constructed by the
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.add(v: any)` | `*Set` | Runs the add operation. |
-| `value.delete(v: any)` | `error` | Deletes a value. |
-| `value.contains(v: any)` | `boolean` | Runs the contains operation. |
+| `value.add(v: any)` | `*Set` | Adds through the shared runtime comparable-value guard. |
+| `value.delete(v: any)` | `error` | Deletes through the same guard. |
+| `value.contains(v: any)` | `boolean` | Checks membership through the same guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
 | `value.clear()` | `void` | Clears all stored values. |
 | `value.toArr()` | `array` | Converts the value to an array. |

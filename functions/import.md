@@ -2,6 +2,11 @@
 
 The `import()` function loads and evaluates OSL code from another file, making its contents available to the current script. This function supports importing both local files and package files.
 
+This is the runtime `import()` function. The compile-time `import foo` statement instead reports a missing package as an `ImportError` during compilation.
+Unchanged local compile-time imports reuse parsed data across parallel compiler workers while returning isolated syntax trees.
+Compile-time directory imports use the filesystem API's stable filename ordering.
+Source and typed-AST compilation share function-signature collection before Go emission.
+
 ```javascript
 // Import a local OSL file
 data = import("utilities.osl")

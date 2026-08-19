@@ -166,6 +166,7 @@
   * [log](packages/log.md)
   * [notify](packages/notify.md)
 * [Media & Documents](packages/categories/media.md)
+  * [shader](packages/shader.md)
   * [raylib](packages/raylib.md)
   * [img](packages/img.md)
   * [qr](packages/qr.md)

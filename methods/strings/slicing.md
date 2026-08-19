@@ -16,10 +16,10 @@ log [1, 2, 3, 4, 5][2:4]  // [2, 3, 4]
 ```
 
 #### `.left(n)` → `string`
-The first `n` characters.
+The first `n` characters; it shares the paired edge-selection path with `.right(n)`.
 
 #### `.right(n)` → `string`
-The last `n` characters.
+The last `n` characters; both edge methods clamp `n` to the available length.
 
 ```javascript
 log "Hello".left(2)   // "He"

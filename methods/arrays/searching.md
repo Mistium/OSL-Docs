@@ -15,6 +15,7 @@ log arr.contains(true)  // true
 
 #### `.index(value)` → `number`
 Position of the first matching element (1-indexed), or `0`.
+Empty arrays naturally return `0`.
 
 #### `.lastIndex(value)` → `number`
 Position of the last matching element (1-indexed), or `0`.
@@ -36,12 +37,13 @@ On typed arrays, callbacks with a matching parameter type are called directly
 without dynamic dispatch.
 
 ```javascript
-log [1, 2, 3].some(x -> x > 2)   // true
+log [1, 2, 3].some(x -> x > 2)   // true; shares compiler/runtime callback dispatch with every
 log [1, 2, 3].every(x -> x > 0)  // true
 ```
 
 #### `.first()` → element type / `.last()` → element type
-The first / last element.
+Both take no arguments and preserve the array's element type.
+The first / last element, selected through the same paired edge lookup.
 
 ```javascript
 arr = [10, 20, 30]

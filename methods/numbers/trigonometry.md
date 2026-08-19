@@ -1,6 +1,6 @@
 # Numbers - Logarithms & Trigonometry
 
-Logarithms and trigonometric functions. Trig comes in **degree** and **radian** variants.
+Logarithms and trigonometric functions share numeric conversion and dispatch. Trig comes in **degree** and **radian** variants.
 
 ## Logarithms
 

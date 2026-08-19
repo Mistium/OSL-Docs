@@ -15,14 +15,14 @@ import "osl/lua"
 | Method | Returns | Description |
 | --- | --- | --- |
 | `lua.create()` | `*State` | Creates a new value. |
-| `lua.doString(code: any)` | `*State` | Runs the do string operation. |
+| `lua.doString(code: any)` | `*State` | Creates a state with `lua.create()`, runs code, and returns it. |
 | `lua.run(code: any)` | `*Result` | Runs the run operation. |
-| `lua.runFile(path: any)` | `object` | Runs file. |
-| `lua.get(code: any, name: any)` | `any` | Returns a value. |
-| `lua.eval(code: any)` | `any` | Runs the eval operation. |
+| `lua.runFile(path: any)` | `object` | Runs a file and returns flat `success` and `error` fields. |
+| `lua.get(code: any, name: any)` | `any` | Executes bounded source through the shared run path and returns a global value. |
+| `lua.eval(code: any)` | `any` | Evaluates an expression, or executes a statement and returns its result when present. |
 | `lua.newTable()` | `any` | Runs the new table operation. |
 | `lua.version()` | `string` | Runs the version operation. |
-| `lua.runTimeout(code: any, timeout: any)` | `result` | Runs code with a bounded timeout and returns an error result on timeout. |
+| `lua.runTimeout(code: any, timeout: any)` | `result` | Runs bounded source through the shared state lifecycle and returns an error result on failure. |
 
 ### `State` values
 
@@ -49,4 +49,5 @@ Methods available on `State` values returned by this package or constructed by t
 ## Edge-case behavior
 
 Lua execution has a finite default timeout and bounded source size. A timed-out
-state can be reused or closed safely.
+state can be reused or closed safely. Evaluation uses the same bounded execution
+path for expressions, setup-and-return snippets, and statement fallback.

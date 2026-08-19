@@ -25,7 +25,7 @@ log [1, 2, 3].average()  // 2
 ```
 
 #### `.max()` → `number` / `.min()` → `number`
-The largest / smallest element.
+The largest / smallest numeric element. Empty arrays return `0`.
 
 ```javascript
 arr = [3, 1, 4, 1, 5, 9, 2, 6]

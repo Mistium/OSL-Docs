@@ -41,6 +41,7 @@ The `to` operator creates an array containing sequential numbers from the first 
 1 to 5     // Returns [1, 2, 3, 4, 5]
 -2 to 2    // Returns [-2, -1, 0, 1, 2]
 10 to 15   // Returns [10, 11, 12, 13, 14, 15]
+5 to 1     // Returns [5, 4, 3, 2, 1]
 
 // Common uses
 // Iterate over a range

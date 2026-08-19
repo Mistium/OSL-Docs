@@ -362,11 +362,11 @@ Methods available on `serveContext` values returned by this package or construct
 | `value.isForm()` | `boolean` | Reports whether form. |
 | `value.query(key: string)` | `string` | Runs the query operation. |
 | `value.queryDefault(key: string, def: string)` | `string` | Runs the query default operation. |
-| `value.queryInt(key: string, def: number)` | `number` | Runs the query int operation. |
+| `value.queryInt(key: string, def: number)` | `number` | Parses an integer query value, returning the default when absent or invalid. |
 | `value.queryBool(key: string, def: boolean)` | `boolean` | Runs the query bool operation. |
 | `value.queryAll()` | `object` | Runs the query all operation. |
 | `value.param(key: string)` | `string` | Runs the param operation. |
-| `value.paramInt(key: string, def: number)` | `number` | Runs the param int operation. |
+| `value.paramInt(key: string, def: number)` | `number` | Parses an integer route parameter, returning the default when absent or invalid. |
 | `value.header(key: string)` | `string` | Runs the header operation. |
 | `value.headers()` | `object` | Every request header as an object (single values are strings; multi-value headers become arrays). |
 | `value.Headers()` | `object` | Alias of `headers`. |
@@ -438,8 +438,8 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.RunTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
 | `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
 | `value.Handler()` | `http.Handler` | Runs the handler operation. |
-| `value.serve(addr: string)` | `error` | Runs the serve operation. |
-| `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs the serve tls operation. |
+| `value.serve(addr: string)` | `error` | Starts the active HTTP server and blocks until it stops. |
+| `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Starts the active HTTPS server and blocks until it stops. |
 | `value.handler()` | `http.Handler` | Runs the handler operation. |
 | `value.stop()` | `boolean` | Gracefully stops the active server and mounted WebSockets; repeated calls are safe. |
 
@@ -450,6 +450,8 @@ Methods available on `serveRouter` values returned by this package or constructe
 
 ## Edge-case behavior
 
-Request bodies remain readable across body, JSON, and form helpers. Static
-serving rejects symlink escapes, client IP parsing supports IPv6, and panic and
-shutdown paths are bounded.
+Request bodies remain readable through one cached decoder path across object,
+array, binding, and form helpers. Response status transitions, typed JSON
+decoding, route registration, OPTIONS handling, and fixed-header middleware each
+use one shared path. Static serving rejects symlink escapes, client IP parsing
+supports IPv6, and panic and shutdown paths are bounded.

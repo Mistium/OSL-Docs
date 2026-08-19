@@ -1,6 +1,6 @@
 # To The Power Of (^)
 
-If you want to find the power of a value you can use the ^ operator.
+Use the `^` operator to exponentiate two numeric operands through the same numeric conversion path.
 
 ```javascript
 log 10 ^ 2

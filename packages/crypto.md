@@ -29,18 +29,18 @@ log digest
 | `crypto.sha512(data: any)` | `string` | Computes a SHA-512 digest through the shared hexadecimal digest path. |
 | `crypto.md5(data: any)` | `string` | Computes an MD5 digest through the shared hexadecimal digest path. |
 | `crypto.sha3_256(data: any)` | `string` | Computes a SHA3-256 digest through the shared hexadecimal digest path. |
-| `crypto.hmacSha256(key: any, data: any)` | `string` | Runs the hmac sha256 operation. |
-| `crypto.hmacSha512(key: any, data: any)` | `string` | Runs the hmac sha512 operation. |
-| `crypto.md5Hash(data: any)` | `string` | Runs the md5 hash operation. |
-| `crypto.aes256Encrypt(key: any, plaintext: any)` | `string` | Runs the aes256 encrypt operation. |
-| `crypto.aes256Decrypt(key: any, ciphertext: any)` | `string` | Runs the aes256 decrypt operation. |
+| `crypto.hmacSha256(key: any, data: any)` | `string` | Computes HMAC-SHA256 through the shared HMAC path. |
+| `crypto.hmacSha512(key: any, data: any)` | `string` | Computes HMAC-SHA512 through the shared HMAC path. |
+| `crypto.md5Hash(data: any)` | `string` | Alias of `crypto.md5`. |
+| `crypto.aes256Encrypt(key: any, plaintext: any)` | `string` | Encrypts with AES-GCM using a normalized 256-bit key. |
+| `crypto.aes256Decrypt(key: any, ciphertext: any)` | `string` | Authenticates and decrypts AES-GCM ciphertext, returning empty on failure. |
 | `crypto.randomBytes(size: any)` | `string` | Generates random bytes. |
-| `crypto.randomInt(...args: any)` | `number` | Generates random int. |
+| `crypto.randomInt(...args: any)` | `number` | Returns a secure integer in `[0, max)` or `[min, max)`. |
 | `crypto.randomString(length: any)` | `string` | Generates random string. |
 | `crypto.randomFloat(...args: any)` | `number` | Generates random float. |
 | `crypto.uuidv4()` | `string` | Runs the uuidv4 operation. |
 | `crypto.randomUUID()` | `string` | Generates random uuid. |
-| `crypto.random(min: any, max: any)` | `any` | Runs the random operation. |
+| `crypto.random(min: any, max: any)` | `any` | Returns a secure integer in `[min, max)`. |
 | `crypto.hash(hashFunc: any, data: any)` | `string` | Runs the hash operation. |
 | `crypto.pbkdf2(password: any, salt: any, iterations: any, keyLen: any, hashFunc: any)` | `string` | Runs the pbkdf2 operation. |
 | `crypto.hexEncode(data: any)` | `string` | Runs the hex encode operation. |
@@ -59,11 +59,11 @@ log digest
 | `crypto.generateKeyPair()` | `object` | Runs the generate key pair operation. |
 | `crypto.sign(key: any, data: any)` | `string` | Runs the sign operation. |
 | `crypto.verify(key: any, data: any, signature: any)` | `boolean` | Runs the verify operation. |
-| `crypto.constantTimeCompare(a: any, b: any)` | `boolean` | Runs the constant time compare operation. |
+| `crypto.constantTimeCompare(a: any, b: any)` | `boolean` | Uses the standard constant-time comparison, including unequal-length rejection. |
 | `crypto.encrypt(data: any, password: any)` | `string` | Runs the encrypt operation. |
 | `crypto.decrypt(data: any, password: any)` | `string` | Runs the decrypt operation. |
-| `crypto.encryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Encrypts file. |
-| `crypto.decryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Decrypts file. |
+| `crypto.encryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Encrypts through the shared fail-closed file transform. |
+| `crypto.decryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Decrypts through the shared fail-closed file transform. |
 | `crypto.hashFile(filePath: any)` | `string` | Runs the hash file operation. |
 | `crypto.hashDirectory(dirPath: any)` | `string` | Runs the hash directory operation. |
 | `crypto.secureErase(filePath: any)` | `boolean` | Runs the secure erase operation. |
@@ -129,5 +129,6 @@ boolean genuine = crypto.ed25519Verify(keys.public, "hello", signature)
 
 ## Edge-case behavior
 
-Key, nonce, salt, iteration, file, and ciphertext sizes are validated. Invalid
-authentication data fails closed and partial output is removed.
+AES keys are truncated or zero-padded to 32 bytes; nonce, salt, iteration, file,
+and ciphertext sizes are validated. Invalid authentication data fails closed and
+partial output is removed.

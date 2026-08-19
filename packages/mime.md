@@ -15,11 +15,11 @@ import "osl/mime"
 | Method | Returns | Description |
 | --- | --- | --- |
 | `mime.typeByExt(ext: any)` | `string` | Runs the type by ext operation. |
-| `mime.byFilename(name: any)` | `string` | Runs the by filename operation. |
+| `mime.byFilename(name: any)` | `string` | Resolves the filename's final extension through `typeByExt`. |
 | `mime.extByType(mtype: any)` | `string` | Runs the ext by type operation. |
 | `mime.parse(contentType: any)` | `object` | Parses input data. |
 | `mime.format(mtype: any, params: object)` | `string` | Formats a value for display. |
-| `mime.resolve(input: any)` | `string` | Runs the resolve operation. |
+| `mime.resolve(input: any)` | `string` | Normalizes a MIME type, extension, or filename using final-extension semantics. |
 | `mime.isText(input: any)` | `boolean` | Reports whether text. |
 | `mime.isImage(input: any)` | `boolean` | Reports whether image. |
 | `mime.isAudio(input: any)` | `boolean` | Reports whether audio. |

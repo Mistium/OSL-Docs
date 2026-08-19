@@ -71,7 +71,28 @@ Key names include letters, arrows, space, escape, enter, modifiers, and F1 throu
 - `setMasterVolume(volume)` adjusts master volume between `0.0` and `1.0`.
 - `loadSound(path)` loads a WAV/OGG/MP3 sound handle with `play()`, `stop()`, `setVolume(vol)`, `setPitch(pitch)`, `unload()`, and `valid()`.
 
-## Textures
+## Textures and Render Textures
 
-`raylib.loadTexture(path)` returns a texture with `valid()`, `width()`, `height()`,
-`draw(x, y, rotation, scale, tint)`, and `unload()` methods.
+- `raylib.loadTexture(path)` returns a texture with `valid()`, `width()`, `height()`,
+  `draw(x, y, rotation, scale, tint)`, and `unload()` methods.
+- `raylib.renderTexture(width, height)` returns an offscreen frame buffer with `valid()`, `begin()`, `end()`,
+  `width()`, `height()`, `texture()`, `draw(x, y, rotation, scale, tint)`, and `unload()` methods.
+- `raylib.drawToTexture(target, drawFunc)` executes a drawing callback into the render target.
+
+## Shaders
+
+- `raylib.loadShader(vs, fs)` and `raylib.loadFragmentShader(fs)` load GLSL or OSL-style shaders from code strings or file paths.
+- `raylib.shader(code)` is a shorthand for loading a fragment shader.
+- `raylib.beginShader(s)` and `raylib.endShader()` toggle active shader mode.
+- `raylib.drawShader(s, x, y, width, height)` draws a rectangle using the active shader.
+
+### Returned Shader object methods
+
+- `valid()` returns boolean indicating if the shader compiled and loaded.
+- `begin()` and `end()` activate and deactivate the shader.
+- `setValue(name, value)` sets float, vector (`[x, y]`, `[x, y, z]`, `[x, y, z, w]`), or texture uniform values.
+- `setUniform(name, value)` is an alias for `setValue`.
+- `draw(x, y, width, height)` draws a rectangle filled by the shader.
+- `drawFullscreen()` draws a fullscreen quad using the shader.
+- `unload()` frees the shader from GPU memory.
+

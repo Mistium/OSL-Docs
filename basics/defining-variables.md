@@ -6,7 +6,8 @@ Use `name = value` to create or update an untyped variable.
 variable = 10
 ```
 
-Top-level variables are global and can be read inside functions:
+Top-level variables declared with `name = value`, a type, or `auto` are global
+and can be read inside functions:
 
 ```javascript
 greeting = "hello"

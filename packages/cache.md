@@ -47,12 +47,12 @@ Methods available on `Cache` values returned by this package or constructed by t
 | `value.cleanupExpired()` | `void` | Removes expired cache entries. |
 | `value.setTTL(key: any, ttl: any)` | `boolean` | Sets ttl. |
 | `value.getTTL(key: any)` | `number` | Returns ttl. |
-| `value.stats()` | `object` | Returns usage statistics. |
-| `value.setMany(data: any)` | `boolean` | Sets many. |
+| `value.stats()` | `object` | Returns usage statistics in a fresh OSL object. |
+| `value.setMany(data: any)` | `boolean` | Sets every entry from an object; non-object input returns false. |
 | `value.getMany(keys: array)` | `object` | Returns many. |
 | `value.deleteMany(keys: array)` | `boolean` | Deletes many. |
-| `value.filter(fn: any)` | `object` | Returns values accepted by a callback. |
-| `value.mapValues(fn: any)` | `object` | Transforms values with a callback. |
+| `value.filter(fn: any)` | `object` | Returns values accepted through the shared snapshot collector. |
+| `value.mapValues(fn: any)` | `object` | Transforms values through the shared snapshot collector. |
 | `value.reduce(initial: any, fn: any)` | `any` | Reduces values with a callback. |
 | `value.foreach(fn: any)` | `boolean` | Runs a callback for each value. |
 | `value.toArray()` | `array` | Converts the value to an array. |
@@ -64,6 +64,7 @@ Methods available on `Cache` values returned by this package or constructed by t
 
 ## Edge-case behavior
 
-Expiry is inclusive at its deadline, null values remain distinguishable from
-missing keys, and both fallback methods use the same presence-sensitive lookup.
-`getOrSetFunc` additionally performs one load per key under concurrency.
+Expiry uses one absolute-deadline liveness path, null values remain distinguishable from
+missing keys, values and entries share a live snapshot, and stats snapshots discard expired entries.
+Both fallback methods use the same presence-sensitive lookup, while `getOrSetFunc`
+performs one load per key under concurrency.

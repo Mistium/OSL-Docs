@@ -2,6 +2,8 @@
 
 Add, remove and reshape keys, or convert the object to another type.
 
+`pick`, `omit`, and `flip` use a safe map assertion; a non-object input behaves like an empty map.
+
 #### `.insert(key, value)` - mutates
 Sets `key` to `value` on the object.
 
@@ -37,7 +39,7 @@ log { a: 1, b: 2 }.flip()  // {"1": "a", "2": "b"}
 An independent deep copy. (Plain `=` shares a reference.)
 
 #### `.toMap()` → `map`
-Converts to an insertion-ordered [`map`](../../packages/map.md).
+Converts to an insertion-ordered [`map`](../../packages/map.md), reusing its package source when already imported.
 
 #### `.toStr()` → `string`
 Serialises the object to a JSON string.

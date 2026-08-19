@@ -13,6 +13,8 @@ obj.count
   += 1
 ```
 
+Top-level declarations and nullish assignments use the same global emission path.
+
 An example of an assignment operator is `+=` where it adds a number to the variable or joins a string directly onto the variable (no separator is added)
 
 ```javascript

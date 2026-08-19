@@ -28,12 +28,12 @@ After calling `canvas(w, h, bgHex)` to create a canvas, call these methods on th
 | `c.width()` | `number` | Returns canvas width. |
 | `c.height()` | `number` | Returns canvas height. |
 | `c.pixels()` | `number` | Returns number of pixels. |
-| `c.setPixel(idx: any, hexColor: any)` | `void` | Sets pixel at index (0-based). |
-| `c.getPixel(idx: any)` | `string` | Returns pixel at index (0-based). |
+| `c.setPixel(idx: any, hexColor: any)` | `void` | Maps a 0-based index to coordinates and uses `setPixelAt`. |
+| `c.getPixel(idx: any)` | `string` | Maps a 0-based index to coordinates and uses `getPixelAt`. |
 | `c.setPixelAt(x: any, y: any, hexColor: any)` | `void` | Sets pixel at x, y (0-based). |
 | `c.getPixelAt(x: any, y: any)` | `string` | Returns pixel at x, y (0-based). |
-| `c.fill(hexColor: any)` | `void` | Fills entire canvas with color. |
-| `c.clear()` | `void` | Clears all pixels. |
+| `c.fill(hexColor: any)` | `void` | Fills the entire surface through the standard image draw path. |
+| `c.clear()` | `void` | Uses the same draw path with the original background color. |
 | `c.stretch(newW: any, newH: any)` | `void` | Resizes canvas. |
 | `c.toURL()` | `string` | Converts to data URL. |
 | `c.toArr()` | `array` | Converts to array. |

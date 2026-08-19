@@ -2,6 +2,8 @@
 
 These methods exist on every value, converting between types. They return a new value.
 
+Numeric conversions share one canonical literal and runtime-coercion path.
+
 #### `.toStr()` → `string`
 
 Converts the value to its string form. Objects and arrays become JSON.
@@ -57,7 +59,7 @@ log "{\"a\":1}".toObject()  // {a: 1}
 
 #### `.len` → `int`
 
-The length of a string, array or object. **It is a property - no parentheses.**
+The length of a string, array or object; for numbers, the length of its printed form. **It is a property - no parentheses.**
 
 ```javascript
 arr = [1, 2, 3]

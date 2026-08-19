@@ -23,15 +23,15 @@ log u["host"]
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `url.parse(raw: any)` | `object` | Parses input data. |
-| `url.build(parts: object)` | `string` | Runs the build operation. |
-| `url.encode(m: object)` | `string` | Runs the encode operation. |
+| `url.parse(raw: any)` | `object` | Parses through the shared standard-library URL boundary. |
+| `url.build(parts: object)` | `string` | Builds a URL using the same scalar and repeated query-value applicator as `encode` and `withParams`. |
+| `url.encode(m: object)` | `string` | Encodes scalar and array query values using the shared query-value rules. |
 | `url.decode(query: any)` | `object` | Decodes a URL-encoded query string into an object. |
 | `url.escape(s: any)` | `string` | Runs the escape operation. |
 | `url.unescape(s: any)` | `string` | Runs the unescape operation. |
-| `url.isValid(raw: any)` | `boolean` | Reports whether the input is valid. |
+| `url.isValid(raw: any)` | `boolean` | Uses the shared parser and requires both scheme and host. |
 | `url.join(base: any, ref: any)` | `string` | Runs the join operation. |
-| `url.withParams(raw: any, params: object)` | `string` | Runs the with params operation. |
+| `url.withParams(raw: any, params: object)` | `string` | Adds or replaces scalar and repeated query values using the same rules as `encode`. |
 | `url.param(raw: any, key: any)` | `string` | Runs the param operation. |
 
 ## Notes

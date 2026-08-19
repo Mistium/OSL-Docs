@@ -4,7 +4,8 @@ General-purpose methods available on every value.
 
 #### `.clone()` → *same type*
 Returns an independent deep copy. Assigning with `=` shares a reference; `.clone()` does not, so
-mutating the copy never affects the original.
+mutating the copy never affects the original. Cycles and shared nested values are preserved within
+the copy.
 
 ```javascript
 a = [1, 2, 3]
@@ -14,8 +15,8 @@ log a  // [1, 2, 3] - unchanged
 ```
 
 #### `.item(key)` → `unknown`
-Reads an element or field dynamically: by 1-based index for arrays/strings, by key for objects. Handy
-when the key is computed.
+Reads an element or field dynamically: known and generic arrays share the same 1-based lookup,
+strings use a 1-based index, and objects use a key. Handy when the key is computed.
 
 ```javascript
 arr = [10, 20, 30]
@@ -53,12 +54,12 @@ already be exactly the named type or the program errors.
 Asserts the value is `type` and returns it as that type; errors at runtime if it is not.
 If the compiler already knows the value's type, a matching assertion is removed and produces a
 redundant-assertion warning; a mismatched assertion is a compile error.
-
 Nullable values are the exception: `.assert(T)` on `T?` performs a runtime non-null assertion and
 narrows the result to `T`.
 Values narrowed by a runtime type guard, and typed array elements that may be missing at runtime,
 also retain their assertion: their static type describes the successful value, not a guarantee that
 the runtime check is unnecessary.
+
 #### `.assertElse(type, default)` → *type*
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
 Using it on a statically known type produces a warning because either the value is already that type

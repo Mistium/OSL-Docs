@@ -34,11 +34,11 @@ Methods available on `Result` values returned by this package or constructed by 
 | --- | --- | --- |
 | `value.isOk()` | `boolean` | Reports whether the result is successful. |
 | `value.isErr()` | `boolean` | Reports whether the result is an error. |
-| `value.unwrap()` | `any` | Returns the contained value or fails. |
+| `value.unwrap()` | `any` | Returns the success value through the shared variant accessor or fails. |
 | `value.unwrapOr(def: any)` | `any` | Returns the contained value or a fallback. |
 | `value.expect(msg: any)` | `any` | Returns the contained value or fails with a custom message. |
-| `value.unwrapErr()` | `any` | Returns the error value or fails. |
-| `value.expectErr(msg: any)` | `any` | Runs the expect err operation. |
+| `value.unwrapErr()` | `any` | Returns the error value through the shared variant accessor or fails. |
+| `value.expectErr(msg: any)` | `any` | Uses the same error-side accessor with a custom failure message. |
 | `value.fromGo(val: any, err: error)` | `*Result` | Creates from go. |
 
 ## Notes

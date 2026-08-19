@@ -22,8 +22,8 @@ log template.render("Hello {{name}}", {name: "Ada"})
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `template.render(tmpl: any, data: object)` | `string` | Runs the render operation. |
-| `template.renderHTML(tmpl: any, data: object)` | `string` | Runs the render html operation. |
+| `template.render(tmpl: any, data: object)` | `string` | Renders interpolation, loops, and shared `if`/`unless` conditional blocks. |
+| `template.renderHTML(tmpl: any, data: object)` | `string` | Uses the shared renderer with standard HTML escaping enabled. |
 
 ## Notes
 
@@ -33,5 +33,5 @@ log template.render("Hello {{name}}", {name: "Ada"})
 ## Edge-case behavior
 
 False, zero, and null remain distinct from missing values. Invalid loops,
-unclosed directives, callback failures, recursion, and all HTML-sensitive
-characters have controlled behavior.
+unclosed directives, and all HTML-sensitive characters have controlled behavior.
+Recursive block rendering returns only the rendered text and reuses scope storage.

@@ -25,8 +25,8 @@ log regex.findAll("[0-9]+", "abc123def456")
 | --- | --- | --- |
 | `regex.match(pattern: any, text: any)` | `boolean` | Runs the match operation. |
 | `regex.find(pattern: any, text: any)` | `string` | Runs the find operation. |
-| `regex.findAll(pattern: any, text: any)` | `array` | Runs the find all operation. |
-| `regex.findSubmatch(pattern: any, text: any)` | `array` | Runs the find submatch operation. |
+| `regex.findAll(pattern: any, text: any)` | `array` | Returns every match through the shared compiled-pattern path. |
+| `regex.findSubmatch(pattern: any, text: any)` | `array` | Returns the full match and capture groups, or an empty array. |
 | `regex.replace(pattern: any, text: any, replacement: any)` | `string` | Runs the replace operation. |
 | `regex.replaceFunc(pattern: any, text: any, fn: any)` | `string` | Runs the replace func operation. |
 | `regex.split(pattern: any, text: any)` | `array` | Runs the split operation. |
@@ -74,3 +74,6 @@ log regex.findAll("[0-9]+", "abc123def456")
 
 Invalid patterns and callback failures are reported cleanly. Empty matches,
 Unicode classes, capture replacement, and zero-width progress are bounded.
+IP and Base64 validators use their standard-library parsers. Truncation clamps
+negative lengths and counts Unicode code points; `charCount` reports UTF-8 bytes.
+Slug patterns are compiled once, and IPv4/IPv6 checks share one parser path.

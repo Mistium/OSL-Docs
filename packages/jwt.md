@@ -23,14 +23,14 @@ log jwt.verify(token, "secret")
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `jwt.encode(header: any, payload: any, secret: any)` | `string` | Runs the encode operation. |
-| `jwt.sign(claims: object, secret: any, expiresIn: any)` | `string` | Runs the sign operation. |
+| `jwt.encode(header: any, payload: any, secret: any)` | `string` | Builds a signed three-part token from raw header and payload text. |
+| `jwt.sign(claims: object, secret: any, expiresIn: any)` | `string` | JSON-encodes claims and uses the same token construction as `encode`. |
 | `jwt.signWithExpiry(claims: object, secret: any, expiresIn: any)` | `string` | Signs with expiry. |
-| `jwt.verify(token: any, secret: any)` | `object` | Runs the verify operation. |
+| `jwt.verify(token: any, secret: any)` | `object` | Verifies the signature with a constant-time comparison and uses shared framing, JSON, and expiry validation. |
 | `jwt.getClaim(token: any, claim: any)` | `any` | Returns claim. |
 | `jwt.isExpired(token: any)` | `boolean` | Reports whether expired. |
 | `jwt.refresh(token: any, secret: any, expiresIn: any)` | `string` | Runs the refresh operation. |
-| `jwt.decode(token: any)` | `object` | Decodes claims without accepting an invalid token as verified. |
+| `jwt.decode(token: any)` | `object` | Decodes header and claims through the shared bounded JSON-part path without verifying a signature. |
 
 ## Notes
 
@@ -40,4 +40,5 @@ log jwt.verify(token, "secret")
 ## Edge-case behavior
 
 Verification rejects malformed tokens, algorithm confusion, invalid signatures,
-and invalid or expired time claims.
+and invalid or expired time claims. Verification and unverified decoding share
+the same bounded three-part parser.

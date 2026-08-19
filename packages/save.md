@@ -13,8 +13,10 @@ import "osl/save"
 ```javascript
 import "osl/save"
 
-save.set("theme", "dark")
-log save.get("theme")
+store = save.create()
+store.init("my-app")
+store.setItem("theme", "dark")
+log store.getItem("theme").data
 ```
 
 ## API reference
@@ -25,9 +27,9 @@ log save.get("theme")
 | --- | --- | --- |
 | `save.init(appName: string)` | `boolean` | Runs the init operation. |
 | `save.OSL_path(filename: string)` | `string` | Runs the osl path operation. |
-| `save.setItem(filename: string, value: any)` | `string` | Sets item. |
+| `save.setItem(filename: string, value: any)` | `string` | Writes an item after shared path validation, returning its path or an empty string. |
 | `save.getItem(filename: string)` | `object` | Returns item. |
-| `save.exists(filename: string)` | `boolean` | Reports whether the value or resource exists. |
+| `save.exists(filename: string)` | `boolean` | Reports whether the validated item path exists; false before initialization. |
 | `save.all()` | `array` | Runs the all operation. |
 | `save.create()` | `*save` | Creates an isolated save value; call `init` before reading or writing. |
 
@@ -39,4 +41,5 @@ log save.get("theme")
 ## Edge-case behavior
 
 Operations before `init` fail safely instead of reading or writing an
-unresolved path.
+unresolved path. Each `init` resolves the current home directory without shared
+mutable root state, and creating the app directory also creates its parents.

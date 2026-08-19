@@ -14,17 +14,19 @@ import "osl/diff"
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `diff.compareLines(oldLines: array, newLines: array)` | `DiffResult` | Runs the compare lines operation. |
-| `diff.compareWords(oldText: string, newText: string)` | `DiffResult` | Runs the compare words operation. |
-| `diff.tokenize(text: string)` | `array` | Runs the tokenize operation. |
+| `diff.compareLines(oldLines: array, newLines: array)` | `DiffResult` | Compares every positional line, including all trailing additions or removals. |
+| `diff.compareWords(oldText: string, newText: string)` | `DiffResult` | Uses the shared positional comparison engine on whitespace-delimited words. |
+| `diff.tokenize(text: string)` | `array` | Splits text using standard Unicode whitespace rules. |
 | `diff.text(oldStr: string, newStr: string)` | `DiffResult` | Runs the text operation. |
 | `diff.words(oldStr: string, newStr: string)` | `DiffResult` | Runs the words operation. |
 | `diff.chars(oldStr: string, newStr: string)` | `DiffResult` | Runs the chars operation. |
 | `diff.unified(result: DiffResult)` | `string` | Runs the unified operation. |
-| `diff.html(result: DiffResult)` | `string` | Runs the html operation. |
-| `diff.json(result: DiffResult)` | `string` | Runs the json operation. |
+| `diff.html(result: DiffResult)` | `string` | Renders escaped HTML using a reusable single-pass replacer. |
+| `diff.json(result: DiffResult)` | `string` | Serializes the tagged result directly without an intermediate object. |
 
 ## Notes
 
 - Standard-library imports accept both `import "osl/diff"` and `import "diff"`.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
+
+Line, word, and Unicode character comparisons share one builder-backed engine.
