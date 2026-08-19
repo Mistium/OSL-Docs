@@ -33,11 +33,11 @@ log sys.getCwd()
 | `sys.getPpid()` | `number` | Returns ppid. |
 | `sys.getUid()` | `number` | Returns uid. |
 | `sys.getGid()` | `number` | Returns gid. |
-| `sys.getUsername()` | `string` | Returns username. |
-| `sys.getHomeDir()` | `string` | Returns home dir. |
-| `sys.cmd(cmd: string, ...args: string)` | `string` | Runs the cmd operation. |
+| `sys.getUsername()` | `string` | Returns the username through the shared current-user lookup. |
+| `sys.getHomeDir()` | `string` | Returns the home directory through the shared current-user lookup. |
+| `sys.cmd(cmd: string, ...args: string)` | `string` | Runs a command with arguments forwarded directly, returning stdout or an empty string. |
 | `sys.getExecutablePath()` | `string` | Returns executable path. |
-| `sys.openURL(url: string)` | `boolean` | Opens url. |
+| `sys.openURL(url: string)` | `boolean` | Opens a validated URL using the exact platform command. |
 
 ## Notes
 

@@ -317,7 +317,7 @@ by the sending methods.
 
 #### Actions
 
-All of these target the message's own channel or thread automatically.
+All of these share the same owner validation and automatically target the message's own channel or thread.
 
 - `msg.reply(content)` → `*originchats.message` - reply (pings the author)
 - `msg.replyNoPing(content)` → `*originchats.message` - reply without pinging
@@ -370,4 +370,7 @@ main_chat.run(token)
 `wss://` connections use normal TLS certificate verification. Malformed frames
 are ignored, callback panics are contained, duplicate listeners run
 independently, and client state is synchronized for concurrent handlers.
-`stop()` is idempotent and releases pending requests with a stopped error.
+Connections reuse the `ws` dialer, construction, and worker lifecycle. Client
+state uses shared read/write lock paths, message and slash accessors share one
+nil-safe projection, and callback fan-out shares one panic boundary. `stop()` is
+idempotent and releases pending requests with a stopped error.

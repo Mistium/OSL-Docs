@@ -62,8 +62,8 @@ Methods available on `dateZonedDateTime` values returned by this package or cons
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.iso()` | `string` | Runs the iso operation. |
-| `value.format(layout: string)` | `string` | Formats a value for display. |
+| `value.iso()` | `string` | Formats the value in its timezone, falling back to UTC when invalid. |
+| `value.format(layout: string)` | `string` | Formats the value using the same timezone lookup and UTC fallback as `iso`. |
 
 ## Notes
 
@@ -74,4 +74,6 @@ Methods available on `dateZonedDateTime` values returned by this package or cons
 
 Negative Unix milliseconds use floor semantics. Calendar arithmetic covers
 month ends, leap days, and DST transitions; non-finite and overflowing
-durations are rejected.
+durations are rejected. Formatting reuses one ordered token table and supports
+literal brackets and backslash escapes; upper- and lowercase meridiem tokens
+share the same noon-aware calculation.

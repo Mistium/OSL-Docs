@@ -13,8 +13,8 @@ import "osl/process"
 ```javascript
 import "osl/process"
 
-auto p = process.run("echo", ["hello"])
-log p.stdout
+auto p = process.spawn("echo", "hello")
+log p.run().output
 ```
 
 ## API reference
@@ -23,7 +23,7 @@ log p.stdout
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `process.spawn(command: any, ...args: any)` | `*Process` | Runs the spawn operation. |
+| `process.spawn(command: any, ...args: any)` | `*Process` | Creates a process using the shared argument conversion path. |
 | `process.spawnShell(command: any)` | `*Process` | Runs the spawn shell operation. |
 | `process.getPID()` | `number` | Returns pid. |
 | `process.getPPID()` | `number` | Returns ppid. |
@@ -64,13 +64,13 @@ Methods available on `Process` values returned by this package or constructed by
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.run()` | `object` | Runs the run operation. |
+| `value.run()` | `object` | Runs the process and returns the shared lifecycle result shape. |
 | `value.start()` | `boolean` | Starts the resource. |
-| `value.wait()` | `object` | Runs the wait operation. |
-| `value.kill()` | `boolean` | Runs the kill operation. |
-| `value.signal(sig: any)` | `boolean` | Runs the signal operation. |
-| `value.isRunning()` | `boolean` | Reports whether running. |
-| `value.getPID()` | `number` | Returns pid. |
+| `value.wait()` | `object` | Waits for a started process and returns the same lifecycle result shape as `run`. |
+| `value.kill()` | `boolean` | Kills through the shared live-process accessor. |
+| `value.signal(sig: any)` | `boolean` | Signals through the shared live-process accessor. |
+| `value.isRunning()` | `boolean` | Checks through the shared live-process accessor. |
+| `value.getPID()` | `number` | Returns the PID through the shared live-process accessor. |
 
 ## Notes
 
@@ -79,6 +79,6 @@ Methods available on `Process` values returned by this package or constructed by
 
 ## Edge-case behavior
 
-Missing commands, failed starts, timeouts, invalid PIDs, and repeated
-wait/kill/signal calls return controlled results instead of dereferencing
+Missing commands, failed starts, timeouts, invalid PIDs (through one shared lookup), and repeated
+wait/kill/signal calls share one live-process guard and return controlled results instead of dereferencing
 missing process state.

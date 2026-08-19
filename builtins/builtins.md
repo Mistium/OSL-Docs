@@ -4,6 +4,7 @@ These functions are built into the compiler - you can call them anywhere without
 anything. They are distinct from **methods** (called on a value with a dot, like `"hi".toUpper()`,
 documented under [Methods](../methods/strings/README.md)) and from **packages** (imported with
 `import`, documented under [Packages](../packages/README.md)).
+Built-in names take precedence over same-named user functions at call sites.
 
 > Many of the maths and conversion helpers also exist as methods. Where a method form exists it is
 > usually the idiomatic choice - for example prefer `value.toNum()` over `number(value)`.
@@ -50,6 +51,8 @@ Constructors for package-backed types (these import their package automatically)
 
 ## Maths
 
+Unary maths functions take one value; paired `min`/`max` accept either two values or one spread array.
+
 | Function | Result | Description |
 | --- | --- | --- |
 | `abs(n)` | `number` | Absolute value. |
@@ -95,6 +98,17 @@ log encodeURIComponent("a b") // "a%20b"
 ```
 
 ## Control & error handling
+
+#### `expression catch ( ... )`
+Unwraps a successful `result`. On error, runs its block with `_` bound to that result, including
+inside nested blocks. The block must transfer control; otherwise the original error is rethrown.
+
+```javascript
+auto value = operation() catch (
+  log _.unwrapErr()
+  return null
+)
+```
 
 #### `try(expression)` → `result`
 Runs `expression`, catching any error. Returns a [`result`](../packages/result.md): `ok(value)` if it

@@ -2,6 +2,8 @@
 
 OSL programming is made up of 6 different types of syntax.
 
+Identifiers may use Unicode letters; validation is shared across token compilation.
+
 ### Warning comments
 
 Use a comment immediately before a line to suppress its compiler warnings:
@@ -119,6 +121,8 @@ func(10, 5)
 
 ### Statements
 
+If `{ ... }` or `[ ... ]` is used where a body is required, the shared block diagnostic identifies it as an object or array literal and points to `( ... )`.
+
 Statements are containers for other commands, and modify their behavior through [looping the statement](../program-flow/iteration.md) or [ignoring it if the specified conditions aren't met](../program-flow/if-statements.md). Statements are always followed by a set of parentheses which surround a script. They generally take one or more inputs, supplied between the statement itself and the opening parenthesis.
 
 ```javascript
@@ -138,6 +142,11 @@ for i 10 (
   log i
 )
 ```
+
+Both counted forms evaluate their count once before entering the loop.
+Nested `()`, `[]`, and `{}` delimiters keep inner separators within their enclosing expression.
+One delimiter scanner handles double-quoted, single-quoted, and template strings,
+including escaped quote characters, so inner separators remain literal.
 
 ## Getting Started
 

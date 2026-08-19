@@ -16,15 +16,15 @@ import "osl/email"
 | --- | --- | --- |
 | `email.create()` | `*Email` | Creates a new value. |
 | `email.setFrom(addr: any)` | `boolean` | Sets from. |
-| `email.addTo(recipient: any)` | `boolean` | Adds to. |
+| `email.addTo(recipient: any)` | `boolean` | Adds a validated, non-duplicate To recipient. |
 | `email.addToMany(recipients: array)` | `boolean` | Adds to many. |
-| `email.setTo(recipients: any)` | `boolean` | Sets to. |
+| `email.setTo(recipients: any)` | `boolean` | Replaces To recipients using shared address validation; fails on an invalid or duplicate entry. |
 | `email.getTo()` | `array` | Returns to. |
-| `email.addCc(recipient: any)` | `boolean` | Adds cc. |
-| `email.setCc(recipients: any)` | `boolean` | Sets cc. |
+| `email.addCc(recipient: any)` | `boolean` | Adds a validated, non-duplicate Cc recipient. |
+| `email.setCc(recipients: any)` | `boolean` | Replaces Cc recipients, skipping invalid or duplicate entries. |
 | `email.getCc()` | `array` | Returns cc. |
-| `email.addBcc(recipient: any)` | `boolean` | Adds bcc. |
-| `email.setBcc(recipients: any)` | `boolean` | Sets bcc. |
+| `email.addBcc(recipient: any)` | `boolean` | Adds a validated, non-duplicate Bcc recipient. |
+| `email.setBcc(recipients: any)` | `boolean` | Replaces Bcc recipients, skipping invalid or duplicate entries. |
 | `email.getBcc()` | `array` | Returns bcc. |
 | `email.setSubject(subject: any)` | `void` | Sets subject. |
 | `email.getSubject()` | `string` | Returns subject. |
@@ -33,8 +33,8 @@ import "osl/email"
 | `email.setHTML(html: any)` | `boolean` | Sets html. |
 | `email.setText(text: any)` | `void` | Sets text. |
 | `email.isHTML()` | `boolean` | Reports whether html. |
-| `email.attachFile(filePath: any)` | `boolean` | Runs the attach file operation. |
-| `email.attachContent(files: object)` | `boolean` | Runs the attach content operation. |
+| `email.attachFile(filePath: any)` | `boolean` | Adds a readable file unless its basename is already attached. |
+| `email.attachContent(files: object)` | `boolean` | Adds named inline attachments through the same duplicate-name validation. |
 | `email.sendWithSmtp(host: any, port: any, username: any, password: any, auth: any)` | `object` | Sends with SMTP and returns the shared success or error result shape. |
 | `email.sendGmail(username: any, password: any)` | `object` | Sends gmail. |
 | `email.sendOutlook(username: any, password: any)` | `object` | Sends outlook. |
@@ -44,7 +44,7 @@ import "osl/email"
 | `email.toMap()` | `object` | Converts the value to an object. |
 | `email.fromMap(data: object)` | `*Email` | Creates from map. |
 | `email.validate()` | `boolean` | Validates the current value. |
-| `email.getRecipients()` | `array` | Returns recipients. |
+| `email.getRecipients()` | `array` | Returns To, Cc, and Bcc values through the shared combined-recipient path. |
 | `email.getRecipientCount()` | `number` | Returns recipient count. |
 | `email.clear()` | `void` | Clears all stored values. |
 | `email.reset()` | `void` | Runs the reset operation. |
@@ -52,7 +52,7 @@ import "osl/email"
 | `email.preview()` | `string` | Runs the preview operation. |
 | `email.wrapText(width: any)` | `boolean` | Runs the wrap text operation. |
 | `email.getHeaders()` | `object` | Returns headers. |
-| `email.hasRecipient(recipient: string)` | `boolean` | Reports whether any To, Cc, or Bcc entry matches the recipient. |
+| `email.hasRecipient(recipient: string)` | `boolean` | Searches the same combined To, Cc, and Bcc recipient list. |
 
 ## Notes
 
@@ -62,4 +62,5 @@ import "osl/email"
 ## Edge-case behavior
 
 Recipient state is kept per email value and guarded for concurrent access.
-Headers reject newline injection and attachment failures are reported.
+Headers reject newline injection and attachment failures are reported. Gmail,
+Outlook, and Office 365 helpers use their standard SMTP submission hosts.

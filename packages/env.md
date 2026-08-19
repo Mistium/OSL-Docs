@@ -93,8 +93,8 @@ Returned by `env` methods; call these on the value you get back.
 | `env.parse(text: string)` | `*envFile` | Parses input data. |
 | `env.from(values: object)` | `*envFile` | Runs the from operation. |
 | `env.stringify(values: object)` | `string` | Serialises a value to text. |
-| `env.load(...paths: string)` | `boolean` | Runs the load operation. |
-| `env.overload(...paths: string)` | `boolean` | Runs the overload operation. |
+| `env.load(...paths: string)` | `boolean` | Loads files in order without replacing existing environment values. |
+| `env.overload(...paths: string)` | `boolean` | Loads files in order and replaces existing environment values. |
 | `env.local()` | `boolean` | Runs the local operation. |
 | `env.localOverload()` | `boolean` | Runs the local overload operation. |
 | `env.get(key: string)` | `string` | Returns a value. |
@@ -128,10 +128,10 @@ Methods available on `envFile` values returned by this package or constructed by
 | `value.setPath(path: string)` | `*envFile` | Sets path. |
 | `value.loaded()` | `boolean` | Runs the loaded operation. |
 | `value.read()` | `boolean` | Runs the read operation. |
-| `value.load()` | `boolean` | Runs the load operation. |
-| `value.overload()` | `boolean` | Runs the overload operation. |
-| `value.apply()` | `boolean` | Runs the apply operation. |
-| `value.applyOverload()` | `boolean` | Runs the apply overload operation. |
+| `value.load()` | `boolean` | Reads and applies the file without replacing existing values. |
+| `value.overload()` | `boolean` | Reads and applies the file, replacing existing values. |
+| `value.apply()` | `boolean` | Applies parsed values without replacing existing values. |
+| `value.applyOverload()` | `boolean` | Applies parsed values, replacing existing values. |
 | `value.save()` | `boolean` | Runs the save operation. |
 | `value.text()` | `string` | Runs the text operation. |
 | `value.all()` | `object` | Runs the all operation. |
@@ -171,4 +171,5 @@ Methods available on `envValue` values returned by this package or constructed b
 ## Edge-case behavior
 
 Loads handle BOM/CRLF, quoted values, expansion cycles, and duplicate-key
-precedence. Missing typed values use the documented fallback.
+precedence. File and process values share typed conversion and sorted key projection;
+missing or malformed typed values use the documented fallback, and mode aliases share one lookup path.

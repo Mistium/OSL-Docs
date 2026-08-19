@@ -15,17 +15,17 @@ import "osl/sound"
 | Method | Returns | Description |
 | --- | --- | --- |
 | `sound.new(url: any)` | `string` | Creates a new value. |
-| `sound.load(url: any)` | `string` | Runs the load operation. |
-| `sound.play(id: any)` | `boolean` | Runs the play operation. |
-| `sound.start(id: any)` | `boolean` | Starts the resource. |
-| `sound.pause(id: any)` | `boolean` | Runs the pause operation. |
-| `sound.unpause(id: any)` | `boolean` | Runs the unpause operation. |
-| `sound.unload(id: any)` | `boolean` | Runs the unload operation. |
-| `sound.clear(id: any)` | `boolean` | Clears all stored values. |
-| `sound.volume(id: any, value: number)` | `boolean` | Runs the volume operation. |
-| `sound.currentTime(id: any)` | `number` | Runs the current time operation. |
-| `sound.loaded(id: any)` | `boolean` | Runs the loaded operation. |
-| `sound.playing(id: any)` | `boolean` | Runs the playing operation. |
+| `sound.load(url: any)` | `string` | Alias of `sound.new`. |
+| `sound.play(id: any)` | `boolean` | Starts or resumes playback. |
+| `sound.start(id: any)` | `boolean` | Alias of `sound.play`. |
+| `sound.pause(id: any)` | `boolean` | Pauses active playback through the shared state transition. |
+| `sound.unpause(id: any)` | `boolean` | Resumes paused playback through the shared state transition. |
+| `sound.unload(id: any)` | `boolean` | Removes the loaded sound. |
+| `sound.clear(id: any)` | `boolean` | Alias of `sound.unload`. |
+| `sound.volume(id: any, value: number)` | `boolean` | Stores the sound's reported volume, clamped from 0 to 1. |
+| `sound.currentTime(id: any)` | `number` | Returns the current playback time in seconds. |
+| `sound.loaded(id: any)` | `boolean` | Reports whether the sound is loaded. |
+| `sound.playing(id: any)` | `boolean` | Reports whether the sound is playing. |
 | `sound.duration(id: any)` | `number` | Runs the duration operation. |
 | `sound.percent(id: any)` | `number` | Runs the percent operation. |
 | `sound.info(id: string, field: string)` | `number` | Runs the info operation. |
@@ -37,6 +37,7 @@ import "osl/sound"
 
 ## Edge-case behavior
 
-Audio sources are bounded and HTTP responses are validated. Speaker setup is
+Audio sources are bounded and HTTP responses are validated by a reused client. Speaker setup is
 lazy, differing sample rates are resampled, and pause state is per sound value.
-Repeated unload and clear calls are safe.
+In-memory decoding uses standard byte readers, generated IDs are serialized, and
+duration probes close their decoder. Repeated unload and clear calls are safe.

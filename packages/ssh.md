@@ -14,14 +14,14 @@ import "osl/ssh"
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `ssh.connect(host: any, port: any, user: any, password: any, privateKey: any)` | `*SSHClient` | Opens a connection. |
+| `ssh.connect(host: any, port: any, user: any, password: any, privateKey: any)` | `*SSHClient` | Opens a connection after shared 1-65535 port validation; an empty port defaults to 22. |
 | `ssh.execRemote(host: any, port: any, user: any, password: any, privateKey: any, command: any)` | `object` | Runs the exec remote operation. |
-| `ssh.scpUpload(client: *SSHClient, localPath: any, remotePath: any)` | `boolean` | Runs the scp upload operation. |
-| `ssh.scpDownload(client: *SSHClient, remotePath: any, localPath: any)` | `boolean` | Runs the scp download operation. |
-| `ssh.tunnel(localPort: any, remoteHost: any, remotePort: any, sshHost: any, sshPort: any)` | `*SSHClient` | Runs the tunnel operation. |
+| `ssh.scpUpload(client: *SSHClient, localPath: any, remotePath: any)` | `boolean` | Uploads through the shared checked SFTP transfer path. |
+| `ssh.scpDownload(client: *SSHClient, remotePath: any, localPath: any)` | `boolean` | Downloads through the same checked SFTP transfer path. |
+| `ssh.tunnel(localPort: any, remoteHost: any, remotePort: any, sshHost: any, sshPort: any)` | `*SSHClient` | Opens a verified tunnel using the same port validation and SSH port default. |
 | `ssh.generateKeyPair(keyType: any)` | `object` | Runs the generate key pair operation. |
-| `ssh.generateRSAKey()` | `string, string` | Runs the generate rsakey operation. |
-| `ssh.generateEd25519Key()` | `string, string` | Runs the generate ed25519 key operation. |
+| `ssh.generateRSAKey()` | `string, string` | Generates RSA material through the shared private/public key encoder. |
+| `ssh.generateEd25519Key()` | `string, string` | Generates Ed25519 material through the shared private/public key encoder. |
 | `ssh.savePrivateKey(path: any, key: any)` | `boolean` | Saves private key. |
 | `ssh.savePublicKey(path: any, key: any)` | `boolean` | Saves public key. |
 | `ssh.loadPrivateKey(path: any)` | `string` | Loads private key. |
@@ -37,7 +37,7 @@ Methods available on `SSHClient` values returned by this package or constructed 
 | `value.execTimeout(command: any, timeout: any)` | `object` | Runs a command with a bounded timeout. |
 | `value.startCommand(command: any)` | `boolean` | Starts command. |
 | `value.sendInput(input: any)` | `boolean` | Sends input. |
-| `value.readOutput(timeout: any)` | `string` | Reads output. |
+| `value.readOutput(timeout: any)` | `string` | Reads output with a fractional-seconds timeout; non-positive values use one millisecond. |
 | `value.close()` | `boolean` | Closes the resource. |
 | `value.isConnected()` | `boolean` | Reports whether connected. |
 

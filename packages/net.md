@@ -37,14 +37,14 @@ Methods available on `TCPConn` values returned by this package or constructed by
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.write(data: any)` | `boolean` | Runs the write operation. |
-| `value.writeBytes(data: bytes)` | `boolean` | Writes bytes. |
-| `value.read(bufferSize: any)` | `string` | Runs the read operation. |
-| `value.readBytes(bufferSize: any)` | `bytes` | Reads bytes. |
+| `value.write(data: any)` | `boolean` | Converts the value to text and uses the shared byte-write path. |
+| `value.writeBytes(data: bytes)` | `boolean` | Writes bytes to the connection. |
+| `value.read(bufferSize: any)` | `string` | Converts the result of the shared bounded byte-read path to text. |
+| `value.readBytes(bufferSize: any)` | `bytes` | Reads through the shared bounded buffer path and returns bytes. |
 | `value.close()` | `boolean` | Closes the resource. |
 | `value.remoteAddr()` | `string` | Runs the remote addr operation. |
 | `value.localAddr()` | `string` | Runs the local addr operation. |
-| `value.setTimeout(seconds: any)` | `boolean` | Sets timeout. |
+| `value.setTimeout(seconds: any)` | `boolean` | Sets a deadline while preserving fractional seconds. |
 
 ### `UDPConn` values
 
@@ -63,5 +63,6 @@ Methods available on `UDPConn` values returned by this package or constructed by
 
 ## Edge-case behavior
 
-Ports, addresses, deadlines, closed sockets, partial reads, and concurrent
-close/read/write calls return controlled results.
+Ports, addresses, fractional deadlines, closed sockets, partial reads, and
+concurrent close/read/write calls return controlled results. Buffer sizes are
+bounded to 16 MiB through the shared clamp.

@@ -23,10 +23,10 @@ auto transparent = colors.RGBA(0, 0, 0, 128)
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `colors.RGBA(r: any, g: any, b: any, a: any)` | `color.RGBA` | Runs the rgba operation. |
-| `colors.rgb(r: any, g: any, b: any)` | `color.RGBA` | Runs the rgb operation. |
+| `colors.RGBA(r: any, g: any, b: any, a: any)` | `color.RGBA` | Builds an RGBA color through shared channel coercion. |
+| `colors.rgb(r: any, g: any, b: any)` | `color.RGBA` | Builds an RGBA color with alpha fixed to `255`. |
 | `colors.gray(v: any)` | `color.Gray` | Runs the gray operation. |
-| `colors.nrgba(r: any, g: any, b: any, a: any)` | `color.NRGBA` | Runs the nrgba operation. |
+| `colors.nrgba(r: any, g: any, b: any, a: any)` | `color.NRGBA` | Builds a non-premultiplied color through the same channel coercion. |
 | `colors.hex(hex: any)` | `color.RGBA` | Runs the hex operation. |
 
 ## Notes

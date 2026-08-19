@@ -23,16 +23,16 @@ log.warn("cache is empty")
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `log.setLevel(level: any)` | `void` | Sets level. |
+| `log.setLevel(level: any)` | `void` | Sets a recognized level using the shared case-insensitive alias parser. |
 | `log.getLevel()` | `string` | Returns level. |
-| `log.shouldLog(level: LogLevel)` | `boolean` | Runs the should log operation. |
-| `log.info(message: any, ...args: any)` | `void` | Runs the info operation. |
-| `log.warn(message: any, ...args: any)` | `void` | Runs the warn operation. |
-| `log.error(message: any, ...args: any)` | `void` | Runs the error operation. |
-| `log.debug(message: any, ...args: any)` | `void` | Runs the debug operation. |
-| `log.success(message: any, ...args: any)` | `void` | Runs the success operation. |
-| `log.log(level: any, message: any, ...args: any)` | `void` | Runs the log operation. |
-| `log.plain(message: any, ...args: any)` | `void` | Runs the plain operation. |
+| `log.shouldLog(level: LogLevel)` | `boolean` | Compares precomputed level ranks without allocating per message. |
+| `log.info(message: any, ...args: any)` | `void` | Logs an info message, substituting stringified arguments into formatting verbs. |
+| `log.warn(message: any, ...args: any)` | `void` | Logs a warning message, substituting stringified arguments into formatting verbs. |
+| `log.error(message: any, ...args: any)` | `void` | Logs an error message, substituting stringified arguments into formatting verbs. |
+| `log.debug(message: any, ...args: any)` | `void` | Logs a debug message, substituting stringified arguments into formatting verbs. |
+| `log.success(message: any, ...args: any)` | `void` | Logs a success message, substituting stringified arguments into formatting verbs. |
+| `log.log(level: any, message: any, ...args: any)` | `void` | Logs at the selected level, defaulting unknown levels to info. |
+| `log.plain(message: any, ...args: any)` | `void` | Prints an unprefixed message with the same argument formatting. |
 | `log.json(data: any)` | `void` | Runs the json operation. |
 | `log.table(headers: array, rows: array)` | `void` | Runs the table operation. |
 | `log.separator()` | `void` | Runs the separator operation. |
@@ -48,8 +48,8 @@ log.warn("cache is empty")
 | `log.withTimestamp(level: any, message: any, ...args: any)` | `void` | Runs the with timestamp operation. |
 | `log.group(title: any)` | `void` | Runs the group operation. |
 | `log.groupEnd()` | `void` | Runs the group end operation. |
-| `log.progressBar(current: any, total: any, width: any, label: any)` | `void` | Runs the progress bar operation. |
-| `log.spinner(message: any, done: boolean)` | `void` | Runs the spinner operation. |
+| `log.progressBar(current: any, total: any, width: any, label: any)` | `void` | Prints a progress bar with percentage and width clamped to safe bounds. |
+| `log.spinner(message: any, done: boolean)` | `void` | Prints a spinner using a shared immutable symbol table. |
 | `log.assert(condition: any, message: any)` | `void` | Runs the assert operation. |
 | `log.trace(message: any)` | `void` | Runs the trace operation. |
 | `log.fatal(message: any)` | `void` | Runs the fatal operation. |
@@ -62,5 +62,5 @@ log.warn("cache is empty")
 
 ## Edge-case behavior
 
-Level changes, history mutation, formatting, and concurrent writes are
-synchronized. Export failures return false.
+History reads and mutations are synchronized through one reset path. Export
+failures return false.

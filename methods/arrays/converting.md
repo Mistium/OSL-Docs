@@ -3,7 +3,7 @@
 Take slices of an array or convert it to another shape.
 
 #### `.left(n)` → same array type
-The first `n` elements.
+The first `n` elements; both edge methods clamp `n` to the available length.
 
 #### `.right(n)` → same array type
 The last `n` elements.

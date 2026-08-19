@@ -14,17 +14,17 @@ import "osl/ptr"
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `ptr.pointer(v: any)` | `number` | Runs the pointer operation. |
-| `ptr.deref(ptr: any)` | `any` | Runs the deref operation. |
+| `ptr.pointer(v: any)` | `number` | Returns the shared reflected address for a value. |
+| `ptr.deref(ptr: any)` | `any` | Dereferences through the shared nil-safe reflection path. |
 | `ptr.ref(v: any)` | `*Pointer` | Runs the ref operation. |
-| `ptr.set(ptr: any, v: any)` | `boolean` | Sets a value. |
+| `ptr.set(ptr: any, v: any)` | `boolean` | Sets a value when assignable, returning false instead of panicking for incompatible reflected values. |
 | `ptr.alloc(v: any)` | `*Pointer` | Runs the alloc operation. |
 | `ptr.allocTyped(typeName: any, v: any)` | `*TypedPointer` | Runs the alloc typed operation. |
 | `ptr.isNull(ptr: any)` | `boolean` | Reports whether null. |
-| `ptr.addressOf(v: any)` | `number` | Runs the address of operation. |
-| `ptr.equalPointers(a: any, b: any)` | `boolean` | Runs the equal pointers operation. |
-| `ptr.sizeOf(v: any)` | `number` | Runs the size of operation. |
-| `ptr.alignOf(v: any)` | `number` | Runs the align of operation. |
+| `ptr.addressOf(v: any)` | `number` | Returns the same address representation as `ptr.pointer`. |
+| `ptr.equalPointers(a: any, b: any)` | `boolean` | Compares values through the shared address representation. |
+| `ptr.sizeOf(v: any)` | `number` | Returns the reflected size, or the element size for slices and maps. |
+| `ptr.alignOf(v: any)` | `number` | Returns alignment through the shared reflected-value path. |
 | `ptr.offsetOf(v: any, field: any)` | `number` | Runs the offset of operation. |
 | `ptr.swap(a: any, b: any)` | `boolean` | Runs the swap operation. |
 | `ptr.copy(dst: any, src: any)` | `boolean` | Runs the copy operation. |
@@ -50,4 +50,5 @@ Methods available on `TypedPointer` values returned by this package or construct
 ## Edge-case behavior
 
 Nil pointers, empty slice data, wrong pointee types, out-of-range offsets, and
-overlapping memory operations are guarded.
+overlapping memory operations are guarded. Typed booleans reuse the language's
+standard boolean conversion.

@@ -15,7 +15,7 @@ Returns `"+"` for zero or positive numbers and `"-"` for negative numbers.
 Constrains the value to the range `[min, max]`.
 
 #### `.sqrt()` → `number`
-Square root.
+Square root, using the shared unary numeric path.
 
 #### `.isPrime()` → `boolean`
 Whether the (integer) value is prime. Fractional values are truncated toward zero first, so `(3.7).isPrime()` is `true` (it checks `3`).

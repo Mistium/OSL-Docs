@@ -6,6 +6,8 @@ The icon command renders a single ".icn" file that can be created locally on you
 
 The icon command allows you to display icons within your OSL application. These icons can be sourced from files in the system's Icons folder, specified by their names, or created using raw icon data directly within the command.
 
+Default icon and font assets share one validated JSON download path; unavailable icon metadata falls back to an empty catalog.
+
 ## Syntax
 
 ```osl

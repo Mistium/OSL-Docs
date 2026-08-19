@@ -3,6 +3,8 @@
 OSL supports the standard arithmetic operators on numbers. Each has its own page
 below with examples and edge cases.
 
+Numeric operators consistently reject operands whose known types are not numeric.
+
 | Operator | Meaning |
 | --- | --- |
 | `+` | Addition |

@@ -16,7 +16,7 @@ import "osl/ftp"
 | --- | --- | --- |
 | `ftp.connect(host: any, port: any, user: any, password: any)` | `*FTP` | Opens a connection. |
 | `ftp.connectEx(host: any, port: any, user: any, password: any)` | `*FTP` | Runs the connect ex operation. |
-| `ftp.list(path: any)` | `array` | Runs the list operation. |
+| `ftp.list(path: any)` | `array` | Lists compact entry projections through shared path and connection checks. |
 | `ftp.upload(localFile: any, remotePath: any)` | `boolean` | Runs the upload operation. |
 | `ftp.download(remotePath: any, localPath: any)` | `boolean` | Runs the download operation. |
 | `ftp.delete(remotePath: any)` | `boolean` | Deletes a value. |
@@ -28,11 +28,11 @@ import "osl/ftp"
 | `ftp.isActive()` | `boolean` | Reports whether active. |
 | `ftp.setTimeout(seconds: any)` | `boolean` | Sets timeout. |
 | `ftp.getFileSize(path: any)` | `number` | Returns file size. |
-| `ftp.exists(path: any)` | `boolean` | Reports whether the value or resource exists. |
+| `ftp.exists(path: any)` | `boolean` | Reports whether a validated remote path exists. |
 | `ftp.uploadDirectory(localDir: any, remoteDir: any)` | `boolean` | Runs the upload directory operation. |
 | `ftp.downloadDirectory(remoteDir: any, localDir: any)` | `boolean` | Runs the download directory operation. |
 | `ftp.setMode(path: any, mode: any)` | `boolean` | Sets mode. |
-| `ftp.setModificationTime(path: any, timestamp: any)` | `boolean` | Sets modification time. |
+| `ftp.setModificationTime(path: any, timestamp: any)` | `boolean` | Sets modification time through the same validated remote-path operation used by other commands. |
 | `ftp.passiveMode(enabled: any)` | `boolean` | Runs the passive mode operation. |
 | `ftp.sync(localDir: any, remoteDir: any)` | `boolean` | Runs the sync operation. |
 | `ftp.getStatistics()` | `object` | Returns statistics. |
@@ -55,6 +55,7 @@ Methods available on `FTP` values returned by this package or constructed by the
 
 `connect` opens and logs into the server directly; it does not shell out to a
 system `ftp` executable. The returned client owns its connection state.
-Credentials and remote paths cannot inject FTP commands. Failed or partial
+Credentials and all single-path operations reject command separators. Failed or partial
 downloads remove their local partial file, and recursive uploads reject
 symlinks.
+Connected operations share one state predicate while retaining their existing locks.

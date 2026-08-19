@@ -2,6 +2,8 @@
 
 When working with comparative operators, it is incredibly useful to be able to quickly and concisely check the comparisons meet certain conditions.
 
+Dynamic `and` and `or` use the same tracked binary-call emission as other runtime operators.
+
 ## Execution Order
 
 Logical operators like `and` and `or` are evaluated **after** all other comparisons or expressions on either side of the operator are evaluated. This means that, in an expression such as `10 == 10 and true`, the comparison `10 == 10` is evaluated **first**, returning `true`. Then, the logical `and` operation is performed.
@@ -59,7 +61,7 @@ log null or "fallback"
 
 Note that `and` and `or` are asymmetric: `and` always returns a boolean, while `or` returns one of its operands.
 
-Be careful with numeric truthiness: a whole number is only considered truthy when it equals exactly `1` (fractional non-zero values like `5.5` are also truthy). So `2 or 3` returns `3`, because `2` is not treated as truthy. To fall back only on `null`, use the [nullish coalescing operator](nullish-coalescing-operator.md) (`??`) instead.
+Be careful with numeric truthiness: a whole number is only considered truthy when it equals exactly `1` (fractional non-zero values like `5.5` are also truthy). This is consistent across signed and unsigned integer widths and floating-point widths. So `2 or 3` returns `3`, because `2` is not treated as truthy. To fall back only on `null`, use the [nullish coalescing operator](nullish-coalescing-operator.md) (`??`) instead.
 
 ## NOR
 
@@ -81,7 +83,7 @@ log true nor false
 
 ## XOR
 
-A logical xor statement will evaluate both of its operands, and if both are true or both are false, then it will return false, otherwise it will return true. The way you write a `xor` operator in osl is simply a lowercase `xor`.
+A logical xor statement returns whether its boolean operands differ. The way you write an `xor` operator in osl is simply a lowercase `xor`.
 
 You can see the truth table below
 
@@ -99,7 +101,7 @@ log true xor false
 
 ## XNOR
 
-A logical xnor statement will evaluate both of its operands, and if both of them are true or both of them are false, then it will return true, otherwise it will return false. The way you write a `xnor` operator in osl is simply a lowercase `xnor`.
+A logical xnor statement is the inverse of `xor`: it returns whether its boolean operands match. The way you write a `xnor` operator in osl is simply a lowercase `xnor`.
 
 You can see the truth table below
 
@@ -116,6 +118,8 @@ log true xnor false
 ```
 
 ## NAND
+
+NOR/NAND and XOR/XNOR are compiled as inverse pairs, with the same constant-folding rules within each pair.
 
 A logical nand statement will evaluate both of its operands, and if both of them aren't true, then it will return true, otherwise it will return false. The way you write a `nand` operator in osl is simply a lowercase `nand`.
 
@@ -136,7 +140,7 @@ log true nand false
 
 ## NOT
 
-The `NOT` statement negates the truth value of its operand. In the context of osl, you can apply it using an exclamation mark (`!`) before a value or group of values. Here's how it works:
+The `NOT` statement negates the truth value of its operand. Use either an exclamation mark (`!`) or the `not` keyword before a value or group of values.
 
 * `!true` evaluates to `false`.
 * `!false` evaluates to `true`.

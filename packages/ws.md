@@ -48,8 +48,8 @@ Methods available on `wsServer` values returned by this package or constructed b
 | `value.AllowAllOrigins()` | `void` | Allows browser WebSocket upgrades from any origin. Call only for intentionally public cross-origin endpoints. |
 | `value.Broadcast(message: string)` | `void` | Runs the broadcast operation. |
 | `value.GetConnections()` | `array` | Returns connections. |
-| `value.Start()` | `error` | Runs the start operation. |
-| `value.StartTLS(certFile: string, keyFile: string)` | `error` | Starts tls. |
+| `value.Start()` | `error` | Starts the standalone HTTP WebSocket server and blocks. |
+| `value.StartTLS(certFile: string, keyFile: string)` | `error` | Starts the standalone HTTPS WebSocket server and blocks. |
 | `value.HandleWebSocket()` | `http.HandlerFunc` | Runs the handle web socket operation. |
 | `value.Stop()` | `error` | Runs the stop operation. |
 
@@ -91,5 +91,6 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 TLS uses normal certificate verification and servers enforce same-origin
 upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins.
-Callback panics are contained, close/stop are idempotent, and shutdown closes
-active and mounted connections.
+Client and reconnect handshakes reuse one bounded dialer. Callback panics share
+one recovery boundary, connection iteration is shared by broadcast and shutdown,
+and connection close uses one idempotent shutdown path.

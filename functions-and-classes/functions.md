@@ -6,7 +6,8 @@ In OSL, you can define custom functions to modularize and reuse your code. Funct
 
 To define a custom function, use the `def` keyword followed by the function name
 and parameters. Declare local variables inside the function with `any`, `auto`,
-or another type keyword.
+or another type keyword. Function bodies always use `( ... )`; object and array
+literals are rejected consistently for top-level and nested functions.
 
 ## Return Types
 
@@ -35,7 +36,9 @@ object[] resp = handleCmd({cmd: "auth", key: "abc"})
 ```
 
 Returning a value whose type can't match the declared return type (for example a
-`number` from an `object[]` function) raises a compile error at the `return`.
+`number` from an `object[]` function) raises a compile error anchored at the nearest `return` token.
+
+Function signatures may contain nested function, array, or map types; their delimiters remain balanced.
 
 A return type with a trailing `?` (e.g. `number?`) is nullable — the function may
 return either the base type or `null`:
@@ -70,7 +73,7 @@ log silly(10)     // 10
 ## Multiline Calls
 
 Function arguments can span lines. Line breaks are formatting only and are not
-included in the values passed to the function.
+included in the values passed to the function; separators inside quoted or nested values remain grouped during tokenization.
 
 ```javascript
 register(

@@ -34,9 +34,9 @@ log semver.satisfies("1.2.3", ">=1.0.0")
 | `semver.neq(a: any, b: any)` | `boolean` | Runs the neq operation. |
 | `semver.satisfies(v: any, constraint: any)` | `boolean` | Runs the satisfies operation. |
 | `semver.inc(v: any, part: any)` | `string` | Runs the inc operation. |
-| `semver.sort(arr: any)` | `array` | Runs the sort operation. |
-| `semver.max(arr: any)` | `string` | Runs the max operation. |
-| `semver.min(arr: any)` | `string` | Runs the min operation. |
+| `semver.sort(arr: any)` | `array` | Returns a semantically sorted copy of the input. |
+| `semver.max(arr: any)` | `string` | Returns the greatest version, or an empty string for an empty input. |
+| `semver.min(arr: any)` | `string` | Returns the least version, or an empty string for an empty input. |
 
 ## Notes
 
@@ -46,4 +46,6 @@ log semver.satisfies("1.2.3", ">=1.0.0")
 ## Edge-case behavior
 
 Parsing and comparison cover prerelease identifiers, build metadata, leading
-zeros, malformed versions, and range boundaries.
+zeros, malformed versions, and range boundaries. Identifiers use SemVer's ASCII
+letters, digits, and hyphen rules without a regular-expression dependency. All
+ordinary range operators share one validated comparison path.

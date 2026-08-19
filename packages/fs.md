@@ -143,7 +143,7 @@ Flushes any buffered writes and closes the file. Always call this when done with
 Reports whether a file or directory exists at `path`.
 
 #### `fs.isDir(path)` → `boolean`
-Reports whether `path` is a directory.
+Reports whether `path` is a directory through the shared stat-or-default path.
 
 #### `fs.remove(path)` → `boolean`
 Deletes the file or directory at `path` (directories are removed recursively). Returns `true` on
@@ -166,7 +166,7 @@ preserving the file's permissions. Fails if `dstPath` already exists.
 Recursively copies the directory `srcPath` to `dstPath`.
 
 #### `fs.readDir(path)` → `array`
-Returns the names of the entries directly inside `path`.
+Returns the names of the entries directly inside `path` through the shared directory-entry mapper.
 
 ```javascript
 for i fs.readDir(".").len (
@@ -175,7 +175,7 @@ for i fs.readDir(".").len (
 ```
 
 #### `fs.readDirAll(path)` → `array`
-Returns the entries inside `path` as objects with details (name, size, isDir, …).
+Returns the entries inside `path` as objects with details through the same directory-entry mapper.
 
 #### `fs.glob(pattern)` → `array`
 Returns the paths matching a shell glob pattern, e.g. `fs.glob("src/*.osl")`.
@@ -192,10 +192,10 @@ Changes the current working directory to `path`.
 ## File metadata
 
 #### `fs.getSize(path)` → `number`
-Returns the file's size in bytes.
+Returns the file's size in bytes through the shared stat-or-default path.
 
 #### `fs.getModTime(path)` → `number`
-Returns the file's last-modified time as a Unix timestamp.
+Returns the file's last-modified time as a Unix timestamp through the shared stat-or-default path.
 
 #### `fs.getStat(path)` → `object`
 Returns an object describing the file: size, modification time, whether it's a directory, and so on.
@@ -295,7 +295,7 @@ Deletes a path, returning `ok(true)` or `err(message)`.
 Creates directories, returning `ok(true)` or `err(message)`.
 
 #### `fs.tryReadDir(path)` → `result`
-Lists a directory, returning `ok(names)` or `err(message)`.
+Lists a directory through the shared entry mapper, returning `ok(names)` or `err(message)`.
 
 ## Complete API reference
 
@@ -303,8 +303,8 @@ Lists a directory, returning `ok(names)` or `err(message)`.
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `fs.readFile(path: any)` | `string` | Reads file. |
-| `fs.readFileBytes(path: any)` | `bytes` | Reads file bytes. |
+| `fs.readFile(path: any)` | `string` | Reads text, returning an empty string on failure. |
+| `fs.readFileBytes(path: any)` | `bytes` | Reads bytes, returning empty bytes on failure. |
 | `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
 | `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
 | `fs.appendToFile(path: any, data: any)` | `boolean` | Runs the append to file operation. |
@@ -383,5 +383,6 @@ call on a failed handle.
 ## Edge-case behavior
 
 Recursive copies reject copying a directory into itself. Reads are bounded,
-walk callbacks accept OSL functions, closed handles are null-safe, and symlink
-and permission failures return controlled results.
+append variants share one file-opening path, buffered handles share one
+constructor, walk callbacks accept OSL functions, closed handles are null-safe,
+and symlink and permission failures return controlled results.

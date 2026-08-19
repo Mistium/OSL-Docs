@@ -66,3 +66,5 @@ log calculate(5)
 - The arrow `->` separates parameters from the body
 - The body can be a single expression or multiple statements in parentheses
 - Functions are first-class values and can be passed as arguments or stored in variables
+- Empty and populated argument lists use the same call semantics
+- Named functions and lambdas share parameter parsing and duplicate-name validation

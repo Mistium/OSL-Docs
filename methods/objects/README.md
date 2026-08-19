@@ -2,6 +2,7 @@
 
 Methods you can call on any `object` (a string-keyed map). Read values with `o.key`, `o["key"]` or
 `o.item(key)`.
+Plain member access uses a direct dot scan; quoted, template, and regex expressions add literal-aware classification so their dots are never member access.
 
 ```javascript
 object user = { name: "Ada", age: 36 }

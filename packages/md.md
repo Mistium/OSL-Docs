@@ -87,7 +87,8 @@ string html = md.toHTML("# Title\n\n| a | b |\n| - | - |\n| 1 | 2 |")
 
 #### `md.toHTMLUnsafe(source)` → `string`
 Same as [`md.toHTML`](#mdtohtmlsource--string), but raw HTML in the Markdown is
-left as-is. Only use this with trusted input.
+left as-is. It shares the safe engine's GFM and heading options; only raw-HTML
+rendering differs. Only use this with trusted input.
 
 ```javascript
 string html = md.toHTMLUnsafe("Hello <em>world</em>")
@@ -114,5 +115,5 @@ string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
 
 #### `md.sanitize(source)` → `string`
 
-Sanitizes an HTML string using the same allow-list as `md.toHTML`. Repeated
-sanitization is idempotent.
+Sanitizes Markdown by rendering it through `md.toHTML` and converting that safe
+HTML back to Markdown. Repeated sanitization is idempotent.

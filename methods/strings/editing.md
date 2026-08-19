@@ -27,6 +27,7 @@ Replaces **all** occurrences of `old` with `new`.
 
 #### `.replaceFirst(old, new)` → `string`
 Replaces only the **first** occurrence.
+Both replacement methods require exactly two arguments.
 
 ```javascript
 log "Hello".replace("l", "L")       // "HeLLo"
@@ -34,7 +35,7 @@ log "Hello".replaceFirst("l", "L")  // "HeLlo"
 ```
 
 #### `.stripStart(prefix)` → `string`
-Removes `prefix` from the start, if present.
+Removes `prefix` from the start if present; otherwise returns the string unchanged.
 
 #### `.stripEnd(suffix)` → `string`
 Removes `suffix` from the end, if present.
@@ -45,7 +46,7 @@ log "hello".stripEnd("lo")    // "hel"
 ```
 
 #### `.padStart(char, length)` → `string`
-Pads the front with `char` until the string is at least `length` long.
+Pads the front with `char` until the string is at least `length` long; already-long strings are unchanged.
 
 #### `.padEnd(char, length)` → `string`
 Pads the end with `char` until the string is at least `length` long.

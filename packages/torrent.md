@@ -25,8 +25,8 @@ Methods available on `Torrent` values returned by this package or constructed by
 | --- | --- | --- |
 | `value.create(name: any, files: array, pieceLength: any)` | `*Torrent` | Creates a new value. |
 | `value.save(path: any)` | `boolean` | Runs the save operation. |
-| `value.addTracker(tracker: any)` | `boolean` | Adds tracker. |
-| `value.removeTracker(tracker: any)` | `boolean` | Removes tracker. |
+| `value.addTracker(tracker: any)` | `boolean` | Adds a tracker through shared standard-library membership handling. |
+| `value.removeTracker(tracker: any)` | `boolean` | Removes a tracker through the same standard-library slice path. |
 | `value.getTrackers()` | `array` | Returns trackers. |
 | `value.getInfo()` | `object` | Returns info. |
 | `value.addMetadata(key: any, value: any)` | `void` | Adds metadata. |
@@ -36,8 +36,8 @@ Methods available on `Torrent` values returned by this package or constructed by
 | `value.getPieceHashes()` | `array` | Returns piece hashes. |
 | `value.setPieceHash(index: any, hash: any)` | `boolean` | Sets piece hash. |
 | `value.validate()` | `boolean` | Validates the current value. |
-| `value.download(torrentPath: any, outputPath: any)` | `boolean` | Runs the download operation. |
-| `value.seed(torrentPath: any, port: any)` | `boolean` | Runs the seed operation. |
+| `value.download(torrentPath: any, outputPath: any)` | `boolean` | Compatibility method that reports whether the current torrent validates; it does not transfer data. |
+| `value.seed(torrentPath: any, port: any)` | `boolean` | Compatibility no-op that returns `true`; it does not transfer data. |
 | `value.getMagnetLink()` | `string` | Returns magnet link. |
 | `value.calculateInfoHash()` | `string` | Runs the calculate info hash operation. |
 | `value.getFiles()` | `array` | Returns files. |
@@ -48,8 +48,8 @@ Methods available on `Torrent` values returned by this package or constructed by
 | `value.generatePeerID()` | `string` | Runs the generate peer id operation. |
 | `value.getMagnetURI()` | `string` | Returns magnet uri. |
 | `value.exportInfo(path: any)` | `boolean` | Runs the export info operation. |
-| `value.clone()` | `*Torrent` | Runs the clone operation. |
-| `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Runs the merge operation. |
+| `value.clone()` | `*Torrent` | Clones the torrent through shared file conversion and map cloning paths. |
+| `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Merges file lists using the same conversion path as `clone`. |
 | `value.strip(metadata: any)` | `*Torrent` | Runs the strip operation. |
 | `value.buildTorrent()` | `string` | Builds the bencoded torrent after validating its file and piece metadata. |
 
@@ -61,4 +61,6 @@ Methods available on `Torrent` values returned by this package or constructed by
 ## Edge-case behavior
 
 Directory scans avoid symlink loops and disappearing files. `validate` checks
-piece length, piece count, total size, and the binary piece hashes.
+piece length, piece count, total size, and the binary piece hashes. Parsing
+uses the canonical bencode decoder; the removed legacy scanner is not part of
+the public API.

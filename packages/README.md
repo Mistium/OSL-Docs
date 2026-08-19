@@ -172,7 +172,8 @@ receiver methods are merged by the same direct returned-object lookup.
 ### Graphics & windowing
 | Package | Description |
 | --- | --- |
-| [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, and textures. |
+| [shader](shader.md) | GLSL and OSL-style shader transpilation and rendering to images and windows. |
+| [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, shaders, and textures. |
 | [window](window.md) | Open a window and draw to it (the originOS graphics model). |
 | [win-buttons](win-buttons.md) | Install native window controls. |
 

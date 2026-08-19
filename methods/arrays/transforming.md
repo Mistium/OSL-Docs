@@ -3,9 +3,10 @@
 Methods that produce a new array from an existing one. Lambdas use the arrow form
 `param -> expression`. Any function value works as a callback, including typed
 lambdas like `(number x) number -> x * 2` and named functions.
+Array `++` and `.concat()` use the same append semantics.
 
 #### `.map(fn)` → `array`
-Applies `fn` to every element and collects the results. A typed callback on a
+Normalizes `fn` once, applies it to every element, and collects the results. A typed callback on a
 typed array preserves its return type, so no dynamic conversion is needed.
 
 ```javascript
@@ -15,7 +16,7 @@ log doubled  // [2, 4, 6]
 ```
 
 #### `.filter(fn)` → same array type
-Keeps only the elements for which `fn` returns true.
+Keeps only the elements for which `fn` returns true, directly reusing the same predicate normalization as `.some()` and `.every()`.
 
 ```javascript
 log [1, 2, 3, 4].filter(x -> x > 2)  // [3, 4]
@@ -33,7 +34,9 @@ log arr.sortBy("age").getKeys("name")               // ["alice", "bob"]
 log arr.sortBy("age", "descending").getKeys("name") // ["bob", "alice"]
 ```
 
-`.sortBy(fn)` also accepts an arrow function that returns the value to sort on.
+Ascending and descending sorts use the same numeric-or-string comparison rules.
+
+`.sortBy(fn)` also accepts an arrow function, normalized once, that returns the value to sort on.
 Typed callbacks on typed arrays use direct calls instead of dynamic dispatch.
 
 #### `.reverse()` → same array type

@@ -21,7 +21,8 @@ auto add = (a, b) -> a + b
 log add.call(3, 4)   // 7
 ```
 
-`.call` works on any function value - `auto`/unknown values, lambdas with a concrete signature, named functions, and bound functions.
+`.call` works on any function value - `auto`/unknown values, lambdas with a concrete signature, named functions, and bound functions. Arguments are adapted to the function's declared parameter types.
+Runtime type errors use OSL names such as `number`, `array`, and `object` rather than Go reflection names.
 
 #### `.bind(...args)` → function
 

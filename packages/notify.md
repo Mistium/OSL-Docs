@@ -15,9 +15,9 @@ import "osl/notify"
 | Method | Returns | Description |
 | --- | --- | --- |
 | `notify.send(title: any, message: any)` | `boolean` | Sends data. |
-| `notify.sendWithSound(title: any, message: any, sound: any)` | `boolean` | Sends with sound. |
+| `notify.sendWithSound(title: any, message: any, sound: any)` | `boolean` | Sends with sound on macOS and otherwise falls back to `send`. |
 | `notify.alert(title: any, message: any)` | `boolean` | Runs the alert operation. |
-| `notify.isAvailable()` | `boolean` | Reports whether available. |
+| `notify.isAvailable()` | `boolean` | Reports whether the platform notification command is available. |
 
 ## Notes
 
@@ -26,5 +26,6 @@ import "osl/notify"
 
 ## Edge-case behavior
 
-Notification text is passed as process arguments rather than interpolated into
-a shell script. Availability uses executable lookup and failures return false.
+Notification text is passed as process arguments on macOS and Linux. Windows
+PowerShell literals escape embedded quotes before interpolation. Availability
+uses executable lookup and failures return false.

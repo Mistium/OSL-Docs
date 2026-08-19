@@ -2,9 +2,15 @@
 
 A comparative operator is an operator that takes in operands and returns a boolean.
 
+Dynamic equality and membership operations share one tracked runtime-call path.
+
 ## Equal to (==) (===)
 
 When you want to check if a value is equal to another value in osl, there's multiple levels of how to do it.
+
+`is` is an alias for `==` and uses the same comparison rules.
+
+For dynamic arrays and objects, `==` compares nested contents and safely handles cycles.
 
 ### Case Insensitive
 
@@ -29,6 +35,8 @@ log "world" === "world"
 
 Type Sensitivity is also a benefit of using `===`
 
+Scalar values compare directly, while dynamically typed maps use identity for strict equality.
+
 ```javascript
 log "10" == 10
 // this will return true
@@ -39,7 +47,7 @@ log "10" === 10
 
 ## Greater than
 
-You can check if a value is greater than another using the `>` operator. Greater than is always case insensitive when using strings
+You can check if a value is greater than another using the `>` operator. String ordering uses the native three-way comparison path.
 
 ```javascript
 log 10 > 5
@@ -79,6 +87,9 @@ You can check if a value contains another value using
 ```javascript
 log "1" in "1234"
 // returns true
+
+log "1" of "1234"
+// `of` is an alias for `in`
 ```
 
 ## Ternary Operator (?)
@@ -104,7 +115,7 @@ text "Points: " + (points > 100 ? "max" points)
 // Note: The + operator here adds a space between "Points: " and the result
 ```
 
-When both values have the same known type, the ternary expression keeps that type. For example, `ready ? "yes" "no"` can be passed directly to a `string` parameter or used with string methods.
+When both values have the same known type, the ternary expression keeps that type through parsing. For example, `ready ? "yes" "no"` can be passed directly to a `string` parameter or used with string methods.
 
 ## Inverting A Comparison
 

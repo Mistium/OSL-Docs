@@ -27,9 +27,9 @@ Methods available on `Option` values returned by this package or constructed by 
 | --- | --- | --- |
 | `value.isSome()` | `boolean` | Reports whether the option contains a value. |
 | `value.isNone()` | `boolean` | Reports whether the option is empty. |
-| `value.unwrap()` | `T` | Returns the contained value or fails. |
+| `value.unwrap()` | `T` | Returns through the shared checked accessor or fails. |
 | `value.unwrapOr(def: T)` | `T` | Returns the contained value or a fallback. |
-| `value.expect(msg: any)` | `T` | Returns the contained value or fails with a custom message. |
+| `value.expect(msg: any)` | `T` | Uses the same checked accessor with a custom failure message. |
 
 ## Notes
 

@@ -72,3 +72,4 @@ log product.final()
 - Both arrays and objects can contain any OSL data type
 - Values can be computed when creating arrays or objects
 - Methods can be included in objects using `def() ->`
+- Inferred element and field shapes widen safely when later mutations change their types

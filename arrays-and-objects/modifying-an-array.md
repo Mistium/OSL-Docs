@@ -75,8 +75,9 @@ combined = arr1 ++ arr2  // [1, 2, 3, 4]
 ## Important Notes
 
 - Arrays are 1-indexed in OSL
+- Negative and out-of-range reads and writes use the same normalized bounds check
 - Most operations create new copies
 - `.trim()` is used for array slicing
-- Destructuring can skip elements using empty slots
+- Array and object destructuring evaluate their source once and share typed coercion and declaration emission; array patterns can skip elements using `_`, as in `[first, _, third] = arr`
 - The `++` operator combines arrays
 - Methods like `sort()` and `map()` return new arrays
