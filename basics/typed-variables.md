@@ -28,9 +28,11 @@ OSL supports the following type annotations for variables:
 * `boolean` - Logical values (true/false)
 * `byte`, `int`, `int8`, `int16`, `int32`, `int64` - Integer values
 * `number`, `number32`, `number64` - Numeric values
-* `array` - JSON arrays
+* `array`, `array<type>` - JSON arrays or typed element arrays
 * `type[]` - Compact arrays whose elements use one specific type, such as `byte[]` or `int[]`
-* `object` - JSON objects
+* `object`, `map<keyType, valueType>` - JSON objects or typed maps
+* `set<type>` - Typed sets
+* `result<valueType>`, `result<valueType, errorType>` - Typed results
 * `function` - Function objects
 * `any` - Any type (default if no type is specified)
 * `auto` - Infer the variable type from the initial value
