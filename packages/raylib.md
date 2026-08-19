@@ -26,6 +26,7 @@ raylib.run({width: 800, height: 450, title: "OSL raylib", fps: 60}, def(dt) -> (
 - `run(options, update, draw)` manages the window and frame loop.
 - `setTargetFPS(fps)`, `fps()`, `frameTime()`, `time()`, `screenSize()`, `setWindowTitle(title)`, and `setWindowSize(width, height)` manage timing and the window.
 - `disableCursor()`, `enableCursor()`, and `cursorHidden()` manage captured mouse input.
+- `setConfigFlags(flags)` configures window initialization flags before `initWindow` (e.g. `"highdpi"`, `"resizable"`, `"undecorated"`, `"vsync"`, `"transparent"`, `"msaa"`).
 - `setGPUPreference(pref)` sets GPU power mode (`"integrated"` or `"discrete"`). Defaults to `"integrated"`.
 - `gpuPreference()` returns the current GPU preference.
 
