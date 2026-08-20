@@ -87,3 +87,5 @@ wait/kill/signal calls share one live-process guard and return controlled result
 missing process state.
 Run results include `timeout` and `truncated` flags. When output exceeds its limit, `output` contains
 the exact captured prefix, `truncated` is `true`, and `success` is `false` even when the child exits zero.
+Calls that start or wait on the same `Process` run one at a time. `kill`, `signal`, `isRunning`, and
+`getPID` use separately synchronized live-process state, so they remain available while `run` is waiting.
