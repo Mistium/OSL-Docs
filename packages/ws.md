@@ -95,3 +95,5 @@ Client and reconnect handshakes reuse one bounded dialer. Callback panics share
 one recovery boundary, connection iteration is shared by broadcast and shutdown,
 and connection close uses one idempotent shutdown path. Queued byte messages are
 copied so later caller mutations cannot alter data in flight.
+Standalone servers reject overlapping `Start` or `StartTLS` calls. `Stop` makes
+the active start call return `null`; listener failures still return their error.
