@@ -85,7 +85,7 @@ number oldRate = mem.setProfileRate(65536)
 
 Starts the standard Go pprof HTTP endpoints on `address` and returns whether listening started.
 Bind to localhost unless the endpoint is protected; profiles can contain sensitive process data.
-The idle endpoint adds no custom sampling loop.
+Header reads time out after 10 seconds. The idle endpoint adds no custom sampling loop.
 
 ```javascript
 mem.serve("127.0.0.1:6060")
@@ -107,6 +107,11 @@ curl -o goroutines.pprof http://127.0.0.1:6060/debug/pprof/goroutine
 
 The endpoint also exposes CPU profiles and runtime traces through the standard pprof paths.
 
+#### `mem.address()` -> `string`
+
+Returns the pprof listener's bound address. This includes the operating system assigned port when
+`mem.serve("127.0.0.1:0")` is used. Returns an empty string when the server is stopped.
+
 #### `mem.stop()` -> `boolean`
 
-Stops the pprof listener. Returns `false` when no listener is active.
+Closes the pprof listener and its active HTTP connections. Returns `false` when no server is active.
