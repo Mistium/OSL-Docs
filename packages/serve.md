@@ -127,6 +127,9 @@ app.use(serve.requestID())
 Other built-in middleware: `corsOpen()`, `requireHeader(key, value)`, `maxBodySize(bytes)`,
 `timeout(seconds)`, `basicAuth(user, pass)`, `noCache()`, `setKey(key, value)`.
 
+`timeout` buffers downstream output until the handler completes and cancels the request context at
+the deadline. Do not place streaming, flushing, or WebSocket handlers behind it.
+
 Even without `serve.recover()`, a handler that throws never crashes the server: the error is
 printed to stderr as a formatted OSL runtime error (with the source line that caused it) and the
 client gets a plain `500 Internal Server Error`. Use `serve.recover()` when you want the error
@@ -315,7 +318,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `serve.requireHeader(key: string, value: string)` | `serveHandler` | Runs the require header operation. |
 | `serve.maxBodySize(maxBytes: number)` | `serveHandler` | Runs the max body size operation. |
 | `serve.recover()` | `serveHandler` | Runs the recover operation. |
-| `serve.timeout(seconds: number)` | `serveHandler` | Runs the timeout operation. |
+| `serve.timeout(seconds: number)` | `serveHandler` | Cancels the downstream request context at the deadline and returns a buffered 503 response without allowing late handler writes to reach the client. |
 | `serve.setKey(key: string, value: any)` | `serveHandler` | Sets key. |
 | `serve.basicAuth(username: string, password: string)` | `serveHandler` | Runs the basic auth operation. |
 | `serve.requestID()` | `serveHandler` | Runs the request id operation. |
