@@ -33,8 +33,10 @@ Methods available on `SSHClient` values returned by this package or constructed 
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.exec(command: any)` | `object` | Runs the exec operation. |
-| `value.execTimeout(command: any, timeout: any)` | `object` | Runs a command with a bounded timeout. |
+| `value.exec(command: any)` | `object` | Runs for at most 30 seconds and captures at most 16 MiB of combined output. |
+| `value.execLimited(command: any, maxBytes: any)` | `object` | Runs for at most 30 seconds with a chosen output limit. Nonpositive values use 16 MiB; values above 1 GiB use 1 GiB. |
+| `value.execTimeout(command: any, timeout: any)` | `object` | Runs for at most 300 seconds with the default 16 MiB output limit. Nonpositive timeouts use one millisecond. |
+| `value.execTimeoutLimited(command: any, timeout: any, maxBytes: any)` | `object` | Runs with both a chosen timeout and output limit. |
 | `value.startCommand(command: any)` | `boolean` | Starts command. |
 | `value.sendInput(input: any)` | `boolean` | Sends input. |
 | `value.readOutput(timeout: any)` | `string` | Reads the next ordered output chunk with a fractional-seconds timeout; repeated timeouts share one session-owned reader. Non-positive values use one millisecond. |
@@ -52,3 +54,5 @@ Hosts are verified against `SSH_KNOWN_HOSTS`, or `~/.ssh/known_hosts` when the
 variable is unset. A missing or mismatched key fails closed. File transfers use
 SFTP over the verified connection, preserve exact remote paths, and remove
 partial local files on failure. Saved private keys use mode `0600`.
+Command results always include `output`, `error`, `timeout`, and `truncated`. Excess output keeps the
+captured prefix and returns `success: false`. A timeout closes the session and joins its command worker.
