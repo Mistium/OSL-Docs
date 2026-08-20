@@ -310,7 +310,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `serve.logger()` | `serveHandler` | Runs the logger operation. |
 | `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serveHandler` | Runs the cors operation. |
 | `serve.corsOpen()` | `serveHandler` | Runs the cors open operation. |
-| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serveHandler` | Runs the rate limit operation. |
+| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serveHandler` | Limits requests per client without a background worker; nonpositive windows use one second. |
 | `serve.requireBearer(token: string)` | `serveHandler` | Runs the require bearer operation. |
 | `serve.requireHeader(key: string, value: string)` | `serveHandler` | Runs the require header operation. |
 | `serve.maxBodySize(maxBytes: number)` | `serveHandler` | Runs the max body size operation. |
