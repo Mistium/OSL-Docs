@@ -5,13 +5,13 @@
 Use `crypto` for hashing, random values, encoding helpers, password checks, signatures, and file encryption helpers.
 
 ```javascript
-import "osl/crypto"
+import "std:crypto"
 ```
 
 ## Example
 
 ```javascript
-import "osl/crypto"
+import "std:crypto"
 
 string digest = crypto.sha256("hello")
 string id = crypto.randomUUID()
@@ -124,7 +124,7 @@ boolean genuine = crypto.ed25519Verify(keys.public, "hello", signature)
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/crypto"` and `import "crypto"`.
+- Prefer `import "std:crypto"`; the older `import "osl/crypto"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

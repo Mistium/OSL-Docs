@@ -11,7 +11,7 @@ shapes, text, icons and 3D). This is the same drawing model that powered originO
 > `line`, `rect`, `window.Icon`, and `window.Text`.
 
 ```javascript
-import "osl/window"
+import "std:window"
 ```
 
 ## Program structure
@@ -23,7 +23,7 @@ A windowed program has two parts:
    you read input and draw.
 
 ```javascript
-import "osl/window"
+import "std:window"
 
 window.setTitle("Hello OSL")
 window.setColor("#ffffff")
@@ -117,7 +117,7 @@ The window package also exposes per-frame **global variables** you can read dire
 ## A complete example
 
 ```javascript
-import "osl/window"
+import "std:window"
 
 object player = { x: 0, y: 0 }
 
@@ -150,7 +150,7 @@ centext "use WASD" 10 : c#000
 
 ## Companion packages
 
-- [`win-buttons`](../packages/README.md) - add clickable buttons to a window (`import "osl/win-buttons"`).
+- [`win-buttons`](../packages/README.md) - add clickable buttons to a window (`import "std:win-buttons"`).
 - [`sound`](sound.md) - play audio in a windowed app.
 
 > **Heads-up:** the `window` package depends on native graphics libraries, so the first compile pulls
@@ -234,7 +234,7 @@ Methods available on `winRender` values returned by this package or constructed 
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/window"` and `import "window"`.
+- Prefer `import "std:window"`; the older `import "osl/window"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

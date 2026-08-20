@@ -6,8 +6,8 @@
 them into valid GLSL code, and rendering procedural graphics directly to images or raylib windows.
 
 ```javascript
-import "osl/shader"
-import "osl/img"
+import "std:shader"
+import "std:img"
 
 string plasma = "def mainImage(fragCoord) (
     vec2 uv = fragCoord / iResolution.xy

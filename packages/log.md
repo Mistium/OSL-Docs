@@ -5,13 +5,13 @@
 Use `log` for levelled terminal logging with configurable formatting, colors, file output, and timing helpers.
 
 ```javascript
-import "osl/log"
+import "std:log"
 ```
 
 ## Example
 
 ```javascript
-import "osl/log"
+import "std:log"
 
 log.info("server started")
 log.warn("cache is empty")
@@ -57,7 +57,7 @@ log.warn("cache is empty")
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/log"` and `import "log"`.
+- Prefer `import "std:log"`; the older `import "osl/log"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

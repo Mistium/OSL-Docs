@@ -5,7 +5,7 @@
 Use `ssh` for SSH connections, remote commands, SCP transfers, tunnels, and key handling.
 
 ```javascript
-import "osl/ssh"
+import "std:ssh"
 ```
 
 ## API reference
@@ -43,7 +43,7 @@ Methods available on `SSHClient` values returned by this package or constructed 
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/ssh"` and `import "ssh"`.
+- Prefer `import "std:ssh"`; the older `import "osl/ssh"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Security and transfer behavior

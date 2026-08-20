@@ -5,13 +5,13 @@
 Use `yaml` for parsing YAML, writing YAML, converting to or from JSON, and editing map values.
 
 ```javascript
-import "osl/yaml"
+import "std:yaml"
 ```
 
 ## Example
 
 ```javascript
-import "osl/yaml"
+import "std:yaml"
 
 auto data = yaml.parse("name: Ada")
 log data["name"]
@@ -37,7 +37,7 @@ log data["name"]
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/yaml"` and `import "yaml"`.
+- Prefer `import "std:yaml"`; the older `import "osl/yaml"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

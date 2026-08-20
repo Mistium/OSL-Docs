@@ -5,13 +5,13 @@
 Use `map` when you need a mutable key-value map object with explicit methods for reading keys and values.
 
 ```javascript
-import "osl/map"
+import "std:map"
 ```
 
 ## Example
 
 ```javascript
-import "osl/map"
+import "std:map"
 
 map users = map()
 users.set("ada", 36)
@@ -36,7 +36,7 @@ Methods available on `Map` values returned by this package or constructed by the
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/map"` and `import "map"`.
+- Prefer `import "std:map"`; the older `import "osl/map"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 Maps and sets use one runtime comparable-value guard for composite and cyclic keys, and shared maps synchronize

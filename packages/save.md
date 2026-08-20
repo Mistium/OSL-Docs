@@ -5,13 +5,13 @@
 Use `save` for simple persistent key-value data without designing a database schema.
 
 ```javascript
-import "osl/save"
+import "std:save"
 ```
 
 ## Example
 
 ```javascript
-import "osl/save"
+import "std:save"
 
 store = save.create()
 store.init("my-app")
@@ -35,7 +35,7 @@ log store.getItem("theme").data
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/save"` and `import "save"`.
+- Prefer `import "std:save"`; the older `import "osl/save"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

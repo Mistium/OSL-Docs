@@ -5,7 +5,7 @@
 Use `lua` to create an embedded Lua state, execute Lua code, register OSL callbacks, and exchange values.
 
 ```javascript
-import "osl/lua"
+import "std:lua"
 ```
 
 ## API reference
@@ -43,7 +43,7 @@ Methods available on `State` values returned by this package or constructed by t
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/lua"` and `import "lua"`.
+- Prefer `import "std:lua"`; the older `import "osl/lua"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

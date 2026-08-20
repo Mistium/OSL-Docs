@@ -5,13 +5,13 @@
 Use `net` for low-level TCP and UDP clients/servers, DNS lookups, and IP/port utilities.
 
 ```javascript
-import "osl/net"
+import "std:net"
 ```
 
 ## Example
 
 ```javascript
-import "osl/net"
+import "std:net"
 
 auto addrs = net.lookupHost("example.com")
 log addrs
@@ -58,7 +58,7 @@ Methods available on `UDPConn` values returned by this package or constructed by
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/net"` and `import "net"`.
+- Prefer `import "std:net"`; the older `import "osl/net"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

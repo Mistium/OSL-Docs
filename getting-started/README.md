@@ -134,7 +134,7 @@ def greet(string name) string (
 ## A bigger example
 
 ```javascript
-import "osl/fs"
+import "std:fs"
 
 string path = "names.txt"
 
@@ -156,7 +156,7 @@ if fs.exists(path) (
 A project can be a single file, or many. There are three kinds of `import`:
 
 ```javascript
-import "osl/fs"            // a standard-library package (the osl/ prefix is optional: import "fs")
+import "std:fs"            // a standard-library package
 import "./helpers.osl"     // another OSL file in your project (relative to this file; ./ optional for same-dir: import "helpers.osl")
 import "./utils"           // every .osl file directly inside a project directory
 import "go/strings"        // a raw Go package, for advanced interop

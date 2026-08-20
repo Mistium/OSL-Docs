@@ -7,13 +7,13 @@ connection, the handshake → rotur validator → auth → ready flow, automatic
 slash command registration, and request/response matching, so a bot is just handlers.
 
 ```javascript
-import "osl/originchats"
+import "std:originchats"
 ```
 
 A minimal bot:
 
 ```javascript
-import "osl/originchats"
+import "std:originchats"
 
 *originchats.client client = originchats.new("wss://chats.mistium.com")
 

@@ -5,7 +5,7 @@
 Use `webpush` to generate VAPID keys and send Web Push notifications to browser push subscriptions.
 
 ```javascript
-import "osl/webpush"
+import "std:webpush"
 ```
 
 ## API reference
@@ -24,7 +24,7 @@ import "osl/webpush"
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/webpush"` and `import "webpush"`.
+- Prefer `import "std:webpush"`; the older `import "osl/webpush"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

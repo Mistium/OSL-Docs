@@ -5,13 +5,13 @@
 Use `colors` to construct color values for image, canvas, QR, PDF, and window drawing APIs.
 
 ```javascript
-import "osl/colors"
+import "std:colors"
 ```
 
 ## Example
 
 ```javascript
-import "osl/colors"
+import "std:colors"
 
 auto red = colors.rgb(255, 0, 0)
 auto transparent = colors.RGBA(0, 0, 0, 128)
@@ -31,5 +31,5 @@ auto transparent = colors.RGBA(0, 0, 0, 128)
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/colors"` and `import "colors"`.
+- Prefer `import "std:colors"`; the older `import "osl/colors"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

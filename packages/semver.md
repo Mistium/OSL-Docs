@@ -5,13 +5,13 @@
 Use `semver` to parse, compare, bump, sort, and test semantic version strings and ranges.
 
 ```javascript
-import "osl/semver"
+import "std:semver"
 ```
 
 ## Example
 
 ```javascript
-import "osl/semver"
+import "std:semver"
 
 log semver.compare("1.2.0", "1.1.9")
 log semver.satisfies("1.2.3", ">=1.0.0")
@@ -40,7 +40,7 @@ log semver.satisfies("1.2.3", ">=1.0.0")
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/semver"` and `import "semver"`.
+- Prefer `import "std:semver"`; the older `import "osl/semver"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

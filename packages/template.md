@@ -5,13 +5,13 @@
 Use `template` to render small text or HTML templates with data maps.
 
 ```javascript
-import "osl/template"
+import "std:template"
 ```
 
 ## Example
 
 ```javascript
-import "osl/template"
+import "std:template"
 
 log template.render("Hello {{name}}", {name: "Ada"})
 ```
@@ -27,7 +27,7 @@ log template.render("Hello {{name}}", {name: "Ada"})
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/template"` and `import "template"`.
+- Prefer `import "std:template"`; the older `import "osl/template"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

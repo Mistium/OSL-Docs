@@ -6,7 +6,7 @@ The `schema` package validates unknown values, nested objects, and arrays. Schem
 immutable: constraint methods return a new schema, leaving the original unchanged.
 
 ```javascript
-import "osl/schema"
+import "std:schema"
 
 *schema.Schema createUser = schema.object({
   name: schema.string().trim().minLen(1),

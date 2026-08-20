@@ -5,13 +5,13 @@
 Use `sys` for process arguments, environment variables, working directories, process IDs, shell commands, and opening URLs.
 
 ```javascript
-import "osl/sys"
+import "std:sys"
 ```
 
 ## Example
 
 ```javascript
-import "osl/sys"
+import "std:sys"
 
 log sys.getArgs()
 log sys.getCwd()
@@ -41,7 +41,7 @@ log sys.getCwd()
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/sys"` and `import "sys"`.
+- Prefer `import "std:sys"`; the older `import "osl/sys"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

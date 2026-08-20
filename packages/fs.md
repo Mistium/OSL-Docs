@@ -5,7 +5,7 @@
 The `fs` package reads and writes files, manages directories, and manipulates path strings.
 
 ```javascript
-import "osl/fs"
+import "std:fs"
 ```
 
 ## Reading & writing files
@@ -377,7 +377,7 @@ call on a failed handle.
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/fs"` and `import "fs"`.
+- Prefer `import "std:fs"`; the older `import "osl/fs"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

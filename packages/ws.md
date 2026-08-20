@@ -5,7 +5,7 @@
 Use `ws` for WebSocket clients and servers, connection callbacks, broadcast, and per-connection state.
 
 ```javascript
-import "osl/ws"
+import "std:ws"
 ```
 
 ## API reference
@@ -58,8 +58,8 @@ Methods available on `wsServer` values returned by this package or constructed b
 Prefer `ws.New()` when the HTTP server owns the listener:
 
 ```javascript
-import "osl/serve"
-import "osl/ws"
+import "std:serve"
+import "std:ws"
 
 auto socket = ws.New()
 socket.OnMessage(def(*ws.Connection conn, string msg) -> (
@@ -83,7 +83,7 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/ws"` and `import "ws"`.
+- Prefer `import "std:ws"`; the older `import "osl/ws"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

@@ -5,13 +5,13 @@
 Use `result` to return either a success value or an error value from APIs that should not throw immediately.
 
 ```javascript
-import "osl/result"
+import "std:result"
 ```
 
 ## Example
 
 ```javascript
-import "osl/result"
+import "std:result"
 
 auto ok = result.ok(42)
 log ok.unwrapOr(0)
@@ -43,5 +43,5 @@ Methods available on `Result` values returned by this package or constructed by 
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/result"` and `import "result"`.
+- Prefer `import "std:result"`; the older `import "osl/result"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

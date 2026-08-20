@@ -5,13 +5,13 @@
 Use `url` for parsing, building, joining, escaping, and editing URLs and query strings.
 
 ```javascript
-import "osl/url"
+import "std:url"
 ```
 
 ## Example
 
 ```javascript
-import "osl/url"
+import "std:url"
 
 auto u = url.parse("https://example.com?a=1")
 log u["host"]
@@ -36,7 +36,7 @@ log u["host"]
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/url"` and `import "url"`.
+- Prefer `import "std:url"`; the older `import "osl/url"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

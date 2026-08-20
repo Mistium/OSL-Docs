@@ -3,7 +3,7 @@
 > Sandboxed JavaScript execution
 
 ```javascript
-import "osl/js"
+import "std:js"
 ```
 
 | Method | Returns | Description |

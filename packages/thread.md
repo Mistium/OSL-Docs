@@ -5,13 +5,13 @@
 Use `thread` to run functions in the background, coordinate parallel work, and pass messages.
 
 ```javascript
-import "osl/thread"
+import "std:thread"
 ```
 
 ## Example
 
 ```javascript
-import "osl/thread"
+import "std:thread"
 
 auto t = thread.new(def() -> ( return 42 ))
 log t.wait()
@@ -57,7 +57,7 @@ callbacks use a safe whole-program fallback. This means:
   or scalar read-modify-write such as `count += 1`.
 
 ```javascript
-import "osl/thread"
+import "std:thread"
 
 object shared = {}
 array threads = []
@@ -92,7 +92,7 @@ always release them and use a consistent order when acquiring more than one.
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/thread"` and `import "thread"`.
+- Prefer `import "std:thread"`; the older `import "osl/thread"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`), which is handy for releasing an `osl/sync` lock taken inside a thread.
 - Panicking tasks still complete their handle. `wait` and a completed `timeout` rethrow

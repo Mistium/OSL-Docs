@@ -5,13 +5,13 @@
 Use `csv` for CSV parsing, writing, and table-style transforms over arrays of row objects.
 
 ```javascript
-import "osl/csv"
+import "std:csv"
 ```
 
 ## Example
 
 ```javascript
-import "osl/csv"
+import "std:csv"
 
 array rows = csv.parse("name,age\nAda,36")
 log rows[0]["name"]
@@ -63,7 +63,7 @@ log rows[0]["name"]
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/csv"` and `import "csv"`.
+- Prefer `import "std:csv"`; the older `import "osl/csv"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

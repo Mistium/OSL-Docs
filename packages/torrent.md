@@ -5,7 +5,7 @@
 Use `torrent` to create, inspect, edit, and serialise torrent metadata.
 
 ```javascript
-import "osl/torrent"
+import "std:torrent"
 ```
 
 ## API reference
@@ -55,7 +55,7 @@ Methods available on `Torrent` values returned by this package or constructed by
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/torrent"` and `import "torrent"`.
+- Prefer `import "std:torrent"`; the older `import "osl/torrent"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

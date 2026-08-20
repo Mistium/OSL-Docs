@@ -5,13 +5,13 @@
 Use `random` for seedable pseudo-random numbers, choices, shuffling, and generated strings. For security-sensitive randomness, use `crypto`.
 
 ```javascript
-import "osl/random"
+import "std:random"
 ```
 
 ## Example
 
 ```javascript
-import "osl/random"
+import "std:random"
 
 random.seed(123)
 log random.int(10)         // integer in [0, 10)
@@ -37,7 +37,7 @@ log random.between(1, 10)  // integer in [1, 10] (inclusive)
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/random"` and `import "random"`.
+- Prefer `import "std:random"`; the older `import "osl/random"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
