@@ -10,10 +10,12 @@ The quickest way to install the OSL compiler is the one-line installer:
 curl -fsSL https://gosl.mistium.com | sh
 ```
 
-This downloads the `osl` binary and installs it. To confirm it worked:
+This downloads one release build and installs it as both the `osl` compiler and the `opal` package
+manager. To confirm they work:
 
 ```bash
 osl version
+opal version
 ```
 
 ### Building from source (optional)
@@ -25,14 +27,14 @@ OSL is itself written in Go. If you'd rather build it yourself you'll need a rec
 git clone https://git.rotur.dev/osl/.go osl
 cd osl
 go build
-sudo ./osl setup   # installs the binary to /usr/local/bin/osl
+./osl setup   # installs /usr/local/bin/osl and /usr/local/bin/opal
 ```
 
 ### Keeping it up to date
 
 ```bash
 osl update      # fetch and install the latest version
-osl uninstall   # remove OSL
+osl uninstall   # remove OSL and Opal binaries
 ```
 
 > **Note:** OSL compiles your program by generating Go and building it, so the **Go toolchain must be
@@ -78,7 +80,7 @@ osl compile hello.osl     # produces ./hello
 | `osl package <name>` | Print the source of a standard-library package (omit `<name>` to list them all). |
 | `osl lsp` | Start the language server for editor integration (autocomplete, errors, hover). |
 | `osl lsp check <file.osl>` | Print the same project-aware diagnostics the language server reports. |
-| `osl todo` | List `TODO:` comments using `//`, `#`, or block-comment markers, sorted by file. |
+| `osl opal <command>` | Run the same package manager as the standalone `opal` command. |
 | `osl version` | Show the compiler version. |
 
 Commands return a non-zero process status when compilation, validation, execution, or editor
@@ -88,6 +90,8 @@ diagnostics fail. Usage errors return status 2. `osl run` preserves the status s
 `osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, scans generated and imported code for runtime dependencies, and emits only the helper files the program references. It does not invoke the Go compiler.
 Each compilation owns its generated temporary names and embedded-image state, so compiling identical
 source repeatedly produces deterministic Go without retaining assets from an earlier project.
+The native binary cache keeps only the newest executable artifact for each source directory. A
+successful compile replaces that directory's older cached executable.
 
 `osl ast <file.osl>` emits the parsed token tree as JSON. The `compile`, `run`, and `transpile`
 commands also accept that JSON representation when integrations need to provide an AST directly.
