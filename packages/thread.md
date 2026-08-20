@@ -80,8 +80,9 @@ assignment inside its block. Guard multi-statement critical sections with
 locking is compiled out entirely. Named thread functions use a constant-time function-only
 scope lookup without reading their captured globals during thread creation. Generic, typed,
 read, and write array operations share the same lock path, and read-only statements can run
-in parallel. Mutable statements use a shared statement
-boundary so scalar and collection updates remain atomic. Method and package calls use
+in parallel. Shared scalar reads in polling conditions and pure conversions use that read
+boundary as well. Mutable statements use a shared statement boundary so scalar and collection
+updates remain atomic. Method and package calls use
 their own value/package synchronization and run outside that boundary, allowing HTTP,
 WebSocket, and similar callbacks to update captured values without deadlocking their caller.
 
