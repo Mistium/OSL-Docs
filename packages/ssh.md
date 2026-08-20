@@ -37,7 +37,7 @@ Methods available on `SSHClient` values returned by this package or constructed 
 | `value.execTimeout(command: any, timeout: any)` | `object` | Runs a command with a bounded timeout. |
 | `value.startCommand(command: any)` | `boolean` | Starts command. |
 | `value.sendInput(input: any)` | `boolean` | Sends input. |
-| `value.readOutput(timeout: any)` | `string` | Reads output with a fractional-seconds timeout; non-positive values use one millisecond. |
+| `value.readOutput(timeout: any)` | `string` | Reads the next ordered output chunk with a fractional-seconds timeout; repeated timeouts share one session-owned reader. Non-positive values use one millisecond. |
 | `value.close()` | `boolean` | Closes the resource. |
 | `value.isConnected()` | `boolean` | Reports whether connected. |
 
