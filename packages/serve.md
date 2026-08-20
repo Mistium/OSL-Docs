@@ -444,7 +444,7 @@ Methods available on `serveRouter` values returned by this package or constructe
 | `value.serve(addr: string)` | `error` | Starts the active HTTP server and blocks until it stops. |
 | `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Starts the active HTTPS server and blocks until it stops. |
 | `value.handler()` | `http.Handler` | Runs the handler operation. |
-| `value.stop()` | `boolean` | Gracefully stops the active server and mounted WebSockets; repeated calls are safe. |
+| `value.stop()` | `boolean` | Blocks new WebSocket registrations, closes the HTTP listener, and drains mounted WebSockets; repeated calls are safe. |
 
 ## Notes
 
@@ -458,3 +458,5 @@ array, binding, and form helpers. Response status transitions, typed JSON
 decoding, route registration, OPTIONS handling, and fixed-header middleware each
 use one shared path. Static serving rejects symlink escapes, client IP parsing
 supports IPv6, and panic and shutdown paths are bounded.
+Server shutdown gates WebSocket upgrades before closing the listener, so a request already entering
+the upgrade path cannot leave a hijacked connection alive after `stop` returns.
