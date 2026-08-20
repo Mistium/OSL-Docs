@@ -27,6 +27,7 @@ Methods available on `wsConnection` values returned by this package or construct
 | `value.Send(message: any)` | `void` | Runs the send operation. |
 | `value.Close()` | `void` | Runs the close operation. |
 | `value.EnableReconnect()` | `void` | Runs the enable reconnect operation. |
+| `value.Shutdown()` | `void` | Disables reconnect and closes the connection. |
 | `value.Set(key: string, value: any)` | `void` | Runs the set operation. |
 | `value.Delete(key: string)` | `void` | Runs the delete operation. |
 | `value.Get(key: string)` | `any` | Returns stored connection data. |
@@ -91,7 +92,8 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 TLS uses normal certificate verification and servers enforce same-origin
 upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins.
-Client and reconnect handshakes reuse one bounded dialer. Callback panics share
+Client and reconnect handshakes reuse one bounded dialer and the same requested
+subprotocol headers. Callback panics share
 one recovery boundary, connection iteration is shared by broadcast and shutdown,
 and connection close uses one idempotent shutdown path. Queued byte messages are
 copied so later caller mutations cannot alter data in flight.
