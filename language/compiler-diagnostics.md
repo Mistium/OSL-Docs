@@ -15,7 +15,9 @@ The compiler currently reports these high-confidence safety diagnostics:
   `OSL-CONSTANT-CONDITION` and states whether the comparison is always true or false.
 - Discarding a `result` produces `OSL-DISCARDED-RESULT`. Handle or unwrap the result,
   assign it for later handling, or use `void` to explicitly ignore it.
-- Redundant assertions and unused variables remain warnings.
+- Redundant assertions and unused variables remain warnings. Project-wide unused-variable analysis
+  follows file and directory imports relative to the importing file, including when the entry file
+  is below the project root.
 
 These checks use propagated facts. For example, a nullable value narrowed by a guard
 is treated as non-null only in the branch where that fact holds. Unknown and genuinely
