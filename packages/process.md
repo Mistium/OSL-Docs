@@ -30,7 +30,7 @@ log p.run().output
 | `process.killPID(pid: any)` | `boolean` | Runs the kill pid operation. |
 | `process.signalPID(pid: any, sig: any)` | `boolean` | Runs the signal pid operation. |
 | `process.isPIDRunning(pid: any)` | `boolean` | Reports whether pidrunning. |
-| `process.list()` | `array` | Runs the list operation. |
+| `process.list()` | `array` | Lists processes with a 16 MiB command-output limit. Returns an empty array if discovery fails or exceeds the limit. |
 | `process.findByPID(pid: any)` | `object` | Runs the find by pid operation. |
 | `process.findByName(name: any)` | `array` | Runs the find by name operation. |
 | `process.killByName(name: any)` | `number` | Runs the kill by name operation. |
@@ -42,8 +42,8 @@ log p.run().output
 | `process.getArguments()` | `array` | Returns arguments. |
 | `process.getArg(index: any)` | `string` | Returns arg. |
 | `process.getExecutablePath()` | `string` | Returns executable path. |
-| `process.exec(command: any, ...args: any)` | `string` | Runs the exec operation. |
-| `process.execAsUser(user: any, command: any, ...args: any)` | `string` | Runs the exec as user operation. |
+| `process.exec(command: any, ...args: any)` | `string` | Runs a command through `sys.cmd`, returning at most 16 MiB of stdout or an empty string. |
+| `process.execAsUser(user: any, command: any, ...args: any)` | `string` | Runs a command through `sudo` with a 16 MiB combined-output limit. |
 | `process.pipe(process1: *Process, process2: *Process)` | `boolean` | Runs the pipe operation. |
 | `process.background(command: any, ...args: any)` | `*Process` | Runs the background operation. |
 | `process.daemonize(command: any, ...args: any)` | `boolean` | Runs the daemonize operation. |
