@@ -7,4 +7,5 @@ Packages for data structures and utility types.
 - [set](../set.md) - A set type.
 - [option](../option.md) - Optional values (`some`/`none`).
 - [result](../result.md) - Success/error result values.
+- [retry](../retry.md) - Bounded retries with exponential backoff and jitter.
 - [ptr](../ptr.md) - Low-level pointer operations.
