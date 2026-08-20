@@ -64,8 +64,10 @@ Methods available on `Process` values returned by this package or constructed by
 
 | Method | Returns | Description |
 | --- | --- | --- |
-| `value.run()` | `object` | Runs the process and returns the shared lifecycle result shape. |
-| `value.runTimeout(timeout: any)` | `object` | Runs for at most 300 seconds, captures combined output, and always reaps the child; nonpositive timeouts use one millisecond. The result includes a `timeout` flag. |
+| `value.run()` | `object` | Runs the process and captures at most 16 MiB of combined output. |
+| `value.runLimited(maxBytes: any)` | `object` | Runs with a combined-output limit. Nonpositive values use 16 MiB; values above 1 GiB use 1 GiB. |
+| `value.runTimeout(timeout: any)` | `object` | Runs for at most 300 seconds, captures at most 16 MiB of combined output, and always reaps the child; nonpositive timeouts use one millisecond. |
+| `value.runTimeoutLimited(timeout: any, maxBytes: any)` | `object` | Combines the timeout and output limits from `runTimeout` and `runLimited`. |
 | `value.start()` | `boolean` | Starts the resource. |
 | `value.wait()` | `object` | Waits for a started process and returns the same lifecycle result shape as `run`. |
 | `value.kill()` | `boolean` | Kills through the shared live-process accessor. |
@@ -83,3 +85,5 @@ Methods available on `Process` values returned by this package or constructed by
 Missing commands, failed starts, timeouts, invalid PIDs (through one shared lookup), and repeated
 wait/kill/signal calls share one live-process guard and return controlled results instead of dereferencing
 missing process state.
+Run results include `timeout` and `truncated` flags. When output exceeds its limit, `output` contains
+the exact captured prefix, `truncated` is `true`, and `success` is `false` even when the child exits zero.
