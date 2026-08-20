@@ -88,6 +88,8 @@ diagnostics fail. Usage errors return status 2. `osl run` preserves the status s
 `exit status` command, so OSL programs compose correctly with shell scripts and CI pipelines.
 
 `osl transpile` stops after lean parser initialization with shared immutable operator and built-in signature tables, scans generated and imported code for runtime dependencies, and emits only the helper files the program references. It does not invoke the Go compiler.
+With `-o <path>`, it creates missing parent directories and atomically replaces a regular
+owner-readable output file, so interrupted writes cannot leave partial generated Go.
 Each compilation owns its generated temporary names and embedded-image state, so compiling identical
 source repeatedly produces deterministic Go without retaining assets from an earlier project.
 The native binary cache keeps only the newest executable artifact for each source directory. A
