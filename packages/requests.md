@@ -35,8 +35,10 @@ log res["status"]
 
 ## Notes
 
-Optional `headers`, `params`, `body`, and `timeout` values use the same request-construction
+Optional `headers`, `params`, `body`, `timeout`, and `max_bytes` values use the same request-construction
 path for regular, HEAD, and streaming requests. Positive timeouts are capped at 300 seconds.
+Regular responses default to a 16 MiB body limit; `max_bytes` can raise it up to 1 GiB. Use
+`requests.stream` when the response should not be buffered in memory.
 Regular request results include `error`, which is empty on success and describes malformed URLs,
 connection failures, timeouts, and response-read failures when `success` is `false`.
 
