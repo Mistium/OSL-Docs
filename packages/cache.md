@@ -67,4 +67,4 @@ Methods available on `Cache` values returned by this package or constructed by t
 Expiry uses one absolute-deadline liveness path, null values remain distinguishable from
 missing keys, values and entries share a live snapshot, and stats snapshots discard expired entries.
 Both fallback methods use the same presence-sensitive lookup, while `getOrSetFunc`
-performs one load per key under concurrency.
+performs one load per key under concurrency. Loads for different keys run concurrently.
