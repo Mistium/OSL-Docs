@@ -65,6 +65,7 @@ Methods available on `Process` values returned by this package or constructed by
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.run()` | `object` | Runs the process and returns the shared lifecycle result shape. |
+| `value.runTimeout(timeout: any)` | `object` | Runs for at most 300 seconds, captures combined output, and always reaps the child; nonpositive timeouts use one millisecond. The result includes a `timeout` flag. |
 | `value.start()` | `boolean` | Starts the resource. |
 | `value.wait()` | `object` | Waits for a started process and returns the same lifecycle result shape as `run`. |
 | `value.kill()` | `boolean` | Kills through the shared live-process accessor. |
