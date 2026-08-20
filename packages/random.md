@@ -43,4 +43,5 @@ log random.between(1, 10)  // integer in [1, 10] (inclusive)
 ## Edge-case behavior
 
 Empty collections, reversed bounds, invalid weights, and deterministic seeds
-have explicit, tested behavior.
+have explicit, tested behavior. The package-owned generator is safe to use from
+concurrent thread workers, including while another worker reseeds it.
