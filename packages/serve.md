@@ -6,13 +6,13 @@
 groups, static-file serving, WebSockets and TLS.
 
 ```javascript
-import "osl/serve"
+import "std:serve"
 ```
 
 ## Quick start
 
 ```javascript
-import "osl/serve"
+import "std:serve"
 
 *serve.Router app = serve.new()
 
@@ -197,8 +197,8 @@ trusted raw HTML (e.g. Markdown you rendered with [`md`](md.md)).
 The layout receives the rendered page as `body`; emit it raw with `{{& body}}`.
 
 ```javascript
-import "osl/serve"
-import "osl/md"
+import "std:serve"
+import "std:md"
 
 // views/layout.html →  <!doctype html><title>{{ title }}</title><main>{{& body}}</main>
 // views/post.html   →  <h1>{{ title }}</h1><article>{{& html}}</article>
@@ -231,8 +231,8 @@ path — upgrade requests go to the socket, everything else hits the HTTP handle
 also upgrade from inside a handler with `c.isWebsocket()` / `c.upgrade(socket)`.
 
 ```javascript
-import "osl/serve"
-import "osl/ws"
+import "std:serve"
+import "std:ws"
 
 *serve.Router app = serve.new()
 auto socket = ws.New()   // no listen address — serve owns the port
@@ -445,7 +445,7 @@ Methods available on `serveRouter` values returned by this package or constructe
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/serve"` and `import "serve"`.
+- Prefer `import "std:serve"`; the older `import "osl/serve"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

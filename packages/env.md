@@ -3,7 +3,7 @@
 > .env file loader and typed environment helper for OSL
 
 ```javascript
-import "osl/env"
+import "std:env"
 ```
 
 ## Methods
@@ -165,7 +165,7 @@ Methods available on `envValue` values returned by this package or constructed b
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/env"` and `import "env"`.
+- Prefer `import "std:env"`; the older `import "osl/env"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

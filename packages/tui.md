@@ -5,13 +5,13 @@
 Use `tui` to build terminal output with cursor movement, colors, boxes, tables, prompts, menus, charts, and key input.
 
 ```javascript
-import "osl/tui"
+import "std:tui"
 ```
 
 ## Example
 
 ```javascript
-import "osl/tui"
+import "std:tui"
 
 log tui.color("green", "OK")
 log tui.table(["Name"], [["Ada"]])
@@ -83,7 +83,7 @@ Methods available on `Screen` values returned by this package or constructed by 
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/tui"` and `import "tui"`.
+- Prefer `import "std:tui"`; the older `import "osl/tui"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

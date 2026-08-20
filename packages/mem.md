@@ -7,7 +7,7 @@ runtime already samples allocations, so importing this package adds no custom in
 or continuous work.
 
 ```javascript
-import "osl/mem"
+import "std:mem"
 ```
 
 #### `mem.dump(path)` -> `boolean`

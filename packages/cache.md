@@ -5,13 +5,13 @@
 Use `cache` when you need a small in-memory store with optional TTL expiry and LRU-style capacity limits.
 
 ```javascript
-import "osl/cache"
+import "std:cache"
 ```
 
 ## Example
 
 ```javascript
-import "osl/cache"
+import "std:cache"
 
 auto c = cache.create(100, 60)
 c.set("token", "abc")
@@ -59,7 +59,7 @@ Methods available on `Cache` values returned by this package or constructed by t
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/cache"` and `import "cache"`.
+- Prefer `import "std:cache"`; the older `import "osl/cache"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

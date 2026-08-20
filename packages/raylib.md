@@ -6,7 +6,7 @@
 builds. Use `osl compile` or `osl run`; browser builds intentionally reject this package.
 
 ```javascript
-import "osl/raylib"
+import "std:raylib"
 
 player = {x: 20}
 raylib.run({width: 800, height: 450, title: "OSL raylib", fps: 60}, def(dt) -> (

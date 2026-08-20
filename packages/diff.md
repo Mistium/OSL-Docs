@@ -5,7 +5,7 @@
 Use `diff` to compare text by line, word, or character and render the result as plain text, HTML, JSON, or unified diff text.
 
 ```javascript
-import "osl/diff"
+import "std:diff"
 ```
 
 ## API reference
@@ -26,7 +26,7 @@ import "osl/diff"
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/diff"` and `import "diff"`.
+- Prefer `import "std:diff"`; the older `import "osl/diff"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 Line, word, and Unicode character comparisons share one builder-backed engine.

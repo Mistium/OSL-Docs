@@ -5,13 +5,13 @@
 Use `json` for parsing JSON into OSL values, serialising values, pretty-printing, validating JSON strings, and streaming large JSON files.
 
 ```javascript
-import "osl/json"
+import "std:json"
 ```
 
 ## Example
 
 ```javascript
-import "osl/json"
+import "std:json"
 
 auto parsed = json.parse("{\"ok\":true}", {})
 if parsed.isOk() (
@@ -40,7 +40,7 @@ if parsed.isOk() (
 `json.open(path, maxBytes?)` returns a `*json.Stream`. The optional byte limit rejects an oversized file before it is read. Opening and parsing errors are reported by `stream.ok()` and `stream.error()`.
 
 ```javascript
-import "osl/json"
+import "std:json"
 
 *json.Stream stream = json.open("project.json", 1073741824)
 while stream.more() (
@@ -107,7 +107,7 @@ Closes the file and returns whether closing succeeded.
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/json"` and `import "json"`.
+- Prefer `import "std:json"`; the older `import "osl/json"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - Serialisation observes a consistent traversal of shared OSL objects and arrays. Concurrent OSL mutations wait until encoding finishes.
 

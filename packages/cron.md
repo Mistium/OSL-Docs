@@ -5,7 +5,7 @@
 Use `cron` to register named jobs, run them manually, or keep a scheduler loop checking cron-style schedules.
 
 ```javascript
-import "osl/cron"
+import "std:cron"
 ```
 
 ## API reference
@@ -38,7 +38,7 @@ import "osl/cron"
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/cron"` and `import "cron"`.
+- Prefer `import "std:cron"`; the older `import "osl/cron"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

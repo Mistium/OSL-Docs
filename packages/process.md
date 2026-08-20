@@ -5,13 +5,13 @@
 Use `process` to spawn external commands, capture output, stream input, manage environment variables, and signal processes.
 
 ```javascript
-import "osl/process"
+import "std:process"
 ```
 
 ## Example
 
 ```javascript
-import "osl/process"
+import "std:process"
 
 auto p = process.spawn("echo", "hello")
 log p.run().output
@@ -74,7 +74,7 @@ Methods available on `Process` values returned by this package or constructed by
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/process"` and `import "process"`.
+- Prefer `import "std:process"`; the older `import "osl/process"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

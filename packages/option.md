@@ -5,13 +5,13 @@
 Use `option` to model a value that may be present (`some`) or absent (`none`) without relying on `null`.
 
 ```javascript
-import "osl/option"
+import "std:option"
 ```
 
 ## Example
 
 ```javascript
-import "osl/option"
+import "std:option"
 
 auto value = some(42)
 log value.unwrapOr(0)
@@ -33,7 +33,7 @@ Methods available on `Option` values returned by this package or constructed by 
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/option"` and `import "option"`.
+- Prefer `import "std:option"`; the older `import "osl/option"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

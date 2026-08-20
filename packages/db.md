@@ -3,7 +3,7 @@
 > SQLite database utilities
 
 ```javascript
-import "osl/db"
+import "std:db"
 ```
 
 ## Methods
@@ -208,7 +208,7 @@ Methods available on `dbQuery` values returned by this package or constructed by
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/db"` and `import "db"`.
+- Prefer `import "std:db"`; the older `import "osl/db"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

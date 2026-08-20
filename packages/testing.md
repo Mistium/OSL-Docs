@@ -3,12 +3,11 @@
 > Assertions for OSL test files
 
 The `testing` package provides assertion helpers that stop the current test with an
-`AssertionError`. Test files conventionally end in `.test.osl` or `_test.osl` and can be run
-with `osl test`. Reserve those suffixes for executable assertion suites; name ordinary demos
+`AssertionError`. Test files end in `.test.osl` and can be run with `osl test`. Reserve that suffix for executable assertion suites; name ordinary demos
 and manually run programs with the plain `.osl` suffix so test discovery does not run them.
 
 ```javascript
-import "osl/testing"
+import "std:testing"
 
 testing.equal(2 + 2, 4)
 testing.assert("hello".contains("ell"))

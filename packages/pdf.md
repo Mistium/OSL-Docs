@@ -5,13 +5,13 @@
 Use `pdf` to build PDF documents with text, lines, shapes, images, pages, metadata, and simple layout helpers.
 
 ```javascript
-import "osl/pdf"
+import "std:pdf"
 ```
 
 ## Example
 
 ```javascript
-import "osl/pdf"
+import "std:pdf"
 
 auto doc = pdf.create()
 doc.textAt(40, 40, "Hello")
@@ -57,7 +57,7 @@ doc.save("hello.pdf")
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/pdf"` and `import "pdf"`.
+- Prefer `import "std:pdf"`; the older `import "osl/pdf"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

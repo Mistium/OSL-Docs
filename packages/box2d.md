@@ -6,7 +6,7 @@
 engine is pure Go, it works in both native executables and `osl web` builds.
 
 ```javascript
-import "osl/box2d"
+import "std:box2d"
 
 world = box2d.newWorld({x: 0, y: 10})
 ground = world.createBody({type: "static", x: 0, y: 10})

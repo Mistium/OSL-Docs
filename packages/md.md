@@ -7,13 +7,13 @@ Use `md` to turn Markdown into HTML (and back with
 [`serve`](serve.md) and composing markup with [`template`](template.md).
 
 ```javascript
-import "osl/md"
+import "std:md"
 ```
 
 ## Example
 
 ```javascript
-import "osl/md"
+import "std:md"
 
 log md.toHTML("# Hello\n\n**world**")
 // <h1 id="hello">Hello</h1>\n<p><strong>world</strong></p>\n
@@ -24,8 +24,8 @@ log md.toHTML("# Hello\n\n**world**")
 Pass the HTML string straight to `ctx.html` when you want a full response body:
 
 ```javascript
-import "osl/md"
-import "osl/serve"
+import "std:md"
+import "std:serve"
 
 *serve.Router app = serve.new()
 
@@ -40,9 +40,9 @@ app.run(":8080")
 Or wrap it in a small page layout first:
 
 ```javascript
-import "osl/md"
-import "osl/template"
-import "osl/serve"
+import "std:md"
+import "std:template"
+import "std:serve"
 
 *serve.Router app = serve.new()
 
@@ -64,8 +64,8 @@ app.run(":8080")
 when the value is already HTML from `md.toHTML`:
 
 ```javascript
-import "osl/md"
-import "osl/template"
+import "std:md"
+import "std:template"
 
 string body = md.toHTML("**hi**")
 string out = template.renderHTML("<article>{{& body}}</article>", {body: body})
@@ -108,7 +108,7 @@ string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/md"` and `import "md"`.
+- Prefer `import "std:md"`; the older `import "osl/md"` spelling remains supported.
 - Rendering is powered by [goldmark](https://github.com/yuin/goldmark).
 - Return values are ordinary OSL strings — pass them to `ctx.html`, `ctx.send`,
   or template slots as needed.

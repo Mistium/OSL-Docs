@@ -5,7 +5,7 @@
 Use `date` for current time, Unix timestamps, durations, time-zone conversion, formatting, and date arithmetic.
 
 ```javascript
-import "osl/date"
+import "std:date"
 ```
 
 ## API reference
@@ -67,7 +67,7 @@ Methods available on `dateZonedDateTime` values returned by this package or cons
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/date"` and `import "date"`.
+- Prefer `import "std:date"`; the older `import "osl/date"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

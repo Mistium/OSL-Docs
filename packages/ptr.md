@@ -5,7 +5,7 @@
 Use `ptr` for low-level pointer-style references when you need explicit mutation through a handle.
 
 ```javascript
-import "osl/ptr"
+import "std:ptr"
 ```
 
 ## API reference
@@ -44,7 +44,7 @@ Methods available on `TypedPointer` values returned by this package or construct
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/ptr"` and `import "ptr"`.
+- Prefer `import "std:ptr"`; the older `import "osl/ptr"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

@@ -5,13 +5,13 @@
 Use `set` when you need a collection of unique values with membership checks.
 
 ```javascript
-import "osl/set"
+import "std:set"
 ```
 
 ## Example
 
 ```javascript
-import "osl/set"
+import "std:set"
 
 set names = set()
 names.add("ada")
@@ -35,7 +35,7 @@ Methods available on `Set` values returned by this package or constructed by the
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/set"` and `import "set"`.
+- Prefer `import "std:set"`; the older `import "osl/set"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 Composite and cyclic values are compared safely, and shared sets synchronize

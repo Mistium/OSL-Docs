@@ -5,13 +5,13 @@
 Use `jwt` for signing, verifying, decoding, and inspecting JSON Web Tokens.
 
 ```javascript
-import "osl/jwt"
+import "std:jwt"
 ```
 
 ## Example
 
 ```javascript
-import "osl/jwt"
+import "std:jwt"
 
 string token = jwt.sign({user: "ada"}, "secret")
 log jwt.verify(token, "secret")
@@ -34,7 +34,7 @@ log jwt.verify(token, "secret")
 
 ## Notes
 
-- Standard-library imports accept both `import "osl/jwt"` and `import "jwt"`.
+- Prefer `import "std:jwt"`; the older `import "osl/jwt"` spelling remains supported.
 - Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior

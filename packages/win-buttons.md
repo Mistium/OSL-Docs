@@ -3,7 +3,7 @@
 > Native window control buttons
 
 ```javascript
-import "osl/win-buttons"
+import "std:win-buttons"
 ```
 
 Importing this package installs close, minimise, and maximise controls into an

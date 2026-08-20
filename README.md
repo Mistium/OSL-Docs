@@ -3,7 +3,7 @@
 **OSL** is a small, fast, compiled programming language. You write `.osl` source files in a clean, readable syntax and the OSL compiler turns them into a **single self-contained native binary** - no interpreter, no dependencies to ship.
 
 ```javascript
-import "osl/serve"
+import "std:serve"
 
 string port = "8080"
 *serve.Router app = serve.new()
@@ -33,7 +33,7 @@ Because programs compile to a native binary, they start instantly and run fast, 
 
 * **Readable, command-style syntax.** Command keywords are recognized consistently at top level and in nested parser contexts. Code reads top-to-bottom. There is no `main()` to write - the file _is_ the program (see [The Execution Model](getting-started/#the-execution-model)).
 * **Optional types.** Variables and function parameters can be untyped (`x = 5`) or typed (`int x = 5`). Types are checked at compile time when you use them.
-* **A rich standard library.** Capabilities are grouped into [packages](packages/) you pull in with `import "osl/<name>"`.
+* **A rich standard library.** Capabilities are grouped into [packages](packages/) you pull in with `import "std:<name>"`.
 * **Methods and functions everywhere.** Values have methods (`"hi".toUpper()`, `[1,2,3].map(...)`), and there is a large set of built-in [functions](builtins/math/).
 
 ## Where to go next

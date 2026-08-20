@@ -4,29 +4,27 @@ OSL keeps the core language small and ships capabilities as a **standard library
 pull in what you need with `import`:
 
 ```javascript
-import "osl/fs"
+import "std:fs"
 
 log fs.readFile("notes.txt")
 ```
 
 Each package exposes a single global value named after the package (`fs`, `crypto`, `serve`, …) whose
-methods you call. The `osl/` prefix is optional for standard-library packages - `import "fs"` and
-`import "osl/fs"` are equivalent.
+methods you call. Prefer the `std:` prefix. The older `osl/` spelling remains supported and produces
+a migration warning.
 
 ## How imports work
 
 | Form | Meaning |
 | --- | --- |
-| `import "osl/fs"` / `import "fs"` | A standard-library package (listed below). |
+| `import "std:fs"` | A standard-library package (listed below). |
 | `import "./helpers.osl"` | Another OSL file in your project (path relative to the current file). |
 | `import "utils"` / `import "./utils"` | A **directory** — imports every `.osl` file inside it (path relative to the current file). |
-| `import "github.com/me/tools"` | A Git-backed module installed by `osl pkg`. |
+| `import "git.rotur.dev/me/tools"` | A Git-backed module installed by Opal. |
 | `import "go/net/http"` | A raw Go package, for advanced interop. |
 
-Directory imports pull in all the `.osl` files in the named folder, so you can split a
-module across several files and import the folder once. The `osl/` prefix is reserved for
-standard-library packages: to import a local directory literally named `osl`, write
-`import "./osl"` — a bare `import "osl"` always looks for a standard-library package.
+Directory imports pull in all the `.osl` files directly inside the named folder. Child folders
+must be imported or re-exported explicitly.
 Directory imports reuse the resolver's already-sorted file slice directly, and bare-package
 resolution checks embedded file metadata without loading package source. Repeated core and package
 imports reuse their first registration instead of rebuilding import state or reparsing package signatures.
@@ -51,9 +49,25 @@ log math.add(2, 3)
 log math.square(4)
 ```
 
-Top-level names that start with `_` are **private**: they are not exposed on the module
-object, but the module's own functions can still call them. Both `def` declarations and
-function-valued assignments are exported through the same module-function path.
+Without an export statement, a file exposes all of its declarations. Adding an export statement
+turns on an explicit public API for that file:
+
+```javascript
+export {add, subtract as difference}
+export {Vector} from "./geometry/vector.osl"
+export * as geometry from "./geometry"
+```
+
+Consumers can import the full API, selected names, or an immutable namespace:
+
+```javascript
+import * from "./math.osl"
+import {add, subtract as difference} from "./math.osl"
+import * as math from "./math.osl"
+```
+
+Files in the same directory can share private declarations. Consumers in another directory see
+only exported declarations. Missing, duplicate, and conflicting exports are compile errors.
 
 ```javascript
 // math.osl
@@ -70,8 +84,7 @@ def quadruple(number n) number (
 )
 ```
 
-Here `math.square` and `math.quadruple` are callable from outside, but `math._double` is not
-— it exists only for the module's internal use. `import(...)` works with local `.osl` files
+Here `math.square` and `math.quadruple` are callable from outside. `import(...)` works with local `.osl` files
 whose path is a string literal.
 
 ## Returned objects
@@ -80,7 +93,7 @@ Some packages give you an **object** to keep working with. For example, `db.open
 database handle, and you call further methods on *that*:
 
 ```javascript
-import "osl/db"
+import "std:db"
 
 *db.DB handle = db.open("app.db")
 handle.exec("CREATE TABLE users (id INTEGER, name TEXT)")
