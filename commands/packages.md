@@ -1,39 +1,51 @@
-# Package manager
+# Opal package manager
 
-OSL projects can install OSL source modules directly from Git repositories. The workflow uses an
-`osl.mod` manifest, an exact-commit `osl.lock` file, and an `osl_modules` dependency directory.
-
-```bash
-osl pkg init github.com/me/game
-osl pkg add owner/repository@v1.2.0
-osl pkg add https://github.com/owner/other.git@main
-osl pkg sync
-```
-
-The short `owner/repository` form uses GitHub. Full HTTPS and SSH Git URLs are also accepted. For
-local development, pass a local Git repository and select a ref with `--version`:
+Opal is OSL's project and package manager. Git repositories are authoritative package sources.
+Projects commit `opal.json` and the exact-commit `opal.lock`, while generated local state lives in
+the ignored `.opal/` directory.
 
 ```bash
-osl pkg add ../shared-tools --version HEAD
+opal init my-game
+opal add mist/physics@v1.2.0
+opal add github:owner/other@main
+opal add go:github.com/owner/native@v1.4.0
+opal sync
 ```
 
-Import the module by the path declared in its `osl.mod`:
+The short `owner/repository` form uses `git.rotur.dev`. Explicit host shorthands are `rotur:`,
+`github:`, `gitlab:`, and `codeberg:`. Full HTTPS and SSH Git URLs and local repositories are also
+accepted. `osl opal` and `opal` call the same implementation.
+
+The `go:` source kind records and downloads Go modules through the system Go toolchain. This is
+useful for OSL packages that use `go/...` imports.
+
+Import an installed package by its repository name:
 
 ```javascript
-import "github.com/owner/repository"
+import "git.rotur.dev/mist/physics"
 ```
 
 Available commands:
 
 | Command | Purpose |
 | --- | --- |
-| `osl pkg init [module]` | Create `osl.mod` in the current directory. |
-| `osl pkg add <repository>[@ref]` | Add or update a direct dependency. |
-| `osl pkg remove <module>` | Remove a direct dependency and unused transitive dependencies. |
-| `osl pkg sync` | Restore the exact commits recorded in `osl.lock`. |
-| `osl pkg list` | List resolved versions and commits. |
+| `opal i`, `opal init` | Create `opal.json` and ignore `.opal/`. |
+| `opal a`, `opal add` | Add or update a direct dependency. |
+| `opal d`, `opal remove` | Remove a direct dependency and unreachable transitive packages. |
+| `opal u`, `opal update` | Refresh one or all dependency commits. |
+| `opal s`, `opal sync` | Restore the commits recorded in `opal.lock`; accepts `--offline`. |
+| `opal l`, `opal list` | List resolved dependencies; accepts `--json`. |
+| `opal g`, `opal graph` | Print the dependency graph; accepts `--json`. |
+| `opal w`, `opal why` | Explain why a dependency is installed; accepts `--json`. |
+| `opal r`, `opal run` | Run an argv-array script declared in `opal.json`. |
+| `opal c`, `opal clean` | Remove project-local `.opal/` state. |
 
-`osl get` is an alias for `osl pkg add`, and `osl mod` is an alias for `osl pkg`.
+Scripts are argument arrays, so Opal does not invoke a shell:
 
-Commit `osl.mod` and `osl.lock`. Add `osl_modules/` to the project's `.gitignore`; `osl pkg sync`
-recreates it from the lock file.
+```json
+{
+  "scripts": {
+    "dev": ["osl", "run", "main.osl"]
+  }
+}
+```
