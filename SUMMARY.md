@@ -107,7 +107,6 @@
 ## Commands
 
 * [Benchmarking and CPU profiling](commands/benchmarking.md)
-* [WebAssembly builds](commands/web.md)
 * [Package manager](commands/packages.md)
 * [Debugging (log / say)](commands/debugging/README.md)
   * [log value](commands/debugging/log-hello-world.md)

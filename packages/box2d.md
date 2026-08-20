@@ -2,8 +2,7 @@
 
 > Box2D-compatible rigid-body simulation using a pure-Go engine
 
-`osl/box2d` provides worlds, bodies, and box, circle, or polygon fixtures. Because the underlying
-engine is pure Go, it works in both native executables and `osl web` builds.
+`osl/box2d` provides worlds, bodies, and box, circle, or polygon fixtures using a pure-Go engine.
 
 ```javascript
 import "std:box2d"
