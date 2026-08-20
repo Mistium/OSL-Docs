@@ -2,7 +2,7 @@
 
 > HTTP client (`get`/`post`/`put`/…)
 
-Use `requests` for HTTP client calls that return status, headers, body text, and decoded response data.
+Use `requests` for HTTP client calls that return status, headers, body text, and actionable transport errors.
 
 ```javascript
 import "std:requests"
@@ -37,6 +37,8 @@ log res["status"]
 
 Optional `headers`, `params`, `body`, and `timeout` values use the same request-construction
 path for regular, HEAD, and streaming requests. Positive timeouts are capped at 300 seconds.
+Regular request results include `error`, which is empty on success and describes malformed URLs,
+connection failures, timeouts, and response-read failures when `success` is `false`.
 
 - Prefer `import "std:requests"`; the older `import "osl/requests"` spelling remains supported.
 - `requests` can be imported alongside `osl/url` in the same program.
@@ -44,6 +46,7 @@ path for regular, HEAD, and streaming requests. Positive timeouts are capped at 
 
 ## Edge-case behavior
 
-Requests honor explicit finite timeouts. Read failures set `success: false`;
+Requests honor explicit finite timeouts. Construction, transport, timeout, and read failures set
+`success: false` and preserve the cause in `error`;
 streaming close is idempotent, and SSE parsing supports
 multiline and final unterminated events.
