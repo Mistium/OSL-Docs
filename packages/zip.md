@@ -51,7 +51,8 @@ log zip.list("dist.zip")
 ## Edge-case behavior
 
 ZIP, limited ZIP, and TAR extraction share the same resolved-destination checks and reject traversal
-and symlink escapes, including when extracting into the current directory. Corrupt/truncated archives,
-oversized input/output, duplicate paths, and write failures remove partial
-results. ZIP, TAR, and archive addition share one source-tree traversal; add and remove share one temporary-archive rewrite. Limited GZIP output stops at the configured byte boundary. Empty
+and symlink escapes, including when extracting into the current directory. Extraction preflights
+normalized entry paths and rejects duplicates or file/directory conflicts before creating the output.
+Corrupt/truncated archives, oversized input/output, and write failures remove partial results. ZIP,
+TAR, and archive addition share one source-tree traversal; add and remove share one temporary-archive rewrite. Limited GZIP output stops at the configured byte boundary. Empty
 archives and statistics remain valid.
