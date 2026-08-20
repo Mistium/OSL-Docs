@@ -14,7 +14,9 @@ import "std:mem"
 
 Forces a garbage collection, then writes a heap profile to `path`. Returns `true` when the
 complete profile was written and closed successfully, or `false` otherwise. The garbage
-collection and file write only run when `dump` is called.
+collection and file write only run when `dump` is called. The profile atomically replaces the
+destination after it has been flushed and closed. A failed dump leaves an existing profile intact
+and removes its temporary file.
 
 ```javascript
 mem.dump("heap.pprof")
@@ -42,7 +44,8 @@ go tool pprof -top -base heap-before.pprof heap-after.pprof
 
 Writes any named runtime profile to `path`. Returns `false` if the profile name is unknown or
 the file cannot be written. Useful names for memory investigations are `heap`, `allocs`, and
-`goroutine`. Heap and allocation dumps force garbage collection first.
+`goroutine`. Heap and allocation dumps force garbage collection first. Successful dumps replace
+the destination atomically; failures preserve an existing file.
 
 ```javascript
 mem.dumpProfile("goroutine", "goroutines.pprof")
