@@ -92,7 +92,8 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 
 TLS uses normal certificate verification and servers enforce same-origin
 upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
-server when it intentionally accepts browser clients from other origins.
+server when it intentionally accepts browser clients from other origins. Upgrade
+handshakes time out after 10 seconds.
 Client and reconnect handshakes reuse one bounded dialer and the same requested
 subprotocol headers. Callback panics share
 one recovery boundary, connection iteration is shared by broadcast and shutdown,
@@ -100,3 +101,5 @@ and connection close uses one idempotent shutdown path. Queued byte messages are
 copied so later caller mutations cannot alter data in flight.
 Standalone servers reject overlapping `Start` or `StartTLS` calls. `Stop` makes
 the active start call return `null`; listener failures still return their error.
+Shutdown blocks upgrade registration before closing the listener, drains every
+registered connection, and then permits a later start on the same server value.
