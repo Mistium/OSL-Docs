@@ -161,4 +161,5 @@ import "std:math"
 
 Statistics share sorted floating-point conversion, variance/covariance, positive-mean,
 and zero-safe scaling kernels; non-finite values follow Go floating-point propagation. Prime helpers
-handle zero, negative, and large boundary values without hanging, while clamping and random ranges share ordered-bound normalization.
+handle zero, negative, and large boundary values without hanging, while clamping and random ranges
+share ordered-bound normalization. Random generation and reseeding are safe across concurrent workers.
