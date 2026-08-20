@@ -161,6 +161,7 @@
   * [random](packages/random.md)
   * [date](packages/date.md)
   * [cron](packages/cron.md)
+  * [retry](packages/retry.md)
 * [Terminal & Logging](packages/categories/terminal.md)
   * [tui](packages/tui.md)
   * [log](packages/log.md)

@@ -164,6 +164,7 @@ receiver methods are merged by the same direct returned-object lookup.
 | [random](random.md) | Seedable pseudo-random numbers. |
 | [date](date.md) | Dates, durations and time zones. |
 | [cron](cron.md) | Cron-style job scheduling. |
+| [retry](retry.md) | Bounded retries with exponential backoff and jitter. |
 
 ### Terminal & logging
 | Package | Description |
