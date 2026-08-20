@@ -74,8 +74,8 @@ app.serve(":8080")
 
 #### `ws.send(connection, message)` → `boolean`
 
-Sends through an untyped connection value and returns `false` for a closed or
-non-connection value.
+Sends through an untyped connection value and returns `false` when the value is
+not a connection, the connection is closed, the message is invalid, or its outbound queue is full.
 
 #### `ws.closeConn(connection)` → `boolean`
 
@@ -93,4 +93,5 @@ upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins.
 Client and reconnect handshakes reuse one bounded dialer. Callback panics share
 one recovery boundary, connection iteration is shared by broadcast and shutdown,
-and connection close uses one idempotent shutdown path.
+and connection close uses one idempotent shutdown path. Queued byte messages are
+copied so later caller mutations cannot alter data in flight.
