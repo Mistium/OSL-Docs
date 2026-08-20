@@ -64,7 +64,9 @@ Defaults to `true`. Raw event handlers always see everything. Chainable.
 
 #### `client.timeout(seconds)` → `*originchats.client`
 How long request/response calls (`send`, `reply`, `request`, `channels`, …) wait for the server
-before giving up. Defaults to 10 seconds. Chainable.
+before giving up. Defaults to 10 seconds. Chainable. Calls made while the socket is closed or
+waiting to reconnect return `not connected` immediately. Completed requests stop their timers,
+and `stop()` wakes every pending request with a `stopped` error.
 
 ## Event handlers
 
