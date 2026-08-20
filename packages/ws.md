@@ -27,6 +27,7 @@ Methods available on `wsConnection` values returned by this package or construct
 | `value.Send(message: any)` | `void` | Runs the send operation. |
 | `value.Close()` | `void` | Runs the close operation. |
 | `value.EnableReconnect()` | `void` | Runs the enable reconnect operation. |
+| `value.Connected()` | `boolean` | Reports whether the connection currently owns a live WebSocket session. Returns `false` during reconnect backoff and after close. |
 | `value.Shutdown()` | `void` | Disables reconnect, cancels pending backoff, and closes the connection without allowing a replacement session. |
 | `value.Set(key: string, value: any)` | `void` | Runs the set operation. |
 | `value.Delete(key: string)` | `void` | Runs the delete operation. |
