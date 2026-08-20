@@ -23,14 +23,17 @@ Returns the file's raw bytes, for binary data. Returns empty bytes on failure.
 
 #### `fs.writeFile(path, data)` → `boolean`
 Writes `data` (a string) to `path`, replacing any existing contents and creating the file if needed.
-Returns `true` on success.
+The replacement is atomic: data is written to a temporary file in the same directory and renamed
+only after the complete file has been flushed and closed. A failed write leaves an existing file
+unchanged and removes the temporary file. Returns `true` on success.
 
 ```javascript
 fs.writeFile("out.txt", "hello world")
 ```
 
 #### `fs.writeFileBytes(path, data)` → `boolean`
-Writes raw bytes (a `bytes` value or an array of byte numbers) to `path`. Returns `true` on success.
+Writes raw bytes (a `bytes` value or an array of byte numbers) to `path` with the same atomic
+replacement guarantees as `fs.writeFile`. Returns `true` on success.
 
 #### `fs.appendToFile(path, data)` → `boolean`
 Appends `data` to the end of `path`, creating the file if it doesn't exist. Returns `true` on success.
