@@ -29,6 +29,8 @@ log ok.unwrapOr(0)
 ### `Result` values
 
 Methods available on `Result` values returned by this package or constructed by the language.
+An unparameterized `result` preserves success and error values as `any`. A `result<T>` keeps the
+success type and defaults its error accessor to `string`; use `result<T, E>` to specify both sides.
 
 | Method | Returns | Description |
 | --- | --- | --- |
