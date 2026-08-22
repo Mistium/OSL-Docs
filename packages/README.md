@@ -21,7 +21,7 @@ a migration warning.
 | `import "./helpers.osl"` | Another OSL file in your project (path relative to the current file). |
 | `import "utils"` / `import "./utils"` | A **directory** — imports every `.osl` file inside it (path relative to the current file). |
 | `import "git.rotur.dev/me/tools"` | A Git-backed module installed by Opal. |
-| `import "go/net/http"` | A raw Go package, for advanced interop. |
+| `import "go:net/http"` | A raw Go package, for advanced interop. |
 
 Directory imports pull in all the `.osl` files directly inside the named folder. Child folders
 must be imported or re-exported explicitly.

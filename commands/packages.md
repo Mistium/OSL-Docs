@@ -19,7 +19,7 @@ The short `owner/repository` form uses `git.rotur.dev`. Explicit host shorthands
 accepted. `osl opal` and `opal` call the same implementation.
 
 The `go:` source kind records and downloads Go modules through the system Go toolchain. This is
-useful for OSL packages that use `go/...` imports.
+useful for OSL packages that use `go:...` imports.
 
 Import an installed package by its repository name:
 
