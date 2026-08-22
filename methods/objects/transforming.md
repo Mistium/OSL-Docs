@@ -2,7 +2,8 @@
 
 Add, remove and reshape keys, or convert the object to another type.
 
-`pick`, `omit`, and `flip` use a safe map assertion; a non-object input behaves like an empty map.
+Typed-map transformations retain their declared key type. `flip` converts values into string keys,
+but keeps each original key as the corresponding value.
 
 #### `.insert(key, value)` - mutates
 Sets `key` to `value` on the object.
@@ -21,6 +22,9 @@ A copy of the object **without** the named keys.
 
 #### `.pick(...keys)` → `object`
 A copy of the object containing **only** the named keys.
+
+For a typed map, both methods return the same typed-map type rather than converting it to an
+`object`.
 
 ```javascript
 object o = { a: 1, b: 2, c: 3 }
