@@ -39,7 +39,7 @@ Available commands:
 | `opal l`, `opal list` | List resolved dependencies; accepts `--json`. |
 | `opal g`, `opal graph` | Print the dependency graph; accepts `--json`. |
 | `opal w`, `opal why` | Explain why a dependency is installed; accepts `--json`. |
-| `opal r`, `opal run` | Run an argv-array script declared in `opal.json`. |
+| `opal r`, `opal run` | List scripts, or run a named argv-array script declared in `opal.json`. |
 | `opal e`, `opal exec` | Compile and run a package command without installing it. |
 | `opal c`, `opal clean` | Remove project-local `.opal/` state. |
 
@@ -72,3 +72,6 @@ Scripts are argument arrays, so Opal does not invoke a shell:
   }
 }
 ```
+
+Run `opal run` without a script name to list the available scripts and their commands. Pass a name
+and any extra arguments to run one, for example `opal run dev --watch`.
