@@ -4,6 +4,9 @@
 
 You can use the `+` operator to append or prepend a value to an array
 
+The operator returns a new array. It does not modify either operand, including when an operand is a
+slice of another array. Use `.append()` or `.prepend()` when you want to mutate an array variable.
+
 ```javascript
 log "hello" + ["world"]
 // This prepends a value to an array, returning ["hello","world"]
@@ -26,6 +29,8 @@ array_result = ["a", "b", "c"] - 1
 ## Concatenating Arrays
 
 You can use the `++` operator to concatenate and join multiple arrays together
+
+Concatenation returns a new array and leaves both input arrays unchanged.
 
 ```javascript
 log ["hello"] ++ ["world"]
