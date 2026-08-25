@@ -8,9 +8,14 @@ Dynamic `and` and `or` use the same tracked binary-call emission as other runtim
 
 Logical operators like `and` and `or` are evaluated **after** all other comparisons or expressions on either side of the operator are evaluated. This means that, in an expression such as `10 == 10 and true`, the comparison `10 == 10` is evaluated **first**, returning `true`. Then, the logical `and` operation is performed.
 
+The left operand is always evaluated. Short-circuiting may skip only the right operand. Constant
+folding follows the same rule, so `check() and false` still calls `check()` once.
+
 ## AND
 
-A logical and statement will evaluate both of its operands, and if they are both truthy, then it will return true, otherwise it will return false. Unlike `or`, `and` always returns a boolean, not one of its operands. The way you write an `and` operator in osl is simply a lowercase `and`.
+A logical and statement evaluates its left operand, then evaluates the right operand only if the
+left value is truthy. It returns true when both values are truthy and false otherwise. Unlike `or`,
+`and` always returns a boolean, not one of its operands. Write it as a lowercase `and`.
 
 You can see the truth table below
 

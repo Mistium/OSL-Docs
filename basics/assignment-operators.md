@@ -15,6 +15,9 @@ obj.count
 
 Top-level declarations and nullish assignments use the same global emission path.
 
+For property and index assignments, OSL evaluates the receiver and index once. This matters for
+targets such as `items[nextIndex()] += 1` and `items[nextIndex()] ??= fallback()`.
+
 An example of an assignment operator is `+=` where it adds a number to the variable or joins a string directly onto the variable (no separator is added)
 
 ```javascript

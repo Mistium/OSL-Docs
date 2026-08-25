@@ -42,6 +42,8 @@ Nested loops use independent compiler-generated counters.
 
 `for ... in` iterates over values. With two variable names, the first receives
 the one-based index or object key and the second receives the value.
+The iterable expression is evaluated once before iteration starts. This also applies to object
+iteration, where key collection and value reads use the same object.
 
 ```js
 for value in [10, 20, 30] (

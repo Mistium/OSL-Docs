@@ -14,6 +14,9 @@ The `??` operator is particularly useful when you want to provide default values
 
 This makes it ideal for cases where `0`, empty strings, or `false` are valid values that should be preserved.
 
+OSL evaluates the left expression once. It evaluates the right expression only when the left result
+is `null`, so a fallback function does not run when a value is already present.
+
 ## Examples
 
 ### Basic Usage
@@ -111,6 +114,7 @@ if variable == null (
 ## Notes
 
 - The `??` operator only considers `null` as the trigger for using the fallback value
+- The fallback expression is evaluated only when the left value is `null`
 - Empty strings, `0`, and `false` are all considered valid values and will not trigger the fallback
 - The `??` operator has relatively low precedence, but explicit parentheses can be used for clarity
 - The nullish coalescing operator is particularly useful when working with database values, API responses, or optional object properties 

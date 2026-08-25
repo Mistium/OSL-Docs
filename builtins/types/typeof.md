@@ -4,6 +4,9 @@
 
 typeof returns a string representing the type of the given value.
 
+OSL always evaluates `value`, even when its static type lets the compiler determine the returned
+type name. For example, `typeof(loadNumber())` calls `loadNumber()` once.
+
 Comparing a dynamic variable with `typeof(value) == "object"` (including reversed and strict equality) narrows it to the matched object, array, string, number, or boolean type inside matching `if`, `else if`, and `while` bodies. Multiple guards joined by `and` narrow together. A negative `typeof` guard narrows its `else` branch.
 
 Typed variables declared in a narrowed branch can be used normally in nested blocks within that branch.
