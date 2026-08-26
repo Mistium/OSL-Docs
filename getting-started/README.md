@@ -100,7 +100,9 @@ commands also accept that JSON representation when integrations need to provide 
 
 `osl fmt` is OSL's equivalent of `gofmt`. It deterministically applies two-space indentation,
 canonical operator and delimiter spacing, multiline command blocks, one blank line between top-level
-declarations, and no leading or repeated blank lines. The editor uses this same formatter. It preserves comments
+declarations, and no leading or repeated blank lines. Generic type brackets remain attached to their
+declaration or call while commas between type arguments receive one following space. The editor uses
+this same formatter. It preserves comments
 and literal contents, and leaves a file unchanged when parsing fails. Pass a project directory,
 such as `osl fmt .`, to format every `.osl` file below it recursively.
 
