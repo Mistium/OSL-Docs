@@ -60,18 +60,24 @@ Values narrowed by a runtime type guard, and typed array elements that may be mi
 also retain their assertion: their static type describes the successful value, not a guarantee that
 the runtime check is unnecessary.
 
-#### `.assertElse(type, default)` → *type*
+#### `.assertElse(default)` / `.assertElse(type, default)` → *type*
 Like `.assert`, but returns `default` instead of erroring on a type mismatch.
+With one argument, the asserted type is inferred from the default. This keeps common dynamic-value
+narrowing concise: use `value.assertElse("")`, `value.assertElse({})`, `value.assertElse([])`, or
+`value.assertElse(false)`. Inference preserves the exact runtime type. In particular, `0` infers
+`int` while `0.0` infers `number`.
 Using it on a statically known type produces a warning because either the value is already that type
 or the fallback is always selected. It is intended for `any` values.
 As with `.assert(T)`, calling `.assertElse(T, default)` on `T?` is valid narrowing: it returns the
 non-null value or `default`, without a redundant-assertion warning.
 Assertion type arguments accept package-qualified pointers and arrays, such as
-`value.assertElse(*ws.Connection[], [])`.
+`value.assertElse(*ws.Connection[], [])`. Keep the explicit two-argument form when an empty default
+cannot express the intended type, including typed arrays and package pointers.
 
 ```javascript
 any value = "x"
 auto n = value.assertElse("number", 0)  // 0 - value is not a number
+string text = value.assertElse("")      // "x" - string inferred from the default
 ```
 
 > These are strict about the underlying runtime type. Prefer `.toNum()` / `.toInt()` when you want

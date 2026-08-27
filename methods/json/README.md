@@ -2,7 +2,7 @@
 
 ## Description
 
-OSL provides powerful and flexible JSON handling with several unique features:
+OSL JSON values support:
 
 - 1-based array indexing
 - Dynamic JSON creation with variables and expressions

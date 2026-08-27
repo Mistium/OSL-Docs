@@ -99,7 +99,7 @@ log c.count
 
 ## Private Properties
 
-Properties that start with an underscore (`_`) are considered private and can only be accessed from within the class's methods. Accessing a private property from outside the class does not raise an error - it silently returns `null`. This provides a way to encapsulate internal state.
+Properties that start with an underscore (`_`) are private. Class methods can access them, but access from outside the class returns `null` without raising an error.
 Public and private `self` fields use the same typed field-resolution path.
 
 ```javascript

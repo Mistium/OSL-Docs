@@ -1,10 +1,10 @@
-# Mouse Cursor
+# Mouse cursor
 
-## Cursor Styles
+## Cursor styles
 
-In originOS scripting, the cursor commands allow you to control the appearance and behavior of the cursor within the graphical user interface. The cursor can represent different states or styles, enhancing the user experience. Here are the available cursor commands:
+Cursor commands change the pointer shown in an originOS interface.
 
-### Basic Cursor Styles
+### Basic cursor styles
 
 <table><thead><tr><th width="128">Name</th><th width="245">Code</th><th>Use</th><th>Typical Appearance</th></tr></thead><tbody><tr><td>Default</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "default"
 </code></pre></td><td>Resets the cursor to its standard appearance.</td><td>An arrow</td></tr><tr><td>Pointer</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "pointer"
@@ -17,7 +17,7 @@ In originOS scripting, the cursor commands allow you to control the appearance a
 </code></pre></td><td>Provides feedback during loading or processing tasks.</td><td>An hourglass or spinning wheel</td></tr><tr><td>Progress</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "progress"
 </code></pre></td><td>Conveys a sense of progress or loading.</td><td>A wait icon to the bottom right of the cursor</td></tr></tbody></table>
 
-### Extended Cursor Styles
+### Extended cursor styles
 
 <table><thead><tr><th width="119">Name</th><th width="282">Code</th><th>Use</th><th>Typical Appearance</th></tr></thead><tbody><tr><td>Help</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "help"
 </code></pre></td><td>Suggests that additional information is accessible.</td><td>A question mark</td></tr><tr><td>Context Menu</td><td><pre class="language-javascript"><code class="lang-javascript">cursor "context-menu"
@@ -74,8 +74,7 @@ cursor "nwse-resize" // left up, right down
 
 ## Lock
 
-* Locks the cursor, preventing it from moving freely across the screen.
-* **Use Case:** Useful when you want to restrict cursor movement during specific UI interactions or gameplay elements.
+`cursor "lock"` prevents the cursor from moving across the screen. Use it when an interaction or game controls cursor movement directly.
 
 ```javascript
 cursor "lock"
@@ -83,8 +82,7 @@ cursor "lock"
 
 ## Unlock
 
-* Unlocks the cursor, allowing it to move freely again.
-* **Use Case:** Used to release the cursor from a locked state.
+`cursor "unlock"` releases a locked cursor.
 
 ```javascript
 cursor "unlock"
@@ -92,11 +90,8 @@ cursor "unlock"
 
 ## Hide
 
-* Hides the cursor from view.
-* **Use Case:** Often used during specific UI interactions where the cursor's visibility is not required.
+`cursor "hide"` hides the cursor.
 
 ```javascript
 cursor "hide"
 ```
-
-Now you have a comprehensive set of cursor commands to enhance the visual feedback and user interactions in your originOS applications. Choose the appropriate cursor styles and commands based on the specific context and requirements of your interface or game.
