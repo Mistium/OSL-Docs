@@ -12,7 +12,7 @@ It keeps one project-aware compiler engine. Unsaved editor buffers become in-mem
 osl lsp check src/main.osl
 ```
 
-This runs the same project diagnostic path and returns a failure status for errors.
+This runs the same project diagnostic path, reports diagnostics from every reachable imported OSL file, and returns a failure status for errors.
 
 ## Formatting
 

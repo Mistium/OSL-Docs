@@ -53,6 +53,8 @@ any selected = primary ?? fallback
 
 `and` and `or` return according to OSL truthiness and short-circuit. `??` only falls back for `null`. `??=` assigns only when the current value is `null`.
 
+Logical operators have precedence rules, with `and` binding more tightly than `or`. The compiler warns when different logical operators are mixed without parentheses. Parenthesize the intended grouping when an expression uses both.
+
 ## Ranges and the ternary form
 
 `start to end` creates an inclusive integer range in either direction.
