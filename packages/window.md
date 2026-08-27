@@ -87,11 +87,7 @@ for that element:
 centext "Score: " ++ score 10 : c#000
 ```
 
-See the full reference: [Rendering basics](../commands/rendering/basics.md),
-[Elements](../commands/rendering/elements/README.md),
-[the ICN icon format](../commands/rendering/elements/icon.md),
-[clipping & frames](../commands/rendering/clipping-and-scrolling-frames.md), and
-[3D rendering](../commands/rendering/3d-rendering.md).
+The rendering commands, modifiers, clipping operations, and input globals are documented on this page because they are part of `std:window`, not the core language.
 
 ## Input
 
