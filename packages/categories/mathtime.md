@@ -2,6 +2,7 @@
 
 Packages for text processing, math operations, and time handling.
 
+- [emoji](../emoji.md) - Emoji detection, extraction, replacement, flags, and skin tones.
 - [regex](../regex.md) - Regular expressions plus validators and text helpers.
 - [semver](../semver.md) - Semantic-version parsing and comparison.
 - [math](../math.md) - Maths, statistics and number theory.
