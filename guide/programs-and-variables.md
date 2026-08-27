@@ -43,6 +43,8 @@ payload = {ok: true}
 
 Production OSL tends to declare types at function boundaries and for long-lived state. Short local values often use `auto` when their type is obvious from the right side.
 
+`auto` is limited to declarations with an initializer. Function parameters cannot use it because there is no declaration-site value to infer from. Use `any` for a dynamically typed parameter or write its explicit type.
+
 ## Assignment and mutation
 
 ```osl
