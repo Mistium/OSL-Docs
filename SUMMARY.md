@@ -1,11 +1,19 @@
 # Table of contents
 
-## Introduction
+## Start
 
-* [What is OSL?](README.md)
-* [Getting Started](getting-started/README.md)
+* [OSL documentation](README.md)
+* [Install and run OSL](getting-started/README.md)
 
-## The Language
+## Build and manage projects
+
+* [Compiler CLI](cli/README.md)
+* [Opal projects](projects/opal.md)
+* [Imports and modules](projects/imports.md)
+* [Testing OSL programs](tooling/testing.md)
+* [Editor tooling](tooling/editor.md)
+
+## Language guide
 
 * [Syntax Overview](language/syntax.md)
 * [Compiler Diagnostics](language/compiler-diagnostics.md)
@@ -36,14 +44,14 @@
 * [Pipe Operator (|>)](operators/pipe-operator.md)
 * [Nullish Coalescing (??)](operators/nullish-coalescing-operator.md)
 
-## Program Flow
+## Control flow
 
 * [If Statements](program-flow/if-statements/README.md)
 * [Switch Case](program-flow/switch-case.md)
 * [Iteration](program-flow/iteration.md)
 * [While And Until](program-flow/while-and-until.md)
 
-## Arrays And Objects
+## Collections
 
 * [Making Arrays Or Objects](arrays-and-objects/making-arrays-or-objects.md)
 * [Modifying An Array](arrays-and-objects/modifying-an-array.md)
@@ -51,7 +59,7 @@
 * [Object Operations](arrays-and-objects/object-operations.md)
 * [Object Property Shorthand](arrays-and-objects/object-property-shorthand.md)
 
-## Functions & Classes
+## Functions and types
 
 * [Functions](functions-and-classes/functions.md)
 * [Typed Parameters](functions-and-classes/typed-parameters.md)
@@ -63,7 +71,7 @@
 * [Structs](functions-and-classes/structs.md)
 * [Enums](functions-and-classes/enums.md)
 
-## Builtins
+## Built-in functions
 
 * [Global Built-in Functions](builtins/builtins.md)
 * [Math Functions](builtins/math/README.md)
@@ -104,17 +112,16 @@
 * [Functions](methods/functions/README.md)
   * [.bind(...args)](methods/functions/bind.md)
 
-## Commands
+## Language commands
 
 * [Benchmarking and CPU profiling](commands/benchmarking.md)
-* [Package manager](commands/packages.md)
 * [Debugging (log / say)](commands/debugging/README.md)
   * [log value](commands/debugging/log-hello-world.md)
 * [void](commands/general/void.md)
 * [exit](commands/general/exit.md)
 * [Modifiers](commands/modifiers.md)
 
-## Packages
+## Standard library
 
 * [Overview](packages/README.md)
 * [Web & Networking](packages/categories/web.md)
@@ -154,6 +161,7 @@
   * [crypto](packages/crypto.md)
   * [jwt](packages/jwt.md)
 * [Text, Math & Time](packages/categories/mathtime.md)
+  * [emoji](packages/emoji.md)
   * [regex](packages/regex.md)
   * [semver](packages/semver.md)
   * [math](packages/math.md)
@@ -190,27 +198,15 @@
   * [email](packages/email.md)
   * [torrent](packages/torrent.md)
 
-## Graphics (osl/window)
+## Native graphics
 
+* [raylib](packages/raylib.md)
+* [box2d](packages/box2d.md)
+* [shader](packages/shader.md)
 * [window](packages/window.md)
 * [win-buttons](packages/win-buttons.md)
-* [Rendering](commands/rendering/README.md)
-  * [Basics](commands/rendering/basics.md)
-    * [Color Commands](commands/general/color.md)
-  * [Draw Cursor](commands/rendering/draw-cursor/README.md)
-    * [goto x y](commands/rendering/draw-cursor/goto-x-y.md)
-    * [change\_x x](commands/rendering/draw-cursor/change_x-x.md)
-    * [change\_y y](commands/rendering/draw-cursor/change_y-y.md)
-    * [change x y](commands/rendering/draw-cursor/change-x-y.md)
-    * [loc a b c d](commands/rendering/draw-cursor/loc-a-b-c-d.md)
-    * [x\_position and y\_position](commands/rendering/draw-cursor/x_position-and-y_position.md)
-  * [Elements](commands/rendering/elements/README.md)
-    * [Rectangle](commands/rendering/elements/rectangle.md)
-    * [Icon](commands/rendering/elements/icon.md)
-    * [Text](commands/rendering/elements/text.md)
-    * [Image](commands/rendering/elements/image.md)
 
-## Legacy OSL (originOS)
+## Legacy originOS
 
 * [About Legacy OSL](legacy-osl/README.md)
 * [Original Local Scoping (local / this)](legacy-osl/originals/basics/local-scoping.md)
@@ -221,6 +217,10 @@
   * [warn value](commands/debugging/warn-you-should-change-this.md)
   * [error value](commands/debugging/error-something-went-wrong.md)
 * [The Window System](environment/the-window-system.md)
+* [Rendering commands](commands/rendering/README.md)
+  * [Draw cursor](commands/rendering/draw-cursor/README.md)
+  * [Elements](commands/rendering/elements/README.md)
+  * [Image editing](commands/rendering/editing/README.md)
 * [Events](environment/events.md)
 * [Camera](environment/camera.md)
 * [Clipboard](environment/clipboard.md)

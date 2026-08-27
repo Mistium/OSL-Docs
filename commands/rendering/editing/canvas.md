@@ -1,7 +1,7 @@
 # Canvas
-The OSL canvas commands are a set of commands that internally store images that can be easily written to and read from. The canvas element is primarily used in situations where the user will directly be interacting with an image, such as drawing programs or image editors.
+Canvas commands store an image in memory and let a script read or change it. They suit drawing programs and image editors where users interact with the image directly.
 
-A canvas can be initialized using one of two ways:
+Create a blank canvas or load one from a data URI:
 
 ```js
 // width - the width of the canvas, in pixels
@@ -13,9 +13,9 @@ canvas myCanvas @= canvas(width, height, background)
 canvas myCanvas @= canvas.fromURL(url, width, height)
 ```
 
-## Canvas Type
+## Canvas type
 
-Canvases also have their own type, so using Typeof will give you "canvas"
+`typeof` returns `"canvas"` for a canvas value.
 
 ```js
 canvas myCanvas @= canvas(100, 100, "#fff")
@@ -24,8 +24,9 @@ canvas myCanvas @= canvas(100, 100, "#fff")
 log typeof(myCanvas) == "canvas"
 ```
 
-## Writing to the Canvas
-OSL provides many methods for writing to the canvas. The most primitive of these write to a single pixel.
+## Writing to the canvas
+
+These methods write a single pixel:
 
 ```js
 // index starts at 1 in the top left, flowing left to right, top to bottom
@@ -36,7 +37,7 @@ myCanvas.setPixelAt(x, y, colour)
 ```
 
 ### Shapes
-The canvas provides methods to draw lines, rectangles, and triangles. When drawing shapes, the cursor's color is used as the fill color (this can be set with the color/colour/c command). They use the same coordinate system as `setPixelAt`, where (0, 0) is in the center of the canvas. **It's worth noting that these methods are not pixel perfect; at smaller canvas sizes they may appear blurry.**
+The canvas can draw lines, rectangles, and triangles. Shapes use the cursor color as their fill color; set it with `color`, `colour`, or `c`. Coordinates match `setPixelAt`, with `(0, 0)` at the canvas center. Shapes may look blurry on small canvases because these methods are not pixel-perfect.
 
 ```js
 // draws a dot at a position using the current draw cursor colour
@@ -65,8 +66,7 @@ Canvases can also apply other images onto themselves using DataURIs. The image i
 myCanvas.image(dataURI, x, y, width, height)
 ```
 
-## Reading the Canvas
-OSL provides several methods for reading canvas data.
+## Reading the canvas
 
 To get the entire canvas as a DataURI, use `toURL()`.
 
@@ -88,22 +88,20 @@ myCanvas.height()
 myCanvas.pixels()
 ```
 
-Finally, methods can be used to find the color of specific pixels. These serve as the inverses of `setPixel` and `setPixelAt`.
+Use these methods to read the color of a pixel:
 
 ```js
 myCanvas.getPixel(index)
 myCanvas.getPixelAt(x, y)
 ```
 
-## Managing Canvases
+## Managing canvases
 
-Most canvas management is handled internally; all stored canvases are deleted when the window is closed, and canvases are stored in such a way that prevents interference from other scripts. However, sometimes the need arises to handle these interactions manually. OSL exposes several commands for deleting and resizing canvases.
+OSL keeps each script's canvases separate and deletes them when the window closes. A script can also delete, clear, fill, or resize a canvas itself.
 
-### Deleting/Clearing Canvases
+### Deleting and clearing canvases
 
-The `delete` and `clear` methods function very similarly, with the key difference being that `delete` entirely removes the canvas from memory, while `clear` simply erases its content, while still allowing it to be written to.
-
-The `fill` method allows you to clear a canvas with a specific colour
+`delete` removes the canvas from memory. `clear` erases its contents but keeps the canvas available. `fill` clears it with a chosen color.
 
 ```js
 // removes the canvas from memory, using the canvas variable after this may cause errors

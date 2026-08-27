@@ -1,10 +1,10 @@
-# If Statements
+# If statements
 
-In the OSL language, `if` statements are pivotal for controlling the flow of a program based on certain conditions. Below is a breakdown of how `if` statements work:
+An `if` statement runs a block only when its condition is true.
 
-## **Basic `if` Statement:**
+## Basic `if` statement
 
-The basic `if` statement tests a condition. If the condition is true, the commands within the block are executed. If not, the program moves to the next section.
+If the condition is false, execution continues after the block.
 
 {% tabs %}
 {% tab title="OSL" %}
@@ -31,13 +31,9 @@ if 10 > 5:
 {% endtab %}
 {% endtabs %}
 
-## if else Statements
+## `if else` statements
 
-`if-else` statements allow for alternative code blocks to be executed if the condition is false.
-
-**`if-else` Statement:**
-
-If the condition in the `if` statement is true, the commands within the first block are executed. Otherwise, the commands within the `else` block are executed.
+Add `else` to run another block when the condition is false.
 
 Example:
 
@@ -63,13 +59,9 @@ if complete break
 
 `return` may include a value or return without one. `continue` and `break` do not accept values. Inline flow guards do not support `else`; use a normal block when an alternative branch is required.
 
-## else if Statements
+## `else if` statements
 
-`else-if` statements allow for multiple conditions to be checked sequentially. If one condition is true, the corresponding block of code is executed.
-
-**`else-if` Statement:**
-
-Multiple conditions can be checked using `else-if`. If the condition in the `if` statement is false, the program checks the condition in the `else-if`. If that's true, the corresponding block of commands is executed.
+Add `else if` to test another condition after the preceding condition fails. OSL runs the first matching block.
 
 Example:
 
@@ -83,15 +75,15 @@ if condition1 (
 )
 ```
 
-## Additional Information
+## Conditions
 
 * Conditions can involve logical operators (`and`, `or`, `nor`, `nand`) and comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
-* Conditions can also include function calls that return boolean values.
-* `if` statements can be nested within each other to create more complex decision-making structures.
+* Conditions may call functions that return booleans.
+* `if` statements may be nested.
 
-## Examples:
+## Examples
 
-### **Basic `if` Statement:**
+### Basic `if` statement
 
 ```js
 // Example of a basic if statement
@@ -102,9 +94,9 @@ if temperature > 25 (
 )
 ```
 
-In this example, the `if` statement checks if the `temperature` variable is greater than 25. If the condition is true, the program executes the commands inside the block, which outputs "It's a hot day!" using the `say` command.
+This prints the message because `temperature` is greater than 25.
 
-### **`if else` Statement:**
+### `if else` statement
 
 ```js
 // Example of an if-else statement
@@ -118,9 +110,9 @@ if age >= 18 (
 )
 ```
 
-In this example, the `if-else` statement checks if the `age` variable is greater than or equal to 18. If the condition is true, it outputs "You are an adult." If the condition is false, it outputs "You are a minor."
+This prints one of the two messages based on whether `age` is at least 18.
 
-### **`else if` Statement:**
+### `else if` statement
 
 ```js
 // Example of an else-if statement
@@ -138,4 +130,4 @@ if grade >= 90 (
 )
 ```
 
-In this example, the `else-if` statement checks multiple conditions to determine the letter grade based on the `grade` variable. If the grade is greater than or equal to 90, it outputs "You got an A." If the grade is between 80 and 89, it outputs "You got a B." If the grade is between 70 and 79, it outputs "You got a C." Otherwise, it outputs "You need to improve your grade."
+The conditions run from highest grade to lowest. The final `else` handles grades below 70.

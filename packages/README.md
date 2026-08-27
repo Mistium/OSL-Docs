@@ -158,6 +158,7 @@ receiver methods are merged by the same direct returned-object lookup.
 ### Text, math & time
 | Package | Description |
 | --- | --- |
+| [emoji](emoji.md) | Emoji detection, extraction, replacement, flags, and skin tones. |
 | [regex](regex.md) | Regular expressions plus validators and text helpers. |
 | [semver](semver.md) | Semantic-version parsing and comparison. |
 | [math](math.md) | Maths, statistics and number theory. |

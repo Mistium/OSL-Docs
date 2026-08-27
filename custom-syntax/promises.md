@@ -1,12 +1,10 @@
 # Promises
 
-By default, OSL scripts will run synchronously. This means that every line runs one after another in a sequence. However, this also means if one especially resource intensive command takes a while to run, the rest of the code will have to wait until after it's finished to execute. A similar issue occurs when trying to [fetch from the internet](https://osl.mistium.com/methods/networking/.httpget), which will almost always need the extra time to run.
+OSL scripts run synchronously by default, so a slow command blocks everything after it. A promise runs work asynchronously. This is useful for slow operations such as [network requests](https://osl.mistium.com/methods/networking/.httpget).
 
-Sometimes, it can be helpful to run a script asynchronously (also referred to as async). Promises provide an easy way to do just that.
+### Creating promises
 
-### Creating Promises
-
-To create a promise, we can use the Promise object with the method "new". This method takes one parameter, which is the function to be run async.
+`Promise.new` takes the function to run asynchronously.
 ```javascript
 def fetch() (
   // Fetches a large text file
@@ -15,7 +13,7 @@ def fetch() (
 
 Promise.new(fetch)
 ```
-This works, however it can be inconvienent to have to define a function for every promise. Instead, we can define the function [inline](https://osl.mistium.com/custom-syntax/inline):
+The function may also be [defined inline](https://osl.mistium.com/custom-syntax/inline):
 ```javascript
 // Functionally identical to the script above.
 Promise.new(def() -> (
@@ -23,15 +21,15 @@ Promise.new(def() -> (
 ))
 ```
 
-### Following Up Promises
+### Chaining promises
 
-We can now create asynchronous scripts, however the data they provide isn't very useful to us in this state. Remember, these scripts run completely independently from the rest of the program; as such, it's difficult to know exactly when a promise is wrapped up. Luckily, there's another method we can use to help. To access it though, we'll need a reference to the promise we just created.
+Keep a reference to the promise when code needs to inspect it or run another function after it finishes.
 
 ```javascript
 myPromise @= Promise.new(fetch)
 ```
 
-Using this reference, we can call on the "then" method to run a follow-up script after the initial promise has concluded. Similarly to the prior method, this one takes only a function as the parameter. There's no limit to the amount of "then" statements that can be added to one promise; in the case that there are multiple, they will run in the order they were defined.
+The `then` method takes a function and runs it after the promise finishes. Multiple `then` calls run in the order they were added.
 
 ```javascript
 myPromise.then(def() -> (
@@ -53,7 +51,7 @@ void Promise.new(def() -> (
 ))
 ```
 
-Oftentimes, it'll be important to transfer variables from the initial promise to the follow-up function. We can do this with global variables (such as in the above examples), but a much cleaner way to accomplish this would be to store it in the promise itself using the "self" object.
+Store intermediate values on `self` when a later function needs them:
 
 ```javascript
 calculate @= Promise.new(def() -> (
@@ -65,7 +63,7 @@ calculate.then(def() -> (
 ))
 ```
 
-By far the cleanest way to transfer data to follow up functions is to return it.
+Prefer returning a value when the next function only needs the result:
 
 ```javascript
 void Promise.new(def() -> (
@@ -76,11 +74,11 @@ void Promise.new(def() -> (
 ))
 ```
 
-This script will log 10 as the returned value was passed out of the first function and into the follow-ups.
+The returned value becomes the argument to the next function, so this example logs `10`.
 
-### Worker Variables
+### Worker variables
 
-Promises internally use the osl worker api, these are some values that are accessible through this api.
+Promises expose these worker values:
 
 | Variable | Type | Description |
 |----------|------|-------------|
@@ -88,7 +86,7 @@ Promises internally use the osl worker api, these are some values that are acces
 | `createdTime` | Number | The timestamp at which the promise was first created. |
 | `processTime` | Number | How long it took to run the promise, in seconds. |
 
-Any of these variables can also be accessed outside their respective promise by accessing the "worker" property in the referenced promise. Additionally, any variables created with the "self" object will appear here too, minus the "self" prefix.
+Access these values through the promise's `worker` property. Values assigned to `self` also appear there without the `self` prefix.
 
 ```javascript
 secret @= Promise.new(def() -> (
@@ -104,9 +102,9 @@ log secret.worker.favoriteAnimal
 log secret.worker.return
 ```
 
-### Promises and Mainloop
+### Promises and `mainloop`
 
-Another important thing to note about promises is that the main script will not wait for them to finish before ending the entire program. As such, promises may not work as expected without a [mainloop](https://osl.mistium.com/basics/the-execution-loop) in the project, as most promises will not be able to conclude in one frame before the program automatically shuts down.
+The main script does not wait for promises before exiting. Use a [main loop](https://osl.mistium.com/basics/the-execution-loop) to keep the program alive while a promise runs.
 
 ```javascript
 myPromise @= Promise.new(def() -> (

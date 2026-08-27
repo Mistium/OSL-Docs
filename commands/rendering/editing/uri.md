@@ -1,10 +1,10 @@
-# URI Commands
+# URI commands
 
-OSL's URI commands are a series of commands intended for applying filters, tranformations, and other changes to images. These commands are a lot slower than the Canvas commands, however provide more utility in image-wide modifications.
+URI commands apply filters and other whole-image changes. They are slower than Canvas commands.
 
-## Handling Images
+## Loading an image
 
-URI commands can only load and edit one image at a time. To initialize an image to edit, we can use the `"start_editing"` command in tandem with an image URI. If an image was already being edited, then that image will be overwritten. To remove a URI from memory, the `"stop_editing"` command can be called.
+URI commands edit one image at a time. `"start_editing"` loads an image URI and replaces any image already loaded. `"stop_editing"` removes it from memory.
 
 ```javascript
 // Load an image to edit.
@@ -14,11 +14,11 @@ uri "start_editing" "[data:uri or link to image]"
 uri "stop_editing"
 ```
 
-## Getting Image Data
+## Reading image data
 
-### Image Output
+### Image output
 
-By using the `"get_output"` command, the image's current state will be logged to the "data" variable as a dataURI. This in turn can be plugged into an Image command to view the resulting image.
+`"get_output"` writes the current image to the `data` variable as a data URI. Pass that value to an Image command to display it.
 
 ```javascript
 uri "get_output"
@@ -29,9 +29,9 @@ image "load" outputImage "test_image"
 image "test_image"
 ```
 
-### Image Width/Height
+### Image dimensions
 
-Running the `"get_width_height"` argument sets the "data" variable to an array with 2 values. The former value is the image's width, while the latter is it's height.
+`"get_width_height"` sets `data` to `[width, height]`.
 
 ```javascript
 uri "get_width_height"
@@ -42,15 +42,15 @@ log data[1]
 log data[2]
 ```
 
-### Image Total Pixels
+### Pixel count
 
-The `"get_total_pixels"` command sets the "data" variable to the total amount of pixels in the image (width \* height).
+`"get_total_pixels"` sets `data` to the image's pixel count, `width * height`.
 
-## Image Modification
+## Image modification
 
-### Pixel Editing
+### Pixel editing
 
-Although pixel-by-pixel modification can and should be done via the Canvas commands, URI commands also contains functions to read and write colors to specific pixels. `"get_pixel"` and `"set_pixel"` can be used in tandem with a x-y coordinate pair and (if applicable) a hex code in order to achieve this.
+Prefer Canvas commands for pixel editing. URI commands also provide `"get_pixel"` and `"set_pixel"`, which accept x and y coordinates. `"set_pixel"` also accepts a hex color.
 
 ```javascript
 // Get the hex of the pixel at (10, 20).
@@ -62,27 +62,27 @@ uri "set_pixel" 15 5 #ef92e2
 
 ### Resizing
 
-By using the `"stretch"` command, an image can be resized to fill a specific width and height.
+`"stretch"` resizes the image to the given width and height.
 
 ```javascript
 // Resize the image to be 128 x 64 pixels.
 uri "stretch" 128 64
 ```
 
-### Miscellaneous Commands
+### Other commands
 
 | Syntax | Description |
 | --- | --- |
-| `uri "replace_colour" [hex a] [hex b] [0-100]` | Replaces all instances of "hex a" and similar colors with "hex b." The last argument is a percentage which dictates how close a color must be to "hex a" in order to be replaced. |
+| `uri "replace_colour" [hex a] [hex b] [0-100]` | Replaces `hex a` and colors within the given similarity percentage with `hex b`. |
 | `uri "remove_colour" [hex code] [0-100]` | Functionally similar to the above command, however removes all instances of the specified hex. |
-| `uri "remove_transparent" [mode] [0-100]` | Removes pixels in the image based on their alpha value. Mode dictates the conditions a pixel must meet in order to be removed ("over" / "under" / "equal_to"). The last argument is a percentage which specifies an alpha value for the previous argument. |
+| `uri "remove_transparent" [mode] [0-100]` | Removes pixels whose alpha is `over`, `under`, or `equal_to` the given percentage. |
 | `uri "add_hue" [hex code]` | Tints the image with the specified color. |
 | `uri "upscale" [percent]` | Attempts to increase the quality of the image by a given percent. Useful for resized images. |
 | `uri "blur" [pixels]` | Blurs the image by the specific amount of pixels. A lot faster than the variant in the `"effect"` command. |
 
-### Image Effects
+### Image effects
 
-The `effect` command is a powerful tool for applying filters and effects to the image. The command takes 2 arguments; the first one specifies what effect to apply, while the second is a percentage of which to apply it.
+The `effect` command takes an effect name and a percentage.
 
 ```javascript
 uri "effect" "[one of the ops below]" [percentage]

@@ -1,8 +1,8 @@
-# Arrays and Objects in OSL
+# Arrays and objects in OSL
 
 ## Description
 
-OSL provides powerful handling of arrays and objects with several unique features:
+OSL arrays and objects support the following operations:
 - Arrays are 1-indexed (first element is at index 1)
 - Dynamic creation with variables and expressions
 - Built-in merging with the `++` operator
@@ -12,7 +12,7 @@ OSL provides powerful handling of arrays and objects with several unique feature
 
 ## Arrays
 
-### Creating Arrays
+### Creating arrays
 
 ```javascript
 // Simple array
@@ -29,7 +29,7 @@ mixed = [1, "text", true, {x: 10}]
 vals = [1 + 1, "pre" ++ "fix", 10 * 2]  // [2, "prefix", 20]
 ```
 
-### Array Operations
+### Array operations
 
 ```javascript
 arr = [1, 2, 3, 4]
@@ -56,7 +56,7 @@ length = arr.len  // Number of elements
 slice = arr.trim(2, 4)  // Gets elements from index 2 to 4 inclusive
 ```
 
-### Array Methods
+### Array methods
 
 ```javascript
 arr = [3, 1, 4, 1, 5, 9]
@@ -80,7 +80,7 @@ doubled = arr.map(def(x) -> (return x * 2))
 
 ## Objects
 
-### Creating Objects
+### Creating objects
 
 ```javascript
 // Simple object
@@ -106,7 +106,7 @@ calculator = {
 }
 ```
 
-### Object Operations
+### Object operations
 
 ```javascript
 obj = {x: 1, y: 2}
@@ -134,7 +134,7 @@ obj2 = {b: 3, c: 4}
 merged = obj1 ++ obj2    // {a: 1, b: 3, c: 4}
 ```
 
-### Cloning vs Referencing
+### Cloning and references
 
 ```javascript
 // Reference: `=` makes both names point to the same data
@@ -149,7 +149,7 @@ obj3 = obj1.clone()  // obj3 is a deep copy of obj1
 obj3.x = 20          // Only changes obj3.x
 ```
 
-## Important Notes
+## Notes
 
 - Arrays are always 1-indexed in OSL
 - Most operations create new copies rather than modifying in place
@@ -160,4 +160,4 @@ obj3.x = 20          // Only changes obj3.x
 - All OSL data types can be stored in arrays and objects
 - Assignment with `=` creates a reference (both names share the same data); use `.clone()` for an independent deep copy
 - Use `.contains()` to check for object keys
-- Use `.trim()` for array slicing 
+- Use `.trim()` for array slicing
