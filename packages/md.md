@@ -4,13 +4,13 @@ Use `md` to turn Markdown into HTML (and back with
 [`md.fromHTML`](#mdfromhtmlsource--string)). It is built for serving pages with
 [`serve`](serve.md) and composing markup with [`template`](template.md).
 
-```javascript
+```osl
 import "std:md"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:md"
 
 log md.toHTML("# Hello\n\n**world**")
@@ -21,7 +21,7 @@ log md.toHTML("# Hello\n\n**world**")
 
 Pass the HTML string straight to `ctx.html` when you want a full response body:
 
-```javascript
+```osl
 import "std:md"
 import "std:serve"
 
@@ -37,7 +37,7 @@ app.run(":8080")
 
 Or wrap it in a small page layout first:
 
-```javascript
+```osl
 import "std:md"
 import "std:template"
 import "std:serve"
@@ -61,7 +61,7 @@ app.run(":8080")
 `template.renderHTML` escapes interpolated values by default. Use `{{& name}}`
 when the value is already HTML from `md.toHTML`:
 
-```javascript
+```osl
 import "std:md"
 import "std:template"
 
@@ -79,7 +79,7 @@ Renders Markdown `source` to HTML. Enables GitHub Flavored Markdown (tables,
 strikethrough, autolinks, task lists) and auto heading IDs. Raw HTML tags in the
 source are **not passed through** (safe default for untrusted content).
 
-```javascript
+```osl
 string html = md.toHTML("# Title\n\n| a | b |\n| - | - |\n| 1 | 2 |")
 ```
 
@@ -88,7 +88,7 @@ Same as [`md.toHTML`](#mdtohtmlsource--string), but raw HTML in the Markdown is
 left as-is. It shares the safe engine's GFM and heading options; only raw-HTML
 rendering differs. Only use this with trusted input.
 
-```javascript
+```osl
 string html = md.toHTMLUnsafe("Hello <em>world</em>")
 // contains a real <em> element
 ```
@@ -99,7 +99,7 @@ string into Markdown. Headings, emphasis, links, lists, and other common
 elements map to their Markdown equivalents; unconvertible input yields an empty
 string.
 
-```javascript
+```osl
 string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
 // # Hello\n\na **bold** word
 ```
@@ -108,7 +108,7 @@ string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
 
 - Prefer `import "std:md"`; the older `import "osl/md"` spelling remains supported.
 - Rendering is powered by [goldmark](https://github.com/yuin/goldmark).
-- Return values are ordinary OSL strings — pass them to `ctx.html`, `ctx.send`,
+- Return values are ordinary OSL strings. Pass them to `ctx.html`, `ctx.send`,
   or template slots as needed.
 
 #### `md.sanitize(source)` → `string`

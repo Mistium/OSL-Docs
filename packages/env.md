@@ -1,6 +1,6 @@
 # env
 
-```javascript
+```osl
 import "std:env"
 ```
 
@@ -82,87 +82,86 @@ Returned by `env` methods; call these on the value you get back.
 
 ### `env`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `env.home()` | `string` | Runs the home operation. |
-| `env.cwd()` | `string` | Runs the cwd operation. |
-| `env.file(path: string)` | `*envFile` | Runs the file operation. |
-| `env.read(path: string)` | `*envFile` | Runs the read operation. |
+| `env.home()` | `string` |  |
+| `env.cwd()` | `string` |  |
+| `env.file(path: string)` | `*envFile` |  |
+| `env.read(path: string)` | `*envFile` |  |
 | `env.parse(text: string)` | `*envFile` | Parses input data. |
-| `env.from(values: object)` | `*envFile` | Runs the from operation. |
+| `env.from(values: object)` | `*envFile` |  |
 | `env.stringify(values: object)` | `string` | Serialises a value to text. |
 | `env.load(...paths: string)` | `boolean` | Loads files in order without replacing existing environment values. |
 | `env.overload(...paths: string)` | `boolean` | Loads files in order and replaces existing environment values. |
-| `env.local()` | `boolean` | Runs the local operation. |
-| `env.localOverload()` | `boolean` | Runs the local overload operation. |
+| `env.local()` | `boolean` |  |
+| `env.localOverload()` | `boolean` |  |
 | `env.get(key: string)` | `string` | Returns a value. |
 | `env.getDefault(key: string, def: string)` | `string` | Returns default. |
-| `env.value(key: string)` | `envValue` | Runs the value operation. |
+| `env.value(key: string)` | `envValue` |  |
 | `env.getInt(key: string, def: number)` | `number` | Returns int. |
 | `env.getFloat(key: string, def: number)` | `number` | Returns float. |
 | `env.getBool(key: string, def: boolean)` | `boolean` | Returns bool. |
-| `env.has(key: string)` | `boolean` | Reports whether the value exists. |
+| `env.has(key: string)` | `boolean` |  |
 | `env.set(key: string, value: any)` | `boolean` | Sets a value. |
-| `env.unset(key: string)` | `boolean` | Runs the unset operation. |
-| `env.require(key: string)` | `string` | Runs the require operation. |
-| `env.required(...keys: string)` | `boolean` | Runs the required operation. |
-| `env.missing(...keys: string)` | `array` | Runs the missing operation. |
-| `env.all()` | `object` | Runs the all operation. |
+| `env.unset(key: string)` | `boolean` |  |
+| `env.require(key: string)` | `string` |  |
+| `env.required(...keys: string)` | `boolean` |  |
+| `env.missing(...keys: string)` | `array` |  |
+| `env.all()` | `object` |  |
 | `env.keys()` | `array` | Returns all keys. |
-| `env.expand(value: string)` | `string` | Runs the expand operation. |
-| `env.mode()` | `string` | Runs the mode operation. |
-| `env.isDev()` | `boolean` | Reports whether dev. |
-| `env.isProd()` | `boolean` | Reports whether prod. |
-| `env.isTest()` | `boolean` | Reports whether test. |
+| `env.expand(value: string)` | `string` |  |
+| `env.mode()` | `string` |  |
+| `env.isDev()` | `boolean` |  |
+| `env.isProd()` | `boolean` |  |
+| `env.isTest()` | `boolean` |  |
 
 ### `envFile` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.OSLensure()` | `void` | Runs the oslensure operation. |
-| `value.path()` | `string` | Runs the path operation. |
+| `value.path()` | `string` |  |
 | `value.setPath(path: string)` | `*envFile` | Sets path. |
-| `value.loaded()` | `boolean` | Runs the loaded operation. |
-| `value.read()` | `boolean` | Runs the read operation. |
+| `value.loaded()` | `boolean` |  |
+| `value.read()` | `boolean` |  |
 | `value.load()` | `boolean` | Reads and applies the file without replacing existing values. |
 | `value.overload()` | `boolean` | Reads and applies the file, replacing existing values. |
 | `value.apply()` | `boolean` | Applies parsed values without replacing existing values. |
 | `value.applyOverload()` | `boolean` | Applies parsed values, replacing existing values. |
-| `value.save()` | `boolean` | Runs the save operation. |
-| `value.text()` | `string` | Runs the text operation. |
-| `value.all()` | `object` | Runs the all operation. |
+| `value.save()` | `boolean` |  |
+| `value.text()` | `string` |  |
+| `value.all()` | `object` |  |
 | `value.keys()` | `array` | Returns all keys. |
-| `value.has(key: string)` | `boolean` | Reports whether the value exists. |
-| `value.value(key: string)` | `envValue` | Runs the value operation. |
+| `value.has(key: string)` | `boolean` |  |
+| `value.value(key: string)` | `envValue` |  |
 | `value.get(key: string)` | `string` | Returns a value. |
 | `value.getDefault(key: string, def: string)` | `string` | Returns default. |
 | `value.getInt(key: string, def: number)` | `number` | Returns int. |
 | `value.getFloat(key: string, def: number)` | `number` | Returns float. |
 | `value.getBool(key: string, def: boolean)` | `boolean` | Returns bool. |
 | `value.set(key: string, value: any)` | `*envFile` | Sets a value. |
-| `value.unset(key: string)` | `*envFile` | Runs the unset operation. |
+| `value.unset(key: string)` | `*envFile` |  |
 | `value.clear()` | `*envFile` | Clears all stored values. |
-| `value.merge(values: object)` | `*envFile` | Runs the merge operation. |
-| `value.expand(key: string)` | `string` | Runs the expand operation. |
+| `value.merge(values: object)` | `*envFile` |  |
+| `value.expand(key: string)` | `string` |  |
 
 ### `envValue` values
 
-| Method | Returns | Description |
-| --- | --- | --- |
-| `value.key()` | `string` | Runs the key operation. |
-| `value.exists()` | `boolean` | Reports whether the value or resource exists. |
-| `value.string()` | `string` | Runs the string operation. |
-| `value.fallback(def: string)` | `string` | Runs the fallback operation. |
-| `value.int(def: number)` | `number` | Runs the int operation. |
-| `value.float(def: number)` | `number` | Runs the float operation. |
-| `value.bool(def: boolean)` | `boolean` | Runs the bool operation. |
+| Method | Returns |
+| --- | --- |
+| `value.key()` | `string` |
+| `value.exists()` | `boolean` |
+| `value.string()` | `string` |
+| `value.fallback(def: string)` | `string` |
+| `value.int(def: number)` | `number` |
+| `value.float(def: number)` | `number` |
+| `value.bool(def: boolean)` | `boolean` |
 
 ## Notes
 
 - Prefer `import "std:env"`; the older `import "osl/env"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Loads handle BOM/CRLF, quoted values, expansion cycles, and duplicate-key
-precedence. File and process values share typed conversion and sorted key projection;
-missing or malformed typed values use the documented fallback, and mode aliases share one lookup path.
+The parser accepts a UTF-8 BOM, CRLF line endings, and quoted values. It detects expansion cycles.
+When a file repeats a key, the later value wins. Typed getters return their fallback for missing or
+malformed values. Key lists are sorted.

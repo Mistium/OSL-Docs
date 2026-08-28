@@ -2,13 +2,13 @@
 
 Use `process` to spawn external commands, capture output, stream input, manage environment variables, and signal processes.
 
-```javascript
+```osl
 import "std:process"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:process"
 
 auto p = process.spawn("echo", "hello")
@@ -19,46 +19,46 @@ log p.run().output
 
 ### `process`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `process.spawn(command: any, ...args: any)` | `*Process` | Creates a process using the shared argument conversion path. |
-| `process.spawnShell(command: any)` | `*Process` | Runs the spawn shell operation. |
+| `process.spawn(command: any, ...args: any)` | `*Process` | Creates a process handle without starting it. |
+| `process.spawnShell(command: any)` | `*Process` |  |
 | `process.getPID()` | `number` | Returns pid. |
 | `process.getPPID()` | `number` | Returns ppid. |
-| `process.killPID(pid: any)` | `boolean` | Runs the kill pid operation. |
-| `process.signalPID(pid: any, sig: any)` | `boolean` | Runs the signal pid operation. |
-| `process.isPIDRunning(pid: any)` | `boolean` | Reports whether pidrunning. |
+| `process.killPID(pid: any)` | `boolean` |  |
+| `process.signalPID(pid: any, sig: any)` | `boolean` |  |
+| `process.isPIDRunning(pid: any)` | `boolean` |  |
 | `process.list()` | `array` | Lists processes with a 16 MiB command-output limit. Returns an empty array if discovery fails or exceeds the limit. |
-| `process.findByPID(pid: any)` | `object` | Runs the find by pid operation. |
-| `process.findByName(name: any)` | `array` | Runs the find by name operation. |
-| `process.killByName(name: any)` | `number` | Runs the kill by name operation. |
-| `process.environment()` | `object` | Runs the environment operation. |
+| `process.findByPID(pid: any)` | `object` |  |
+| `process.findByName(name: any)` | `array` |  |
+| `process.killByName(name: any)` | `number` |  |
+| `process.environment()` | `object` |  |
 | `process.setEnvironment(key: any, value: any)` | `boolean` | Sets environment. |
 | `process.getEnvironment(key: any)` | `string` | Returns environment. |
-| `process.workingDir()` | `string` | Runs the working dir operation. |
+| `process.workingDir()` | `string` |  |
 | `process.setWorkingDir(path: any)` | `boolean` | Sets working dir. |
 | `process.getArguments()` | `array` | Returns arguments. |
 | `process.getArg(index: any)` | `string` | Returns arg. |
 | `process.getExecutablePath()` | `string` | Returns executable path. |
 | `process.exec(command: any, ...args: any)` | `string` | Runs a command through `sys.cmd`, returning at most 16 MiB of stdout or an empty string. |
 | `process.execAsUser(user: any, command: any, ...args: any)` | `string` | Runs a command through `sudo` with a 16 MiB combined-output limit. |
-| `process.pipe(process1: *Process, process2: *Process)` | `boolean` | Runs the pipe operation. |
-| `process.background(command: any, ...args: any)` | `*Process` | Runs the background operation. |
-| `process.daemonize(command: any, ...args: any)` | `boolean` | Runs the daemonize operation. |
-| `process.fork()` | `object` | Runs the fork operation. |
-| `process.waitPID(pid: any)` | `object` | Runs the wait pid operation. |
+| `process.pipe(process1: *Process, process2: *Process)` | `boolean` |  |
+| `process.background(command: any, ...args: any)` | `*Process` |  |
+| `process.daemonize(command: any, ...args: any)` | `boolean` |  |
+| `process.fork()` | `object` |  |
+| `process.waitPID(pid: any)` | `object` |  |
 | `process.getMemoryMB()` | `number` | Returns memory mb. |
 | `process.getCPUTime()` | `number` | Returns cputime. |
 | `process.getNumGoroutines()` | `number` | Returns num goroutines. |
 | `process.getNumCPU()` | `number` | Returns num cpu. |
 | `process.setNumCPU(n: any)` | `void` | Sets num cpu. |
-| `process.sleep(seconds: any)` | `number` | Runs the sleep operation. |
-| `process.exit(code: any)` | `void` | Runs the exit operation. |
+| `process.sleep(seconds: any)` | `number` |  |
+| `process.exit(code: any)` | `void` |  |
 | `process.getExitCode()` | `number` | Returns exit code. |
 
 ### `Process` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.run()` | `object` | Runs the process and captures at most 16 MiB of combined output. |
 | `value.runLimited(maxBytes: any)` | `object` | Runs with a combined-output limit. Nonpositive values use 16 MiB; values above 1 GiB use 1 GiB. |
@@ -66,21 +66,20 @@ log p.run().output
 | `value.runTimeoutLimited(timeout: any, maxBytes: any)` | `object` | Combines the timeout and output limits from `runTimeout` and `runLimited`. |
 | `value.start()` | `boolean` | Starts the resource. |
 | `value.wait()` | `object` | Waits for a started process and returns the same lifecycle result shape as `run`. |
-| `value.kill()` | `boolean` | Kills through the shared live-process accessor. |
-| `value.signal(sig: any)` | `boolean` | Signals through the shared live-process accessor. |
-| `value.isRunning()` | `boolean` | Checks through the shared live-process accessor. |
-| `value.getPID()` | `number` | Returns the PID through the shared live-process accessor. |
+| `value.kill()` | `boolean` | Kills the running process. |
+| `value.signal(sig: any)` | `boolean` | Sends a signal to the running process. |
+| `value.isRunning()` | `boolean` | Reports whether the process is running. |
+| `value.getPID()` | `number` | Returns the process ID, or `0` before start. |
 
 ## Notes
 
 - Prefer `import "std:process"`; the older `import "osl/process"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Missing commands, failed starts, timeouts, invalid PIDs (through one shared lookup), and repeated
-wait/kill/signal calls share one live-process guard and return controlled results instead of dereferencing
-missing process state.
+Missing commands, failed starts, timeouts, invalid process IDs, and repeated `wait`, `kill`, or
+`signal` calls return failure values instead of panicking.
 Run results include `timeout` and `truncated` flags. When output exceeds its limit, `output` contains
 the exact captured prefix, `truncated` is `true`, and `success` is `false` even when the child exits zero.
-Calls that start or wait on the same `Process` run one at a time. `kill`, `signal`, `isRunning`, and
-`getPID` use separately synchronized live-process state, so they remain available while `run` is waiting.
+Only one call may start or wait on a given `Process` at a time. `kill`, `signal`, `isRunning`, and
+`getPID` remain available while `run` waits.

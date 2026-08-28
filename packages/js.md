@@ -1,12 +1,12 @@
 # js
 
-```javascript
+```osl
 import "std:js"
 ```
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `js.eval(code: any, timeoutMs: any)` | `object` | Runs QuickJS with a hard timeout and memory limit, returning `{success, result}` or one shared `{success: false, error}` shape. |
+| `js.eval(code: any, timeoutMs: any)` | `object` | Runs QuickJS with a hard timeout and memory limit. Returns `{success, result}` or `{success: false, error}`. |
 
 The sandbox has no filesystem or network access. Timeouts are clamped to a
 finite maximum so infinite loops cannot wedge the host process.

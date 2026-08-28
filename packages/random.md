@@ -2,13 +2,13 @@
 
 Use `random` for seedable pseudo-random numbers, choices, shuffling, and generated strings. For security-sensitive randomness, use `crypto`.
 
-```javascript
+```osl
 import "std:random"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:random"
 
 random.seed(123)
@@ -20,25 +20,25 @@ log random.between(1, 10)  // integer in [1, 10] (inclusive)
 
 ### `random`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `random.seed(n: any)` | `void` | Runs the seed operation. |
-| `random.float(...args: any)` | `number` | Runs the float operation. |
-| `random.int(n: any)` | `number` | Random integer in `[0, n)`. Extra arguments are ignored — for a range, use `random.between`. |
+| `random.seed(n: any)` | `void` |  |
+| `random.float(...args: any)` | `number` |  |
+| `random.int(n: any)` | `number` | Random integer in `[0, n)`. Extra arguments are ignored. Use `random.between` for a range. |
 | `random.between(min: any, max: any)` | `number` | Random integer in `[min, max]` (inclusive). |
-| `random.bool(...args: any)` | `boolean` | Uses the shared optional-number handling with probability defaulting to `0.5`. |
-| `random.pick(arr: any)` | `any` | Runs the pick operation. |
+| `random.bool(...args: any)` | `boolean` | Returns `true` with the given probability, which defaults to `0.5`. |
+| `random.pick(arr: any)` | `any` |  |
 | `random.shuffle(arr: any)` | `array` | Returns a shuffled copy without mutating the input. |
 | `random.sample(arr: any, n: any)` | `array` | Returns a random sample, clamping the count between zero and the input length. |
-| `random.string(...args: any)` | `string` | Runs the string operation. |
-| `random.gaussian(...args: any)` | `number` | Uses shared optional-number handling for mean `0` and standard deviation `1`. |
+| `random.string(...args: any)` | `string` |  |
+| `random.gaussian(...args: any)` | `number` | Draws from a normal distribution. Mean defaults to `0` and standard deviation to `1`. |
 
 ## Notes
 
 - Prefer `import "std:random"`; the older `import "osl/random"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Empty collections, reversed bounds, invalid weights, and deterministic seeds
-have explicit, tested behavior. The package-owned generator is safe to use from
-concurrent thread workers, including while another worker reseeds it.
+Choice helpers define fallback values for empty collections. Range methods accept reversed bounds,
+and weighted choice rejects invalid weights. A fixed seed produces a repeatable sequence. The
+generator remains safe when several threads use or reseed it.

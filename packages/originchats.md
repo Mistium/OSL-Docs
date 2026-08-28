@@ -4,13 +4,13 @@ The `originchats` package is a batteries-included bot framework: it handles the 
 connection, the handshake → rotur validator → auth → ready flow, automatic reconnection,
 slash command registration, and request/response matching, so a bot is just handlers.
 
-```javascript
+```osl
 import "std:originchats"
 ```
 
 A minimal bot:
 
-```javascript
+```osl
 import "std:originchats"
 
 *originchats.client client = originchats.new("wss://chats.mistium.com")
@@ -76,7 +76,7 @@ instead of crashing the bot.
 Called with the client (`def(*originchats.client c)`) once the server accepts authentication.
 Fires again after every reconnect.
 
-```javascript
+```osl
 client.onReady(def(*originchats.client c) -> (
   log "logged in as " ++ c.username()
 ))
@@ -86,7 +86,7 @@ client.onReady(def(*originchats.client c) -> (
 Called with a `*originchats.message` for every chat message that isn't handled by a prefix
 command (and isn't the bot's own, unless `ignoreSelf(false)`).
 
-```javascript
+```osl
 client.onMessageNew(def(*originchats.message msg) -> (
   log msg.user() ++ ": " ++ msg.content()
 ))
@@ -109,7 +109,7 @@ raw event object: `def(*originchats.client c, object event)`.
 - `client.onError(handler)` - the server sent an error packet
 - `client.onRateLimit(handler)` - the bot was rate limited (`event.length` ms to wait)
 
-```javascript
+```osl
 client.onReactionAdd(def(*originchats.client c, object event) -> (
   log event.user.toStr() ++ " reacted with " ++ event.emoji.toStr()
 ))
@@ -127,7 +127,7 @@ Registers a prefix command. When a message starts with `prefix` (followed by a s
 of the message), the handler is called with the message; `msg.content()` has the prefix already
 stripped. Matched messages don't reach `onMessageNew`.
 
-```javascript
+```osl
 client.command("!roll", def(*originchats.message msg) -> (
   msg.reply("You rolled a " ++ (random(1, 6)).toStr())
 ))
@@ -138,7 +138,7 @@ Starts a fluent slash command builder. The leading `/` in `name` is optional. Ch
 setting calls, then finish with `.fn(handler)` to register. Commands are sent to the server
 automatically on `ready` (and after every reconnect).
 
-```javascript
+```osl
 client.slashCommand("/weather")
   .description("Get the weather")
   .addInput(originchats.string, "city", "City name")
@@ -186,7 +186,7 @@ or the server rejects the message.
 #### `client.send(channel, content)` → `*originchats.message`
 Sends a message to a channel.
 
-```javascript
+```osl
 *originchats.message m = client.send("general", "hello!")
 m.react("👋")
 ```
@@ -198,7 +198,7 @@ Sends a message into a thread.
 Sends a `message_new` with a payload you build yourself - use this for attachments, pings, or
 any protocol field the helpers don't cover. `cmd` is set for you.
 
-```javascript
+```osl
 client.sendRaw({channel: "general", content: "look", attachments: [{id: att_id}]})
 ```
 
@@ -247,7 +247,7 @@ Role names of one user.
 Escape hatch for any protocol command: attaches a listener, sends `payload`, and returns the
 server's response. Returns `{error: "timeout"}` if no response arrives in time.
 
-```javascript
+```osl
 object res = client.request({cmd: "unreads_get"})
 ```
 
@@ -261,7 +261,7 @@ Returns the complete server handshake details as a defensive copy. This includes
 `limits`, `uploads`, `attachments`, `version`, `validator_key`, `capabilities`, and `permissions`,
 plus any fields added by newer servers.
 
-```javascript
+```osl
 object details = client.details()
 log details.limits.post_content
 log details.attachments.max_size
@@ -271,7 +271,7 @@ log details.attachments.max_size
 Whether the server advertised `command` in its handshake capability list. Use this before
 calling newer commands through `request()` or `sendCmd()`.
 
-```javascript
+```osl
 if client.supports("messages_search") (
   object response = client.request({cmd: "messages_search", query: "release"})
 )
@@ -326,7 +326,7 @@ All of these share the same owner validation and automatically target the messag
 - `msg.edit(content)` - edit this message (must be the bot's own)
 - `msg.delete()` - delete this message
 
-```javascript
+```osl
 client.command("!ping", def(*originchats.message msg) -> (
   *originchats.message m = msg.reply("pong")
   m.edit("pong 🏓")
@@ -355,7 +355,7 @@ client.command("!ping", def(*originchats.message msg) -> (
 Create one client per server - handlers and state are per-client. Since `run` blocks, start
 extra clients with `connect` first:
 
-```javascript
+```osl
 *originchats.client main_chat = originchats.new("wss://chats.mistium.com")
 *originchats.client dms = originchats.new("wss://dms.mistium.com")
 

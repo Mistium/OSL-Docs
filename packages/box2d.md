@@ -2,7 +2,7 @@
 
 `osl/box2d` provides worlds, bodies, and box, circle, or polygon fixtures using a pure-Go engine.
 
-```javascript
+```osl
 import "std:box2d"
 
 world = box2d.newWorld({x: 0, y: 10})

@@ -2,7 +2,7 @@
 
 Use `img` for loading, creating, resizing, drawing, encoding, and saving raster images.
 
-```javascript
+```osl
 import "std:img"
 ```
 
@@ -10,50 +10,42 @@ import "std:img"
 
 ### `img`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `img.open(path: string)` | `*imgImage` | Opens a resource. |
-| `img.openSize(path: string)` | `number, number` | Opens size. |
-| `img.new(w: number, h: number)` | `*imgImage` | Creates a new value. |
-| `img.clone(i: *imgImage)` | `*imgImage` | Clones through the shared RGBA conversion path. |
-| `img.resize(i: *imgImage, w: number, h: number)` | `*imgImage` | Resizes through the shared dimension checks using Lanczos interpolation. |
-| `img.resizeFast(i: *imgImage, w: number, h: number)` | `*imgImage` | Resizes through the same dimension checks using bilinear interpolation. |
-| `img.resizeWidth(i: *imgImage, w: number)` | `*imgImage` | Runs the resize width operation. |
-| `img.resizeHeight(i: *imgImage, h: number)` | `*imgImage` | Runs the resize height operation. |
-| `img.resizeFit(i: *imgImage, maxW: number, maxH: number)` | `*imgImage` | Runs the resize fit operation. |
-| `img.draw(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Draws with source replacement through the shared bounds path. |
-| `img.drawOver(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Draws with alpha compositing through the shared bounds path. |
-| `img.rotate(i: *imgImage, angle: number)` | `*imgImage` | Runs the rotate operation. |
-| `img.rotate90(src: *_image.RGBA, a: number)` | `*imgImage` | Runs the rotate90 operation. |
-| `img.rotateAny(src: *_image.RGBA, angle: number)` | `*imgImage` | Runs the rotate any operation. |
-| `img.normalizeOrientation(i: *imgImage, r: io.Reader)` | `*imgImage` | Runs the normalize orientation operation. |
-| `img.fill(i: *imgImage, r: unumber8, g: unumber8, b: unumber8, a: unumber8)` | `boolean` | Runs the fill operation. |
-| `img.savePNG(i: *imgImage, path: string)` | `boolean` | Saves PNG through the shared create, encode, and close path. |
-| `img.saveJPEG(i: *imgImage, path: string, quality: number)` | `boolean` | Saves JPEG through the shared create, encode, and close path. |
-| `img.decode(r: reader)` | `*imgImage` | Decodes an image from an io.Reader. |
-| `img.decodeBytes(data: bytes)` | `*imgImage` | Decodes an image from a byte array. |
-| `img.decodeSize(r: reader)` | `number, number` | Returns width, height without decoding. |
-| `img.encodePNG(w: writer, i: *imgImage)` | `boolean` | Encodes image to PNG via io.Writer. |
-| `img.encodeJPEG(w: writer, i: *imgImage, q: number)` | `boolean` | Encodes image to JPEG via io.Writer. |
-| `img.encodePNGBytes(i: *imgImage)` | `bytes` | Uses the same writer encoder to return PNG bytes. |
-| `img.encodeJPEGBytes(i: *imgImage, q: number)` | `bytes` | Uses the same clamped-quality writer encoder to return JPEG bytes. |
+| `img.open(path: string)` | `*imgImage` | Opens a PNG or JPEG file. |
+| `img.openSize(path: string)` | `number, number` | Reads width and height without decoding the pixels. |
+| `img.new(w: number, h: number)` | `*imgImage` | Creates a transparent image. |
+| `img.clone(i: *imgImage)` | `*imgImage` | Copies an image and its pixels. |
+| `img.resize(i: *imgImage, w: number, h: number)` | `*imgImage` | Resizes with Lanczos interpolation. |
+| `img.resizeFast(i: *imgImage, w: number, h: number)` | `*imgImage` | Resizes with bilinear interpolation. |
+| `img.resizeWidth(i: *imgImage, w: number)` | `*imgImage` | Changes the width and preserves the aspect ratio. |
+| `img.resizeHeight(i: *imgImage, h: number)` | `*imgImage` | Changes the height and preserves the aspect ratio. |
+| `img.resizeFit(i: *imgImage, maxW: number, maxH: number)` | `*imgImage` | Fits an image inside the given bounds. |
+| `img.draw(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Replaces destination pixels with the source image. |
+| `img.drawOver(dst: *imgImage, src: *imgImage, x: number, y: number)` | `boolean` | Alpha-composites the source over the destination. |
+| `img.rotate(i: *imgImage, angle: number)` | `*imgImage` | Returns an image rotated by degrees. |
+| `img.fill(i: *imgImage, r: number, g: number, b: number, a: number)` | `boolean` | Fills the image with an RGBA color. Channels must be between 0 and 255. |
+| `img.savePNG(i: *imgImage, path: string)` | `boolean` | Saves an image as PNG. |
+| `img.saveJPEG(i: *imgImage, path: string, quality: number)` | `boolean` | Saves an image as JPEG. |
+| `img.decodeBytes(data: byte[])` | `*imgImage` | Decodes PNG or JPEG bytes. |
+| `img.encodePNGBytes(i: *imgImage)` | `byte[]` | Encodes an image as PNG. |
+| `img.encodeJPEGBytes(i: *imgImage, q: number)` | `byte[]` | Encodes an image as JPEG. |
 
 ### `imgImage` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Close()` | `void` | Runs the close operation. |
-| `value.Width()` | `number` | Returns the width from the shared nil-safe dimensions path. |
-| `value.Height()` | `number` | Returns the height from the shared nil-safe dimensions path. |
-| `value.Size()` | `object` | Returns `{w: number, h: number}` from the same dimensions path. |
+| `value.Close()` | `void` | Releases the pixels. Repeated calls are safe. |
+| `value.Width()` | `number` | Returns the width, or zero after `Close`. |
+| `value.Height()` | `number` | Returns the height, or zero after `Close`. |
+| `value.Size()` | `object` | Returns `{w, h}`, or an empty object after `Close`. |
 
 ## Notes
 
 - Prefer `import "std:img"`; the older `import "osl/img"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Images are dimension-checked before full decode. Invalid or enormous sizes,
-non-finite rotations, corrupt data, and write failures return controlled
-failure values. Closing clears the sole backing-image state, and file saves
-report both encoding and close failures.
+The decoder checks image dimensions before allocating the full image. Invalid sizes, non-finite
+rotation angles, corrupt input, and write errors return failure values. Closing an image releases
+its pixel data. Save methods report encoding and file-close errors.

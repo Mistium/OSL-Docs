@@ -2,7 +2,7 @@
 
 Use `canvas` for simple in-memory pixel buffers that can be filled, edited by pixel index or coordinate, and exported.
 
-```javascript
+```osl
 import "std:canvas"
 ```
 
@@ -12,7 +12,7 @@ import "std:canvas"
 
 Call `canvas(w, h, bgHex)` to create a new canvas instance, then call methods on it:
 
-```javascript
+```osl
 auto c = canvas(100, 100, "#fff")
 log c.width()
 ```
@@ -21,7 +21,7 @@ log c.width()
 
 After calling `canvas(w, h, bgHex)` to create a canvas, call these methods on the instance:
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `c.width()` | `number` | Returns canvas width. |
 | `c.height()` | `number` | Returns canvas height. |
@@ -30,11 +30,11 @@ After calling `canvas(w, h, bgHex)` to create a canvas, call these methods on th
 | `c.getPixel(idx: any)` | `string` | Maps a 0-based index to coordinates and uses `getPixelAt`. |
 | `c.setPixelAt(x: any, y: any, hexColor: any)` | `void` | Sets pixel at x, y (0-based). |
 | `c.getPixelAt(x: any, y: any)` | `string` | Returns pixel at x, y (0-based). |
-| `c.fill(hexColor: any)` | `void` | Fills the entire surface through the standard image draw path. |
-| `c.clear()` | `void` | Uses the same draw path with the original background color. |
+| `c.fill(hexColor: any)` | `void` | Fills every pixel with the given color. |
+| `c.clear()` | `void` | Restores every pixel to the original background color. |
 | `c.stretch(newW: any, newH: any)` | `void` | Resizes canvas. |
 | `c.toURL()` | `string` | Converts to data URL. |
-| `c.toArr()` | `array` | Converts to array. |
+| `c.toArr()` | `array` | Returns the pixels as an array. |
 
 ## Notes
 

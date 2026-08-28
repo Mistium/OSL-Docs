@@ -2,7 +2,7 @@
 
 Use `torrent` to create, inspect, edit, and serialise torrent metadata.
 
-```javascript
+```osl
 import "std:torrent"
 ```
 
@@ -10,19 +10,19 @@ import "std:torrent"
 
 ### `torrent`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `torrent.createFromDirectory(dirPath: any)` | `*Torrent` | Creates from directory. |
 | `torrent.parse(torrentData: any)` | `*Torrent` | Parses input data. |
 
 ### `Torrent` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.create(name: any, files: array, pieceLength: any)` | `*Torrent` | Creates a new value. |
-| `value.save(path: any)` | `boolean` | Runs the save operation. |
-| `value.addTracker(tracker: any)` | `boolean` | Adds a tracker through shared standard-library membership handling. |
-| `value.removeTracker(tracker: any)` | `boolean` | Removes a tracker through the same standard-library slice path. |
+| `value.create(name: any, files: array, pieceLength: any)` | `*Torrent` |  |
+| `value.save(path: any)` | `boolean` |  |
+| `value.addTracker(tracker: any)` | `boolean` | Adds a tracker unless it is already present. |
+| `value.removeTracker(tracker: any)` | `boolean` | Removes a tracker. |
 | `value.getTrackers()` | `array` | Returns trackers. |
 | `value.getInfo()` | `object` | Returns info. |
 | `value.addMetadata(key: any, value: any)` | `void` | Adds metadata. |
@@ -35,27 +35,26 @@ import "std:torrent"
 | `value.download(torrentPath: any, outputPath: any)` | `boolean` | Compatibility method that reports whether the current torrent validates; it does not transfer data. |
 | `value.seed(torrentPath: any, port: any)` | `boolean` | Compatibility no-op that returns `true`; it does not transfer data. |
 | `value.getMagnetLink()` | `string` | Returns magnet link. |
-| `value.calculateInfoHash()` | `string` | Runs the calculate info hash operation. |
+| `value.calculateInfoHash()` | `string` |  |
 | `value.getFiles()` | `array` | Returns files. |
 | `value.setFiles(files: array)` | `void` | Sets files. |
 | `value.getFileCount()` | `number` | Returns file count. |
 | `value.getTotalSize()` | `number` | Returns total size. |
 | `value.getPieceCount()` | `number` | Returns piece count. |
-| `value.generatePeerID()` | `string` | Runs the generate peer id operation. |
+| `value.generatePeerID()` | `string` |  |
 | `value.getMagnetURI()` | `string` | Returns magnet uri. |
-| `value.exportInfo(path: any)` | `boolean` | Runs the export info operation. |
-| `value.clone()` | `*Torrent` | Clones the torrent through shared file conversion and map cloning paths. |
-| `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Merges file lists using the same conversion path as `clone`. |
-| `value.strip(metadata: any)` | `*Torrent` | Runs the strip operation. |
+| `value.exportInfo(path: any)` | `boolean` |  |
+| `value.clone()` | `*Torrent` | Returns an independent copy of the metadata and file list. |
+| `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Returns a copy containing files from both torrents. |
+| `value.strip(metadata: any)` | `*Torrent` |  |
 | `value.buildTorrent()` | `string` | Builds the bencoded torrent after validating its file and piece metadata. |
 
 ## Notes
 
 - Prefer `import "std:torrent"`; the older `import "osl/torrent"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Directory scans avoid symlink loops and disappearing files. `validate` checks
-piece length, piece count, total size, and the binary piece hashes. Parsing
-uses the canonical bencode decoder; the removed legacy scanner is not part of
-the public API.
+Directory scans avoid symbolic-link loops and tolerate files that disappear during the scan.
+`validate` checks the piece length, piece count, total size, and binary piece hashes. Parsing uses
+the package's bencode decoder.

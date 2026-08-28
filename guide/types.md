@@ -91,7 +91,7 @@ object record = value.assert(object)
 The generic shorthand is equivalent:
 
 ```osl
-object record = value.<object>()
+object record = value.<object>
 ```
 
 `.assertElse(type, fallback)` returns the fallback after a mismatch. When the fallback has an unambiguous type, omit the type argument:

@@ -2,7 +2,7 @@
 
 Use `sync` for named locks, scoped locking, one-time execution, and wait groups across threads.
 
-```javascript
+```osl
 import "std:sync"
 ```
 
@@ -10,7 +10,7 @@ import "std:sync"
 
 ### `sync`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `sync.lock(name: string)` | `void` | Acquires the initialized named lock, waiting if it is held. |
 | `sync.tryLock(name: string)` | `boolean` | Attempts to acquire the named lock without blocking. Returns `true` if acquired, `false` if held. |
@@ -21,7 +21,7 @@ import "std:sync"
 
 ### `*WaitGroup`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `waitGroup.add(delta?: number)` | `void` | Adds `delta` (default 1) to the wait group counter. |
 | `waitGroup.done()` | `void` | Decrements the wait group counter by 1. |

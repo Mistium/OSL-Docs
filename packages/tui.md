@@ -2,13 +2,13 @@
 
 Use `tui` to build terminal output with cursor movement, colors, boxes, tables, prompts, menus, charts, and key input.
 
-```javascript
+```osl
 import "std:tui"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:tui"
 
 log tui.color("green", "OK")
@@ -19,71 +19,70 @@ log tui.table(["Name"], [["Ada"]])
 
 ### `tui`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `tui.write(value: any)` | `void` | Writes to stdout without adding a newline. |
 | `tui.clear()` | `void` | Clears all stored values. |
-| `tui.clearLine()` | `void` | Runs the clear line operation. |
-| `tui.clearLines(count: any)` | `void` | Runs the clear lines operation. |
-| `tui.moveCursor(x: any, y: any)` | `void` | Runs the move cursor operation. |
-| `tui.moveUp(n: any)` | `void` | Runs the move up operation. |
-| `tui.moveDown(n: any)` | `void` | Runs the move down operation. |
-| `tui.moveRight(n: any)` | `void` | Runs the move right operation. |
-| `tui.moveLeft(n: any)` | `void` | Runs the move left operation. |
+| `tui.clearLine()` | `void` |  |
+| `tui.clearLines(count: any)` | `void` |  |
+| `tui.moveCursor(x: any, y: any)` | `void` |  |
+| `tui.moveUp(n: any)` | `void` |  |
+| `tui.moveDown(n: any)` | `void` |  |
+| `tui.moveRight(n: any)` | `void` |  |
+| `tui.moveLeft(n: any)` | `void` |  |
 | `tui.saveCursor()` | `void` | Saves cursor. |
-| `tui.restoreCursor()` | `void` | Runs the restore cursor operation. |
-| `tui.hideCursor()` | `void` | Runs the hide cursor operation. |
-| `tui.showCursor()` | `void` | Runs the show cursor operation. |
+| `tui.restoreCursor()` | `void` |  |
+| `tui.hideCursor()` | `void` |  |
+| `tui.showCursor()` | `void` |  |
 | `tui.color(colorName: string, text: any)` | `string` | Applies a foreground color through shared ANSI wrapping. |
 | `tui.bgColor(colorName: string, text: any)` | `string` | Applies a background color through shared ANSI wrapping. |
-| `tui.style(styleName: string, text: any)` | `string` | Applies a named style through the same ANSI wrapping path. |
+| `tui.style(styleName: string, text: any)` | `string` | Wraps text with the named ANSI style. |
 | `tui.rgbColor(r: any, g: any, b: any, text: any)` | `string` | Applies RGB foreground color through shared RGB formatting. |
 | `tui.rgbBg(r: any, g: any, b: any, text: any)` | `string` | Applies RGB background color through shared RGB formatting. |
-| `tui.progress(current: any, total: any, width: any)` | `string` | Runs the progress operation. |
-| `tui.spinner(finished: boolean)` | `string` | Runs the spinner operation. |
-| `tui.horizontal(width: any)` | `string` | Runs the horizontal operation. |
-| `tui.vertical(height: any)` | `array` | Runs the vertical operation. |
-| `tui.box(title: any, content: any)` | `string` | Runs the box operation. |
-| `tui.drawBox(x: any, y: any, width: any, height: any, title: any)` | `void` | Runs the draw box operation. |
+| `tui.progress(current: any, total: any, width: any)` | `string` |  |
+| `tui.spinner(finished: boolean)` | `string` |  |
+| `tui.horizontal(width: any)` | `string` |  |
+| `tui.vertical(height: any)` | `array` |  |
+| `tui.box(title: any, content: any)` | `string` |  |
+| `tui.drawBox(x: any, y: any, width: any, height: any, title: any)` | `void` |  |
 | `tui.table(headers: array, rows: array)` | `string` | Formats headers and data through one padded-row renderer. |
 | `tui.tableColored(headers: array, rows: array, colorFn: any)` | `string` | Uses the shared row renderer and colors data cells with `colorFn`. |
-| `tui.Select(prompt: any, options: array)` | `any` | Runs the select operation. |
-| `tui.confirm(prompt: any)` | `boolean` | Runs the confirm operation. |
-| `tui.menu(title: any, items: array)` | `any` | Runs the menu operation. |
-| `tui.input(prompt: any)` | `string` | Runs the input operation. |
-| `tui.password(prompt: any)` | `string` | Runs the password operation. |
-| `tui.center(text: any)` | `string` | Runs the center operation. |
-| `tui.pad(text: any, width: any, align: any)` | `string` | Runs the pad operation. |
-| `tui.divider(char: any, width: any, title: any)` | `string` | Runs the divider operation. |
-| `tui.status(status: any, message: any)` | `string` | Formats named status aliases through a shared icon/color lookup. |
-| `tui.frame(text: any, width: any)` | `string` | Runs the frame operation. |
-| `tui.grid(items: array, columns: any)` | `string` | Runs the grid operation. |
-| `tui.tree(items: array, prefix: any)` | `string` | Runs the tree operation. |
-| `tui.barChart(data: array, width: any, showLabels: any)` | `string` | Runs the bar chart operation. |
-| `tui.width()` | `number` | Runs the width operation. |
-| `tui.height()` | `number` | Runs the height operation. |
+| `tui.Select(prompt: any, options: array)` | `any` |  |
+| `tui.confirm(prompt: any)` | `boolean` |  |
+| `tui.menu(title: any, items: array)` | `any` |  |
+| `tui.input(prompt: any)` | `string` |  |
+| `tui.password(prompt: any)` | `string` |  |
+| `tui.center(text: any)` | `string` |  |
+| `tui.pad(text: any, width: any, align: any)` | `string` |  |
+| `tui.divider(char: any, width: any, title: any)` | `string` |  |
+| `tui.status(status: any, message: any)` | `string` | Formats a named status with its icon and color. |
+| `tui.frame(text: any, width: any)` | `string` |  |
+| `tui.grid(items: array, columns: any)` | `string` |  |
+| `tui.tree(items: array, prefix: any)` | `string` |  |
+| `tui.barChart(data: array, width: any, showLabels: any)` | `string` |  |
+| `tui.width()` | `number` |  |
+| `tui.height()` | `number` |  |
 | `tui.size()` | `array` | Returns terminal width and height as [width, height]. |
-| `tui.newScreen()` | `*Screen` | Runs the new screen operation. |
+| `tui.newScreen()` | `*Screen` |  |
 | `tui.readKey()` | `string` | Reads one key, preserving buffered keys from fast typing or pasted input for later calls. |
-| `tui.keyPressed()` | `boolean` | Runs the key pressed operation. |
-| `tui.interactiveSelect(prompt: any, options: array)` | `any` | Runs the interactive select operation. |
+| `tui.keyPressed()` | `boolean` |  |
+| `tui.interactiveSelect(prompt: any, options: array)` | `any` |  |
 
 ### `Screen` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Set(x: any, y: any, text: string)` | `void` | Runs the set operation. |
-| `value.Clear()` | `void` | Runs the clear operation. |
-| `value.Render()` | `void` | Runs the render operation. |
+| `value.Set(x: any, y: any, text: string)` | `void` |  |
+| `value.Clear()` | `void` |  |
+| `value.Render()` | `void` |  |
 | `value.WriteCenter(y: any, text: string)` | `void` | Writes center. |
 
 ## Notes
 
 - Prefer `import "std:tui"`; the older `import "osl/tui"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Plain and coloured tables share one row renderer, including visible-width padding.
-Dimension defaults and status aliases use shared lookup paths. Negative progress
-clamps to zero. Non-interactive terminals and invalid
-dimensions do not panic; interactive helpers still require a real TTY.
+Table padding uses visible width, so ANSI color codes do not disturb column alignment. Negative
+progress becomes zero. Invalid dimensions and non-interactive output do not panic, but prompts,
+menus, and key input still need a real terminal.

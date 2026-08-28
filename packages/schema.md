@@ -3,7 +3,7 @@
 The `schema` package validates unknown values, nested objects, and arrays. Schemas are reusable and
 immutable: constraint methods return a new schema, leaving the original unchanged.
 
-```javascript
+```osl
 import "std:schema"
 
 *schema.Schema createUser = schema.object({
@@ -45,7 +45,7 @@ Accepts a boolean.
 
 Accepts only a value equal to `value`.
 
-```javascript
+```osl
 *schema.Schema enabled = schema.literal(true)
 ```
 
@@ -53,7 +53,7 @@ Accepts only a value equal to `value`.
 
 Accepts one of the supplied values. Values may be strings, numbers, booleans, or other OSL values.
 
-```javascript
+```osl
 *schema.Schema status = schema.enum(["online", "away", "offline"])
 ```
 
@@ -62,7 +62,7 @@ Accepts one of the supplied values. Values may be strings, numbers, booleans, or
 Accepts an array and validates every element with `itemSchema`. Errors include the failing index,
 such as `roles[1]`.
 
-```javascript
+```osl
 *schema.Schema tags = schema.array(schema.string().minLen(1))
 ```
 
@@ -71,7 +71,7 @@ such as `roles[1]`.
 Accepts either one value or an array of values and validates each value with `itemSchema`. The
 normalized result is always an array, which is useful for APIs that accept scalar shorthand.
 
-```javascript
+```osl
 *schema.Schema tags = schema.oneOrMany(schema.string())
 array normalized = tags.parse("news") // ["news"]
 ```
@@ -81,7 +81,7 @@ array normalized = tags.parse("news") // ["news"]
 Accepts an object and validates the named fields with the schemas in `shape`. Fields not in the
 shape are preserved unless `.strict()` is used. Nested error paths use dot notation.
 
-```javascript
+```osl
 *schema.Schema profile = schema.object({
   id: schema.string().minLen(1),
   settings: schema.object({dark: schema.boolean().defaultValue(false)})
@@ -92,7 +92,7 @@ shape are preserved unless `.strict()` is used. Nested error paths use dot notat
 
 Accepts an object with arbitrary string keys and validates every value with `valueSchema`.
 
-```javascript
+```osl
 *schema.Schema scores = schema.record(schema.integer().min(0))
 ```
 
@@ -100,7 +100,7 @@ Accepts an object with arbitrary string keys and validates every value with `val
 
 Accepts a value when any supplied schema accepts it.
 
-```javascript
+```osl
 *schema.Schema id = schema.union([schema.string(), schema.integer().gt(0)])
 ```
 
@@ -147,7 +147,7 @@ also accepts zero.
 
 Returns an object schema where every declared field is optional. This is useful for update payloads.
 
-```javascript
+```osl
 *schema.Schema user = schema.object({name: schema.string(), age: schema.integer()})
 *schema.Schema userUpdate = user.partial()
 ```
@@ -157,7 +157,7 @@ Returns an object schema where every declared field is optional. This is useful 
 Returns an object schema containing its existing fields plus the supplied fields. Supplied fields
 replace existing fields with the same name.
 
-```javascript
+```osl
 *schema.Schema account = user.extend({active: schema.boolean()})
 ```
 
@@ -166,7 +166,7 @@ replace existing fields with the same name.
 Requires an object to contain at least one named field. A present field with a `null` value counts,
 so this works for patches where `null` intentionally clears a value.
 
-```javascript
+```osl
 *schema.Schema update = user.partial().requireAny(["name", "age"])
 ```
 
@@ -175,7 +175,7 @@ so this works for patches where `null` intentionally clears a value.
 Requires an object to contain a non-null value for at least one named field. Empty strings and
 arrays still count; combine the field schema with `.minLen(1)` when emptiness should be rejected.
 
-```javascript
+```osl
 *schema.Schema message = schema.object({
   content: schema.string().optional(),
   embeds: schema.array(schema.any()).optional()
@@ -198,7 +198,7 @@ Validates `input` without throwing. Returns `ok(normalizedValue)` on success. On
 `err(error)`, where `error` contains `message`, `path`, and `issues`. The current implementation
 stops at the first issue.
 
-```javascript
+```osl
 auto checked = profile.safeParse(input)
 if checked.isErr() (
   object problem = checked.unwrapErr()
@@ -211,7 +211,7 @@ if checked.isErr() (
 
 Returns the normalized value or throws a path-based validation message.
 
-```javascript
+```osl
 object user = profile.parse(input)
 ```
 

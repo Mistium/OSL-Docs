@@ -2,7 +2,7 @@
 
 Use `ws` for WebSocket clients and servers, connection callbacks, broadcast, and per-connection state.
 
-```javascript
+```osl
 import "std:ws"
 ```
 
@@ -10,7 +10,7 @@ import "std:ws"
 
 ### `ws`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `ws.Connect(url: string, ...protocols: string)` | `*wsConnection` | Opens a WebSocket client connection. |
 | `ws.New(...args: string)` | `*wsServer` | Builds a server meant to be mounted on `serve` (`app.WS`, `c.upgrade`). No listen address. Optional: `New(path)` or `New(addr, path)`. Path defaults to `"/"`. |
@@ -18,15 +18,15 @@ import "std:ws"
 
 ### `wsConnection` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Send(message: any)` | `void` | Runs the send operation. |
-| `value.Close()` | `void` | Runs the close operation. |
-| `value.EnableReconnect()` | `void` | Runs the enable reconnect operation. |
+| `value.Send(message: any)` | `void` |  |
+| `value.Close()` | `void` |  |
+| `value.EnableReconnect()` | `void` |  |
 | `value.Connected()` | `boolean` | Reports whether the connection currently owns a live WebSocket session. Returns `false` during reconnect backoff and after close. |
 | `value.Shutdown()` | `void` | Disables reconnect, cancels pending backoff, and closes the connection without allowing a replacement session. |
-| `value.Set(key: string, value: any)` | `void` | Runs the set operation. |
-| `value.Delete(key: string)` | `void` | Runs the delete operation. |
+| `value.Set(key: string, value: any)` | `void` |  |
+| `value.Delete(key: string)` | `void` |  |
 | `value.Get(key: string)` | `any` | Returns stored connection data. |
 | `value.GetAll()` | `object` | Returns stored connection data. |
 | `value.GetHeader(key: string)` | `string` | Returns stored connection data. |
@@ -36,24 +36,24 @@ import "std:ws"
 
 ### `wsServer` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.OnConnect(handler: function)` | `void` | Registers a callback for new connections. |
 | `value.OnMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
 | `value.OnDisconnect(handler: function)` | `void` | Registers a callback for disconnected clients. |
 | `value.AllowAllOrigins()` | `void` | Allows browser WebSocket upgrades from any origin. Call only for intentionally public cross-origin endpoints. |
-| `value.Broadcast(message: string)` | `void` | Runs the broadcast operation. |
+| `value.Broadcast(message: string)` | `void` |  |
 | `value.GetConnections()` | `array` | Returns connections. |
 | `value.Start()` | `error` | Starts the standalone HTTP WebSocket server and blocks. |
 | `value.StartTLS(certFile: string, keyFile: string)` | `error` | Starts the standalone HTTPS WebSocket server and blocks. |
-| `value.HandleWebSocket()` | `http.HandlerFunc` | Runs the handle web socket operation. |
-| `value.Stop()` | `error` | Runs the stop operation. |
+| `value.HandleWebSocket()` | `http.HandlerFunc` |  |
+| `value.Stop()` | `error` |  |
 
 ## Mounting on serve
 
 Prefer `ws.New()` when the HTTP server owns the listener:
 
-```javascript
+```osl
 import "std:serve"
 import "std:ws"
 
@@ -81,18 +81,16 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 
 - Prefer `import "std:ws"`; the older `import "osl/ws"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
 TLS uses normal certificate verification and servers enforce same-origin
 upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins. Upgrade
 handshakes time out after 10 seconds.
-Client and reconnect handshakes reuse one bounded dialer and the same requested
-subprotocol headers. Callback panics share
-one recovery boundary, connection iteration is shared by broadcast and shutdown,
-and connection close uses one idempotent shutdown path. Queued byte messages are
-copied so later caller mutations cannot alter data in flight.
+Client and reconnect handshakes use the same timeout and requested subprotocols. A panic in a
+callback is recovered. Closing a connection more than once is safe. The send queue copies byte
+messages, so changing the caller's array later cannot change data already queued.
 Standalone servers reject overlapping `Start` or `StartTLS` calls. `Stop` makes
 the active start call return `null`; listener failures still return their error.
-Shutdown blocks upgrade registration before closing the listener, drains every
-registered connection, and then permits a later start on the same server value.
+Shutdown rejects new upgrades, closes the listener, and drains registered connections. The same
+server value can be started again afterwards.

@@ -2,7 +2,7 @@
 
 The `fs` package reads and writes files, manages directories, and manipulates path strings.
 
-```javascript
+```osl
 import "std:fs"
 ```
 
@@ -12,14 +12,14 @@ import "std:fs"
 Returns the entire contents of the file at `path` as a string. Returns an empty string if the file
 can't be read - use [`fs.tryReadFile`](#result-returning-variants) if you need to distinguish errors.
 
-```javascript
+```osl
 string text = fs.readFile("notes.txt")
 ```
 
 #### `fs.readFileBytes(path)` → `byte[]`
 Returns the file's raw bytes, for binary data. Returns empty bytes on failure.
 
-```javascript
+```osl
 byte[] body = fs.readFileBytes("image.png")
 ```
 
@@ -29,12 +29,12 @@ The replacement is atomic: data is written to a temporary file in the same direc
 only after the complete file has been flushed and closed. A failed write leaves an existing file
 unchanged and removes the temporary file. Returns `true` on success.
 
-```javascript
+```osl
 fs.writeFile("out.txt", "hello world")
 ```
 
 #### `fs.writeFileBytes(path, data)` → `boolean`
-Writes raw bytes (a `bytes` value or an array of byte numbers) to `path` with the same atomic
+Writes a `byte[]` or an array of byte numbers to `path` with the same atomic
 replacement guarantees as `fs.writeFile`. Returns `true` on success.
 
 #### `fs.appendToFile(path, data)` → `boolean`
@@ -50,7 +50,7 @@ null-safe (reads return `""`, writes return `false`), so a missing file can't cr
 The simplest way to stream a file: calls `fn(line)` for every line (line endings stripped), reading
 one buffered chunk at a time. Does nothing if the file can't be opened.
 
-```javascript
+```osl
 fs.eachLine("big.log", def(line) -> (
   log line
 ))
@@ -60,15 +60,15 @@ fs.eachLine("big.log", def(line) -> (
 One-shot conveniences that open the file, run the matching [file handle method](#file-handle-methods)
 and close it. `n` defaults to 10.
 
-```javascript
+```osl
 log fs.tail("app.log", 20).join("\n")
-for line fs.grep("app.log", "^ERROR") ( log line )
+for line in fs.grep("app.log", "^ERROR") ( log line )
 ```
 
 #### `fs.open(path)` → `file`
 Opens `path` for buffered reading. Returns `null` if the file can't be opened.
 
-```javascript
+```osl
 auto f = fs.open("big.log")
 while !f.eof() (
   log f.readLine()
@@ -79,7 +79,7 @@ f.close()
 #### `fs.create(path)` → `file`
 Creates (or truncates) `path` and returns a buffered write handle. Returns `null` on failure.
 
-```javascript
+```osl
 auto out = fs.create("out.txt")
 for i 1000 (
   out.write("row " + i + "\n")
@@ -100,7 +100,7 @@ returns `""`, so loop on `file.eof()` rather than on the return value.
 Returns the next `n` bytes, or everything remaining when called with no argument. Returns `""` at
 end of file.
 
-```javascript
+```osl
 auto f = fs.open("data.bin")
 while !f.eof() (
   chunk = f.read(65536)
@@ -119,25 +119,25 @@ a fresh handle that's the first `n` lines, read without touching the rest of the
 
 #### `file.tail(n?)` → `array`
 Returns the last `n` lines (default 10) of the file, reading backwards from the end in 64&nbsp;KB
-chunks — a multi-gigabyte log costs the same as a tiny one. Doesn't move the read position, so you
+chunks. A multi-gigabyte log costs the same as a tiny one. It does not move the read position, so you
 can `tail` and then still read from the top.
 
 #### `file.grep(pattern)` → `array`
-Streams the rest of the file and returns the lines matching `pattern` — a regular expression, or a
+Streams the rest of the file and returns lines matching `pattern`. Pass a regular expression or a
 plain substring if the pattern doesn't compile as one. Only matching lines are held in memory.
 
-```javascript
+```osl
 auto f = fs.open("app.log")
 errors = f.grep("^ERROR")
 f.close()
 ```
 
 #### `file.write(data)` → `boolean`
-Buffers `data` (a string, `bytes` value, or array of byte numbers) for writing. Returns `true` on
+Buffers `data` as a string, `byte[]`, or array of byte numbers. Returns `true` on
 success. Data is flushed when the buffer fills, on `flush()`, and on `close()`.
 
 #### `file.flush()` → `boolean`
-Forces buffered writes to disk without closing — useful for long-lived logs.
+Forces buffered writes to disk without closing. Use it for long-lived logs.
 
 #### `file.close()` → `boolean`
 Flushes any buffered writes and closes the file. Always call this when done with a handle.
@@ -148,7 +148,7 @@ Flushes any buffered writes and closes the file. Always call this when done with
 Reports whether a file or directory exists at `path`.
 
 #### `fs.isDir(path)` → `boolean`
-Reports whether `path` is a directory through the shared stat-or-default path.
+Reports whether `path` is a directory. Missing paths return `false`.
 
 #### `fs.remove(path)` → `boolean`
 Deletes the file or directory at `path` (directories are removed recursively). Returns `true` on
@@ -171,16 +171,16 @@ preserving the file's permissions. Fails if `dstPath` already exists.
 Recursively copies the directory `srcPath` to `dstPath`.
 
 #### `fs.readDir(path)` → `array`
-Returns the names of the entries directly inside `path` through the shared directory-entry mapper.
+Returns the names of entries directly inside `path`.
 
-```javascript
+```osl
 for i fs.readDir(".").len (
   log fs.readDir(".")[i]
 )
 ```
 
 #### `fs.readDirAll(path)` → `array`
-Returns the entries inside `path` as objects with details through the same directory-entry mapper.
+Returns entries inside `path` as objects with names, paths, extensions, and types.
 
 #### `fs.glob(pattern)` → `array`
 Returns the paths matching a shell glob pattern, e.g. `fs.glob("src/*.osl")`.
@@ -197,10 +197,10 @@ Changes the current working directory to `path`.
 ## File metadata
 
 #### `fs.getSize(path)` → `number`
-Returns the file's size in bytes through the shared stat-or-default path.
+Returns the file's size in bytes, or `0` when it cannot be read.
 
 #### `fs.getModTime(path)` → `number`
-Returns the file's last-modified time as a Unix timestamp through the shared stat-or-default path.
+Returns the last-modified Unix timestamp, or `0` when it cannot be read.
 
 #### `fs.getStat(path)` → `object`
 Returns an object describing the file: size, modification time, whether it's a directory, and so on.
@@ -272,7 +272,7 @@ handle errors explicitly rather than checking for `""`/`false`.
 #### `fs.tryReadFile(path)` → `result`
 Reads a file, returning `ok(contents)` or `err(message)`.
 
-```javascript
+```osl
 auto r = fs.tryReadFile("config.json")
 if r.isOk() (
   log r.unwrap()
@@ -300,19 +300,19 @@ Deletes a path, returning `ok(true)` or `err(message)`.
 Creates directories, returning `ok(true)` or `err(message)`.
 
 #### `fs.tryReadDir(path)` → `result`
-Lists a directory through the shared entry mapper, returning `ok(names)` or `err(message)`.
+Lists a directory, returning `ok(names)` or `err(message)`.
 
 ## Complete API reference
 
 ### `fs`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `fs.readFile(path: any)` | `string` | Reads text, returning an empty string on failure. |
 | `fs.readFileBytes(path: any)` | `byte[]` | Reads bytes, returning an empty byte array on failure. |
 | `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
 | `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
-| `fs.appendToFile(path: any, data: any)` | `boolean` | Runs the append to file operation. |
+| `fs.appendToFile(path: any, data: any)` | `boolean` |  |
 | `fs.open(path: any)` | `file` | Opens a buffered read stream, `null` on failure. |
 | `fs.create(path: any)` | `file` | Opens a buffered write stream (truncates), `null` on failure. |
 | `fs.append(path: any)` | `file` | Opens a buffered append stream, `null` on failure. |
@@ -322,53 +322,53 @@ Lists a directory through the shared entry mapper, returning `ok(names)` or `err
 | `fs.grep(path: any, pattern: any)` | `array` | Lines matching a regex (or substring). |
 | `fs.copy(srcPath: any, dstPath: any)` | `boolean` | Streams a file copy; fails if dst exists. |
 | `fs.glob(pattern: any)` | `array` | Paths matching a glob pattern. |
-| `fs.rename(oldPath: any, newPath: any)` | `boolean` | Runs the rename operation. |
-| `fs.exists(path: any)` | `boolean` | Reports whether the value or resource exists. |
+| `fs.rename(oldPath: any, newPath: any)` | `boolean` |  |
+| `fs.exists(path: any)` | `boolean` |  |
 | `fs.remove(path: any)` | `boolean` | Removes a value or resource. |
-| `fs.mkdir(path: any)` | `boolean` | Runs the mkdir operation. |
-| `fs.mkdirAll(path: any)` | `boolean` | Runs the mkdir all operation. |
-| `fs.copyDir(srcPath: any, dstPath: any)` | `boolean` | Runs the copy dir operation. |
+| `fs.mkdir(path: any)` | `boolean` |  |
+| `fs.mkdirAll(path: any)` | `boolean` |  |
+| `fs.copyDir(srcPath: any, dstPath: any)` | `boolean` |  |
 | `fs.readDir(path: any)` | `array` | Reads dir. |
 | `fs.readDirAll(path: any)` | `array` | Reads dir all. |
 | `fs.walkDir(path: any, fn: function)` | `void` | Walks a directory tree and calls `fn` for each entry. |
-| `fs.walk(path: any)` | `array` | Runs the walk operation. |
-| `fs.isDir(path: any)` | `boolean` | Reports whether dir. |
-| `fs.getwd()` | `string` | Runs the getwd operation. |
-| `fs.chdir(path: any)` | `boolean` | Runs the chdir operation. |
-| `fs.joinPath(...path: any)` | `string` | Runs the join path operation. |
+| `fs.walk(path: any)` | `array` |  |
+| `fs.isDir(path: any)` | `boolean` |  |
+| `fs.getwd()` | `string` |  |
+| `fs.chdir(path: any)` | `boolean` |  |
+| `fs.joinPath(...path: any)` | `string` |  |
 | `fs.getBase(path: any)` | `string` | Returns base. |
 | `fs.getDir(path: any)` | `string` | Returns dir. |
 | `fs.getExt(path: any)` | `string` | Returns ext. |
 | `fs.getParts(path: any)` | `array` | Returns parts. |
 | `fs.getStem(path: any)` | `string` | Returns stem. |
-| `fs.cleanPath(path: any)` | `string` | Runs the clean path operation. |
-| `fs.isAbs(path: any)` | `boolean` | Reports whether abs. |
-| `fs.splitPath(path: any)` | `array` | Runs the split path operation. |
-| `fs.splitExt(path: any)` | `array` | Runs the split ext operation. |
-| `fs.segments(path: any)` | `array` | Runs the segments operation. |
-| `fs.withExt(path: any, ext: any)` | `string` | Runs the with ext operation. |
-| `fs.withName(path: any, name: any)` | `string` | Runs the with name operation. |
+| `fs.cleanPath(path: any)` | `string` |  |
+| `fs.isAbs(path: any)` | `boolean` |  |
+| `fs.splitPath(path: any)` | `array` |  |
+| `fs.splitExt(path: any)` | `array` |  |
+| `fs.segments(path: any)` | `array` |  |
+| `fs.withExt(path: any, ext: any)` | `string` |  |
+| `fs.withName(path: any, name: any)` | `string` |  |
 | `fs.toPosix(path: any)` | `string` | Converts to posix. |
-| `fs.relPath(base: any, target: any)` | `string` | Runs the rel path operation. |
-| `fs.pathStartsWith(path: any, prefix: any)` | `boolean` | Runs the path starts with operation. |
+| `fs.relPath(base: any, target: any)` | `string` |  |
+| `fs.pathStartsWith(path: any, prefix: any)` | `boolean` |  |
 | `fs.getSize(path: any)` | `number` | Returns size. |
 | `fs.getModTime(path: any)` | `number` | Returns mod time. |
 | `fs.getStat(path: any)` | `object` | Returns stat. |
-| `fs.evalSymlinks(path: any)` | `string` | Runs the eval symlinks operation. |
-| `fs.tryReadFile(path: any)` | `*Result` | Runs the try read file operation. |
-| `fs.tryWriteFile(path: any, data: any)` | `*Result` | Runs the try write file operation. |
-| `fs.tryAppendToFile(path: any, data: any)` | `*Result` | Runs the try append to file operation. |
-| `fs.tryRename(oldPath: any, newPath: any)` | `*Result` | Runs the try rename operation. |
-| `fs.tryRemove(path: any)` | `*Result` | Runs the try remove operation. |
-| `fs.tryMkdirAll(path: any)` | `*Result` | Runs the try mkdir all operation. |
-| `fs.tryReadDir(path: any)` | `*Result` | Runs the try read dir operation. |
+| `fs.evalSymlinks(path: any)` | `string` |  |
+| `fs.tryReadFile(path: any)` | `*Result` |  |
+| `fs.tryWriteFile(path: any, data: any)` | `*Result` |  |
+| `fs.tryAppendToFile(path: any, data: any)` | `*Result` |  |
+| `fs.tryRename(oldPath: any, newPath: any)` | `*Result` |  |
+| `fs.tryRemove(path: any)` | `*Result` |  |
+| `fs.tryMkdirAll(path: any)` | `*Result` |  |
+| `fs.tryReadDir(path: any)` | `*Result` |  |
 
 ### `file` (stream handle)
 
 Returned by `fs.open`, `fs.create` and `fs.append`; `null` on failure, and all methods are safe to
 call on a failed handle.
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `file.read(n?: number)` | `string` | Next `n` bytes, or everything remaining. |
 | `file.readLine()` | `string` | Next line, ending stripped. |
@@ -384,9 +384,8 @@ call on a failed handle.
 
 - Prefer `import "std:fs"`; the older `import "osl/fs"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Recursive copies reject copying a directory into itself. Reads are bounded,
-append variants share one file-opening path, buffered handles share one
-constructor, walk callbacks accept OSL functions, closed handles are null-safe,
-and symlink and permission failures return controlled results.
+`copyDir` rejects attempts to copy a directory into itself. Read helpers cap their allocations.
+Methods on a closed file handle return failure values instead of panicking. Walk callbacks accept
+OSL functions. Permission and symbolic-link errors are returned to the caller.

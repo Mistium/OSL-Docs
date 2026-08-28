@@ -2,7 +2,7 @@
 
 Use `mime` to inspect MIME types, file extensions, media categories, charsets, and content disposition headers.
 
-```javascript
+```osl
 import "std:mime"
 ```
 
@@ -10,24 +10,24 @@ import "std:mime"
 
 ### `mime`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `mime.typeByExt(ext: any)` | `string` | Runs the type by ext operation. |
+| `mime.typeByExt(ext: any)` | `string` |  |
 | `mime.byFilename(name: any)` | `string` | Resolves the filename's final extension through `typeByExt`. |
-| `mime.extByType(mtype: any)` | `string` | Runs the ext by type operation. |
+| `mime.extByType(mtype: any)` | `string` |  |
 | `mime.parse(contentType: any)` | `object` | Parses input data. |
 | `mime.format(mtype: any, params: object)` | `string` | Formats a value for display. |
 | `mime.resolve(input: any)` | `string` | Normalizes a MIME type, extension, or filename using final-extension semantics. |
-| `mime.isText(input: any)` | `boolean` | Reports whether text. |
-| `mime.isImage(input: any)` | `boolean` | Reports whether image. |
-| `mime.isAudio(input: any)` | `boolean` | Reports whether audio. |
-| `mime.isVideo(input: any)` | `boolean` | Reports whether video. |
+| `mime.isText(input: any)` | `boolean` |  |
+| `mime.isImage(input: any)` | `boolean` |  |
+| `mime.isAudio(input: any)` | `boolean` |  |
+| `mime.isVideo(input: any)` | `boolean` |  |
 
 ## Notes
 
 - Prefer `import "std:mime"`; the older `import "osl/mime"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-MIME parsing handles parameters, quoted values, case variants, unknown
-extensions, and malformed media types without panicking.
+MIME parsing accepts parameters, quoted values, and case differences. Unknown extensions and
+malformed media types return empty or failure values instead of panicking.
