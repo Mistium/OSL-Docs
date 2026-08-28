@@ -1,7 +1,5 @@
 # url
 
-> URL parsing, building and query-string handling
-
 Use `url` for parsing, building, joining, escaping, and editing URLs and query strings.
 
 ```javascript
@@ -37,7 +35,6 @@ log u["host"]
 ## Notes
 
 - Prefer `import "std:url"`; the older `import "osl/url"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

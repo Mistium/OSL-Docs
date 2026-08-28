@@ -1,7 +1,5 @@
 # ssh
 
-> SSH connections, remote commands and SCP
-
 Use `ssh` for SSH connections, remote commands, SCP transfers, tunnels, and key handling.
 
 ```javascript
@@ -29,8 +27,6 @@ import "std:ssh"
 
 ### `SSHClient` values
 
-Methods available on `SSHClient` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.exec(command: any)` | `object` | Runs for at most 30 seconds and captures at most 16 MiB of combined output. |
@@ -46,7 +42,6 @@ Methods available on `SSHClient` values returned by this package or constructed 
 ## Notes
 
 - Prefer `import "std:ssh"`; the older `import "osl/ssh"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Security and transfer behavior
 

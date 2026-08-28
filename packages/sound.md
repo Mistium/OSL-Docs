@@ -1,7 +1,5 @@
 # sound
 
-> Audio playback
-
 Use `sound` for loading and controlling audio playback.
 
 ```javascript
@@ -33,7 +31,6 @@ import "std:sound"
 ## Notes
 
 - Prefer `import "std:sound"`; the older `import "osl/sound"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

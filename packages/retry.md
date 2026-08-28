@@ -1,7 +1,5 @@
 # retry
 
-> Bounded retries with exponential backoff, jitter, and structured outcomes
-
 Use `retry` around transient operations that can be attempted again safely.
 
 ```osl

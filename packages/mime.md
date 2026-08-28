@@ -1,7 +1,5 @@
 # mime
 
-> MIME-type lookup and parsing
-
 Use `mime` to inspect MIME types, file extensions, media categories, charsets, and content disposition headers.
 
 ```javascript
@@ -28,7 +26,6 @@ import "std:mime"
 ## Notes
 
 - Prefer `import "std:mime"`; the older `import "osl/mime"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

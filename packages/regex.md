@@ -1,7 +1,5 @@
 # regex
 
-> Regular expressions plus validators and text helpers
-
 Use `regex` for regular expressions, replacements, splitting, validation helpers, and text extraction.
 
 ```javascript
@@ -68,7 +66,6 @@ log regex.findAll("[0-9]+", "abc123def456")
 ## Notes
 
 - Prefer `import "std:regex"`; the older `import "osl/regex"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

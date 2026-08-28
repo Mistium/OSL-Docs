@@ -1,7 +1,5 @@
 # sys
 
-> System info, environment, and running shell commands
-
 Use `sys` for process arguments, environment variables, working directories, process IDs, shell commands, and opening URLs.
 
 ```javascript
@@ -42,7 +40,6 @@ log sys.getCwd()
 ## Notes
 
 - Prefer `import "std:sys"`; the older `import "osl/sys"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

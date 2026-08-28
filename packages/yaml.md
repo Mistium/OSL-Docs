@@ -1,7 +1,5 @@
 # yaml
 
-> YAML parsing and encoding
-
 Use `yaml` for parsing YAML, writing YAML, converting to or from JSON, and editing map values.
 
 ```javascript
@@ -38,7 +36,6 @@ log data["name"]
 ## Notes
 
 - Prefer `import "std:yaml"`; the older `import "osl/yaml"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

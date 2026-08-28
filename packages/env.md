@@ -1,7 +1,5 @@
 # env
 
-> .env file loader and typed environment helper for OSL
-
 ```javascript
 import "std:env"
 ```
@@ -119,8 +117,6 @@ Returned by `env` methods; call these on the value you get back.
 
 ### `envFile` values
 
-Methods available on `envFile` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.OSLensure()` | `void` | Runs the oslensure operation. |
@@ -151,8 +147,6 @@ Methods available on `envFile` values returned by this package or constructed by
 
 ### `envValue` values
 
-Methods available on `envValue` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.key()` | `string` | Runs the key operation. |
@@ -166,7 +160,6 @@ Methods available on `envValue` values returned by this package or constructed b
 ## Notes
 
 - Prefer `import "std:env"`; the older `import "osl/env"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

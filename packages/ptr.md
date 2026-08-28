@@ -1,7 +1,5 @@
 # ptr
 
-> Low-level pointer operations
-
 Use `ptr` for low-level pointer-style references when you need explicit mutation through a handle.
 
 ```javascript
@@ -35,8 +33,6 @@ import "std:ptr"
 
 ### `TypedPointer` values
 
-Methods available on `TypedPointer` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.deref()` | `any` | Runs the deref operation. |
@@ -45,7 +41,6 @@ Methods available on `TypedPointer` values returned by this package or construct
 ## Notes
 
 - Prefer `import "std:ptr"`; the older `import "osl/ptr"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

@@ -1,7 +1,5 @@
 # ftp
 
-> FTP file transfers
-
 Use `ftp` for connecting to FTP servers and transferring, renaming, deleting, or synchronising files and directories.
 
 ```javascript
@@ -39,8 +37,6 @@ import "std:ftp"
 
 ### `FTP` values
 
-Methods available on `FTP` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.login()` | `boolean` | Runs the login operation. |
@@ -49,7 +45,6 @@ Methods available on `FTP` values returned by this package or constructed by the
 ## Notes
 
 - Prefer `import "std:ftp"`; the older `import "osl/ftp"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Connection and transfer behavior
 

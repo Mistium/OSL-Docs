@@ -1,7 +1,5 @@
 # torrent
 
-> Create and parse `.torrent` files
-
 Use `torrent` to create, inspect, edit, and serialise torrent metadata.
 
 ```javascript
@@ -18,8 +16,6 @@ import "std:torrent"
 | `torrent.parse(torrentData: any)` | `*Torrent` | Parses input data. |
 
 ### `Torrent` values
-
-Methods available on `Torrent` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -56,7 +52,6 @@ Methods available on `Torrent` values returned by this package or constructed by
 ## Notes
 
 - Prefer `import "std:torrent"`; the older `import "osl/torrent"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

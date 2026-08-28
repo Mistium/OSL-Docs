@@ -1,7 +1,5 @@
 # window
 
-> Open a window and draw to it
-
 The `window` package brings OSL's original graphical model to compiled programs: you open a real
 desktop window and draw into it every frame using OSL's **rendering commands** (the "draw cursor",
 shapes, text, icons and 3D). This is the same drawing model that powered originOS apps.
@@ -179,8 +177,6 @@ centext "use WASD" 10 : c#000
 
 ### `Window` values
 
-Methods available on `Window` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.Run(loop: function)` | `void` | Runs the window loop callback until the window closes. |
@@ -198,8 +194,6 @@ Methods available on `Window` values returned by this package or constructed by 
 | `value.KeyPressed(key: string)` | `boolean` | Runs the key pressed operation. |
 
 ### `winRender` values
-
-Methods available on `winRender` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -231,7 +225,6 @@ Methods available on `winRender` values returned by this package or constructed 
 ## Notes
 
 - Prefer `import "std:window"`; the older `import "osl/window"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

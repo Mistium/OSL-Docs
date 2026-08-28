@@ -1,7 +1,5 @@
 # js
 
-> Sandboxed JavaScript execution
-
 ```javascript
 import "std:js"
 ```

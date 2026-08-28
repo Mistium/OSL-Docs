@@ -1,7 +1,5 @@
 # cron
 
-> Cron-style job scheduling
-
 Use `cron` to register named jobs, run them manually, or keep a scheduler loop checking cron-style schedules.
 
 ```javascript
@@ -39,7 +37,6 @@ import "std:cron"
 ## Notes
 
 - Prefer `import "std:cron"`; the older `import "osl/cron"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

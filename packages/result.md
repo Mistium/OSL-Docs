@@ -1,7 +1,5 @@
 # result
 
-> Success/error result values
-
 Use `result` to return either a success value or an error value from APIs that should not throw immediately.
 
 ```javascript
@@ -46,4 +44,3 @@ success type and defaults its error accessor to `string`; use `result<T, E>` to 
 ## Notes
 
 - Prefer `import "std:result"`; the older `import "osl/result"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

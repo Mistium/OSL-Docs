@@ -1,7 +1,5 @@
 # date
 
-> Dates, durations and time zones
-
 Use `date` for current time, Unix timestamps, durations, time-zone conversion, formatting, and date arithmetic.
 
 ```javascript
@@ -22,8 +20,6 @@ import "std:date"
 | `date.daysInMonth(year: number, month: number)` | `number` | Runs the days in month operation. |
 
 ### `dateDateTime` values
-
-Methods available on `dateDateTime` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -46,8 +42,6 @@ Methods available on `dateDateTime` values returned by this package or construct
 
 ### `dateDuration` values
 
-Methods available on `dateDuration` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.totalMilliseconds()` | `number` | Runs the total milliseconds operation. |
@@ -58,8 +52,6 @@ Methods available on `dateDuration` values returned by this package or construct
 
 ### `dateZonedDateTime` values
 
-Methods available on `dateZonedDateTime` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.iso()` | `string` | Formats the value in its timezone, falling back to UTC when invalid. |
@@ -68,7 +60,6 @@ Methods available on `dateZonedDateTime` values returned by this package or cons
 ## Notes
 
 - Prefer `import "std:date"`; the older `import "osl/date"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

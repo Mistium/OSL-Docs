@@ -1,7 +1,5 @@
 # crypto
 
-> Hashing, HMAC, AES, password hashing, file encryption, random
-
 Use `crypto` for hashing, random values, encoding helpers, password checks, signatures, and file encryption helpers.
 
 ```javascript
@@ -125,7 +123,6 @@ boolean genuine = crypto.ed25519Verify(keys.public, "hello", signature)
 ## Notes
 
 - Prefer `import "std:crypto"`; the older `import "osl/crypto"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

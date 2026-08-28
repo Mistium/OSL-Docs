@@ -1,7 +1,5 @@
 # img
 
-> Load, transform and save images
-
 Use `img` for loading, creating, resizing, drawing, encoding, and saving raster images.
 
 ```javascript
@@ -42,8 +40,6 @@ import "std:img"
 
 ### `imgImage` values
 
-Methods available on `imgImage` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.Close()` | `void` | Runs the close operation. |
@@ -54,7 +50,6 @@ Methods available on `imgImage` values returned by this package or constructed b
 ## Notes
 
 - Prefer `import "std:img"`; the older `import "osl/img"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

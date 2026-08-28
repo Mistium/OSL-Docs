@@ -1,7 +1,5 @@
 # schema
 
-> Composable schemas for validating and normalizing OSL values
-
 The `schema` package validates unknown values, nested objects, and arrays. Schemas are reusable and
 immutable: constraint methods return a new schema, leaving the original unchanged.
 

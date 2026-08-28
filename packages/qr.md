@@ -1,7 +1,5 @@
 # qr
 
-> QR codes and barcodes
-
 Use `qr` for QR codes, simple barcode-like outputs, and saving generated codes as image files.
 
 ```javascript
@@ -43,7 +41,6 @@ import "std:qr"
 ## Notes
 
 - Prefer `import "std:qr"`; the older `import "osl/qr"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

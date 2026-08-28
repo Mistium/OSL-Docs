@@ -1,7 +1,5 @@
 # net
 
-> Low-level TCP/UDP sockets and DNS lookups
-
 Use `net` for low-level TCP and UDP clients/servers, DNS lookups, and IP/port utilities.
 
 ```javascript
@@ -33,8 +31,6 @@ log addrs
 
 ### `TCPConn` values
 
-Methods available on `TCPConn` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.write(data: any)` | `boolean` | Converts the value to text and uses the shared byte-write path. |
@@ -48,8 +44,6 @@ Methods available on `TCPConn` values returned by this package or constructed by
 
 ### `UDPConn` values
 
-Methods available on `UDPConn` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.write(data: any, targetAddress: any)` | `boolean` | Runs the write operation. |
@@ -59,7 +53,6 @@ Methods available on `UDPConn` values returned by this package or constructed by
 ## Notes
 
 - Prefer `import "std:net"`; the older `import "osl/net"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

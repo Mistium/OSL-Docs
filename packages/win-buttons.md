@@ -1,7 +1,5 @@
 # win-buttons
 
-> Native window control buttons
-
 ```javascript
 import "std:win-buttons"
 ```

@@ -1,7 +1,5 @@
 # log
 
-> Levelled, colourful logging
-
 Use `log` for levelled terminal logging with configurable formatting, colors, file output, and timing helpers.
 
 ```javascript
@@ -58,7 +56,6 @@ log.warn("cache is empty")
 ## Notes
 
 - Prefer `import "std:log"`; the older `import "osl/log"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

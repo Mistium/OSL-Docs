@@ -1,7 +1,5 @@
 # email
 
-> Compose and send email (SMTP)
-
 Use `email` to compose SMTP messages, set recipients and bodies, attach files, preview messages, and send through common SMTP providers.
 
 ```javascript
@@ -57,7 +55,6 @@ import "std:email"
 ## Notes
 
 - Prefer `import "std:email"`; the older `import "osl/email"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

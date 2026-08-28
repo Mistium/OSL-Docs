@@ -1,7 +1,5 @@
 # raylib
 
-> Native windowing, input, 2D and 3D drawing, collision helpers, and managed textures
-
 `osl/raylib` wraps raylib-go with OSL values and a compact frame-loop API. It is for native desktop
 builds. Use `osl compile` or `osl run`; browser builds intentionally reject this package.
 

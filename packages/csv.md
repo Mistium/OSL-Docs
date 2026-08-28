@@ -1,7 +1,5 @@
 # csv
 
-> CSV parsing plus a small dataframe-style toolkit
-
 Use `csv` for CSV parsing, writing, and table-style transforms over arrays of row objects.
 
 ```javascript
@@ -64,7 +62,6 @@ log rows[0]["name"]
 ## Notes
 
 - Prefer `import "std:csv"`; the older `import "osl/csv"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

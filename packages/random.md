@@ -1,7 +1,5 @@
 # random
 
-> Seedable pseudo-random numbers
-
 Use `random` for seedable pseudo-random numbers, choices, shuffling, and generated strings. For security-sensitive randomness, use `crypto`.
 
 ```javascript
@@ -38,7 +36,6 @@ log random.between(1, 10)  // integer in [1, 10] (inclusive)
 ## Notes
 
 - Prefer `import "std:random"`; the older `import "osl/random"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

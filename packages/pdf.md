@@ -1,7 +1,5 @@
 # pdf
 
-> Generate PDF documents
-
 Use `pdf` to build PDF documents with text, lines, shapes, images, pages, metadata, and simple layout helpers.
 
 ```javascript
@@ -58,7 +56,6 @@ doc.save("hello.pdf")
 ## Notes
 
 - Prefer `import "std:pdf"`; the older `import "osl/pdf"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

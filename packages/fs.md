@@ -1,7 +1,5 @@
 # fs
 
-> Files, directories and path utilities
-
 The `fs` package reads and writes files, manages directories, and manipulates path strings.
 
 ```javascript
@@ -18,8 +16,12 @@ can't be read - use [`fs.tryReadFile`](#result-returning-variants) if you need t
 string text = fs.readFile("notes.txt")
 ```
 
-#### `fs.readFileBytes(path)` → `bytes`
+#### `fs.readFileBytes(path)` → `byte[]`
 Returns the file's raw bytes, for binary data. Returns empty bytes on failure.
+
+```javascript
+byte[] body = fs.readFileBytes("image.png")
+```
 
 #### `fs.writeFile(path, data)` → `boolean`
 Writes `data` (a string) to `path`, replacing any existing contents and creating the file if needed.
@@ -307,7 +309,7 @@ Lists a directory through the shared entry mapper, returning `ok(names)` or `err
 | Method | Returns | Description |
 | --- | --- | --- |
 | `fs.readFile(path: any)` | `string` | Reads text, returning an empty string on failure. |
-| `fs.readFileBytes(path: any)` | `bytes` | Reads bytes, returning empty bytes on failure. |
+| `fs.readFileBytes(path: any)` | `byte[]` | Reads bytes, returning an empty byte array on failure. |
 | `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
 | `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
 | `fs.appendToFile(path: any, data: any)` | `boolean` | Runs the append to file operation. |
@@ -381,7 +383,6 @@ call on a failed handle.
 ## Notes
 
 - Prefer `import "std:fs"`; the older `import "osl/fs"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

@@ -1,7 +1,5 @@
 # ws
 
-> WebSocket client and server
-
 Use `ws` for WebSocket clients and servers, connection callbacks, broadcast, and per-connection state.
 
 ```javascript
@@ -20,8 +18,6 @@ import "std:ws"
 
 ### `wsConnection` values
 
-Methods available on `wsConnection` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.Send(message: any)` | `void` | Runs the send operation. |
@@ -39,8 +35,6 @@ Methods available on `wsConnection` values returned by this package or construct
 | `value.OnClose(handler: function)` | `void` | Registers a callback for connection close. |
 
 ### `wsServer` values
-
-Methods available on `wsServer` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -86,7 +80,6 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 ## Notes
 
 - Prefer `import "std:ws"`; the older `import "osl/ws"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

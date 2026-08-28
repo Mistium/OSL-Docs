@@ -1,7 +1,5 @@
 # process
 
-> Spawn, manage and signal processes
-
 Use `process` to spawn external commands, capture output, stream input, manage environment variables, and signal processes.
 
 ```javascript
@@ -60,8 +58,6 @@ log p.run().output
 
 ### `Process` values
 
-Methods available on `Process` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.run()` | `object` | Runs the process and captures at most 16 MiB of combined output. |
@@ -78,7 +74,6 @@ Methods available on `Process` values returned by this package or constructed by
 ## Notes
 
 - Prefer `import "std:process"`; the older `import "osl/process"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 
