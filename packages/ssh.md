@@ -2,7 +2,7 @@
 
 Use `ssh` for SSH connections, remote commands, SCP transfers, tunnels, and key handling.
 
-```javascript
+```osl
 import "std:ssh"
 ```
 
@@ -10,24 +10,24 @@ import "std:ssh"
 
 ### `ssh`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `ssh.connect(host: any, port: any, user: any, password: any, privateKey: any)` | `*SSHClient` | Opens a connection after shared 1-65535 port validation; an empty port defaults to 22. |
-| `ssh.execRemote(host: any, port: any, user: any, password: any, privateKey: any, command: any)` | `object` | Runs the exec remote operation. |
-| `ssh.scpUpload(client: *SSHClient, localPath: any, remotePath: any)` | `boolean` | Uploads through the shared checked SFTP transfer path. |
-| `ssh.scpDownload(client: *SSHClient, remotePath: any, localPath: any)` | `boolean` | Downloads through the same checked SFTP transfer path. |
+| `ssh.connect(host: any, port: any, user: any, password: any, privateKey: any)` | `*SSHClient` | Opens a connection. Ports must be between 1 and 65,535; an empty port defaults to 22. |
+| `ssh.execRemote(host: any, port: any, user: any, password: any, privateKey: any, command: any)` | `object` |  |
+| `ssh.scpUpload(client: *SSHClient, localPath: any, remotePath: any)` | `boolean` | Uploads a file over SFTP and reports transfer errors. |
+| `ssh.scpDownload(client: *SSHClient, remotePath: any, localPath: any)` | `boolean` | Downloads a file over SFTP and reports transfer errors. |
 | `ssh.tunnel(localPort: any, remoteHost: any, remotePort: any, sshHost: any, sshPort: any)` | `*SSHClient` | Opens a verified tunnel using the same port validation and SSH port default. |
-| `ssh.generateKeyPair(keyType: any)` | `object` | Runs the generate key pair operation. |
-| `ssh.generateRSAKey()` | `string, string` | Generates RSA material through the shared private/public key encoder. |
-| `ssh.generateEd25519Key()` | `string, string` | Generates Ed25519 material through the shared private/public key encoder. |
+| `ssh.generateKeyPair(keyType: any)` | `object` |  |
+| `ssh.generateRSAKey()` | `string, string` | Returns PEM-encoded RSA private and public keys. |
+| `ssh.generateEd25519Key()` | `string, string` | Returns encoded Ed25519 private and public keys. |
 | `ssh.savePrivateKey(path: any, key: any)` | `boolean` | Saves private key. |
 | `ssh.savePublicKey(path: any, key: any)` | `boolean` | Saves public key. |
 | `ssh.loadPrivateKey(path: any)` | `string` | Loads private key. |
-| `ssh.fingerprint(publicKey: any)` | `string` | Runs the fingerprint operation. |
+| `ssh.fingerprint(publicKey: any)` | `string` |  |
 
 ### `SSHClient` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.exec(command: any)` | `object` | Runs for at most 30 seconds and captures at most 16 MiB of combined output. |
 | `value.execLimited(command: any, maxBytes: any)` | `object` | Runs for at most 30 seconds with a chosen output limit. Nonpositive values use 16 MiB; values above 1 GiB use 1 GiB. |
@@ -37,7 +37,7 @@ import "std:ssh"
 | `value.sendInput(input: any)` | `boolean` | Sends input. |
 | `value.readOutput(timeout: any)` | `string` | Reads the next ordered output chunk with a fractional-seconds timeout; repeated timeouts share one session-owned reader. Non-positive values use one millisecond. |
 | `value.close()` | `boolean` | Closes the resource. |
-| `value.isConnected()` | `boolean` | Reports whether connected. |
+| `value.isConnected()` | `boolean` |  |
 
 ## Notes
 

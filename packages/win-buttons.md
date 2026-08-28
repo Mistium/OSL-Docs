@@ -1,6 +1,6 @@
 # win-buttons
 
-```javascript
+```osl
 import "std:win-buttons"
 ```
 

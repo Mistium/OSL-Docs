@@ -2,7 +2,7 @@
 
 Use `notify` to show desktop notifications from an OSL program.
 
-```javascript
+```osl
 import "std:notify"
 ```
 
@@ -10,19 +10,19 @@ import "std:notify"
 
 ### `notify`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `notify.send(title: any, message: any)` | `boolean` | Sends data. |
 | `notify.sendWithSound(title: any, message: any, sound: any)` | `boolean` | Sends with sound on macOS and otherwise falls back to `send`. |
-| `notify.alert(title: any, message: any)` | `boolean` | Runs the alert operation. |
-| `notify.isAvailable()` | `boolean` | Reports whether the platform notification command is available. |
+| `notify.alert(title: any, message: any)` | `boolean` |  |
+| `notify.isAvailable()` | `boolean` |  |
 
 ## Notes
 
 - Prefer `import "std:notify"`; the older `import "osl/notify"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Notification text is passed as process arguments on macOS and Linux. Windows
-PowerShell literals escape embedded quotes before interpolation. Availability
-uses executable lookup and failures return false.
+On macOS and Linux, notification text is passed as command arguments rather than shell source. The
+Windows implementation escapes quotes before building its PowerShell literal. `isAvailable`
+checks for the platform command, and send failures return `false`.

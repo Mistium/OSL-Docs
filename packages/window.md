@@ -8,7 +8,7 @@ shapes, text, icons and 3D). This is the same drawing model that powered originO
 > `executeIconCommands` is now internal. Use the stable drawing commands and methods such as
 > `line`, `rect`, `window.Icon`, and `window.Text`.
 
-```javascript
+```osl
 import "std:window"
 ```
 
@@ -20,7 +20,7 @@ A windowed program has two parts:
 2. **The main loop** - everything after the `mainloop:` label runs **once per frame**. This is where
    you read input and draw.
 
-```javascript
+```osl
 import "std:window"
 
 window.setTitle("Hello OSL")
@@ -44,7 +44,7 @@ per-frame loop, and it keeps running until the window closes.
 
 Read the window's size and edges as **properties** (no parentheses):
 
-```javascript
+```osl
 window.width      window.height
 window.left       window.right
 window.top        window.bottom
@@ -68,7 +68,7 @@ Control the window with **methods**:
 
 Inside the loop you draw with **rendering commands**. They operate on a moving "draw cursor":
 
-```javascript
+```osl
 goto x y                 // move the draw cursor
 change_x n   change_y n  // move it relatively
 c "#ff0000"              // set the draw colour
@@ -81,7 +81,7 @@ centext "hello" 10       // draw text centred on the cursor
 Many commands accept an inline modifier after a colon - for example `: c#000` sets the colour just
 for that element:
 
-```javascript
+```osl
 centext "Score: " ++ score 10 : c#000
 ```
 
@@ -91,7 +91,7 @@ The rendering commands, modifiers, clipping operations, and input globals are do
 
 Keyboard keys are queried by name:
 
-```javascript
+```osl
 if "space".isKeyDown() (
   jump = true
 )
@@ -110,7 +110,7 @@ The window package also exposes per-frame **global variables** you can read dire
 
 ## A complete example
 
-```javascript
+```osl
 import "std:window"
 
 object player = { x: 0, y: 0 }
@@ -154,82 +154,80 @@ centext "use WASD" 10 : c#000
 
 ### `window`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `window.on(name: any, callback: any)` | `void` | Runs the on operation. |
-| `window.emit(name: any, ...args: any)` | `void` | Runs the emit operation. |
-| `window.show()` | `void` | Runs the show operation. |
-| `window.Create()` | `void` | Runs the create operation. |
-| `window.Goto(x: any, y: any)` | `void` | Runs the goto operation. |
-| `window.hide()` | `void` | Runs the hide operation. |
-| `window.resize(width: any, height: any)` | `void` | Runs the resize operation. |
+| `window.on(name: any, callback: any)` | `void` |  |
+| `window.emit(name: any, ...args: any)` | `void` |  |
+| `window.show()` | `void` |  |
+| `window.Create()` | `void` |  |
+| `window.Goto(x: any, y: any)` | `void` |  |
+| `window.hide()` | `void` |  |
+| `window.resize(width: any, height: any)` | `void` |  |
 | `window.close()` | `void` | Closes the resource. |
-| `window.minimise()` | `void` | Minimises through the shared safe native-window resolver. |
-| `window.fullscreen()` | `void` | Toggles fullscreen through the shared safe native-window resolver. |
-| `window.isFullscreen()` | `boolean` | Queries fullscreen through the shared safe native-window resolver. |
-| `window.color()` | `string` | Runs the color operation. |
+| `window.minimise()` | `void` | Minimizes the current native window. |
+| `window.fullscreen()` | `void` | Toggles fullscreen on the current native window. |
+| `window.isFullscreen()` | `boolean` | Reports whether the current native window is fullscreen. |
+| `window.color()` | `string` |  |
 | `window.setColor(col: any)` | `void` | Sets color. |
 | `window.setTitle(title: any)` | `void` | Sets title. |
-| `window.keyPressed(key: string)` | `boolean` | Runs the key pressed operation. |
+| `window.keyPressed(key: string)` | `boolean` |  |
 | `window.setResizable(resizable: boolean)` | `void` | Sets resizable. |
 | `window.setDragbox(box: any)` | `void` | Sets dragbox. |
-| `window.dragbox()` | `array` | Runs the dragbox operation. |
+| `window.dragbox()` | `array` |  |
 
 ### `Window` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.Run(loop: function)` | `void` | Runs the window loop callback until the window closes. |
-| `value.width()` | `number` | Runs the width operation. |
-| `value.height()` | `number` | Runs the height operation. |
-| `value.left()` | `number` | Runs the left operation. |
-| `value.right()` | `number` | Runs the right operation. |
-| `value.top()` | `number` | Runs the top operation. |
-| `value.bottom()` | `number` | Runs the bottom operation. |
+| `value.width()` | `number` |  |
+| `value.height()` | `number` |  |
+| `value.left()` | `number` |  |
+| `value.right()` | `number` |  |
+| `value.top()` | `number` |  |
+| `value.bottom()` | `number` |  |
 | `value.SetTitle(title: string)` | `void` | Sets title. |
-| `value.resize(width: any, height: any)` | `void` | Runs the resize operation. |
+| `value.resize(width: any, height: any)` | `void` |  |
 | `value.setResizable(resizable: boolean)` | `void` | Sets resizable. |
-| `value.Clear(col: color.Color)` | `void` | Runs the clear operation. |
-| `value.Update()` | `void` | Runs the update operation. |
-| `value.KeyPressed(key: string)` | `boolean` | Runs the key pressed operation. |
+| `value.Clear(col: color.Color)` | `void` |  |
+| `value.Update()` | `void` |  |
+| `value.KeyPressed(key: string)` | `boolean` |  |
 
 ### `winRender` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Hex(hex: any)` | `color.RGBA` | Runs the hex operation. |
-| `value.Color(col: any)` | `void` | Runs the color operation. |
-| `value.Goto(x: any, y: any)` | `void` | Runs the goto operation. |
-| `value.Loc(a: any, b: any, c: any, d: any)` | `void` | Runs the loc operation. |
+| `value.Hex(hex: any)` | `color.RGBA` |  |
+| `value.Color(col: any)` | `void` |  |
+| `value.Goto(x: any, y: any)` | `void` |  |
+| `value.Loc(a: any, b: any, c: any, d: any)` | `void` |  |
 | `value.toScreen(x: number, y: number)` | `pixel.Vec` | Converts to screen. |
-| `value.drawColor()` | `color.Color` | Runs the draw color operation. |
+| `value.drawColor()` | `color.Color` |  |
 | `value.Effect(name: any, value: any)` | `void` | Sets an effect; transparency is clamped when rendered. |
-| `value.penSize()` | `number` | Runs the pen size operation. |
-| `value.beginElement()` | `void` | Runs the begin element operation. |
-| `value.updateLast(minX: number, minY: number, maxX: number, maxY: number)` | `void` | Runs the update last operation. |
-| `value.checkClick()` | `void` | Runs the check click operation. |
-| `value.LineTo(endX: number, endY: number)` | `void` | Runs the line to operation. |
-| `value.Rect(...args: any)` | `void` | Runs the rect operation. |
-| `value.Icon(icon: any, size: number)` | `void` | Runs the icon operation. |
-| `value.Text(text: string, size: any)` | `void` | Runs the text operation. |
-| `value.Centext(text: string, size: any)` | `void` | Runs the centext operation. |
+| `value.penSize()` | `number` |  |
+| `value.beginElement()` | `void` |  |
+| `value.updateLast(minX: number, minY: number, maxX: number, maxY: number)` | `void` |  |
+| `value.checkClick()` | `void` |  |
+| `value.LineTo(endX: number, endY: number)` | `void` |  |
+| `value.Rect(...args: any)` | `void` |  |
+| `value.Icon(icon: any, size: number)` | `void` |  |
+| `value.Text(text: string, size: any)` | `void` |  |
+| `value.Centext(text: string, size: any)` | `void` |  |
 | `value.SetThickness(thickness: number)` | `void` | Sets thickness. |
-| `value.Change(offsetX: number, offsetY: number)` | `void` | Runs the change operation. |
-| `value.Direction(dirFloat: number)` | `void` | Runs the direction operation. |
-| `value.Turnright(angle: number)` | `void` | Runs the turnright operation. |
-| `value.Turnleft(angle: number)` | `void` | Runs the turnleft operation. |
-| `value.Pointat(x: number, y: number)` | `void` | Runs the pointat operation. |
-| `value.Image(key: string, w: any, h: any)` | `void` | Runs the image operation. |
+| `value.Change(offsetX: number, offsetY: number)` | `void` |  |
+| `value.Direction(dirFloat: number)` | `void` |  |
+| `value.Turnright(angle: number)` | `void` |  |
+| `value.Turnleft(angle: number)` | `void` |  |
+| `value.Pointat(x: number, y: number)` | `void` |  |
+| `value.Image(key: string, w: any, h: any)` | `void` |  |
 | `window.off(name: any, callback: any)` | `boolean` | Removes one event callback without disturbing other listeners. |
 
 ## Notes
 
 - Prefer `import "std:window"`; the older `import "osl/window"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Empty colours and image data are controlled without panics. PNG and JPEG data
-use Go's registered standard image decoder, and failed asynchronous image loads
-always release their inflight slot. Icon tokenization uses the standard field
-splitter, numeric opcodes share one arity parser, and immediate icon primitives
-reuse the batch drawing implementations.
+Empty colors and invalid image data return failure values instead of panicking. PNG and JPEG data
+use Go's image decoders. A failed asynchronous image load releases its queue slot. Icon commands
+split on whitespace and reject operations with the wrong number of numeric arguments.

@@ -3,7 +3,7 @@
 `osl/shader` allows writing fragment and vertex shaders in OSL syntax or standard GLSL, compiling
 them into valid GLSL code, and rendering procedural graphics directly to images or raylib windows.
 
-```javascript
+```osl
 import "std:shader"
 import "std:img"
 

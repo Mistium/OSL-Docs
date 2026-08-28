@@ -2,13 +2,13 @@
 
 Use `json` for parsing JSON into OSL values, serialising values, pretty-printing, validating JSON strings, and streaming large JSON files.
 
-```javascript
+```osl
 import "std:json"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:json"
 
 auto parsed = json.parse("{\"ok\":true}", {})
@@ -21,23 +21,23 @@ if parsed.isOk() (
 
 ### `json`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `json.parse(data: any, options: object)` | `*Result` | Parses one root value using the same trailing-data validation as streams. |
 | `json.parseObject(data: any)` | `*Result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
 | `json.parseArray(data: any)` | `*Result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
 | `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. Safe while another OSL thread mutates shared data. |
 | `json.format(data: any)` | `string` | Serialises the same value as two-space-indented JSON. Safe while another OSL thread mutates shared data. |
-| `json.isValid(data: any)` | `boolean` | Reports whether the input is valid. |
-| `json.isObject(data: any)` | `boolean` | Reports whether object. |
-| `json.isArray(data: any)` | `boolean` | Reports whether array. |
+| `json.isValid(data: any)` | `boolean` |  |
+| `json.isObject(data: any)` | `boolean` |  |
+| `json.isArray(data: any)` | `boolean` |  |
 | `json.open(path: any, maxBytes?: number)` | `*json.Stream` | Opens one JSON document for incremental token reading. |
 
 ## Streaming large files
 
 `json.open(path, maxBytes?)` returns a `*json.Stream`. The optional byte limit rejects an oversized file before it is read. Opening and parsing errors are reported by `stream.ok()` and `stream.error()`.
 
-```javascript
+```osl
 import "std:json"
 
 *json.Stream stream = json.open("project.json", 1073741824)
@@ -108,8 +108,8 @@ Closes the file and returns whether closing succeeded.
 - Prefer `import "std:json"`; the older `import "osl/json"` spelling remains supported.
 - Serialisation observes a consistent traversal of shared OSL objects and arrays. Concurrent OSL mutations wait until encoding finishes.
 
-## Edge-case behavior
+## Behavior and limits
 
-Parsing supports any JSON root value, rejects trailing data, numeric overflow,
-and excessive nesting, and bounds stream reads. Numbers decode as `float64`, so
-large integers outside its exact range may lose precision.
+The parser accepts any JSON value at the root. It rejects trailing data, overflowing numbers, and
+excessive nesting. Stream reads have a size limit. JSON numbers use 64-bit floating point, so large
+integers can lose precision.

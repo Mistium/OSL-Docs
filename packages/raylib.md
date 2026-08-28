@@ -3,7 +3,7 @@
 `osl/raylib` wraps raylib-go with OSL values and a compact frame-loop API. It is for native desktop
 builds. Use `osl compile` or `osl run`; browser builds intentionally reject this package.
 
-```javascript
+```osl
 import "std:raylib"
 
 player = {x: 20}

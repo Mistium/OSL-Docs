@@ -26,7 +26,7 @@ log this
 
 ### Local variables can be re-assigned without the local keyword
 
-```javascript
+```osl
 def myFunc() (
   local v = 0
   v ++

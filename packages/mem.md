@@ -4,7 +4,7 @@ The `mem` package exposes Go's runtime memory counters and standard pprof profil
 runtime already samples allocations, so importing this package adds no custom instrumentation
 or continuous work.
 
-```javascript
+```osl
 import "std:mem"
 ```
 
@@ -16,7 +16,7 @@ collection and file write only run when `dump` is called. The profile atomically
 destination after it has been flushed and closed. A failed dump leaves an existing profile intact
 and removes its temporary file.
 
-```javascript
+```osl
 mem.dump("heap.pprof")
 ```
 
@@ -45,7 +45,7 @@ the file cannot be written. Useful names for memory investigations are `heap`, `
 `goroutine`. Heap and allocation dumps force garbage collection first. Successful dumps replace
 the destination atomically; failures preserve an existing file.
 
-```javascript
+```osl
 mem.dumpProfile("goroutine", "goroutines.pprof")
 ```
 
@@ -78,7 +78,7 @@ Sets the average bytes allocated per heap-profile sample and returns the previou
 default is normally 524288 bytes. Set it once, as early as possible: smaller values improve
 profile resolution but add overhead, `1` records every allocation, and `0` disables profiling.
 
-```javascript
+```osl
 number oldRate = mem.setProfileRate(65536)
 ```
 
@@ -88,7 +88,7 @@ Starts the standard Go pprof HTTP endpoints on `address` and returns whether lis
 Bind to localhost unless the endpoint is protected; profiles can contain sensitive process data.
 Header reads time out after 10 seconds. The idle endpoint adds no custom sampling loop.
 
-```javascript
+```osl
 mem.serve("127.0.0.1:6060")
 ```
 

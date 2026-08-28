@@ -2,13 +2,13 @@
 
 Use `thread` to run functions in the background, coordinate parallel work, and pass messages.
 
-```javascript
+```osl
 import "std:thread"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:thread"
 
 auto t = thread.new(def() -> ( return 42 ))
@@ -19,12 +19,12 @@ log t.wait()
 
 ### `thread`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `thread.new(fn: any, ...args: any)` | `*Thread` | Creates and starts a new thread. |
 | `thread.wait()` | `any` | Waits for the result. If the task failed, rethrows its error with the original task and spawn locations. |
 | `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. If a completed task failed, rethrows its error. A timeout stops waiting; it does not cancel the task. |
-| `thread.isDone()` | `boolean` | Reports whether the thread is done. |
+| `thread.isDone()` | `boolean` |  |
 | `thread.age()` | `number` | Returns the age of the thread in milliseconds. |
 | `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with additional failures attached. |
 | `thread.race(threads: array)` | `any` | Waits for the first thread in the array to complete and returns its result. If the winning task failed, rethrows its error. |
@@ -33,13 +33,13 @@ log t.wait()
 
 ### `*Channel`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `channel.send(value: any)` | `boolean` | Sends a value into the channel. Returns `false` if closed, otherwise `true`. |
 | `channel.recv()` | `any` | Receives a value from the channel, blocking until an item is available or the channel is closed. Returns `null` when closed and empty. |
 | `channel.tryRecv()` | `any` | Non-blocking receive. Returns the next item or `null` if empty or closed. |
 | `channel.close()` | `void` | Closes the channel. |
-| `channel.isClosed()` | `boolean` | Reports whether the channel is closed. |
+| `channel.isClosed()` | `boolean` |  |
 | `channel.len()` | `number` | Returns the number of buffered items currently in the channel. |
 
 ## Thread safety
@@ -54,7 +54,7 @@ callbacks use a safe whole-program fallback. This means:
 - Every OSL statement is atomic, including an index write, `.append`, `.set`, key read,
   or scalar read-modify-write such as `count += 1`.
 
-```javascript
+```osl
 import "std:thread"
 
 object shared = {}

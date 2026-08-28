@@ -2,13 +2,13 @@
 
 Use `template` to render small text or HTML templates with data maps.
 
-```javascript
+```osl
 import "std:template"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:template"
 
 log template.render("Hello {{name}}", {name: "Ada"})
@@ -18,17 +18,17 @@ log template.render("Hello {{name}}", {name: "Ada"})
 
 ### `template`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `template.render(tmpl: any, data: object)` | `string` | Renders interpolation, loops, and shared `if`/`unless` conditional blocks. |
-| `template.renderHTML(tmpl: any, data: object)` | `string` | Uses the shared renderer with standard HTML escaping enabled. |
+| `template.render(tmpl: any, data: object)` | `string` | Renders interpolation, loops, and `if` or `unless` blocks. |
+| `template.renderHTML(tmpl: any, data: object)` | `string` | Renders a template and HTML-escapes inserted values. |
 
 ## Notes
 
 - Prefer `import "std:template"`; the older `import "osl/template"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-False, zero, and null remain distinct from missing values. Invalid loops,
-unclosed directives, and all HTML-sensitive characters have controlled behavior.
-Recursive block rendering returns only the rendered text and reuses scope storage.
+`false`, zero, `null`, and a missing value remain distinct. Invalid loops and unclosed directives
+return errors. HTML rendering escapes all HTML-sensitive characters. A nested block receives its
+parent scope without leaking local values back into it.

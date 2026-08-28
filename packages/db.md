@@ -1,6 +1,6 @@
 # db
 
-```javascript
+```osl
 import "std:db"
 ```
 
@@ -99,112 +99,109 @@ Returned by `db` methods; call these on the value you get back.
 
 ### `db`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `db.open(path: any)` | `*DB` | Opens a resource. |
+| `db.open(path: any)` | `*DB` |  |
 | `db.openMemory()` | `*DB` | Opens memory. |
 
 ### `DB` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.close()` | `error` | Closes the resource. |
-| `value.exec(query: any, ...args: any)` | `boolean` | Runs the exec operation. |
-| `value.query(query: any, ...args: any)` | `array` | Runs the query operation. |
-| `value.queryOne(query: any, ...args: any)` | `DBRow` | Runs the query one operation. |
-| `value.queryMap(query: any, ...args: any)` | `array` | Runs the query map operation. |
-| `value.queryMapOne(query: any, ...args: any)` | `object` | Runs the query map one operation. |
-| `value.insert(table: any, data: object)` | `number` | Runs the insert operation. |
-| `value.update(table: any, data: object, where: any, ...whereArgs: any)` | `boolean` | Runs the update operation. |
+| `value.exec(query: any, ...args: any)` | `boolean` |  |
+| `value.query(query: any, ...args: any)` | `array` |  |
+| `value.queryOne(query: any, ...args: any)` | `DBRow` |  |
+| `value.queryMap(query: any, ...args: any)` | `array` |  |
+| `value.queryMapOne(query: any, ...args: any)` | `object` |  |
+| `value.insert(table: any, data: object)` | `number` |  |
+| `value.update(table: any, data: object, where: any, ...whereArgs: any)` | `boolean` |  |
 | `value.delete(table: any, where: any, ...whereArgs: any)` | `boolean` | Deletes a value. |
-| `value.count(table: any, where: any, ...whereArgs: any)` | `number` | Runs the count operation. |
-| `value.exists(table: any, where: any, ...whereArgs: any)` | `boolean` | Reports whether the value or resource exists. |
+| `value.count(table: any, where: any, ...whereArgs: any)` | `number` |  |
+| `value.exists(table: any, where: any, ...whereArgs: any)` | `boolean` |  |
 | `value.createTable(table: any, columns: object)` | `boolean` | Creates table. |
-| `value.dropTable(table: any)` | `boolean` | Runs the drop table operation. |
+| `value.dropTable(table: any)` | `boolean` |  |
 | `value.getTables()` | `array` | Returns tables. |
 | `value.getColumns(table: any)` | `array` | Returns columns. |
-| `value.begin()` | `boolean` | Runs the begin operation. |
-| `value.commit()` | `boolean` | Runs the commit operation. |
-| `value.rollback()` | `boolean` | Runs the rollback operation. |
-| `value.transaction(fn: any)` | `error` | Runs the transaction operation. |
-| `value.lastInsertId()` | `number` | Runs the last insert id operation. |
-| `value.rowsAffected(query: any, ...args: any)` | `number` | Runs the rows affected operation. |
-| `value.collection(name: any)` | `*dbCollection` | Runs the collection operation. |
-| `value.collections()` | `array` | Runs the collections operation. |
+| `value.begin()` | `boolean` |  |
+| `value.commit()` | `boolean` |  |
+| `value.rollback()` | `boolean` |  |
+| `value.transaction(fn: any)` | `error` |  |
+| `value.lastInsertId()` | `number` |  |
+| `value.rowsAffected(query: any, ...args: any)` | `number` |  |
+| `value.collection(name: any)` | `*dbCollection` |  |
+| `value.collections()` | `array` |  |
 
 ### `DBRow` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `value.get(colIndex: any)` | `any` | Returns a value. |
 | `value.getByName(colName: any)` | `any` | Returns by name. |
 | `value.toMap()` | `object` | Converts the value to an object. |
 | `value.toArray()` | `array` | Converts the value to an array. |
-| `value.isEmpty()` | `boolean` | Reports whether empty. |
-| `value.count()` | `number` | Runs the count operation. |
+| `value.isEmpty()` | `boolean` |  |
+| `value.count()` | `number` |  |
 
 ### `dbCollection` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.insertOne(doc: object)` | `any` | Runs the insert one operation. |
-| `value.insertMany(docs: array)` | `array` | Runs the insert many operation. |
+| `value.insertOne(doc: object)` | `any` |  |
+| `value.insertMany(docs: array)` | `array` |  |
 | `value.find(filter: object, ...opts: object)` | `array` | Returns every matching document after optional sorting and paging. |
 | `value.findOne(filter: object)` | `object` | Returns the first document from the shared matcher, or an empty object. |
-| `value.findById(id: any)` | `object` | Runs the find by id operation. |
-| `value.all()` | `array` | Runs the all operation. |
-| `value.count(filter: object)` | `number` | Runs the count operation. |
-| `value.exists(filter: object)` | `boolean` | Reports whether the value or resource exists. |
+| `value.findById(id: any)` | `object` |  |
+| `value.all()` | `array` |  |
+| `value.count(filter: object)` | `number` |  |
+| `value.exists(filter: object)` | `boolean` |  |
 | `value.updateOne(filter: object, changes: object)` | `number` | Updates at most one matching document and returns the count. |
 | `value.updateMany(filter: object, changes: object)` | `number` | Updates all matching documents and returns the count. |
 | `value.replaceOne(filter: object, doc: object)` | `number` | Replaces at most one matching document, preserving its ID. |
 | `value.deleteOne(filter: object)` | `number` | Deletes at most one matching document and returns the count. |
 | `value.deleteMany(filter: object)` | `number` | Deletes all matching documents and returns the count. |
-| `value.drop()` | `boolean` | Runs the drop operation. |
-| `value.save(doc: object)` | `void` | Runs the save operation. |
-| `value.query()` | `*dbQuery` | Runs the query operation. |
-| `value.where(field: any, op: any, value: any)` | `*dbQuery` | Runs the where operation. |
-| `value.fields(...cols: any)` | `*dbQuery` | Runs the fields operation. |
-| `value.sort(field: any, dir: any)` | `*dbQuery` | Runs the sort operation. |
+| `value.drop()` | `boolean` |  |
+| `value.save(doc: object)` | `void` |  |
+| `value.query()` | `*dbQuery` |  |
+| `value.where(field: any, op: any, value: any)` | `*dbQuery` |  |
+| `value.fields(...cols: any)` | `*dbQuery` |  |
+| `value.sort(field: any, dir: any)` | `*dbQuery` |  |
 
 ### `dbQuery` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.where(field: any, op: any, value: any)` | `*dbQuery` | Runs the where operation. |
-| `value.and(field: any, op: any, value: any)` | `*dbQuery` | Runs the and operation. |
-| `value.sort(field: any, dir: any)` | `*dbQuery` | Runs the sort operation. |
-| `value.fields(...cols: any)` | `*dbQuery` | Runs the fields operation. |
-| `value.limit(n: any)` | `*dbQuery` | Runs the limit operation. |
-| `value.skip(n: any)` | `*dbQuery` | Runs the skip operation. |
-| `value.matched()` | `array` | Runs the matched operation. |
-| `value.all()` | `array` | Runs the all operation. |
+| `value.where(field: any, op: any, value: any)` | `*dbQuery` |  |
+| `value.and(field: any, op: any, value: any)` | `*dbQuery` |  |
+| `value.sort(field: any, dir: any)` | `*dbQuery` |  |
+| `value.fields(...cols: any)` | `*dbQuery` |  |
+| `value.limit(n: any)` | `*dbQuery` |  |
+| `value.skip(n: any)` | `*dbQuery` |  |
+| `value.matched()` | `array` |  |
+| `value.all()` | `array` |  |
 | `value.get()` | `array` | Returns a value. |
-| `value.first()` | `object` | Runs the first operation. |
-| `value.count()` | `number` | Runs the count operation. |
-| `value.exists()` | `boolean` | Reports whether the value or resource exists. |
+| `value.first()` | `object` |  |
+| `value.count()` | `number` |  |
+| `value.exists()` | `boolean` |  |
 | `value.delete()` | `number` | Deletes a value. |
 | `value.addUpdate(kind: string, field: any, value: any)` | `*dbQuery` | Adds update. |
 | `value.set(field: any, value: any)` | `*dbQuery` | Sets a value. |
-| `value.unset(field: any)` | `*dbQuery` | Runs the unset operation. |
-| `value.inc(field: any, n: any)` | `*dbQuery` | Runs the inc operation. |
-| `value.mul(field: any, n: any)` | `*dbQuery` | Runs the mul operation. |
-| `value.min(field: any, value: any)` | `*dbQuery` | Runs the min operation. |
-| `value.max(field: any, value: any)` | `*dbQuery` | Runs the max operation. |
-| `value.push(field: any, value: any)` | `*dbQuery` | Runs the push operation. |
-| `value.pull(field: any, value: any)` | `*dbQuery` | Runs the pull operation. |
-| `value.rename(field: any, newField: any)` | `*dbQuery` | Runs the rename operation. |
-| `value.apply()` | `number` | Runs the apply operation. |
+| `value.unset(field: any)` | `*dbQuery` |  |
+| `value.inc(field: any, n: any)` | `*dbQuery` |  |
+| `value.mul(field: any, n: any)` | `*dbQuery` |  |
+| `value.min(field: any, value: any)` | `*dbQuery` |  |
+| `value.max(field: any, value: any)` | `*dbQuery` |  |
+| `value.push(field: any, value: any)` | `*dbQuery` |  |
+| `value.pull(field: any, value: any)` | `*dbQuery` |  |
+| `value.rename(field: any, newField: any)` | `*dbQuery` |  |
+| `value.apply()` | `number` |  |
 
 ## Notes
 
 - Prefer `import "std:db"`; the older `import "osl/db"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Connection, collection, and query lifecycle checks share named guards.
-Disk and memory databases share one initialization path. Validated SQL
-mutations share the guarded execution path, row projections and nested document
-paths each share one traversal, closed handles fail safely, and transaction
-completion shares one locked path. Nested transactions and negative windows are
-controlled.
+Methods on a closed database, collection, or query return failure values instead of panicking.
+Nested transactions are rejected. Query offsets and limits cannot be negative. Document queries
+support nested paths, and both in-memory and file-backed databases use the same API.

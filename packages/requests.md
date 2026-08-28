@@ -2,13 +2,13 @@
 
 Use `requests` for HTTP client calls that return status, headers, body text, and actionable transport errors.
 
-```javascript
+```osl
 import "std:requests"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:requests"
 
 auto res = requests.get("https://example.com")
@@ -19,7 +19,7 @@ log res["status"]
 
 ### `requests`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `requests.Request(method: any, url: any, ...data: object)` | `object` | Sends an HTTP request. |
 | `requests.get(url: any, ...data: object)` | `object` | Sends an HTTP GET request. |
@@ -45,9 +45,8 @@ connection failures, timeouts, and response-read failures when `success` is `fal
 - Prefer `import "std:requests"`; the older `import "osl/requests"` spelling remains supported.
 - `requests` can be imported alongside `osl/url` in the same program.
 
-## Edge-case behavior
+## Behavior and limits
 
-Requests honor explicit finite timeouts. Construction, transport, timeout, and read failures set
-`success: false` and preserve the cause in `error`;
-streaming close is idempotent, and SSE parsing supports
-multiline and final unterminated events.
+Requests honor finite timeouts. URL, transport, timeout, and body-read failures set `success` to
+`false` and put the cause in `error`. A response stream can be closed more than once. The SSE parser
+accepts multiline events and a final event without a trailing blank line.

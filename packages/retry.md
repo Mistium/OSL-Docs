@@ -16,7 +16,7 @@ if outcome.success ( log outcome.value )
 
 ## API reference
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
 | `retry.run(callback: function, options?: object)` | `object` | Calls the callback until it returns a regular value or `result.ok`, or the attempt limit is reached. Panics and `result.err` values are retried. |
 | `retry.backoff(attempt: number, options?: object)` | `number` | Returns the bounded delay in seconds for an attempt. |

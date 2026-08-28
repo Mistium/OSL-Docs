@@ -1,48 +1,39 @@
 # Packages
 
-OSL keeps the core language small and ships capabilities as a **standard library of packages**. You
-pull in what you need with `import`:
+OSL ships its standard library as importable packages:
 
-```javascript
+```osl
 import "std:fs"
 
 log fs.readFile("notes.txt")
 ```
 
-Each package exposes a single global value named after the package (`fs`, `crypto`, `serve`, …) whose
-methods you call. Prefer the `std:` prefix. The older `osl/` spelling remains supported and produces
-a migration warning.
+An import adds a package value with the same name. For example, `std:fs` adds `fs`. Use the `std:`
+prefix in new code. The older `osl/` spelling still works, but the compiler reports a migration
+warning.
 
 ## How imports work
 
 | Form | Meaning |
 | --- | --- |
-| `import "std:fs"` | A standard-library package (listed below). |
-| `import "./helpers.osl"` | Another OSL file in your project (path relative to the current file). |
-| `import "utils"` / `import "./utils"` | A **directory** — imports every `.osl` file inside it (path relative to the current file). |
-| `import "git.rotur.dev/me/tools"` | A Git-backed module installed by Opal. |
-| `import "go:net/http"` | A raw Go package, for advanced interop. |
+| `import "std:fs"` | A standard-library package listed below |
+| `import "./helpers.osl"` | A local OSL file, relative to the importing file |
+| `import "utils"` or `import "./utils"` | Every `.osl` file directly inside a local directory |
+| `import "git.rotur.dev/me/tools"` | A Git dependency installed by Opal |
+| `import "go:net/http"` | A Go package |
 
-Directory imports pull in all the `.osl` files directly inside the named folder. Child folders
-must be imported or re-exported explicitly.
-Directory imports reuse the resolver's already-sorted file slice directly, and bare-package
-resolution checks embedded file metadata without loading package source. Repeated core and package
-imports reuse their first registration instead of rebuilding import state or reparsing package signatures.
-Package and returned-object methods are registered from the same parsed Go method declarations.
-In the compiler source tree, embedded standard-library implementations use `.gotpl` because they
-are Go fragments assembled into generated programs rather than standalone Go compilation units.
+Directory imports sort files by name and do not recurse. Import or re-export child directories
+yourself.
 
 Missing third-party Go dependencies are fetched automatically when you compile.
 
-## Modules — `import(...)` as a value
+## Module objects
 
-The statement `import "./x.osl"` merges another file's globals and functions into the current
-scope. Imported top-level variables share the entry file's global scope, so functions in either
-file can use them. Top-level statements still run once, at the position of the first import.
-The **expression** form `import("./x.osl")` instead returns that file as a **module object**
-whose fields are its public functions:
+The statement form merges another file's declarations into the current scope. Its top-level
+statements run once, where OSL first imports the file. The expression form returns its public API
+as an object instead:
 
-```javascript
+```osl
 object math = import("./math.osl")
 
 log math.add(2, 3)
@@ -52,15 +43,15 @@ log math.square(4)
 Without an export statement, a file exposes all of its declarations. Adding an export statement
 turns on an explicit public API for that file:
 
-```javascript
+```osl
 export {add, subtract as difference}
 export {Vector} from "./geometry/vector.osl"
 export * as geometry from "./geometry"
 ```
 
-Consumers can import the full API, selected names, or an immutable namespace:
+Consumers can import the full API, selected names, or a namespace:
 
-```javascript
+```osl
 import * from "./math.osl"
 import {add, subtract as difference} from "./math.osl"
 import * as math from "./math.osl"
@@ -69,7 +60,7 @@ import * as math from "./math.osl"
 Files in the same directory can share private declarations. Consumers in another directory see
 only exported declarations. Missing, duplicate, and conflicting exports are compile errors.
 
-```javascript
+```osl
 // math.osl
 def _double(number n) number (
   return n * 2
@@ -92,7 +83,7 @@ whose path is a string literal.
 Some packages give you an **object** to keep working with. For example, `db.open()` returns a
 database handle, and you call further methods on *that*:
 
-```javascript
+```osl
 import "std:db"
 
 *db.DB handle = db.open("app.db")
@@ -100,8 +91,7 @@ handle.exec("CREATE TABLE users (id INTEGER, name TEXT)")
 array rows = handle.query("SELECT * FROM users")
 ```
 
-On each package page these are listed under **"Returned object"** headings. Pointer and value
-receiver methods are merged by the same direct returned-object lookup.
+Each package page lists handle methods in a separate section.
 
 ## The standard library at a glance
 
@@ -111,7 +101,7 @@ receiver methods are merged by the same direct returned-object lookup.
 | [serve](serve.md) | HTTP server / web framework (routing, middleware, contexts). |
 | [ws](ws.md) | WebSocket client and server. |
 | [originchats](originchats.md) | Bot framework for OriginChats servers. |
-| [requests](requests.md) | HTTP client (`get`/`post`/`put`/…). |
+| [requests](requests.md) | HTTP client methods including `get`, `post`, and `put`. |
 | [net](net.md) | Low-level TCP/UDP sockets and DNS lookups. |
 | [url](url.md) | URL parsing, building and query-string handling. |
 | [ftp](ftp.md) | FTP file transfers. |
@@ -216,8 +206,6 @@ receiver methods are merged by the same direct returned-object lookup.
 | --- | --- |
 | [email](email.md) | Compose and send email (SMTP). |
 | [torrent](torrent.md) | Create and parse `.torrent` files. |
-
----
 
 To read a package's source directly from the CLI:
 

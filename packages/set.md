@@ -2,13 +2,13 @@
 
 Use `set` when you need a collection of unique values with membership checks.
 
-```javascript
+```osl
 import "std:set"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:set"
 
 set names = set()
@@ -20,9 +20,9 @@ log names.contains("ada")
 
 ### `Set` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.add(v: any)` | `*Set` | Adds through the shared runtime comparable-value guard. |
+| `value.add(v: any)` | `*Set` | Adds a comparable value. |
 | `value.delete(v: any)` | `error` | Deletes through the same guard. |
 | `value.contains(v: any)` | `boolean` | Checks membership through the same guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
@@ -33,5 +33,5 @@ log names.contains("ada")
 
 - Prefer `import "std:set"`; the older `import "osl/set"` spelling remains supported.
 
-Composite and cyclic values are compared safely, and shared sets synchronize
+Composite and cyclic values are compared safely. Sets synchronize
 concurrent reads and writes.

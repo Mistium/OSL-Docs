@@ -2,13 +2,13 @@
 
 Use `net` for low-level TCP and UDP clients/servers, DNS lookups, and IP/port utilities.
 
-```javascript
+```osl
 import "std:net"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:net"
 
 auto addrs = net.lookupHost("example.com")
@@ -19,43 +19,43 @@ log addrs
 
 ### `net`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `net.dial(network: any, address: any)` | `*TCPConn` | Runs the dial operation. |
-| `net.listen(protocol: any, address: any)` | `*TCPConn` | Runs the listen operation. |
-| `net.listenUDP(network: any, address: any)` | `*UDPConn` | Runs the listen udp operation. |
-| `net.lookupHost(hostname: any)` | `array` | Resolves hostnames through the shared string-result lookup path. |
-| `net.lookupIP(hostname: any)` | `array` | Resolves IP addresses through the shared string-result lookup path. |
-| `net.lookupPort(service: any, network: any)` | `number` | Runs the lookup port operation. |
+| `net.dial(network: any, address: any)` | `*TCPConn` |  |
+| `net.listen(protocol: any, address: any)` | `*TCPConn` |  |
+| `net.listenUDP(network: any, address: any)` | `*UDPConn` |  |
+| `net.lookupHost(hostname: any)` | `array` | Returns the host's DNS addresses. |
+| `net.lookupIP(hostname: any)` | `array` | Returns the host's IP addresses. |
+| `net.lookupPort(service: any, network: any)` | `number` |  |
 | `net.getAddressInfo(hostname: any)` | `object` | Returns address info. |
 
 ### `TCPConn` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.write(data: any)` | `boolean` | Converts the value to text and uses the shared byte-write path. |
-| `value.writeBytes(data: bytes)` | `boolean` | Writes bytes to the connection. |
-| `value.read(bufferSize: any)` | `string` | Converts the result of the shared bounded byte-read path to text. |
-| `value.readBytes(bufferSize: any)` | `bytes` | Reads through the shared bounded buffer path and returns bytes. |
+| `value.write(data: any)` | `boolean` | Converts the value to text and writes it. |
+| `value.writeBytes(data: byte[])` | `boolean` | Writes bytes to the connection. |
+| `value.read(bufferSize: any)` | `string` | Reads up to the bounded buffer size and returns text. |
+| `value.readBytes(bufferSize: any)` | `byte[]` | Reads up to the bounded buffer size. |
 | `value.close()` | `boolean` | Closes the resource. |
-| `value.remoteAddr()` | `string` | Runs the remote addr operation. |
-| `value.localAddr()` | `string` | Runs the local addr operation. |
+| `value.remoteAddr()` | `string` |  |
+| `value.localAddr()` | `string` |  |
 | `value.setTimeout(seconds: any)` | `boolean` | Sets a deadline while preserving fractional seconds. |
 
 ### `UDPConn` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.write(data: any, targetAddress: any)` | `boolean` | Runs the write operation. |
-| `value.read(bufferSize: any)` | `object` | Runs the read operation. |
+| `value.write(data: any, targetAddress: any)` | `boolean` |  |
+| `value.read(bufferSize: any)` | `object` |  |
 | `value.close()` | `boolean` | Closes the resource. |
 
 ## Notes
 
 - Prefer `import "std:net"`; the older `import "osl/net"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-Ports, addresses, fractional deadlines, closed sockets, partial reads, and
-concurrent close/read/write calls return controlled results. Buffer sizes are
-bounded to 16 MiB through the shared clamp.
+Invalid ports or addresses return failure values. Timeouts can include fractional seconds. Closed
+sockets, partial reads, and concurrent close, read, or write calls do not panic. Read buffers are
+limited to 16 MiB.

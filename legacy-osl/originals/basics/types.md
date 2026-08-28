@@ -6,7 +6,7 @@ OSL supports six fundamental data types that can be used to represent various ki
 
 Text values enclosed in double quotation marks.
 
-```javascript
+```osl
 // Basic string
 name = "Hello"
 
@@ -21,7 +21,7 @@ path = "C:/Users/Documents"
 
 Logical values representing true or false (case-insensitive).
 
-```javascript
+```osl
 // Boolean values
 isTrue = true
 isFalse = false
@@ -39,7 +39,7 @@ result = true and false  // false
 
 Numeric values including integers and decimals.
 
-```javascript
+```osl
 // Integers
 count = 42
 negative = -10
@@ -56,7 +56,7 @@ total = 10.5 + 20  // 30.5
 
 Ordered collections of values enclosed in square brackets.
 
-```javascript
+```osl
 // Simple array
 names = ["Alice", "Bob", "Charlie"]
 
@@ -74,7 +74,7 @@ empty = []
 
 Key-value collections enclosed in curly braces.
 
-```javascript
+```osl
 // Simple object
 person = {
     name: "John",
@@ -103,7 +103,7 @@ data = {
 
 Represents an empty or undefined value.
 
-```javascript
+```osl
 // Explicit null
 value = null
 
@@ -123,7 +123,7 @@ user = {
 
 You can check the type of a value using the `typeof()` function:
 
-```javascript
+```osl
  typeof("Hello")     // "string"
 typeof(42)          // "number"
 typeof(true)        // "boolean"

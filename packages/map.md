@@ -2,13 +2,13 @@
 
 Use `map` when you need a mutable key-value map object with explicit methods for reading keys and values.
 
-```javascript
+```osl
 import "std:map"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:map"
 
 map users = map()
@@ -20,9 +20,9 @@ log users.get("ada")
 
 ### `Map` values
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `value.set(k: any, v: any)` | `*Map` | Sets a value after shared comparable-key validation. |
+| `value.set(k: any, v: any)` | `*Map` | Sets a value. Keys must be comparable. |
 | `value.get(k: any)` | `any` | Reads through the same comparable-key guard. |
 | `value.delete(k: any)` | `void` | Deletes through the same comparable-key guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
@@ -34,5 +34,5 @@ log users.get("ada")
 
 - Prefer `import "std:map"`; the older `import "osl/map"` spelling remains supported.
 
-Maps and sets use one runtime comparable-value guard for composite and cyclic keys, and shared maps synchronize
+Composite and cyclic keys are checked safely, and maps synchronize
 concurrent reads and writes.

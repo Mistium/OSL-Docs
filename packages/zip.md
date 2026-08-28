@@ -2,13 +2,13 @@
 
 Use `zip` for ZIP, TAR, and GZIP archives, compressed strings, listing archive contents, and extracting individual files.
 
-```javascript
+```osl
 import "std:zip"
 ```
 
 ## Example
 
-```javascript
+```osl
 import "std:zip"
 
 zip.compress("dist", "dist.zip")
@@ -19,37 +19,36 @@ log zip.list("dist.zip")
 
 ### `zip`
 
-| Method | Returns | Description |
+| Method | Returns | Notes |
 | --- | --- | --- |
-| `zip.compress(sourcePath: any, outputPath: any)` | `boolean` | Runs the compress operation. |
-| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts through the shared scoped archive reader. Entries whose names would escape outputPath are skipped. |
+| `zip.compress(sourcePath: any, outputPath: any)` | `boolean` |  |
+| `zip.decompress(zipPath: any, outputPath: any)` | `boolean` | Extracts a ZIP archive. Entries that escape `outputPath` are rejected. |
 | `zip.decompressLimited(zipPath: any, outputPath: any, maxBytes: number, maxFiles: number)` | `boolean` | Extracts an archive while enforcing total expanded-byte and entry-count limits. |
-| `zip.list(zipPath: any)` | `any` | Lists entry metadata through the shared scoped archive reader. |
-| `zip.tar(sourcePath: any, outputPath: any)` | `boolean` | Runs the tar operation. |
+| `zip.list(zipPath: any)` | `any` | Lists archive entry metadata. |
+| `zip.tar(sourcePath: any, outputPath: any)` | `boolean` |  |
 | `zip.untar(tarPath: any, outputPath: any)` | `boolean` | Extracts a tar archive into outputPath. Entries whose names would escape outputPath (path traversal) are skipped. |
-| `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Compresses through the shared checked file-copy path. |
+| `zip.gzip(sourcePath: any, outputPath: any)` | `boolean` | Compresses a file with GZIP. |
 | `zip.gzipLimited(sourcePath: any, outputPath: any, maxInputBytes: number, maxOutputBytes: number)` | `boolean` | Gzips a file while enforcing input and compressed-output limits. Removes an oversized output. |
-| `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Decompresses through the shared checked file-copy path. |
-| `zip.compressString(data: any)` | `string` | Runs the compress string operation. |
-| `zip.decompressString(data: any)` | `string` | Runs the decompress string operation. |
-| `zip.fileInfo(zipPath: any, filePath: any)` | `any` | Finds an entry through the shared archive lookup and returns its metadata. |
-| `zip.extractFile(zipPath: any, filePath: any, outputPath: any)` | `boolean` | Finds and extracts one entry through the shared archive lookup. |
+| `zip.gunzip(sourcePath: any, outputPath: any)` | `boolean` | Decompresses a GZIP file. |
+| `zip.compressString(data: any)` | `string` |  |
+| `zip.decompressString(data: any)` | `string` |  |
+| `zip.fileInfo(zipPath: any, filePath: any)` | `any` | Returns metadata for one archive entry. |
+| `zip.extractFile(zipPath: any, filePath: any, outputPath: any)` | `boolean` | Extracts one archive entry. |
 | `zip.addFile(zipPath: any, filePath: any)` | `boolean` | Atomically rewrites the archive and adds a file or directory tree using the same traversal as `compress`. |
 | `zip.removeFile(zipPath: any, filePath: any)` | `boolean` | Atomically rewrites the archive without the named entry. |
-| `zip.copyFile(sourcePath: string, outputPath: string)` | `boolean` | Copies a file without compression through the same checked stream path. |
-| `zip.create(path: string)` | `boolean` | Creates a new value. |
-| `zip.statistics(zipPath: any)` | `any` | Computes archive totals through the shared scoped archive reader. |
+| `zip.copyFile(sourcePath: string, outputPath: string)` | `boolean` | Copies a file without compression. |
+| `zip.create(path: string)` | `boolean` |  |
+| `zip.statistics(zipPath: any)` | `any` | Returns archive entry and size totals. |
 | `zip.gunzipLimited(sourcePath: any, outputPath: any, maxOutputBytes: any)` | `boolean` | Decompresses with an output-size limit and removes partial output on failure. |
 
 ## Notes
 
 - Prefer `import "std:zip"`; the older `import "osl/zip"` spelling remains supported.
 
-## Edge-case behavior
+## Behavior and limits
 
-ZIP, limited ZIP, and TAR extraction share the same resolved-destination checks and reject traversal
-and symlink escapes, including when extracting into the current directory. Extraction preflights
-normalized entry paths and rejects duplicates or file/directory conflicts before creating the output.
-Corrupt/truncated archives, oversized input/output, and write failures remove partial results. ZIP,
-TAR, and archive addition share one source-tree traversal; add and remove share one temporary-archive rewrite. Limited GZIP output stops at the configured byte boundary. Empty
-archives and statistics remain valid.
+ZIP and TAR extraction reject path traversal and escapes through symbolic links, including when the
+destination is the current directory. Before writing, extraction rejects duplicate paths and
+file/directory conflicts. Corrupt or truncated archives, size-limit failures, and write errors
+remove partial output. Limited GZIP extraction stops at the requested byte limit. Empty archives
+remain valid.

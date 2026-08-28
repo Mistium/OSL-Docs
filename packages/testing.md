@@ -4,7 +4,7 @@ The `testing` package provides assertion helpers that stop the current test with
 `AssertionError`. Test files end in `.test.osl` and can be run with `osl test`. Reserve that suffix for executable assertion suites; name ordinary demos
 and manually run programs with the plain `.osl` suffix so test discovery does not run them.
 
-```javascript
+```osl
 import "std:testing"
 
 testing.equal(2 + 2, 4)
@@ -27,7 +27,7 @@ Requires `condition` to be true. The optional message replaces the default failu
 Requires the two values to be equal using OSL equality semantics. Arrays and objects are compared
 by value.
 
-```javascript
+```osl
 testing.equal([1, 2].map(def(n) -> ( n * 2 )), [2, 4])
 ```
 
@@ -40,7 +40,7 @@ Requires the two values not to be equal.
 Requires two numeric values to differ by no more than `tolerance`. This is useful for floating-point
 results and simulations.
 
-```javascript
+```osl
 testing.near(0.1 + 0.2, 0.3, 0.000001)
 ```
 
@@ -56,7 +56,7 @@ Requires `value` not to be `null`.
 
 Calls a zero-argument function and requires it to panic or throw.
 
-```javascript
+```osl
 testing.panics(def() -> (
   throw "expected failure"
 ))
