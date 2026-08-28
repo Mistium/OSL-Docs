@@ -1,7 +1,5 @@
 # colors
 
-> Build colour values (used by image-producing packages)
-
 Use `colors` to construct color values for image, canvas, QR, PDF, and window drawing APIs.
 
 ```javascript
@@ -32,4 +30,3 @@ auto transparent = colors.RGBA(0, 0, 0, 128)
 ## Notes
 
 - Prefer `import "std:colors"`; the older `import "osl/colors"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

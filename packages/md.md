@@ -1,7 +1,5 @@
 # md
 
-> Markdown to HTML (CommonMark + GFM via goldmark)
-
 Use `md` to turn Markdown into HTML (and back with
 [`md.fromHTML`](#mdfromhtmlsource--string)). It is built for serving pages with
 [`serve`](serve.md) and composing markup with [`template`](template.md).

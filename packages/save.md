@@ -1,7 +1,5 @@
 # save
 
-> Simple persistent key-value storage
-
 Use `save` for simple persistent key-value data without designing a database schema.
 
 ```javascript
@@ -36,7 +34,6 @@ log store.getItem("theme").data
 ## Notes
 
 - Prefer `import "std:save"`; the older `import "osl/save"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

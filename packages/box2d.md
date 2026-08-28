@@ -1,7 +1,5 @@
 # box2d
 
-> Box2D-compatible rigid-body simulation using a pure-Go engine
-
 `osl/box2d` provides worlds, bodies, and box, circle, or polygon fixtures using a pure-Go engine.
 
 ```javascript

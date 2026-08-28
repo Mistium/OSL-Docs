@@ -1,7 +1,5 @@
 # zip
 
-> ZIP / TAR / GZIP compression
-
 Use `zip` for ZIP, TAR, and GZIP archives, compressed strings, listing archive contents, and extracting individual files.
 
 ```javascript
@@ -46,7 +44,6 @@ log zip.list("dist.zip")
 ## Notes
 
 - Prefer `import "std:zip"`; the older `import "osl/zip"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

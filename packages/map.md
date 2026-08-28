@@ -1,7 +1,5 @@
 # map
 
-> A mutable key-value map type
-
 Use `map` when you need a mutable key-value map object with explicit methods for reading keys and values.
 
 ```javascript
@@ -22,8 +20,6 @@ log users.get("ada")
 
 ### `Map` values
 
-Methods available on `Map` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.set(k: any, v: any)` | `*Map` | Sets a value after shared comparable-key validation. |
@@ -37,7 +33,6 @@ Methods available on `Map` values returned by this package or constructed by the
 ## Notes
 
 - Prefer `import "std:map"`; the older `import "osl/map"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 Maps and sets use one runtime comparable-value guard for composite and cyclic keys, and shared maps synchronize
 concurrent reads and writes.

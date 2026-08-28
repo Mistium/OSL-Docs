@@ -1,7 +1,5 @@
 # originchats
 
-> Bot framework for [OriginChats](https://github.com/Mistium/originchats) servers
-
 The `originchats` package is a batteries-included bot framework: it handles the WebSocket
 connection, the handshake → rotur validator → auth → ready flow, automatic reconnection,
 slash command registration, and request/response matching, so a bot is just handlers.

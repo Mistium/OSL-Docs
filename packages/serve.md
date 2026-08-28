@@ -1,7 +1,5 @@
 # serve
 
-> HTTP server / web framework
-
 `serve` is OSL's web framework. It gives you a router, request/response **contexts**, middleware, route
 groups, static-file serving, WebSockets and TLS.
 
@@ -327,8 +325,6 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 
 ### `serveContext` values
 
-Methods available on `serveContext` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.status(code: number)` | `void` | Runs the status operation. |
@@ -411,8 +407,6 @@ Methods available on `serveContext` values returned by this package or construct
 
 ### `serveRouter` values
 
-Methods available on `serveRouter` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.GET(pattern: string, ...handlers: serveHandler)` | `void` | Registers a GET route handler. |
@@ -449,7 +443,6 @@ Methods available on `serveRouter` values returned by this package or constructe
 ## Notes
 
 - Prefer `import "std:serve"`; the older `import "osl/serve"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

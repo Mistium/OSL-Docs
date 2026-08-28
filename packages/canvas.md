@@ -1,7 +1,5 @@
 # canvas
 
-> In-memory pixel canvas
-
 Use `canvas` for simple in-memory pixel buffers that can be filled, edited by pixel index or coordinate, and exported.
 
 ```javascript
@@ -42,4 +40,3 @@ After calling `canvas(w, h, bgHex)` to create a canvas, call these methods on th
 
 - Pixel positions are **0-based** (unlike OSL arrays and strings, which are 1-indexed): linear indices run from `0` to `c.pixels() - 1`, and coordinates from `(0, 0)` to `(c.width() - 1, c.height() - 1)`. Out-of-range reads return `"#000000"`.
 - Prefer `import "std:canvas"`; the older `import "osl/canvas"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

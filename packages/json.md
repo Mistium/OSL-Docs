@@ -1,7 +1,5 @@
 # json
 
-> JSON parsing and encoding
-
 Use `json` for parsing JSON into OSL values, serialising values, pretty-printing, validating JSON strings, and streaming large JSON files.
 
 ```javascript
@@ -108,7 +106,6 @@ Closes the file and returns whether closing succeeded.
 ## Notes
 
 - Prefer `import "std:json"`; the older `import "osl/json"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - Serialisation observes a consistent traversal of shared OSL objects and arrays. Concurrent OSL mutations wait until encoding finishes.
 
 ## Edge-case behavior

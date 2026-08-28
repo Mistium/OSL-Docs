@@ -1,7 +1,5 @@
 # db
 
-> SQLite database utilities
-
 ```javascript
 import "std:db"
 ```
@@ -108,8 +106,6 @@ Returned by `db` methods; call these on the value you get back.
 
 ### `DB` values
 
-Methods available on `DB` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.close()` | `error` | Closes the resource. |
@@ -138,8 +134,6 @@ Methods available on `DB` values returned by this package or constructed by the 
 
 ### `DBRow` values
 
-Methods available on `DBRow` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.get(colIndex: any)` | `any` | Returns a value. |
@@ -150,8 +144,6 @@ Methods available on `DBRow` values returned by this package or constructed by t
 | `value.count()` | `number` | Runs the count operation. |
 
 ### `dbCollection` values
-
-Methods available on `dbCollection` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -176,8 +168,6 @@ Methods available on `dbCollection` values returned by this package or construct
 | `value.sort(field: any, dir: any)` | `*dbQuery` | Runs the sort operation. |
 
 ### `dbQuery` values
-
-Methods available on `dbQuery` values returned by this package or constructed by the language.
 
 | Method | Returns | Description |
 | --- | --- | --- |
@@ -209,7 +199,6 @@ Methods available on `dbQuery` values returned by this package or constructed by
 ## Notes
 
 - Prefer `import "std:db"`; the older `import "osl/db"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

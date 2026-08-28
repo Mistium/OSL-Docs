@@ -1,7 +1,5 @@
 # requests
 
-> HTTP client (`get`/`post`/`put`/…)
-
 Use `requests` for HTTP client calls that return status, headers, body text, and actionable transport errors.
 
 ```javascript
@@ -46,7 +44,6 @@ connection failures, timeouts, and response-read failures when `success` is `fal
 
 - Prefer `import "std:requests"`; the older `import "osl/requests"` spelling remains supported.
 - `requests` can be imported alongside `osl/url` in the same program.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

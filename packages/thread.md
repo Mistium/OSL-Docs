@@ -1,7 +1,5 @@
 # thread
 
-> Background threads
-
 Use `thread` to run functions in the background, coordinate parallel work, and pass messages.
 
 ```javascript
@@ -94,7 +92,6 @@ always release them and use a consistent order when acquiring more than one.
 ## Notes
 
 - Prefer `import "std:thread"`; the older `import "osl/thread"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 - `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`), which is handy for releasing an `osl/sync` lock taken inside a thread.
 - Panicking tasks still complete their handle. `wait` and a completed `timeout` rethrow
   the failure; `waitAll` waits for every task before rethrowing.

@@ -1,7 +1,5 @@
 # template
 
-> Lightweight `{{ }}` templating with HTML escaping
-
 Use `template` to render small text or HTML templates with data maps.
 
 ```javascript
@@ -28,7 +26,6 @@ log template.render("Hello {{name}}", {name: "Ada"})
 ## Notes
 
 - Prefer `import "std:template"`; the older `import "osl/template"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

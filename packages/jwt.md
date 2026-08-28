@@ -1,7 +1,5 @@
 # jwt
 
-> JSON Web Token signing and verification
-
 Use `jwt` for signing, verifying, decoding, and inspecting JSON Web Tokens.
 
 ```javascript
@@ -35,7 +33,6 @@ log jwt.verify(token, "secret")
 ## Notes
 
 - Prefer `import "std:jwt"`; the older `import "osl/jwt"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

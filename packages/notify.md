@@ -1,7 +1,5 @@
 # notify
 
-> Desktop notifications
-
 Use `notify` to show desktop notifications from an OSL program.
 
 ```javascript
@@ -22,7 +20,6 @@ import "std:notify"
 ## Notes
 
 - Prefer `import "std:notify"`; the older `import "osl/notify"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

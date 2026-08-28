@@ -1,7 +1,5 @@
 # sync
 
-> Named locks and synchronisation
-
 Use `sync` for named locks, scoped locking, one-time execution, and wait groups across threads.
 
 ```javascript
@@ -33,4 +31,3 @@ import "std:sync"
 
 - Prefer `import "std:sync"`; the older `import "osl/sync"` spelling remains supported.
 - Importing `thread` activates concurrent compilation; server-style packages share the pin-trigger path.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.

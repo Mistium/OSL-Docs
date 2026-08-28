@@ -1,7 +1,5 @@
 # tui
 
-> Terminal UI: colours, boxes, tables, prompts, menus, charts
-
 Use `tui` to build terminal output with cursor movement, colors, boxes, tables, prompts, menus, charts, and key input.
 
 ```javascript
@@ -72,8 +70,6 @@ log tui.table(["Name"], [["Ada"]])
 
 ### `Screen` values
 
-Methods available on `Screen` values returned by this package or constructed by the language.
-
 | Method | Returns | Description |
 | --- | --- | --- |
 | `value.Set(x: any, y: any, text: string)` | `void` | Runs the set operation. |
@@ -84,7 +80,6 @@ Methods available on `Screen` values returned by this package or constructed by 
 ## Notes
 
 - Prefer `import "std:tui"`; the older `import "osl/tui"` spelling remains supported.
-- Return values such as `array` and `object` are regular OSL values unless a returned object section says otherwise.
 
 ## Edge-case behavior
 

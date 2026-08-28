@@ -1,7 +1,5 @@
 # mem
 
-> Low-overhead memory diagnostics
-
 The `mem` package exposes Go's runtime memory counters and standard pprof profiles. Go's
 runtime already samples allocations, so importing this package adds no custom instrumentation
 or continuous work.
