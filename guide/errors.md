@@ -22,6 +22,7 @@ object data = schema.safeParse(input) catch (
 ```
 
 Inside the catch block, `_` is the failed result or error value supplied by the expression. A catch block returns its replacement value with `return`.
+If the block reaches its end without returning, OSL rethrows the original error.
 
 ## Result values
 
