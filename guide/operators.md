@@ -20,7 +20,11 @@ number right = 10 + (2 * 3)
 
 The first expression is `(10 + 2) * 3`. The compiler warns about unparenthesized mixed arithmetic. Parenthesize the intended grouping, especially for time, sizes, and persisted values.
 
-Integer overflow raises an error. A divisor that the compiler knows is zero is a compile error.
+The compiler rejects integer overflow when both operands are known. Arithmetic whose values are
+only available at runtime keeps the same checked operations and raises an overflow error instead of
+wrapping. A divisor that the compiler knows is zero is also a compile error.
+
+String repetition rejects a count that the compiler knows is negative.
 
 ## Concatenation and merge
 
@@ -78,7 +82,9 @@ string label = ready ? "ready" "waiting"
 log 10 |> double |> format
 ```
 
-Bitwise operators are `&`, `|`, `^^`, `<<`, and `>>`.
+Bitwise operators are `&`, `|`, `^^`, `<<`, and `>>`. Shift counts cannot be negative. The compiler
+rejects a negative count when it can prove the value, including a known variable. Dynamic counts
+remain checked by Go at runtime.
 
 ## Regular-expression literals
 
