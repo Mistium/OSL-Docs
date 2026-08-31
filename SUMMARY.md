@@ -76,6 +76,7 @@
   * [log](packages/log.md)
   * [notify](packages/notify.md)
 * [Media and documents](packages/categories/media.md)
+  * [exif](packages/exif.md)
   * [img](packages/img.md)
   * [qr](packages/qr.md)
   * [pdf](packages/pdf.md)
