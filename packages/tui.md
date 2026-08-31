@@ -47,7 +47,7 @@ log tui.table(["Name"], [["Ada"]])
 | `tui.drawBox(x: any, y: any, width: any, height: any, title: any)` | `void` |  |
 | `tui.table(headers: array, rows: array)` | `string` | Formats headers and data through one padded-row renderer. |
 | `tui.tableColored(headers: array, rows: array, colorFn: any)` | `string` | Uses the shared row renderer and colors data cells with `colorFn`. |
-| `tui.Select(prompt: any, options: array)` | `any` |  |
+| `tui.select(prompt: any, options: array)` | `any` |  |
 | `tui.confirm(prompt: any)` | `boolean` |  |
 | `tui.menu(title: any, items: array)` | `any` |  |
 | `tui.input(prompt: any)` | `string` |  |
@@ -72,10 +72,10 @@ log tui.table(["Name"], [["Ada"]])
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Set(x: any, y: any, text: string)` | `void` |  |
-| `value.Clear()` | `void` |  |
-| `value.Render()` | `void` |  |
-| `value.WriteCenter(y: any, text: string)` | `void` | Writes center. |
+| `value.set(x: any, y: any, text: string)` | `void` |  |
+| `value.clear()` | `void` |  |
+| `value.render()` | `void` |  |
+| `value.writeCenter(y: any, text: string)` | `void` | Writes center. |
 
 ## Notes
 

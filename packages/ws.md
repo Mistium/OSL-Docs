@@ -12,61 +12,61 @@ import "std:ws"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `ws.Connect(url: string, ...protocols: string)` | `*wsConnection` | Opens a WebSocket client connection. |
-| `ws.New(...args: string)` | `*wsServer` | Builds a server meant to be mounted on `serve` (`app.WS`, `c.upgrade`). No listen address. Optional: `New(path)` or `New(addr, path)`. Path defaults to `"/"`. |
-| `ws.NewServer(addr: string, path: string)` | `*wsServer` | Builds a standalone server that can `Start`/`StartTLS` on `addr+path`, or still be mounted on serve like `New()`. |
+| `ws.connect(url: string, ...protocols: string)` | `*wsConnection` | Opens a WebSocket client connection. |
+| `ws.new(...args: string)` | `*wsServer` | Builds a server meant to be mounted on `serve` (`app.ws`, `c.upgrade`). No listen address. Optional: `new(path)` or `new(addr, path)`. Path defaults to `"/"`. |
+| `ws.newServer(addr: string, path: string)` | `*wsServer` | Builds a standalone server that can `start`/`startTLS` on `addr+path`, or still be mounted on serve like `new()`. |
 
 ### `wsConnection` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Send(message: any)` | `void` |  |
-| `value.Close()` | `void` |  |
-| `value.EnableReconnect()` | `void` |  |
-| `value.Connected()` | `boolean` | Reports whether the connection currently owns a live WebSocket session. Returns `false` during reconnect backoff and after close. |
-| `value.Shutdown()` | `void` | Disables reconnect, cancels pending backoff, and closes the connection without allowing a replacement session. |
-| `value.Set(key: string, value: any)` | `void` |  |
-| `value.Delete(key: string)` | `void` |  |
-| `value.Get(key: string)` | `any` | Returns stored connection data. |
-| `value.GetAll()` | `object` | Returns stored connection data. |
-| `value.GetHeader(key: string)` | `string` | Returns stored connection data. |
-| `value.GetHeaders()` | `object` | Returns stored connection data. |
-| `value.OnMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
-| `value.OnClose(handler: function)` | `void` | Registers a callback for connection close. |
+| `value.send(message: any)` | `void` | Queues a message for delivery. |
+| `value.close()` | `void` |  |
+| `value.enableReconnect()` | `void` |  |
+| `value.connected()` | `boolean` | Reports whether the connection currently owns a live WebSocket session. Returns `false` during reconnect backoff and after close. |
+| `value.shutdown()` | `void` | Disables reconnect, cancels pending backoff, and closes the connection without allowing a replacement session. |
+| `value.set(key: string, value: any)` | `void` |  |
+| `value.delete(key: string)` | `void` |  |
+| `value.get(key: string)` | `any` | Returns stored connection data. |
+| `value.getAll()` | `object` | Returns stored connection data. |
+| `value.getHeader(key: string)` | `string` | Returns stored connection data. |
+| `value.getHeaders()` | `object` | Returns stored connection data. |
+| `value.onMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
+| `value.onClose(handler: function)` | `void` | Registers a callback for connection close. |
 
 ### `wsServer` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.OnConnect(handler: function)` | `void` | Registers a callback for new connections. |
-| `value.OnMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
-| `value.OnDisconnect(handler: function)` | `void` | Registers a callback for disconnected clients. |
-| `value.AllowAllOrigins()` | `void` | Allows browser WebSocket upgrades from any origin. Call only for intentionally public cross-origin endpoints. |
-| `value.Broadcast(message: string)` | `void` |  |
-| `value.GetConnections()` | `array` | Returns connections. |
-| `value.Start()` | `error` | Starts the standalone HTTP WebSocket server and blocks. |
-| `value.StartTLS(certFile: string, keyFile: string)` | `error` | Starts the standalone HTTPS WebSocket server and blocks. |
-| `value.HandleWebSocket()` | `http.HandlerFunc` |  |
-| `value.Stop()` | `error` |  |
+| `value.onConnect(handler: function)` | `void` | Registers a callback for new connections. |
+| `value.onMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
+| `value.onDisconnect(handler: function)` | `void` | Registers a callback for disconnected clients. |
+| `value.allowAllOrigins()` | `void` | Allows browser WebSocket upgrades from any origin. Call only for intentionally public cross-origin endpoints. |
+| `value.broadcast(message: string)` | `void` |  |
+| `value.getConnections()` | `array` | Returns connections. |
+| `value.start()` | `error` | Starts the standalone HTTP WebSocket server and blocks. |
+| `value.startTLS(certFile: string, keyFile: string)` | `error` | Starts the standalone HTTPS WebSocket server and blocks. |
+| `value.handleWebSocket()` | `http.HandlerFunc` |  |
+| `value.stop()` | `error` |  |
 
 ## Mounting on serve
 
-Prefer `ws.New()` when the HTTP server owns the listener:
+Prefer `ws.new()` when the HTTP server owns the listener:
 
 ```osl
 import "std:serve"
 import "std:ws"
 
-auto socket = ws.New()
-socket.OnMessage(def(*ws.Connection conn, string msg) -> (
-  conn.Send("echo: " ++ msg)
+auto socket = ws.new()
+socket.onMessage(def(*ws.Connection conn, string msg) -> (
+  conn.send("echo: " ++ msg)
 ))
 *serve.Router app = serve.new()
-app.WS("/ws", socket)
+app.ws("/ws", socket)
 app.serve(":8080")
 ```
 
-`ws.NewServer(addr, path)` is for standalone servers that call `Start()` themselves.
+`ws.newServer(addr, path)` is for standalone servers that call `start()` themselves.
 
 #### `ws.send(connection, message)` → `boolean`
 
@@ -84,13 +84,13 @@ Closes an untyped connection value safely. Repeated closes are harmless.
 ## Behavior and limits
 
 TLS uses normal certificate verification and servers enforce same-origin
-upgrades by default. Call `AllowAllOrigins()` before mounting or starting a
+upgrades by default. Call `allowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins. Upgrade
 handshakes time out after 10 seconds.
 Client and reconnect handshakes use the same timeout and requested subprotocols. A panic in a
 callback is recovered. Closing a connection more than once is safe. The send queue copies byte
 messages, so changing the caller's array later cannot change data already queued.
-Standalone servers reject overlapping `Start` or `StartTLS` calls. `Stop` makes
+Standalone servers reject overlapping `start` or `startTLS` calls. `stop` makes
 the active start call return `null`; listener failures still return their error.
 Shutdown rejects new upgrades, closes the listener, and drains registered connections. The same
 server value can be started again afterwards.

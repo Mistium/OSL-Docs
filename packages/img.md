@@ -40,10 +40,10 @@ import "std:img"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Close()` | `void` | Releases the pixels. Repeated calls are safe. |
-| `value.Width()` | `number` | Returns the width, or zero after `Close`. |
-| `value.Height()` | `number` | Returns the height, or zero after `Close`. |
-| `value.Size()` | `object` | Returns `{w, h}`, or an empty object after `Close`. |
+| `value.close()` | `void` | Releases the pixels. Repeated calls are safe. |
+| `value.width()` | `number` | Returns the width, or zero after `close`. |
+| `value.height()` | `number` | Returns the height, or zero after `close`. |
+| `value.size()` | `object` | Returns `{w, h}`, or an empty object after `close`. |
 
 ## Notes
 
