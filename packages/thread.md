@@ -74,15 +74,17 @@ example, another thread can change `count` between an `if count < limit` check a
 assignment inside its block. Guard multi-statement critical sections with
 [`osl/sync`](sync.md).
 
-**Performance:** programs that never start a thread skip capture analysis and pay nothing; the
-locking is compiled out entirely. Named thread functions use a constant-time function-only
-scope lookup without reading their captured globals during thread creation. Generic, typed,
-read, and write array operations share the same lock path, and read-only statements can run
-in parallel. Shared scalar reads in polling conditions and pure conversions use that read
-boundary as well. Mutable statements use a shared statement boundary so scalar and collection
-updates remain atomic. Method and package calls use
-their own value/package synchronization and run outside that boundary, allowing HTTP,
-WebSocket, and similar callbacks to update captured values without deadlocking their caller.
+Programs that never start a thread skip capture analysis, and the compiler removes automatic
+locking. Named functions passed to `thread.new` or `thread.parallel` use a constant-time scope
+lookup without reading captured globals during thread creation. Other functions are not added to
+that lookup. Dynamic callbacks use the safe fallback.
+
+Generic, typed, read, and write array operations share the same lock path. Read-only statements
+can run in parallel. Shared scalar reads in polling conditions and conversions use that read
+boundary as well. The compiler leaves constant and local-only expressions outside the boundary.
+Mutable statements use a shared statement boundary so scalar and collection updates remain
+atomic. Method and package calls use their own synchronization and run outside that boundary, so
+HTTP and WebSocket callbacks can update captured values without deadlocking their caller.
 
 Automatic collection locking uses a single world lock, so growing or replacing an array's
 backing storage needs no lock-identity propagation and cyclic values need no recursive

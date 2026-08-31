@@ -13,6 +13,8 @@ Imports are relative to the file that contains them.
 | `import "go:net/http"` | Go package |
 
 Directory imports are sorted by filename and are not recursive. Import each child directory explicitly.
+The compiler emits runtime initialization only for imported files that contain top-level executable
+statements. A file containing declarations alone adds no runtime initializer.
 
 ## A practical layout
 
