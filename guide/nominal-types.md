@@ -2,6 +2,9 @@
 
 OSL has three named data forms. They solve different problems.
 
+Types exposed by packages use a qualified name such as `*img.Image`. Names beginning with `OSL`
+belong to generated Go code and are rejected in OSL source.
+
 ## Structs
 
 A struct is a compact typed value. Fields have defaults, and assignment copies the struct.
