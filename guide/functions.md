@@ -101,6 +101,13 @@ auto addTen = add.bind(10)
 log addTen(5)
 ```
 
+## Package method names
+
+Package method lookup is case-insensitive. Reference pages use lower camel case as the canonical
+spelling, so `connection.send(message)` is preferred even though `connection.Send(message)` calls
+the same method. Methods whose embedded implementation name begins with `OSL` are private and are
+not available to OSL programs.
+
 ## Side-effect calls
 
 OSL warns when code discards a meaningful return value. Prefix a call with `void` when discarding the result is deliberate:

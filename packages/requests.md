@@ -21,7 +21,7 @@ log res["status"]
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `requests.Request(method: any, url: any, ...data: object)` | `object` | Sends an HTTP request. |
+| `requests.request(method: any, url: any, ...data: object)` | `object` | Sends an HTTP request. |
 | `requests.get(url: any, ...data: object)` | `object` | Sends an HTTP GET request. |
 | `requests.post(url: any, data: object)` | `object` | Sends an HTTP POST request. |
 | `requests.put(url: any, data: object)` | `object` | Sends an HTTP PUT request. |

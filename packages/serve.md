@@ -14,11 +14,11 @@ import "std:serve"
 
 *serve.Router app = serve.new()
 
-app.GET("/", def(*serve.Context c) -> (
+app.get("/", def(*serve.Context c) -> (
   c.string(200, "Hello, World!")
 ))
 
-app.GET("/ping", def(*serve.Context c) -> (
+app.get("/ping", def(*serve.Context c) -> (
   c.json(200, { message: "pong" })
 ))
 
@@ -34,12 +34,12 @@ with `serve.new()`, register routes, then call `serve(addr)` to start listening 
 Register a handler for each HTTP method:
 
 ```osl
-app.GET("/users", listUsers)
-app.POST("/users", createUser)
-app.PUT("/users/:id", replaceUser)
-app.PATCH("/users/:id", updateUser)
-app.DELETE("/users/:id", deleteUser)
-app.ANY("/health", healthCheck)     // any method
+app.get("/users", listUsers)
+app.post("/users", createUser)
+app.put("/users/:id", replaceUser)
+app.patch("/users/:id", updateUser)
+app.delete("/users/:id", deleteUser)
+app.any("/health", healthCheck)     // any method
 ```
 
 ### Route parameters
@@ -47,7 +47,7 @@ app.ANY("/health", healthCheck)     // any method
 Use `:name` in a pattern and read it with `c.param(...)`:
 
 ```osl
-app.GET("/users/:id", def(*serve.Context c) -> (
+app.get("/users/:id", def(*serve.Context c) -> (
   string id = c.param("id")
   c.json(200, { id: id })
 ))
@@ -154,8 +154,8 @@ Group related routes under a shared prefix (and shared middleware):
 ```osl
 *serve.Router api = app.group("/api")
 api.use(serve.requireBearer("secret"))
-api.GET("/users", listUsers)
-api.GET("/posts", listPosts)
+api.get("/users", listUsers)
+api.get("/posts", listPosts)
 ```
 
 ## Static files
@@ -180,7 +180,7 @@ def upper(string s) string (
 app.setFuncMap({"upper": upper})
 app.loadHTMLGlob("templates/**/*.html")
 
-app.GET("/", def(*serve.Context c) -> (
+app.get("/", def(*serve.Context c) -> (
   c.html(200, "home.html", { name: "world" })
 ))
 ```
@@ -208,7 +208,7 @@ import "std:md"
 app.views("views")
 app.layout("layout")
 
-app.GET("/", def(*serve.Context c) -> (
+app.get("/", def(*serve.Context c) -> (
   c.render("post", {
     title: "Hello",
     html:  md.toHTML("**bold** and _italic_")   // composed, not reimplemented
@@ -227,7 +227,7 @@ responds `204` with an `Allow` header if no middleware wrote a response.
 
 ## WebSockets
 
-Attach a [`ws`](ws.md) server to a route with `app.WS`. HTTP and websockets can share a
+Attach a [`ws`](ws.md) server to a route with `app.ws`. HTTP and websockets can share a
 path. Upgrade requests go to the socket, while other requests reach the HTTP handlers. You can
 also upgrade from inside a handler with `c.isWebsocket()` / `c.upgrade(socket)`.
 
@@ -236,20 +236,20 @@ import "std:serve"
 import "std:ws"
 
 *serve.Router app = serve.new()
-auto socket = ws.New()   // no listen address; serve owns the port
+auto socket = ws.new()   // no listen address; serve owns the port
 
-socket.OnMessage(def(*ws.Connection conn, string msg) -> (
-  conn.Send("echo: " ++ msg)
+socket.onMessage(def(*ws.Connection conn, string msg) -> (
+  conn.send("echo: " ++ msg)
 ))
 
 // Dedicated path
-app.WS("/chat", socket)
+app.ws("/chat", socket)
 
 // HTTP and WebSocket routes can share a path:
-app.GET("/", def(*serve.Context c) -> (
+app.get("/", def(*serve.Context c) -> (
   c.string(200, "open a websocket on /")
 ))
-app.WS("/", socket)
+app.ws("/", socket)
 
 app.serve(":8080")
 ```
@@ -264,8 +264,8 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 
 ### Router (`serve.new()` → `*serve.Router`)
 
-- `app.GET(pattern, ...handlers)` · `POST` · `PUT` · `PATCH` · `DELETE` · `OPTIONS` · `HEAD` · `ANY`
-- `app.WS(pattern, wsServer)`
+- `app.get(pattern, ...handlers)` · `post` · `put` · `patch` · `delete` · `options` · `head` · `any`
+- `app.ws(pattern, wsServer)`
 - `app.use(...handlers)` → `*serve.Router`
 - `app.group(prefix, fn?)` → `*serve.Router`
 - `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
@@ -307,7 +307,6 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | Method | Returns | Notes |
 | --- | --- | --- |
 | `serve.new()` | `*serveRouter` |  |
-| `serve.New()` | `*serveRouter` |  |
 | `serve.logger()` | `serveHandler` |  |
 | `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serveHandler` |  |
 | `serve.corsOpen()` | `serveHandler` |  |
@@ -331,7 +330,6 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.string(code: number, format: string, ...values: any)` | `void` |  |
 | `value.json(code: number, obj: any)` | `void` |  |
 | `value.html(code: number, body: string, ...data: any)` | `void` |  |
-| `value.HTML(code: number, name: string, data: any)` | `void` |  |
 | `value.render(name: string, data: object)` | `void` | Renders `views/<name>.html` via `osl/template` (escaped; `{{& x}}` for raw), wraps in the layout if set, responds `200`. |
 | `value.data(code: number, contentType: string, body: byte[])` | `void` | Sends a byte body with the given content type. |
 | `value.redirect(code: number, url: string)` | `void` |  |
@@ -355,7 +353,6 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.isWebSocket()` | `boolean` | `true` when the request is a WebSocket upgrade. |
 | `value.isWebsocket()` | `boolean` | Same as `isWebSocket()` with the more natural OSL casing. |
 | `value.upgrade(server: *wsServer)` | `boolean` | Hijacks this request into the given websocket server. Returns `false` if already written, not an upgrade, or server is nil. |
-| `value.Upgrade(server: *wsServer)` | `boolean` | Alias of `upgrade`. |
 | `value.contentType()` | `string` |  |
 | `value.isJSON()` | `boolean` |  |
 | `value.isForm()` | `boolean` |  |
@@ -368,7 +365,6 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.paramInt(key: string, def: number)` | `number` | Parses an integer route parameter, returning the default when absent or invalid. |
 | `value.header(key: string)` | `string` |  |
 | `value.headers()` | `object` | Every request header as an object (single values are strings; multi-value headers become arrays). |
-| `value.Headers()` | `object` | Alias of `headers`. |
 | `value.hasHeader(key: string, value: string)` | `boolean` |  |
 | `value.setHeader(key: string, value: string)` | `void` | Sets header. |
 | `value.addHeader(key: string, value: string)` | `void` | Adds header. |
@@ -409,32 +405,24 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.GET(pattern: string, ...handlers: serveHandler)` | `void` | Registers a GET route handler. |
-| `value.POST(pattern: string, ...handlers: serveHandler)` | `void` | Registers a POST route handler. |
-| `value.PUT(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PUT route handler. |
-| `value.PATCH(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PATCH route handler. |
-| `value.DELETE(pattern: string, ...handlers: serveHandler)` | `void` | Registers a DELETE route handler. |
-| `value.OPTIONS(pattern: string, ...handlers: serveHandler)` | `void` | Registers a OPTIONS route handler. |
-| `value.HEAD(pattern: string, ...handlers: serveHandler)` | `void` | Registers a HEAD route handler. |
-| `value.ANY(pattern: string, ...handlers: serveHandler)` | `void` | Registers a ANY route handler. |
-| `value.WS(pattern: string, server: *wsServer)` | `void` | Mounts a WebSocket server on `pattern`. Upgrades reach the socket; other requests continue to the HTTP handlers on the same path. |
+| `value.get(pattern: string, ...handlers: serveHandler)` | `void` | Registers a GET route handler. |
+| `value.post(pattern: string, ...handlers: serveHandler)` | `void` | Registers a POST route handler. |
+| `value.put(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PUT route handler. |
+| `value.patch(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PATCH route handler. |
+| `value.delete(pattern: string, ...handlers: serveHandler)` | `void` | Registers a DELETE route handler. |
+| `value.options(pattern: string, ...handlers: serveHandler)` | `void` | Registers an OPTIONS route handler. |
+| `value.head(pattern: string, ...handlers: serveHandler)` | `void` | Registers a HEAD route handler. |
+| `value.any(pattern: string, ...handlers: serveHandler)` | `void` | Registers a handler for any method. |
+| `value.ws(pattern: string, server: *wsServer)` | `void` | Mounts a WebSocket server on `pattern`. Upgrades reach the socket; other requests continue to the HTTP handlers on the same path. |
 | `value.static(prefix: string, dir: string)` | `void` |  |
 | `value.staticFile(pattern: string, filepath: string)` | `void` |  |
 | `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
-| `value.LoadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
 | `value.views(dir: string)` | `*serveRouter` | Sets the views directory for `c.render`. |
 | `value.layout(name: string)` | `*serveRouter` | Sets the layout template wrapping `c.render` output. |
 | `value.use(...handlers: serveHandler)` | `*serveRouter` |  |
 | `value.group(prefix: string, ...fn?: func(router))` | `*serveRouter` | Creates a route group with optional router callback functions. |
-| `value.Use(...handlers: serveHandler)` | `*serveRouter` |  |
-| `value.Group(prefix: string, fn?: function)` | `*serveRouter` | Creates a route group with an optional setup callback. |
-| `value.Static(prefix: string, dir: string)` | `void` |  |
-| `value.StaticFile(pattern: string, filepath: string)` | `void` |  |
-| `value.Run(addr: string)` | `error` |  |
 | `value.run(addr: string)` | `error` |  |
-| `value.RunTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
 | `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
-| `value.Handler()` | `http.Handler` |  |
 | `value.serve(addr: string)` | `error` | Starts the active HTTP server and blocks until it stops. |
 | `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Starts the active HTTPS server and blocks until it stops. |
 | `value.handler()` | `http.Handler` |  |
