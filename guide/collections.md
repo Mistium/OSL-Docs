@@ -14,7 +14,7 @@ names.append("Margaret")
 
 Negative positions count from the end. Position `0` is invalid and produces a compile error when the compiler can see it.
 
-Common array methods include `append`, `prepend`, `pop`, `shift`, `insert`, `delete`, `contains`, `index`, `map`, `filter`, `some`, `every`, `sort`, `sortBy`, `reverse`, `join`, `clone`, `min`, `max`, `sum`, and `len`.
+Common array methods include `append`, `prepend`, `pop`, `shift`, `insert`, `delete`, `contains`, `index`, `map`, `filter`, `some`, `every`, `sort`, `sortBy`, `reverse`, `join`, `clone`, `resize`, `min`, `max`, `sum`, and `len`.
 
 ```osl
 int[] values = [3, 1, 4]
