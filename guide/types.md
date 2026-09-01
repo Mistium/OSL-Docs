@@ -30,6 +30,9 @@ def findName(string id) string? (
 )
 ```
 
+A function with a non-nullable return type cannot return `null` or a map lookup that may be
+absent. Declare a nullable return type or handle the missing value before returning.
+
 A trailing nullable function parameter may be omitted. A nullable parameter before a required parameter still has to be passed.
 
 ```osl
@@ -71,6 +74,20 @@ Nested forms are allowed:
 string[object[]] messagesByChannel = {}
 ```
 
+A typed map lookup may be absent when its value type can hold `null`, including objects, arrays,
+pointers, functions, and `any`. The compiler requires a nullable destination, a null guard, or an
+assertion:
+
+```osl
+string[object] users = {}
+
+object? found = users["ada"]
+object displayed = users["ada"].assertElse(object, {name: "Unknown"})
+```
+
+Map values with non-nullable scalar types keep their zero-value behavior. For example, a missing
+value in `string[number]` reads as `0`.
+
 Package handle types use the package name. Pointer handles start with `*`:
 
 ```osl
@@ -100,6 +117,9 @@ object record = value.<object>
 string name = value.assertElse("")
 object data = value.assertElse(object, {})
 ```
+
+Typed nil objects, arrays, pointers, and functions count as `null` for assertions. `.assert(...)`
+fails on them, while `.assertElse(...)` returns its fallback.
 
 The compiler warns about assertions it can prove redundant and rejects assertions it can prove impossible.
 
