@@ -60,7 +60,17 @@ number value = calculated.unwrap()
 object payload = decoded.assert(object)
 ```
 
-Use `.assertElse(...)` when a fallback is valid. Do not use it to hide malformed required data. The OriginChats server validates protocol input with schemas, then uses `.assert(...)` after validation has established the type.
+Use `.assertElse(...)` when a fallback is valid. Do not use it to hide malformed required data. The
+OriginChats server validates protocol input with schemas, then uses `.assert(...)` after validation
+has established the type.
+
+The compiler rejects a possibly absent typed-map value when code passes, assigns, or returns it as
+a non-nullable reference. Handle the missing case explicitly:
+
+```osl
+string[object] users = {}
+object user = users["ada"].assertElse(object, {name: "Unknown"})
+```
 
 ## Process exits
 
