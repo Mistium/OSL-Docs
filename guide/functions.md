@@ -72,7 +72,21 @@ The compiler checks arguments and return values when a function has a signature 
 
 ## Generics
 
-Generic functions put type parameters after the name. This form is useful when a runtime assertion should preserve the requested type:
+Generic functions put type parameters after the name. When calling a generic function, type arguments can be supplied explicitly or inferred automatically from input argument types:
+
+```osl
+def shift<T>(T[] arr) T? (
+  if arr.len == 0 return null
+  T last = arr.last()
+  arr.resize(arr.len - 1)
+  return last
+)
+
+int? lastNum = shift([1, 2, 3])
+string? lastWord = shift(["a", "b"])
+```
+
+Explicit type arguments are useful when a runtime assertion should preserve the requested type or when the type cannot be inferred:
 
 ```osl
 def checked<T>(any value) result<T, string> (
