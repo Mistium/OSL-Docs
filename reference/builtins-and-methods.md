@@ -74,6 +74,7 @@ map          filter        some          every
 sort         sortBy        reverse       randomOf
 join         clone         getKeys       getValues
 min          max           sum           product
+resize
 ```
 
 Array positions are 1-based. Mutating methods change the original array. `.clone()` creates an independent deep copy.
