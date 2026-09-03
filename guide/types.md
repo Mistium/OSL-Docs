@@ -167,3 +167,15 @@ boolean enabled = value.toBool()
 ```
 
 Conversion is different from assertion. Conversion attempts to produce another representation. Assertion checks the existing runtime type.
+
+The compiler warns about conversions it can prove redundant. A conversion on a value that already has the target type can be removed, and a `.toStr().toNum()` or `.toNum().toStr()` roundtrip collapses to the final conversion:
+
+```osl
+string name = "Ada"
+log name // not name.toStr()
+
+any raw = "12"
+log raw.toNum() // not raw.toStr().toNum()
+```
+
+Comparing a known `boolean` to `true` or `false` also warns; use the value or its negation directly. Comparing a dynamic value such as `any` or `boolean?` to `true` is a boolean coercion and does not warn, so keep the `== true` form there.
