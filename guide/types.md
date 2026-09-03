@@ -109,6 +109,7 @@ The generic shorthand is equivalent:
 
 ```osl
 object record = value.<object>
+*ws.Connection conn = raw.<*ws.Connection>
 ```
 
 `.assertElse(type, fallback)` returns the fallback after a mismatch. When the fallback has an unambiguous type, omit the type argument:
@@ -118,10 +119,12 @@ string name = value.assertElse("")
 object data = value.assertElse(object, {})
 ```
 
-Typed nil objects, arrays, pointers, and functions count as `null` for assertions. `.assert(...)`
-fails on them, while `.assertElse(...)` returns its fallback.
+Shorthand assertion aliases are also supported:
+- `.<>(fallback)` is an alias for `.assertElse(fallback)` (e.g. `val.<>("")`).
+- `.<type>()` defaults to the zero value of the type (e.g. `val.<array>()` becomes `.assertElse(array, [])`, `val.<string>()` becomes `.assertElse(string, "")`).
+- Negated type assertions `!type` assert that a value is never that type. For example, `.<!null>` asserts that a value is non-null, and `.<!null>(fallback)` provides a default when null.
 
-The compiler warns about assertions it can prove redundant and rejects assertions it can prove impossible.
+Asserting a value as `any` is meaningless and rejected as a compile error. The compiler also warns about assertions it can prove redundant and rejects assertions it can prove impossible.
 
 ## Narrowing
 
