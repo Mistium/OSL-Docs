@@ -52,10 +52,15 @@ Loose string equality is case-insensitive and may coerce values. Use `===` when 
 
 ```osl
 boolean valid = ready and !failed
-any selected = primary ?? fallback
+string selected = primary ?? fallback
 ```
 
 `and` and `or` return according to OSL truthiness and short-circuit. `??` only falls back for `null`. `??=` assigns only when the current value is `null`.
+
+The null coalescing operator `??` narrows types:
+- If the left operand is a nullable type `T?` (or an indexed map lookup `map[key]`) and the fallback is non-nullable `T`, the resulting expression is inferred as non-nullable `T` (e.g. `string[object] m; object val = m["k"] ?? {}`).
+- If either side is `any`, the expression resolves to `any`.
+- If the right side is non-nullable, the compiler proves the expression can never evaluate to `null`.
 
 Logical operators have precedence rules, with `and` binding more tightly than `or`. The compiler warns when different logical operators are mixed without parentheses. Parenthesize the intended grouping when an expression uses both.
 
