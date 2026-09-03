@@ -125,7 +125,7 @@ The compiler warns about assertions it can prove redundant and rejects assertion
 
 ## Narrowing
 
-A `typeof` comparison narrows an `any` or union value inside the matching branch:
+A `typeof` comparison narrows an `any` or union value inside the matching branch. Comparisons against type names lower directly to native type assertions without allocating runtime strings:
 
 ```osl
 def normalize(any value) string (
