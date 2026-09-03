@@ -88,7 +88,8 @@ upgrades by default. Call `allowAllOrigins()` before mounting or starting a
 server when it intentionally accepts browser clients from other origins. Upgrade
 handshakes time out after 10 seconds.
 Client and reconnect handshakes use the same timeout and requested subprotocols. A panic in a
-callback is recovered. Closing a connection more than once is safe. The send queue copies byte
+callback is recovered and logged with full OSL diagnostic information (error type, source file, line
+number, and code frame). Closing a connection more than once is safe. The send queue copies byte
 messages, so changing the caller's array later cannot change data already queued.
 Standalone servers reject overlapping `start` or `startTLS` calls. `stop` makes
 the active start call return `null`; listener failures still return their error.
