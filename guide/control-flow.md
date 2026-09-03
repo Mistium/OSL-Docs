@@ -24,6 +24,8 @@ if complete break
 
 `return`, `continue`, and `break` are the supported inline guard bodies. Use a block for anything else.
 
+Use `==` to compare inside a condition. A single `=` assigns, so `if x = 5 (` is a compile error that points at the `=`.
+
 ## Boolean operators
 
 Use `and`, `or`, and the `!` prefix:

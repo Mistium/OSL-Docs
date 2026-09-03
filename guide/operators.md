@@ -48,6 +48,8 @@ object options = defaults ++ overrides
 
 Loose string equality is case-insensitive and may coerce values. Use `===` when case and runtime type matter.
 
+Comparing a value to itself is always true for `==` (always false for `!=`) and warns; it is usually a copy-paste mistake.
+
 ## Boolean and nullish operators
 
 ```osl
@@ -56,6 +58,8 @@ string selected = primary ?? fallback
 ```
 
 `and` and `or` return according to OSL truthiness and short-circuit. `??` only falls back for `null`. `??=` assigns only when the current value is `null`.
+
+`!` is the only negation operator; OSL has no `not` keyword. A double negation such as `!!flag` warns; use the value directly or `.toBool()` to coerce it.
 
 The null coalescing operator `??` narrows types:
 - If the left operand is a nullable type `T?` (or an indexed map lookup `map[key]`) and the fallback is non-nullable `T`, the resulting expression is inferred as non-nullable `T` (e.g. `string[object] m; object val = m["k"] ?? {}`).
