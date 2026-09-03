@@ -88,6 +88,10 @@ object displayed = users["ada"].assertElse(object, {name: "Unknown"})
 Map values with non-nullable scalar types keep their zero-value behavior. For example, a missing
 value in `string[number]` reads as `0`.
 
+Typed map and array value types are invariant. The compiler rejects passing or assigning a typed map
+or array where the expected element or value type differs (such as passing `string[string]` to a
+function expecting `string[string?]` or `object`), preventing runtime type conversion panics.
+
 Package handle types use the package name. Pointer handles start with `*`:
 
 ```osl
