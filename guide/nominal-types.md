@@ -20,6 +20,8 @@ Point cursor = Point(10, 20)
 cursor.x = 12
 ```
 
+Field access on structs and closed object shapes is verified at compile time. Accessing an unknown property or typo (such as `cursor.z`) is caught as a compile-time `TypeError`.
+
 A constructor accepts either no arguments or one argument for every field. Convert a struct to a dynamic object explicitly:
 
 ```osl

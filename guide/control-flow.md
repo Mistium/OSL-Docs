@@ -102,9 +102,15 @@ until ready (
 
 ## `match`
 
-`match` is an expression. A non-enum match requires an `_` arm:
+`match` is an expression that supports compile-time exhaustiveness checking. Enums and booleans require all variants/values to be covered, or an explicit `_` wildcard arm. Open scalar values (such as integers or strings) require an `_` wildcard arm:
 
 ```osl
+bool flag = true
+string state = match flag (
+  true -> "enabled"
+  false -> "disabled"
+)
+
 string label = match status (
   200 -> "ok"
   404 -> "missing"
