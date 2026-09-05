@@ -376,7 +376,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.bindJSON(out: any)` | `error` |  |
 | `value.formValue(key: string)` | `string` |  |
 | `value.formValueDefault(key: string, def: string)` | `string` |  |
-| `value.formFile(key: string)` | `*Result` |  |
+| `value.formFile(key: string)` | `result` |  |
 | `value.cookie(name: string)` | `string` |  |
 | `value.setCookie(name: string, value: string, maxAge: number, path: string, domain: string, secure: boolean, httpOnly: boolean)` | `void` | Sets cookie. |
 | `value.clearCookie(name: string)` | `void` |  |

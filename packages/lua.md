@@ -14,7 +14,7 @@ import "std:lua"
 | --- | --- | --- |
 | `lua.create()` | `*lua.State` |  |
 | `lua.doString(code: any)` | `*lua.State` | Creates a state with `lua.create()`, runs code, and returns it. |
-| `lua.run(code: any)` | `*Result` |  |
+| `lua.run(code: any)` | `result` |  |
 | `lua.runFile(path: any)` | `object` | Runs a file and returns flat `success` and `error` fields. |
 | `lua.get(code: any, name: any)` | `any` | Runs the code and returns the named Lua global. |
 | `lua.eval(code: any)` | `any` | Evaluates an expression, or executes a statement and returns its result when present. |
