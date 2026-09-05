@@ -37,3 +37,6 @@ import "std:sound"
 Audio downloads and in-memory sources have size limits. HTTP status codes are checked. Speaker
 setup waits until the first playback, and audio with a different sample rate is resampled. Pause
 state belongs to each sound value. Calling `unload` or `clear` more than once is safe.
+
+The exported `sound` value is an alias of the player instance. Its methods keep the
+same argument and return types when accessed through that alias.

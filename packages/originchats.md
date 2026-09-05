@@ -374,3 +374,6 @@ Connections reuse the `ws` dialer, construction, and worker lifecycle. Client
 state uses shared read/write lock paths, message and slash accessors share one
 nil-safe projection, and callback fan-out shares one panic boundary. `stop()` is
 idempotent and releases pending requests with a stopped error.
+
+Callback failures are logged with a handler-error label followed by the original
+runtime error. A failed callback does not prevent subsequent events from being handled.

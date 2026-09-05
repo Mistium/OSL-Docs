@@ -131,3 +131,7 @@ void cache.insert("key", value)
 ```
 
 This is common for mutating methods that also return the changed value.
+
+`void` also accepts a value expression, such as `void values.lastIndex("Ada")`,
+`void count`, or `void null`. It evaluates the expression once and discards the result.
+Array methods that require callbacks report an OSL type error when the callback is missing.

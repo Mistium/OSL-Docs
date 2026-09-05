@@ -22,8 +22,8 @@ doc.save("hello.pdf")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `pdf.create()` | `*PDF` | Creates a document through `createCustom` with 612 by 792 dimensions. |
-| `pdf.createCustom(width: any, height: any)` | `*PDF` | Creates a custom-sized document, falling back to default dimensions when invalid. |
+| `pdf.create()` | `*pdf.PDF` | Creates a document through `createCustom` with 612 by 792 dimensions. |
+| `pdf.createCustom(width: any, height: any)` | `*pdf.PDF` | Creates a custom-sized document, falling back to default dimensions when invalid. |
 | `pdf.save(path: any)` | `boolean` | Finishes the current page and writes the document. |
 | `pdf.generateContent()` | `string` | Serializes page and content objects in combined output blocks. |
 | `pdf.generateHeader()` | `string` | Serializes the catalog and page-tree header. |
@@ -47,7 +47,7 @@ doc.save("hello.pdf")
 | `pdf.setMetadata(title: any, author: any, subject: any)` | `void` | Sets metadata. |
 | `pdf.addWatermark(text: any)` | `string` | Adds watermark. |
 | `pdf.getPageCount()` | `number` | Returns page count. |
-| `pdf.merge(pdfFiles: array)` | `*PDF` |  |
+| `pdf.merge(pdfFiles: array)` | `*pdf.PDF` |  |
 | `pdf.split(pdfPath: any, outputDir: any)` | `boolean` |  |
 | `pdf.addBookmark(level: any, title: any, page: any)` | `boolean` | Adds bookmark. |
 | `pdf.getPageText(pageNum: any)` | `string` | Returns page text. |

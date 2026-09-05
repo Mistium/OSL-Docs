@@ -108,3 +108,12 @@ Both indexes start at `1` for arrays and strings.
 For a typed dictionary whose Go value type is concrete, reads in a program without concurrency use direct Go indexing. Declared record fields use direct map reads and their known field types. Dynamic objects retain prototype lookup. Concurrent programs retain collection locking.
 
 Use `osl transpile file.osl` to inspect generated Go and `osl bench file.osl --runs 30` to measure a workload. Typed dictionaries and record fields avoid general reflection where the compiler already knows the key and value types.
+
+Concurrent record reads use the declared field's type directly. Array callbacks whose
+result type is known, including calls to typed functions and reads of declared fields,
+keep a typed result array instead of converting through `any[]`. Empty-string and
+nullable collection comparisons use native Go comparisons.
+
+In concurrent programs, only proven private arrays can skip collection locks. Borrowed
+arrays and function results remain protected. See [thread safety](../packages/thread.md#thread-safety)
+for snapshot behavior during iteration and callbacks.

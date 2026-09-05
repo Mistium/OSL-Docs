@@ -21,8 +21,8 @@ log ok.unwrapOr(0)
 
 | Method | Returns |
 | --- | --- |
-| `result.ok(v: any)` | `*Result` |
-| `result.err(e: any)` | `*Result` |
+| `result.ok(v: any)` | `*result.Result` |
+| `result.err(e: any)` | `*result.Result` |
 
 ### `Result` values
 
@@ -39,7 +39,7 @@ success type and defaults its error accessor to `string`; use `result<T, E>` to 
 | `value.expect(msg: any)` | `any` | Returns the contained value or fails with a custom message. |
 | `value.unwrapErr()` | `any` | Returns the error value, or fails for a success result. |
 | `value.expectErr(msg: any)` | `any` | Uses the same error-side accessor with a custom failure message. |
-| `value.fromGo(val: any, err: error)` | `*Result` | Creates from go. |
+| `value.fromGo(val: any, err: error)` | `*result.Result` | Creates from go. |
 
 ## Notes
 

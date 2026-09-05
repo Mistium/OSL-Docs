@@ -12,7 +12,7 @@ import "std:email"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `email.create()` | `*Email` |  |
+| `email.create()` | `*email.Email` |  |
 | `email.setFrom(addr: any)` | `boolean` | Sets from. |
 | `email.addTo(recipient: any)` | `boolean` | Adds a validated, non-duplicate To recipient. |
 | `email.addToMany(recipients: array)` | `boolean` | Adds to many. |
@@ -39,7 +39,7 @@ import "std:email"
 | `email.sendOffice365(username: any, password: any)` | `object` | Sends office365. |
 | `email.sendLocalhost()` | `object` | Sends localhost. |
 | `email.toMap()` | `object` | Converts the value to an object. |
-| `email.fromMap(data: object)` | `*Email` | Creates from map. |
+| `email.fromMap(data: object)` | `*email.Email` | Creates from map. |
 | `email.validate()` | `boolean` | Validates the current value. |
 | `email.getRecipients()` | `array` | Returns the combined To, Cc, and Bcc recipients. |
 | `email.getRecipientCount()` | `number` | Returns recipient count. |
