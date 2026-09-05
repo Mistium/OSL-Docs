@@ -88,7 +88,7 @@ that nullability in OSL checks. A valid `== null` check on those results is acce
 
 Use the package name when declaring a handle, for example `*cache.Cache`, `*db.DB`,
 `*process.Process`, or `*ptr.Pointer`. The same names work in function parameters and
-return types. Embedded Go types use `OSL<package><Type>` consistently, so `*cache.Cache`
+return types. Go types for package handles use `OSL<package><Type>` consistently, so `*cache.Cache`
 resolves to `*OSLcacheCache` without a special compiler alias.
 
 An empty array fallback inherits the left operand's element type:
@@ -97,3 +97,12 @@ An empty array fallback inherits the left operand's element type:
 string[string[]?] groups = {}
 string[] values = groups["missing"] ?? []
 ```
+
+Built-in types such as `result`, `set`, `map`, `option`, `canvas`, and `xml` use bare
+language names. They do not have qualified package type names or require imports.
+For example, use `result<int, string>` for a typed result.
+
+Explicit types on imported global variables are available to top-level statements in
+importing files, including typed arrays, dictionaries, and package handles. Accessing
+an imported `*cache.Cache` does not require a type assertion. Module initialization
+still runs once at the import position.

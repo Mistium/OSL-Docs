@@ -2,15 +2,11 @@
 
 Use `map` when you need a mutable key-value map object with explicit methods for reading keys and values.
 
-```osl
-import "std:map"
-```
+`map` is a built-in language type. It needs no package import.
 
 ## Example
 
 ```osl
-import "std:map"
-
 map users = map()
 users.set("ada", 36)
 log users.get("ada")
@@ -18,11 +14,11 @@ log users.get("ada")
 
 ## API reference
 
-### `Map` values
+### `map` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.set(k: any, v: any)` | `*map.Map` | Sets a value. Keys must be comparable. |
+| `value.set(k: any, v: any)` | `map` | Sets a value. Keys must be comparable. |
 | `value.get(k: any)` | `any` | Reads through the same comparable-key guard. |
 | `value.delete(k: any)` | `void` | Deletes through the same comparable-key guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
@@ -31,8 +27,6 @@ log users.get("ada")
 | `value.getValues()` | `V[]` | Returns values while preserving the map's value type. |
 
 ## Notes
-
-- Prefer `import "std:map"`; the older `import "osl/map"` spelling remains supported.
 
 Composite and cyclic keys are checked safely, and maps synchronize
 concurrent reads and writes.

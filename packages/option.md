@@ -2,22 +2,18 @@
 
 Use `option` to model a value that may be present (`some`) or absent (`none`) without relying on `null`.
 
-```osl
-import "std:option"
-```
+`option` is a built-in language type. It needs no package import.
 
 ## Example
 
 ```osl
-import "std:option"
-
 auto value = some(42)
 log value.unwrapOr(0)
 ```
 
 ## API reference
 
-### `Option` values
+### `option` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -26,10 +22,6 @@ log value.unwrapOr(0)
 | `value.unwrap()` | `T` | Returns the stored value, or fails for `none`. |
 | `value.unwrapOr(def: T)` | `T` | Returns the contained value or a fallback. |
 | `value.expect(msg: any)` | `T` | Uses the same checked accessor with a custom failure message. |
-
-## Notes
-
-- Prefer `import "std:option"`; the older `import "osl/option"` spelling remains supported.
 
 ## Behavior and limits
 

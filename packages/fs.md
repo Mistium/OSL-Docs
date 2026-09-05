@@ -355,13 +355,13 @@ Lists a directory, returning `ok(names)` or `err(message)`.
 | `fs.getModTime(path: any)` | `number` | Returns mod time. |
 | `fs.getStat(path: any)` | `object` | Returns stat. |
 | `fs.evalSymlinks(path: any)` | `string` |  |
-| `fs.tryReadFile(path: any)` | `*Result` |  |
-| `fs.tryWriteFile(path: any, data: any)` | `*Result` |  |
-| `fs.tryAppendToFile(path: any, data: any)` | `*Result` |  |
-| `fs.tryRename(oldPath: any, newPath: any)` | `*Result` |  |
-| `fs.tryRemove(path: any)` | `*Result` |  |
-| `fs.tryMkdirAll(path: any)` | `*Result` |  |
-| `fs.tryReadDir(path: any)` | `*Result` |  |
+| `fs.tryReadFile(path: any)` | `result` |  |
+| `fs.tryWriteFile(path: any, data: any)` | `result` |  |
+| `fs.tryAppendToFile(path: any, data: any)` | `result` |  |
+| `fs.tryRename(oldPath: any, newPath: any)` | `result` |  |
+| `fs.tryRemove(path: any)` | `result` |  |
+| `fs.tryMkdirAll(path: any)` | `result` |  |
+| `fs.tryReadDir(path: any)` | `result` |  |
 
 ### `file` (stream handle)
 
