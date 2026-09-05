@@ -113,3 +113,6 @@ Strings, arrays, objects, numbers, and functions can resolve methods through pro
 `??` uses its fallback only when the left value is null. Fallbacks can be chained, including when several consecutive values are null: `primary ?? backup ?? 42` returns `42` when both variables are null.
 
 Null guards also narrow nullable typed arrays, typed dictionaries, and named records. After `if values == null return`, a `string[]?` value can use string-array methods without an assertion.
+
+Package handles report their qualified `typeof` name, such as `*cache.Cache` or `*process.Process`.
+Built-in `xml`, `map`, `set`, `canvas`, `option`, and `result` values keep their language type names.

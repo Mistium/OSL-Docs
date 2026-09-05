@@ -21,7 +21,7 @@ log t.wait()
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `thread.new(fn: any, ...args: any)` | `*Thread` | Creates and starts a new thread. |
+| `thread.new(fn: any, ...args: any)` | `*thread.Thread` | Creates and starts a new thread. |
 | `thread.wait()` | `any` | Waits for the result. If the task failed, rethrows its error with the original task and spawn locations. |
 | `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. If a completed task failed, rethrows its error. A timeout stops waiting; it does not cancel the task. |
 | `thread.isDone()` | `boolean` |  |
@@ -29,9 +29,9 @@ log t.wait()
 | `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with additional failures attached. |
 | `thread.race(threads: array)` | `any` | Waits for the first thread in the array to complete and returns its result. If the winning task failed, rethrows its error. |
 | `thread.parallel(items: array, fn: any, limit?: number)` | `array` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. |
-| `thread.channel(capacity?: number)` | `*Channel` | Creates a thread-safe message channel with optional buffer capacity. |
+| `thread.channel(capacity?: number)` | `*thread.Channel` | Creates a thread-safe message channel with optional buffer capacity. |
 
-### `*Channel`
+### `*thread.Channel`
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -44,15 +44,13 @@ log t.wait()
 
 ## Thread safety
 
-OSL automatically makes concurrent programs memory-safe. The compiler identifies named
-functions that can run as scoped threads, including their transitive calls, and guards
-concurrent operations with shared read/write statement and collection locks. Dynamic
-callbacks use a safe whole-program fallback. This means:
+OSL uses shared statement and collection locks for concurrent access. Captured locals
+are protected in both the parent function and its callbacks. Array reads protect the
+slice header as well as its elements when another thread can grow the array.
 
-- Two threads touching the **same** object, array, `map()`, or `set()` will never crash
-  the program or corrupt memory.
-- Every OSL statement is atomic, including an index write, `.append`, `.set`, key read,
-  or scalar read-modify-write such as `count += 1`.
+Index writes, array mutations, and scalar read-modify-write expressions such as
+`count += 1` use automatic synchronization. Function and method calls run outside
+statement locks so callbacks can acquire locks themselves.
 
 ```osl
 import "std:thread"
@@ -81,7 +79,7 @@ that lookup. Dynamic callbacks use the safe fallback.
 
 Generic, typed, read, and write array operations share the same lock path. Read-only statements
 can run in parallel. Shared scalar reads in polling conditions and conversions use that read
-boundary as well. The compiler leaves constant and local-only expressions outside the boundary.
+boundary as well. The compiler leaves constant expressions outside the boundary. It can also omit collection locks for fresh local arrays of scalar values when their aliases do not escape. Parameters, globals, callback captures, and arrays passed to unknown functions retain locking. Raw Go in a function disables this local ownership optimization.
 Mutable statements use a shared statement boundary so scalar and collection updates remain
 atomic. Method and package calls use their own synchronization and run outside that boundary, so
 HTTP and WebSocket callbacks can update captured values without deadlocking their caller.
@@ -90,6 +88,20 @@ Automatic collection locking uses a single world lock, so growing or replacing a
 backing storage needs no lock-identity propagation and cyclic values need no recursive
 registration. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
 always release them and use a consistent order when acquiring more than one.
+
+Collection iteration takes a shallow snapshot when the source may be shared, including
+collections returned by functions. Array callbacks for `map`, `filter`, `some`, and
+`every` traverse a snapshot. A callback can mutate its source without changing that
+traversal or holding a collection lock across user code. Nested objects remain shared
+references and use their normal field locks.
+
+Sorting compares a snapshot and writes the sorted elements back under the collection
+lock. Concurrent updates made during comparison can be replaced by that write. Use an
+explicit `sync` lock around operations that must form one transaction.
+
+Raw Go code and imported Go packages can retain references or launch goroutines outside
+OSL's locks. Synchronize that boundary or pass a copy. Automatic OSL locking does not
+make arbitrary foreign code safe.
 
 ## Notes
 

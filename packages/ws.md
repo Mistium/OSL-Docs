@@ -95,3 +95,6 @@ Standalone servers reject overlapping `start` or `startTLS` calls. `stop` makes
 the active start call return `null`; listener failures still return their error.
 Shutdown rejects new upgrades, closes the listener, and drains registered connections. The same
 server value can be started again afterwards.
+
+Standalone server `Start` and `Stop` return `null` on success or an error on failure.
+Check their results with `== null` or `!= null`.

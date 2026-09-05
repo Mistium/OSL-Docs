@@ -22,7 +22,7 @@ log users.get("ada")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.set(k: any, v: any)` | `*Map` | Sets a value. Keys must be comparable. |
+| `value.set(k: any, v: any)` | `*map.Map` | Sets a value. Keys must be comparable. |
 | `value.get(k: any)` | `any` | Reads through the same comparable-key guard. |
 | `value.delete(k: any)` | `void` | Deletes through the same comparable-key guard. |
 | `value.size()` | `number` | Returns the number of stored values. |

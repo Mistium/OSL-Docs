@@ -79,3 +79,21 @@ Native builds look for `go.mod` in the entry file's directory and its parents. T
 ## Opal projects
 
 Opal manages Git and Go dependencies, exact lock data, scripts, and package commands. An Opal project uses `opal.json`, `opal.lock`, and an ignored `.opal/` directory. See [Opal projects](../reference/opal.md).
+
+Package method discovery follows exported variable aliases to their receiver type.
+Methods implemented with a Go `error` return, or with an explicit `nil` return, retain
+that nullability in OSL checks. A valid `== null` check on those results is accepted.
+
+## Package handle types
+
+Use the package name when declaring a handle, for example `*cache.Cache`, `*db.DB`,
+`*process.Process`, or `*ptr.Pointer`. The same names work in function parameters and
+return types. Embedded Go types use `OSL<package><Type>` consistently, so `*cache.Cache`
+resolves to `*OSLcacheCache` without a special compiler alias.
+
+An empty array fallback inherits the left operand's element type:
+
+```osl
+string[string[]?] groups = {}
+string[] values = groups["missing"] ?? []
+```

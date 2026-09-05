@@ -12,7 +12,7 @@ import "std:exif"
 | --- | --- | --- |
 | `exif.has(data: any)` | `boolean` | Reports EXIF data in raw TIFF or EXIF blocks and in JPEG, PNG, or WebP containers. |
 | `exif.orientation(data: any)` | `number` | Returns the EXIF orientation from 1 through 8. Missing or invalid metadata returns 1. |
-| `exif.strip(data: any)` | `byte[]` | Removes EXIF segments or chunks from JPEG, PNG, and WebP data. |
+| `exif.strip(data: any)` | `byte[]?` | Removes EXIF segments or chunks from JPEG, PNG, and WebP data. |
 
 `data` may be a string, `byte[]`, or an array of byte values. Unsupported input returns `null`.
 Malformed and unsupported image containers are returned unchanged. Raw TIFF data can be inspected,

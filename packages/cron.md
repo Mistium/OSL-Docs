@@ -12,7 +12,7 @@ import "std:cron"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `cron.create()` | `*Cron` |  |
+| `cron.create()` | `*cron.Cron` |  |
 | `cron.addJob(name: any, schedule: any, callback: any)` | `boolean` | Adds job. |
 | `cron.removeJob(name: any)` | `boolean` | Removes job. |
 | `cron.enableJob(name: any)` | `boolean` | Enables an existing job. |
@@ -43,3 +43,6 @@ import "std:cron"
 Schedules accept names, ranges, lists, and steps. Invalid schedules return an error instead of
 stopping the program. The scheduler will not start a second scheduled run of a job that is still
 running. Calls to `runJob` are independent and can overlap. Calling `stop` more than once is safe.
+
+`getJob` returns `null` when the named job is absent, including after it removes itself.
+Check that result before reading job fields.

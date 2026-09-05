@@ -14,10 +14,10 @@ import "std:ptr"
 | --- | --- | --- |
 | `ptr.pointer(v: any)` | `number` | Returns the value's address. |
 | `ptr.deref(ptr: any)` | `any` | Returns the pointed-to value, or `null` for a nil pointer. |
-| `ptr.ref(v: any)` | `*Pointer` |  |
+| `ptr.ref(v: any)` | `*ptr.Pointer` |  |
 | `ptr.set(ptr: any, v: any)` | `boolean` | Sets a value when assignable, returning false instead of panicking for incompatible reflected values. |
-| `ptr.alloc(v: any)` | `*Pointer` |  |
-| `ptr.allocTyped(typeName: any, v: any)` | `*TypedPointer` |  |
+| `ptr.alloc(v: any)` | `*ptr.Pointer` |  |
+| `ptr.allocTyped(typeName: any, v: any)` | `*ptr.TypedPointer` |  |
 | `ptr.isNull(ptr: any)` | `boolean` |  |
 | `ptr.addressOf(v: any)` | `number` | Returns the same address representation as `ptr.pointer`. |
 | `ptr.equalPointers(a: any, b: any)` | `boolean` | Reports whether two pointers have the same address. |

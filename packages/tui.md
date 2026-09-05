@@ -63,7 +63,7 @@ log tui.table(["Name"], [["Ada"]])
 | `tui.width()` | `number` |  |
 | `tui.height()` | `number` |  |
 | `tui.size()` | `array` | Returns terminal width and height as [width, height]. |
-| `tui.newScreen()` | `*Screen` |  |
+| `tui.newScreen()` | `*tui.Screen` |  |
 | `tui.readKey()` | `string` | Reads one key, preserving buffered keys from fast typing or pasted input for later calls. |
 | `tui.keyPressed()` | `boolean` |  |
 | `tui.interactiveSelect(prompt: any, options: array)` | `any` |  |

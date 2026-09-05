@@ -22,7 +22,7 @@ log names.contains("ada")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.add(v: any)` | `*Set` | Adds a comparable value. |
+| `value.add(v: any)` | `*set.Set` | Adds a comparable value. |
 | `value.delete(v: any)` | `error` | Deletes through the same guard. |
 | `value.contains(v: any)` | `boolean` | Checks membership through the same guard. |
 | `value.size()` | `number` | Returns the number of stored values. |

@@ -6,12 +6,12 @@ import "std:db"
 
 ## Methods
 
-- `db.open(path)` → `DB`
-- `db.openMemory()` → `DB`
+- `db.open(path)` → `*db.DB`
+- `db.openMemory()` → `*db.DB`
 - `db.close()` → `error`
 - `db.exec(query, ...args)` → `boolean`
 - `db.query(query, ...args)` → `array`
-- `db.queryOne(query, ...args)` → `DBRow`
+- `db.queryOne(query, ...args)` → `*db.Row`
 - `db.queryMap(query, ...args)` → `array`
 - `db.queryMapOne(query, ...args)` → `object`
 - `db.insert(table, data)` → `number`
@@ -101,8 +101,8 @@ Returned by `db` methods; call these on the value you get back.
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `db.open(path: any)` | `*DB` |  |
-| `db.openMemory()` | `*DB` | Opens memory. |
+| `db.open(path: any)` | `*db.DB` |  |
+| `db.openMemory()` | `*db.DB` | Opens memory. |
 
 ### `DB` values
 
@@ -205,3 +205,6 @@ Returned by `db` methods; call these on the value you get back.
 Methods on a closed database, collection, or query return failure values instead of panicking.
 Nested transactions are rejected. Query offsets and limits cannot be negative. Document queries
 support nested paths, and both in-memory and file-backed databases use the same API.
+
+`close` and `transaction` return `null` on success and an error on failure. Their
+results support `== null` checks.
