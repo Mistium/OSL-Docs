@@ -68,7 +68,7 @@ def render(object value, Formatter format) string (
 )
 ```
 
-The compiler checks arguments and return values when a function has a signature type.
+The compiler checks arguments and return values when a function has a signature type. Imported signature types also apply to callbacks passed from other modules. Nullable array and dictionary parameters give literals their declared element and value types.
 
 ## Generics
 
