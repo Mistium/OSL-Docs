@@ -67,3 +67,5 @@ osl version
 ```
 
 `setup` installs both `osl` and `opal`.
+
+Local imports are deduplicated by their resolved file paths. Matching relative names in separate directories, such as `db/attachments/storage.osl` and `attachments/storage.osl`, refer to separate modules.

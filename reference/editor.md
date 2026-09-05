@@ -14,6 +14,8 @@ osl lsp check src/main.osl
 
 This runs the same project diagnostic path, reports diagnostics from every reachable imported OSL file, and returns a failure status for errors.
 
+Self-comparison warnings flag expressions such as `value != value`. They do not prevent compilation. NaN is an exception to ordinary self-equality: it is unequal to itself. Use `math.isNan(value)` when that is the intended check.
+
 ## Formatting
 
 The editor and `osl fmt` use the same formatter:
@@ -23,3 +25,5 @@ osl fmt src/
 ```
 
 The formatter preserves comments and string contents. It leaves a file unchanged when parsing fails.
+
+A method call whose receiver is still `any` and whose method cannot be resolved reports an OSL `TypeError` at the call. Narrow the receiver with a type guard, conversion, or assertion before using a type-specific method. This avoids an error about an undefined method in generated Go.

@@ -56,7 +56,7 @@ This logs `1`. Call `.clone()` for an independent deep copy:
 object second = first.clone()
 ```
 
-Structs behave differently. They are values, so assigning a struct copies it.
+Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
 
 ## Merging and spreading
 
@@ -102,3 +102,9 @@ for index of names (
 ```
 
 Both indexes start at `1` for arrays and strings.
+
+## Generated collection access
+
+For a typed dictionary whose Go value type is concrete, reads in a program without concurrency use direct Go indexing. Declared record fields use direct map reads and their known field types. Dynamic objects retain prototype lookup. Concurrent programs retain collection locking.
+
+Use `osl transpile file.osl` to inspect generated Go and `osl bench file.osl --runs 30` to measure a workload. Typed dictionaries and record fields avoid general reflection where the compiler already knows the key and value types.

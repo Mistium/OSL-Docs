@@ -50,7 +50,7 @@ for index 3 (
 )
 ```
 
-This logs `1`, `2`, and `3`. The compiler evaluates the bound once.
+This logs `1`, `2`, and `3`. The compiler evaluates the bound once. Use `for _ count (...)` when you do not need the index. This emits a Go range loop without an index variable.
 
 `loop count` repeats a block without declaring an index:
 

@@ -21,8 +21,9 @@ object data = schema.safeParse(input) catch (
 )
 ```
 
-Inside the catch block, `_` is the failed result or error value supplied by the expression. A catch block returns its replacement value with `return`.
-If the block reaches its end without returning, OSL rethrows the original error.
+Inside the catch block, `_` is the failed result supplied by the expression. A `return` exits the enclosing function. A `continue` or `break` applies to the enclosing loop. If the block reaches its end, OSL rethrows the original error.
+
+A catch expression preserves the success type of `result<T, E>`. For example, `json.parse<string[int]>(text) catch (...)` produces `string[int]` on success. The source expression runs once.
 
 ## Result values
 
