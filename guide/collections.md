@@ -117,3 +117,6 @@ nullable collection comparisons use native Go comparisons.
 In concurrent programs, only proven private arrays can skip collection locks. Borrowed
 arrays and function results remain protected. See [thread safety](../packages/thread.md#thread-safety)
 for snapshot behavior during iteration and callbacks.
+
+Scalar calculations stored in explicitly declared local variables do not make a private
+array escape. Scratch arrays used this way can keep direct reads and native appends.
