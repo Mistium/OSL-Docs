@@ -105,6 +105,18 @@ Both indexes start at `1` for arrays and strings.
 
 ## Generated collection access
 
+Typed dictionary assignments convert compatible numeric values to the declared value
+type. For example, an array length can be stored directly in `string[number]`:
+
+```osl
+string[] names = ["Ada", "Lin"]
+string[number] counts = {}
+counts["names"] = names.len
+```
+
+Assigning a known incompatible value, such as a string to this dictionary, reports
+the actual value type and the expected value type at the assignment.
+
 For a typed dictionary whose Go value type is concrete, reads in a program without concurrency use direct Go indexing. Declared record fields use direct map reads and their known field types. Dynamic objects retain prototype lookup. Concurrent programs retain collection locking.
 
 Use `osl transpile file.osl` to inspect generated Go and `osl bench file.osl --runs 30` to measure a workload. Typed dictionaries and record fields avoid general reflection where the compiler already knows the key and value types.
