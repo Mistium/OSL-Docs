@@ -133,3 +133,17 @@ string label = match status (
 ```
 
 Use `match` for new code. `switch` also exists for command-style fallthrough cases, but it is easier to get wrong because cases continue until `break`.
+
+## Assignments in conditional branches
+
+Put an assignment in a parenthesized block:
+
+```osl
+string field = "author"
+string[] required = []
+if field == "author" (
+  required = ["name"]
+)
+```
+
+`if field == "author" required = ["name"]` is not a supported blockless statement. The diagnostic explains the block syntax and distinguishes assignment with `=` from comparison with `==`.
