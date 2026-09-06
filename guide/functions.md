@@ -42,6 +42,19 @@ def page(int limit, string? cursor) object (
 page(20)
 ```
 
+Default values in parameter declarations, such as `boolean enabled = true`, are unsupported. The compiler reports the parameter name and suggests a nullable parameter with a fallback in the body:
+
+```osl
+def enabled(boolean? value) boolean (
+  return value ?? true
+)
+
+log enabled()
+log enabled(false)
+```
+
+The omitted argument uses the fallback; an explicit `false` remains `false`. Apply the same pattern to arrays and other nullable parameters.
+
 Use `...name` to collect extra arguments:
 
 ```osl
