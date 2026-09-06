@@ -181,3 +181,9 @@ log raw.toNum() // not raw.toStr().toNum()
 Repeated idempotent calls such as `.trim().trim()` or `.toLower().toLower()` warn in the same way; the second call has no additional effect.
 
 Comparing a known `boolean` to `true` or `false` also warns; use the value or its negation directly. Comparing a dynamic value such as `any` or `boolean?` to `true` is a boolean coercion and does not warn, so keep the `== true` form there.
+
+## Null values and type checks
+
+`typeof` reports `"null"` for null values, including missing nullable entries in typed dictionaries. A null object or array fails the corresponding `typeof(value) == "object"` or `"array"` guard. Allocated empty objects and arrays retain their collection type.
+
+The quoted string `"null"` is an ordinary string. Assigning it to a string variable or comparing against it does not make it a null literal or narrow a nullable variable. Use the unquoted `null` value for null checks.
