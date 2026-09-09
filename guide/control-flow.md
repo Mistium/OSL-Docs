@@ -82,6 +82,8 @@ for index of names (
 )
 ```
 
+Loop names belong to their loop body and may shadow an outer name. Each loop infers its value type from its own collection; reusing a name in a later loop does not convert its elements to an earlier type. After a nested loop, the outer binding is available again. This applies to counted loops and the `loop index value array` form as well.
+
 Use `_` when you do not need one side of a two-value loop:
 
 ```osl
