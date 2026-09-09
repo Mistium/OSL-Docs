@@ -26,6 +26,16 @@ def optionalConnections() *ws.Connection[]? (
 
 `*ws.Connection[]` is an array of connection pointers. `*ws.Connection[][]` is an array of those arrays. The trailing `?` allows the entire array to be null.
 
+Named concise functions use `->` and one expression. Statements after the definition execute normally:
+
+```osl
+def greeting() string -> "hello"
+log greeting()
+log "after"
+```
+
+For a function that does nothing, use `def noop() ( return )`. An empty `()` body is invalid; the diagnostic suggests this correction.
+
 ## Lambdas
 
 Use `->` for an anonymous function:
