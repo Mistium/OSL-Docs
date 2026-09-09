@@ -10,6 +10,22 @@ def greet(string name) string (
 
 A function with no declared return type may return any value. Declare the type when callers depend on it.
 
+A return annotation can name an array of package handles, including nested and nullable arrays:
+
+```osl
+import "std:ws"
+
+def connections() *ws.Connection[] (
+  return []
+)
+
+def optionalConnections() *ws.Connection[]? (
+  return null
+)
+```
+
+`*ws.Connection[]` is an array of connection pointers. `*ws.Connection[][]` is an array of those arrays. The trailing `?` allows the entire array to be null.
+
 ## Lambdas
 
 Use `->` for an anonymous function:
