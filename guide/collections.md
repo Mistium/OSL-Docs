@@ -38,6 +38,8 @@ user["active"] = true
 
 A missing property returns `null`. Useful object methods include `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, and `clone`.
 
+Typed maps preserve their key and value types in `getKeys()` and `getValues()`. Both methods take a snapshot under the runtime's shared collection lock in concurrent programs, including HTTP and WebSocket servers. Concurrent inserts, replacements, and deletions cannot invalidate the traversal. Values in the snapshot can still refer to shared records or objects. Use a named lock when several operations must form one transaction.
+
 ## References and copies
 
 Assigning an array, object, or class instance with `=` shares the same mutable value:
