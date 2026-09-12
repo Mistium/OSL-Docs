@@ -23,7 +23,7 @@ log users.get("ada")
 | `value.delete(k: any)` | `void` | Deletes through the same comparable-key guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
 | `value.clear()` | `void` | Clears all stored values. |
-| `value.getKeys()` | `K[]` | Returns keys while preserving the map's key type. |
+| `value.getKeys()` | `K[]` | Returns a snapshot of the keys while preserving the map's key type. |
 | `value.getValues()` | `V[]` | Returns values while preserving the map's value type. |
 
 ## Notes
