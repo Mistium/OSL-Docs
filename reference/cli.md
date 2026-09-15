@@ -32,7 +32,7 @@ osl package <name>
 
 `fmt` rewrites valid OSL source with canonical spacing and two-space indentation. It walks directory arguments recursively. Validation resolves locally imported type declarations relative to each file, so parameters such as `Entry[]` work when `Entry` is declared in an imported module.
 
-`fix` applies the same automatic fixes the editor offers as one-click actions: redundant `.assert(...)` calls are removed and repeated top-level `import` lines are deleted. It takes the same file-or-directory arguments as `fmt` and prints only the files it changed. With `-v` it logs one line per checked file.
+`fix` applies the same automatic fixes the editor offers as one-click actions: redundant `.assert(...)` and `.<T>` assertions are removed and repeated top-level `import` lines are deleted. It takes the same file-or-directory arguments as `fmt` and prints only the files it changed. With `-v` it logs one line per checked file.
 
 `ast` prints the parsed syntax tree as JSON. `compile`, `run`, and `transpile` can also consume that JSON representation.
 
