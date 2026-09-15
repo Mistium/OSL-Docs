@@ -6,7 +6,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 
 | Function | Purpose |
 | --- | --- |
-| `typeof(value)` | Returns the runtime type name. |
+| `typeof(value)` | Returns the runtime type name. When the value has a single known type, the comparison folds at compile time and warns as a constant condition. |
 | `len(value)` | Returns the length of a supported value. |
 | `string(value)` | Converts a value to text. Prefer `.toStr()` in application code. |
 | `number(value)` | Converts a value to a decimal number. Prefer `.toNum()`. |
