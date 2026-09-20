@@ -48,7 +48,7 @@ object options = defaults ++ overrides
 
 Loose string equality is case-insensitive and may coerce values. Use `===` when case and runtime type matter.
 
-Comparing a value to itself is always true for `==` (always false for `!=`) and warns; it is usually a copy-paste mistake.
+Comparing a value to itself is normally true for `==` (normally false for `!=`) and warns; it is usually a copy-paste mistake. NaN is the exception: it is unequal to itself, so `value != value` is true for NaN. Use `math.isNan(value)` when that is the intended check.
 
 ## Boolean and nullish operators
 
