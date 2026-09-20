@@ -13,6 +13,8 @@ Imports are relative to the file that contains them.
 | `import "go:net/http"` | Go package |
 
 Directory imports are sorted by filename and are not recursive. Import each child directory explicitly.
+The compiler emits runtime initialization only for imported files that contain top-level executable
+statements. A file containing declarations alone adds no runtime initializer.
 
 ## A practical layout
 
@@ -77,3 +79,30 @@ Native builds look for `go.mod` in the entry file's directory and its parents. T
 ## Opal projects
 
 Opal manages Git and Go dependencies, exact lock data, scripts, and package commands. An Opal project uses `opal.json`, `opal.lock`, and an ignored `.opal/` directory. See [Opal projects](../reference/opal.md).
+
+Package method discovery follows exported variable aliases to their receiver type.
+Methods implemented with a Go `error` return, or with an explicit `nil` return, retain
+that nullability in OSL checks. A valid `== null` check on those results is accepted.
+
+## Package handle types
+
+Use the package name when declaring a handle, for example `*cache.Cache`, `*db.DB`,
+`*process.Process`, or `*ptr.Pointer`. The same names work in function parameters and
+return types. Go types for package handles use `OSL<package><Type>` consistently, so `*cache.Cache`
+resolves to `*OSLcacheCache` without a special compiler alias.
+
+An empty array fallback inherits the left operand's element type:
+
+```osl
+string[string[]?] groups = {}
+string[] values = groups["missing"] ?? []
+```
+
+Built-in types such as `result`, `set`, `map`, `option`, `canvas`, and `xml` use bare
+language names. They do not have qualified package type names or require imports.
+For example, use `result<int, string>` for a typed result.
+
+Explicit types on imported global variables are available to top-level statements in
+importing files, including typed arrays, dictionaries, and package handles. Accessing
+an imported `*cache.Cache` does not require a type assertion. Module initialization
+still runs once at the import position.

@@ -12,14 +12,14 @@ import "std:torrent"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `torrent.createFromDirectory(dirPath: any)` | `*Torrent` | Creates from directory. |
-| `torrent.parse(torrentData: any)` | `*Torrent` | Parses input data. |
+| `torrent.createFromDirectory(dirPath: any)` | `*torrent.Torrent` | Creates from directory. |
+| `torrent.parse(torrentData: any)` | `*torrent.Torrent` | Parses input data. |
 
 ### `Torrent` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.create(name: any, files: array, pieceLength: any)` | `*Torrent` |  |
+| `value.create(name: any, files: array, pieceLength: any)` | `*torrent.Torrent` |  |
 | `value.save(path: any)` | `boolean` |  |
 | `value.addTracker(tracker: any)` | `boolean` | Adds a tracker unless it is already present. |
 | `value.removeTracker(tracker: any)` | `boolean` | Removes a tracker. |
@@ -44,9 +44,9 @@ import "std:torrent"
 | `value.generatePeerID()` | `string` |  |
 | `value.getMagnetURI()` | `string` | Returns magnet uri. |
 | `value.exportInfo(path: any)` | `boolean` |  |
-| `value.clone()` | `*Torrent` | Returns an independent copy of the metadata and file list. |
-| `value.merge(otherTorrent: *Torrent)` | `*Torrent` | Returns a copy containing files from both torrents. |
-| `value.strip(metadata: any)` | `*Torrent` |  |
+| `value.clone()` | `*torrent.Torrent` | Returns an independent copy of the metadata and file list. |
+| `value.merge(otherTorrent: *Torrent)` | `*torrent.Torrent` | Returns a copy containing files from both torrents. |
+| `value.strip(metadata: any)` | `*torrent.Torrent` |  |
 | `value.buildTorrent()` | `string` | Builds the bencoded torrent after validating its file and piece metadata. |
 
 ## Notes

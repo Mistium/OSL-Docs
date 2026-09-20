@@ -12,14 +12,14 @@ import "std:date"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `date.now()` | `dateDateTime` | Returns current date/time. |
-| `date.fromUnix(s: number)` | `dateDateTime` | Creates from unix. |
-| `date.fromUnixMs(ms: number)` | `dateDateTime` | Creates from unix ms. |
-| `date.duration(value: number)` | `dateDuration` |  |
+| `date.now()` | `date.DateTime` | Returns current date/time. |
+| `date.fromUnix(s: number)` | `date.DateTime` | Creates from unix. |
+| `date.fromUnixMs(ms: number)` | `date.DateTime` | Creates from unix ms. |
+| `date.duration(value: number)` | `date.Duration` |  |
 | `date.isLeap(year: number)` | `boolean` |  |
 | `date.daysInMonth(year: number, month: number)` | `number` |  |
 
-### `dateDateTime` values
+### `date.DateTime` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -27,20 +27,20 @@ import "std:date"
 | `value.unixMs()` | `number` |  |
 | `value.iso()` | `string` |  |
 | `value.format(layout: string)` | `string` | Formats a value for display. |
-| `value.add(unit: string, value: number)` | `dateDateTime` |  |
-| `value.subtract(unit: string, value: number)` | `dateDateTime` |  |
-| `value.addDuration(v: dateDuration)` | `dateDateTime` | Adds duration. |
-| `value.since(other: dateDateTime)` | `dateDuration` |  |
-| `value.until(other: dateDateTime)` | `dateDuration` |  |
-| `value.with(field: string, value: number)` | `dateDateTime` |  |
-| `value.round(unit: string)` | `dateDateTime` |  |
-| `value.inTimezone(tz: string)` | `dateZonedDateTime` |  |
-| `value.compare(other: dateDateTime)` | `number` |  |
-| `value.equals(other: dateDateTime)` | `boolean` |  |
-| `value.before(other: dateDateTime)` | `boolean` |  |
-| `value.after(other: dateDateTime)` | `boolean` |  |
+| `value.add(unit: string, value: number)` | `date.DateTime` |  |
+| `value.subtract(unit: string, value: number)` | `date.DateTime` |  |
+| `value.addDuration(v: date.Duration)` | `date.DateTime` | Adds duration. |
+| `value.since(other: date.DateTime)` | `date.Duration` |  |
+| `value.until(other: date.DateTime)` | `date.Duration` |  |
+| `value.with(field: string, value: number)` | `date.DateTime` |  |
+| `value.round(unit: string)` | `date.DateTime` |  |
+| `value.inTimezone(tz: string)` | `date.ZonedDateTime` |  |
+| `value.compare(other: date.DateTime)` | `number` |  |
+| `value.equals(other: date.DateTime)` | `boolean` |  |
+| `value.before(other: date.DateTime)` | `boolean` |  |
+| `value.after(other: date.DateTime)` | `boolean` |  |
 
-### `dateDuration` values
+### `date.Duration` values
 
 | Method | Returns |
 | --- | --- |
@@ -50,7 +50,7 @@ import "std:date"
 | `value.hours()` | `number` |
 | `value.days()` | `number` |
 
-### `dateZonedDateTime` values
+### `date.ZonedDateTime` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |

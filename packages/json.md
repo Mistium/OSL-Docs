@@ -23,9 +23,9 @@ if parsed.isOk() (
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `json.parse(data: any, options: object)` | `*Result` | Parses one root value using the same trailing-data validation as streams. |
-| `json.parseObject(data: any)` | `*Result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
-| `json.parseArray(data: any)` | `*Result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
+| `json.parse(data: any, options: object)` | `result` | Parses one root value using the same trailing-data validation as streams. |
+| `json.parseObject(data: any)` | `result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
+| `json.parseArray(data: any)` | `result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
 | `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. Safe while another OSL thread mutates shared data. |
 | `json.format(data: any)` | `string` | Serialises the same value as two-space-indented JSON. Safe while another OSL thread mutates shared data. |
 | `json.isValid(data: any)` | `boolean` |  |
@@ -79,11 +79,11 @@ Returns `true` when another token is available. It returns `false` at the end of
 
 Consumes and returns the next token as `{type, value, depth}`. It returns an `eof` token when no token remains.
 
-#### `stream.readScalarMap(maxValues)` → `*Result`
+#### `stream.readScalarMap(maxValues)` → `result`
 
 Consumes the next value as a flat JSON object and returns it. Values may be strings, numbers, booleans, or `null`. Nested objects and arrays return an error. `maxValues` bounds the number of object entries.
 
-#### `stream.readStringMap(maxValues)` → `*Result`
+#### `stream.readStringMap(maxValues)` → `result`
 
 Like `readScalarMap`, but every value must be a string.
 

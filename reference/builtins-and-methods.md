@@ -6,7 +6,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 
 | Function | Purpose |
 | --- | --- |
-| `typeof(value)` | Returns the runtime type name. |
+| `typeof(value)` | Returns the runtime type name. When the value has a single known type, the comparison folds at compile time and warns as a constant condition. |
 | `len(value)` | Returns the length of a supported value. |
 | `string(value)` | Converts a value to text. Prefer `.toStr()` in application code. |
 | `number(value)` | Converts a value to a decimal number. Prefer `.toNum()`. |
@@ -42,6 +42,8 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `.len` or `.len()` | Length where supported |
 | `.contains(value)` | Membership where supported |
 
+Assertion shorthand uses `value.<type>` for `.assert(type)` and `value.<type>(fallback)` for `.assertElse(type, fallback)`. Keep the fallback's opening parenthesis adjacent to `>`. A space separates a following block, as in `for value in items.<array> (`.
+
 ## Strings
 
 Common string methods include:
@@ -53,13 +55,15 @@ index        lastIndex     count         match
 replace      replaceFirst  split         left          right
 trim         trimText      strip         stripStart    stripEnd
 toUpper      toLower       toTitle       toMixed
-padStart     padEnd        reverse       repeat
+padStart     padEnd        reverse
 toArr        ord           btoa          atob
 encodeHex    decodeHex     encodeBin     decodeBin
 hashMD5      hashSHA1      hashSHA256    hashSHA512
 ```
 
 String positions are 1-based. Indexing and iteration use Unicode code points. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
+
+There is no `repeat` method. Use multiplication, as in `"a" * 3`.
 
 ## Arrays
 
@@ -74,6 +78,7 @@ map          filter        some          every
 sort         sortBy        reverse       randomOf
 join         clone         getKeys       getValues
 min          max           sum           product
+resize
 ```
 
 Array positions are 1-based. Mutating methods change the original array. `.clone()` creates an independent deep copy.
@@ -82,7 +87,18 @@ Array positions are 1-based. Mutating methods change the original array. `.clone
 
 Common object methods include `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, `clone`, `toStr`, `jsonParse`, and `getProto`.
 
-Objects return `null` for missing fields. Assignment shares the object; `.clone()` copies it.
+Cloning a null value returns null.
+
+Objects return `null` for missing fields. Assignment shares the object; `.clone()` makes a deep copy and preserves a typed dictionary's key and value types.
+
+```osl
+string[object] roles = {user: {position: 1}}
+string[object] copied = roles.clone()
+copied["user"].position = 2
+log roles["user"].position // 1
+```
+
+Object shorthand resolves variable names even when they match a command name. For example, `string error = "failed"` followed by `{error}` creates `{error: "failed"}`.
 
 ## Numbers and booleans
 
@@ -93,3 +109,12 @@ Booleans support the universal conversion, type, assertion, and prototype method
 ## Prototypes
 
 Strings, arrays, objects, numbers, and functions can resolve methods through prototypes. Prefer ordinary functions or named types for application structure. Prototype changes are global to the value type and are harder to trace in a large project.
+
+## Nullish fallback
+
+`??` uses its fallback only when the left value is null. Fallbacks can be chained, including when several consecutive values are null: `primary ?? backup ?? 42` returns `42` when both variables are null.
+
+Null guards also narrow nullable typed arrays, typed dictionaries, and named records. After `if values == null return`, a `string[]?` value can use string-array methods without an assertion.
+
+Package handles report their qualified `typeof` name, such as `*cache.Cache` or `*process.Process`.
+Built-in `xml`, `map`, `set`, `canvas`, `option`, and `result` values keep their language type names.

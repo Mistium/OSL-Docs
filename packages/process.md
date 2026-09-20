@@ -21,8 +21,8 @@ log p.run().output
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `process.spawn(command: any, ...args: any)` | `*Process` | Creates a process handle without starting it. |
-| `process.spawnShell(command: any)` | `*Process` |  |
+| `process.spawn(command: any, ...args: any)` | `*process.Process` | Creates a process handle without starting it. |
+| `process.spawnShell(command: any)` | `*process.Process` |  |
 | `process.getPID()` | `number` | Returns pid. |
 | `process.getPPID()` | `number` | Returns ppid. |
 | `process.killPID(pid: any)` | `boolean` |  |
@@ -43,7 +43,7 @@ log p.run().output
 | `process.exec(command: any, ...args: any)` | `string` | Runs a command through `sys.cmd`, returning at most 16 MiB of stdout or an empty string. |
 | `process.execAsUser(user: any, command: any, ...args: any)` | `string` | Runs a command through `sudo` with a 16 MiB combined-output limit. |
 | `process.pipe(process1: *Process, process2: *Process)` | `boolean` |  |
-| `process.background(command: any, ...args: any)` | `*Process` |  |
+| `process.background(command: any, ...args: any)` | `*process.Process` |  |
 | `process.daemonize(command: any, ...args: any)` | `boolean` |  |
 | `process.fork()` | `object` |  |
 | `process.waitPID(pid: any)` | `object` |  |
@@ -83,3 +83,6 @@ Run results include `timeout` and `truncated` flags. When output exceeds its lim
 the exact captured prefix, `truncated` is `true`, and `success` is `false` even when the child exits zero.
 Only one call may start or wait on a given `Process` at a time. `kill`, `signal`, `isRunning`, and
 `getPID` remain available while `run` waits.
+
+`findByPID` returns `null` when the PID is invalid or absent. Check for `null` before
+using the returned process object.

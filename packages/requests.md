@@ -21,7 +21,7 @@ log res["status"]
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `requests.Request(method: any, url: any, ...data: object)` | `object` | Sends an HTTP request. |
+| `requests.request(method: any, url: any, ...data: object)` | `object` | Sends an HTTP request. |
 | `requests.get(url: any, ...data: object)` | `object` | Sends an HTTP GET request. |
 | `requests.post(url: any, data: object)` | `object` | Sends an HTTP POST request. |
 | `requests.put(url: any, data: object)` | `object` | Sends an HTTP PUT request. |
@@ -29,7 +29,7 @@ log res["status"]
 | `requests.delete(url: any, ...data: object)` | `object` | Sends an HTTP DELETE request. |
 | `requests.options(url: any, ...data: object)` | `object` | Sends an HTTP OPTIONS request. |
 | `requests.head(url: any, ...data: object)` | `object` | Sends an HTTP HEAD request. |
-| `requests.stream(method: any, url: any, ...data: object)` | `*requestsStream` | Opens a bounded streaming response with idempotent close. |
+| `requests.stream(method: any, url: any, ...data: object)` | `*requests.Stream` | Opens a bounded streaming response with idempotent close. |
 
 ## Notes
 

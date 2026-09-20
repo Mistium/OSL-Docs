@@ -17,9 +17,9 @@ import "std:sync"
 | `sync.unlock(name: string)` | `void` | Releases a named lock; missing names are ignored. |
 | `sync.withLock(name: string, fn: any)` | `any` | Acquires `name`, executes `fn()`, and guarantees lock release on exit. Returns `fn()`'s result. |
 | `sync.once(name: string, fn: any)` | `any` | Runs `fn()` at most once across all threads for the given `name`. |
-| `sync.waitGroup()` | `*WaitGroup` | Creates a new WaitGroup for coordinating multiple asynchronous tasks. |
+| `sync.waitGroup()` | `*sync.WaitGroup` | Creates a new WaitGroup for coordinating multiple asynchronous tasks. |
 
-### `*WaitGroup`
+### `*sync.WaitGroup`
 
 | Method | Returns | Notes |
 | --- | --- | --- |

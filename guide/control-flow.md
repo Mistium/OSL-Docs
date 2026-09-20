@@ -24,6 +24,8 @@ if complete break
 
 `return`, `continue`, and `break` are the supported inline guard bodies. Use a block for anything else.
 
+Use `==` to compare inside a condition. A single `=` assigns, so `if x = 5 (` is a compile error that points at the `=`.
+
 ## Boolean operators
 
 Use `and`, `or`, and the `!` prefix:
@@ -48,7 +50,7 @@ for index 3 (
 )
 ```
 
-This logs `1`, `2`, and `3`. The compiler evaluates the bound once.
+This logs `1`, `2`, and `3`. The compiler evaluates the bound once. Use `for _ count (...)` when you do not need the index. This emits a Go range loop without an index variable.
 
 `loop count` repeats a block without declaring an index:
 
@@ -80,6 +82,8 @@ for index of names (
 )
 ```
 
+Loop names belong to their loop body and may shadow an outer name. Each loop infers its value type from its own collection; reusing a name in a later loop does not convert its elements to an earlier type. After a nested loop, the outer binding is available again. This applies to counted loops and the `loop index value array` form as well.
+
 Use `_` when you do not need one side of a two-value loop:
 
 ```osl
@@ -102,9 +106,15 @@ until ready (
 
 ## `match`
 
-`match` is an expression. A non-enum match requires an `_` arm:
+`match` is an expression that supports compile-time exhaustiveness checking. Enums and booleans require all variants/values to be covered, or an explicit `_` wildcard arm. Open scalar values (such as integers or strings) require an `_` wildcard arm:
 
 ```osl
+bool flag = true
+string state = match flag (
+  true -> "enabled"
+  false -> "disabled"
+)
+
 string label = match status (
   200 -> "ok"
   404 -> "missing"
@@ -125,3 +135,17 @@ string label = match status (
 ```
 
 Use `match` for new code. `switch` also exists for command-style fallthrough cases, but it is easier to get wrong because cases continue until `break`.
+
+## Assignments in conditional branches
+
+Put an assignment in a parenthesized block:
+
+```osl
+string field = "author"
+string[] required = []
+if field == "author" (
+  required = ["name"]
+)
+```
+
+`if field == "author" required = ["name"]` is not a supported blockless statement. The diagnostic explains the block syntax and distinguishes assignment with `=` from comparison with `==`.

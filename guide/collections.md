@@ -14,7 +14,7 @@ names.append("Margaret")
 
 Negative positions count from the end. Position `0` is invalid and produces a compile error when the compiler can see it.
 
-Common array methods include `append`, `prepend`, `pop`, `shift`, `insert`, `delete`, `contains`, `index`, `map`, `filter`, `some`, `every`, `sort`, `sortBy`, `reverse`, `join`, `clone`, `min`, `max`, `sum`, and `len`.
+Common array methods include `append`, `prepend`, `pop`, `shift`, `insert`, `delete`, `contains`, `index`, `map`, `filter`, `some`, `every`, `sort`, `sortBy`, `reverse`, `join`, `clone`, `resize`, `min`, `max`, `sum`, and `len`.
 
 ```osl
 int[] values = [3, 1, 4]
@@ -38,6 +38,8 @@ user["active"] = true
 
 A missing property returns `null`. Useful object methods include `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, and `clone`.
 
+Typed maps preserve their key and value types in `getKeys()` and `getValues()`. Both methods take a snapshot under the runtime's shared collection lock in concurrent programs, including HTTP and WebSocket servers. Concurrent inserts, replacements, and deletions cannot invalidate the traversal. Values in the snapshot can still refer to shared records or objects. Use a named lock when several operations must form one transaction.
+
 ## References and copies
 
 Assigning an array, object, or class instance with `=` shares the same mutable value:
@@ -56,7 +58,7 @@ This logs `1`. Call `.clone()` for an independent deep copy:
 object second = first.clone()
 ```
 
-Structs behave differently. They are values, so assigning a struct copies it.
+Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
 
 ## Merging and spreading
 
@@ -102,3 +104,33 @@ for index of names (
 ```
 
 Both indexes start at `1` for arrays and strings.
+
+## Generated collection access
+
+Typed dictionary assignments convert compatible numeric values to the declared value
+type. For example, an array length can be stored directly in `string[number]`:
+
+```osl
+string[] names = ["Ada", "Lin"]
+string[number] counts = {}
+counts["names"] = names.len
+```
+
+Assigning a known incompatible value, such as a string to this dictionary, reports
+the actual value type and the expected value type at the assignment.
+
+For a typed dictionary whose Go value type is concrete, reads in a program without concurrency use direct Go indexing. Declared record fields use direct map reads and their known field types. Dynamic objects retain prototype lookup. Concurrent programs retain collection locking.
+
+Use `osl transpile file.osl` to inspect generated Go and `osl bench file.osl --runs 30` to measure a workload. Typed dictionaries and record fields avoid general reflection where the compiler already knows the key and value types.
+
+Concurrent record reads use the declared field's type directly. Array callbacks whose
+result type is known, including calls to typed functions and reads of declared fields,
+keep a typed result array instead of converting through `any[]`. Empty-string and
+nullable collection comparisons use native Go comparisons.
+
+In concurrent programs, only proven private arrays can skip collection locks. Borrowed
+arrays and function results remain protected. See [thread safety](../packages/thread.md#thread-safety)
+for snapshot behavior during iteration and callbacks.
+
+Scalar calculations stored in explicitly declared local variables do not make a private
+array escape. Scratch arrays used this way can keep direct reads and native appends.

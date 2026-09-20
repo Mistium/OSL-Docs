@@ -2,15 +2,11 @@
 
 Use `result` to return either a success value or an error value from APIs that should not throw immediately.
 
-```osl
-import "std:result"
-```
+`result` is a built-in language type. It needs no package import.
 
 ## Example
 
 ```osl
-import "std:result"
-
 auto ok = result.ok(42)
 log ok.unwrapOr(0)
 ```
@@ -21,12 +17,12 @@ log ok.unwrapOr(0)
 
 | Method | Returns |
 | --- | --- |
-| `result.ok(v: any)` | `*Result` |
-| `result.err(e: any)` | `*Result` |
+| `result.ok(v: any)` | `result` |
+| `result.err(e: any)` | `result` |
 
-### `Result` values
+### `result` values
 
-Methods available on `Result` values returned by this package or constructed by the language.
+Methods available on `result` values constructed by the language or returned by APIs.
 An unparameterized `result` preserves success and error values as `any`. A `result<T>` keeps the
 success type and defaults its error accessor to `string`; use `result<T, E>` to specify both sides.
 
@@ -39,8 +35,4 @@ success type and defaults its error accessor to `string`; use `result<T, E>` to 
 | `value.expect(msg: any)` | `any` | Returns the contained value or fails with a custom message. |
 | `value.unwrapErr()` | `any` | Returns the error value, or fails for a success result. |
 | `value.expectErr(msg: any)` | `any` | Uses the same error-side accessor with a custom failure message. |
-| `value.fromGo(val: any, err: error)` | `*Result` | Creates from go. |
-
-## Notes
-
-- Prefer `import "std:result"`; the older `import "osl/result"` spelling remains supported.
+| `value.fromGo(val: any, err: error)` | `result` | Creates from go. |
