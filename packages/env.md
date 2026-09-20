@@ -8,10 +8,10 @@ import "std:env"
 
 - `env.home()` → `string`
 - `env.cwd()` → `string`
-- `env.file(path)` → `envFile`
-- `env.read(path)` → `envFile`
-- `env.parse(text)` → `envFile`
-- `env.from(values)` → `envFile`
+- `env.file(path)` → `*env.File`
+- `env.read(path)` → `*env.File`
+- `env.parse(text)` → `*env.File`
+- `env.from(values)` → `*env.File`
 - `env.stringify(values)` → `string`
 - `env.load(...paths)` → `boolean`
 - `env.overload(...paths)` → `boolean`
@@ -19,7 +19,7 @@ import "std:env"
 - `env.localOverload()` → `boolean`
 - `env.get(key)` → `string`
 - `env.getDefault(key, def)` → `string`
-- `env.value(key)` → `OSLenvValue`
+- `env.value(key)` → `env.Value`
 - `env.getInt(key, def)` → `number`
 - `env.getFloat(key, def)` → `number`
 - `env.getBool(key, def)` → `boolean`
@@ -37,46 +37,46 @@ import "std:env"
 - `env.isProd()` → `boolean`
 - `env.isTest()` → `boolean`
 
-## Returned object: `envValue`
+## Returned object: `env.Value`
 
 Returned by `env` methods; call these on the value you get back.
 
-- `envValue.key()` → `string`
-- `envValue.exists()` → `boolean`
-- `envValue.string()` → `string`
-- `envValue.fallback(def)` → `string`
-- `envValue.int(def)` → `number`
-- `envValue.float(def)` → `number`
-- `envValue.bool(def)` → `boolean`
+- `value.key()` → `string`
+- `value.exists()` → `boolean`
+- `value.string()` → `string`
+- `value.fallback(def)` → `string`
+- `value.int(def)` → `number`
+- `value.float(def)` → `number`
+- `value.bool(def)` → `boolean`
 
-## Returned object: `envFile`
+## Returned object: `*env.File`
 
 Returned by `env` methods; call these on the value you get back.
 
-- `envFile.path()` → `string`
-- `envFile.setPath(path)` → `envFile`
-- `envFile.loaded()` → `boolean`
-- `envFile.read()` → `boolean`
-- `envFile.load()` → `boolean`
-- `envFile.overload()` → `boolean`
-- `envFile.apply()` → `boolean`
-- `envFile.applyOverload()` → `boolean`
-- `envFile.save()` → `boolean`
-- `envFile.text()` → `string`
-- `envFile.all()` → `object`
-- `envFile.keys()` → `array`
-- `envFile.has(key)` → `boolean`
-- `envFile.value(key)` → `OSLenvValue`
-- `envFile.get(key)` → `string`
-- `envFile.getDefault(key, def)` → `string`
-- `envFile.getInt(key, def)` → `number`
-- `envFile.getFloat(key, def)` → `number`
-- `envFile.getBool(key, def)` → `boolean`
-- `envFile.set(key, value)` → `envFile`
-- `envFile.unset(key)` → `envFile`
-- `envFile.clear()` → `envFile`
-- `envFile.merge(values)` → `envFile`
-- `envFile.expand(key)` → `string`
+- `value.path()` → `string`
+- `value.setPath(path)` → `*env.File`
+- `value.loaded()` → `boolean`
+- `value.read()` → `boolean`
+- `value.load()` → `boolean`
+- `value.overload()` → `boolean`
+- `value.apply()` → `boolean`
+- `value.applyOverload()` → `boolean`
+- `value.save()` → `boolean`
+- `value.text()` → `string`
+- `value.all()` → `object`
+- `value.keys()` → `array`
+- `value.has(key)` → `boolean`
+- `value.value(key)` → `env.Value`
+- `value.get(key)` → `string`
+- `value.getDefault(key, def)` → `string`
+- `value.getInt(key, def)` → `number`
+- `value.getFloat(key, def)` → `number`
+- `value.getBool(key, def)` → `boolean`
+- `value.set(key, value)` → `*env.File`
+- `value.unset(key)` → `*env.File`
+- `value.clear()` → `*env.File`
+- `value.merge(values)` → `*env.File`
+- `value.expand(key)` → `string`
 
 ## Complete API reference
 
@@ -86,10 +86,10 @@ Returned by `env` methods; call these on the value you get back.
 | --- | --- | --- |
 | `env.home()` | `string` |  |
 | `env.cwd()` | `string` |  |
-| `env.file(path: string)` | `*envFile` |  |
-| `env.read(path: string)` | `*envFile` |  |
-| `env.parse(text: string)` | `*envFile` | Parses input data. |
-| `env.from(values: object)` | `*envFile` |  |
+| `env.file(path: string)` | `*env.File` |  |
+| `env.read(path: string)` | `*env.File` |  |
+| `env.parse(text: string)` | `*env.File` | Parses input data. |
+| `env.from(values: object)` | `*env.File` |  |
 | `env.stringify(values: object)` | `string` | Serialises a value to text. |
 | `env.load(...paths: string)` | `boolean` | Loads files in order without replacing existing environment values. |
 | `env.overload(...paths: string)` | `boolean` | Loads files in order and replaces existing environment values. |
@@ -97,7 +97,7 @@ Returned by `env` methods; call these on the value you get back.
 | `env.localOverload()` | `boolean` |  |
 | `env.get(key: string)` | `string` | Returns a value. |
 | `env.getDefault(key: string, def: string)` | `string` | Returns default. |
-| `env.value(key: string)` | `envValue` |  |
+| `env.value(key: string)` | `env.Value` |  |
 | `env.getInt(key: string, def: number)` | `number` | Returns int. |
 | `env.getFloat(key: string, def: number)` | `number` | Returns float. |
 | `env.getBool(key: string, def: boolean)` | `boolean` | Returns bool. |
@@ -115,12 +115,12 @@ Returned by `env` methods; call these on the value you get back.
 | `env.isProd()` | `boolean` |  |
 | `env.isTest()` | `boolean` |  |
 
-### `envFile` values
+### `*env.File` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
 | `value.path()` | `string` |  |
-| `value.setPath(path: string)` | `*envFile` | Sets path. |
+| `value.setPath(path: string)` | `*env.File` | Sets path. |
 | `value.loaded()` | `boolean` |  |
 | `value.read()` | `boolean` |  |
 | `value.load()` | `boolean` | Reads and applies the file without replacing existing values. |
@@ -132,19 +132,19 @@ Returned by `env` methods; call these on the value you get back.
 | `value.all()` | `object` |  |
 | `value.keys()` | `array` | Returns all keys. |
 | `value.has(key: string)` | `boolean` |  |
-| `value.value(key: string)` | `envValue` |  |
+| `value.value(key: string)` | `env.Value` |  |
 | `value.get(key: string)` | `string` | Returns a value. |
 | `value.getDefault(key: string, def: string)` | `string` | Returns default. |
 | `value.getInt(key: string, def: number)` | `number` | Returns int. |
 | `value.getFloat(key: string, def: number)` | `number` | Returns float. |
 | `value.getBool(key: string, def: boolean)` | `boolean` | Returns bool. |
-| `value.set(key: string, value: any)` | `*envFile` | Sets a value. |
-| `value.unset(key: string)` | `*envFile` |  |
-| `value.clear()` | `*envFile` | Clears all stored values. |
-| `value.merge(values: object)` | `*envFile` |  |
+| `value.set(key: string, value: any)` | `*env.File` | Sets a value. |
+| `value.unset(key: string)` | `*env.File` |  |
+| `value.clear()` | `*env.File` | Clears all stored values. |
+| `value.merge(values: object)` | `*env.File` |  |
 | `value.expand(key: string)` | `string` |  |
 
-### `envValue` values
+### `env.Value` values
 
 | Method | Returns |
 | --- | --- |

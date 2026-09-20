@@ -11,7 +11,7 @@ import "std:db"
 - `db.close()` → `error`
 - `db.exec(query, ...args)` → `boolean`
 - `db.query(query, ...args)` → `array`
-- `db.queryOne(query, ...args)` → `*db.Row`
+- `db.queryOne(query, ...args)` → `db.Row`
 - `db.queryMap(query, ...args)` → `array`
 - `db.queryMapOne(query, ...args)` → `object`
 - `db.insert(table, data)` → `number`
@@ -29,71 +29,71 @@ import "std:db"
 - `db.transaction(fn)` → `error`
 - `db.lastInsertId()` → `number`
 - `db.rowsAffected(query, ...args)` → `number`
-- `db.collection(name)` → `dbCollection`
+- `db.collection(name)` → `*db.Collection`
 - `db.collections()` → `array`
 
-## Returned object: `DBRow`
+## Returned object: `db.Row`
 
 Returned by `db` methods; call these on the value you get back.
 
-- `dBRow.get(colIndex)` → `any`
-- `dBRow.getByName(colName)` → `any`
-- `dBRow.toMap()` → `object`
-- `dBRow.toArray()` → `array`
-- `dBRow.isEmpty()` → `boolean`
-- `dBRow.count()` → `number`
+- `value.get(colIndex)` → `any`
+- `value.getByName(colName)` → `any`
+- `value.toMap()` → `object`
+- `value.toArray()` → `array`
+- `value.isEmpty()` → `boolean`
+- `value.count()` → `number`
 
-## Returned object: `dbCollection`
-
-Returned by `db` methods; call these on the value you get back.
-
-- `dbCollection.insertOne(doc)` → `any`
-- `dbCollection.insertMany(docs)` → `array`
-- `dbCollection.find(filter, ...opts)` → `array`
-- `dbCollection.findOne(filter)` → `object`
-- `dbCollection.findById(id)` → `object`
-- `dbCollection.all()` → `array`
-- `dbCollection.count(filter)` → `number`
-- `dbCollection.exists(filter)` → `boolean`
-- `dbCollection.updateOne(filter, changes)` → `number`
-- `dbCollection.updateMany(filter, changes)` → `number`
-- `dbCollection.replaceOne(filter, doc)` → `number`
-- `dbCollection.deleteOne(filter)` → `number`
-- `dbCollection.deleteMany(filter)` → `number`
-- `dbCollection.drop()` → `boolean`
-- `dbCollection.save(doc)`
-- `dbCollection.query()` → `dbQuery`
-- `dbCollection.where(field, op, value)` → `dbQuery`
-- `dbCollection.fields(...cols)` → `dbQuery`
-- `dbCollection.sort(field, dir)` → `dbQuery`
-
-## Returned object: `dbQuery`
+## Returned object: `*db.Collection`
 
 Returned by `db` methods; call these on the value you get back.
 
-- `dbQuery.where(field, op, value)` → `dbQuery`
-- `dbQuery.and(field, op, value)` → `dbQuery`
-- `dbQuery.sort(field, dir)` → `dbQuery`
-- `dbQuery.fields(...cols)` → `dbQuery`
-- `dbQuery.limit(n)` → `dbQuery`
-- `dbQuery.skip(n)` → `dbQuery`
-- `dbQuery.matched()` → `array`
-- `dbQuery.all()` → `array`
-- `dbQuery.get()` → `array`
-- `dbQuery.first()` → `object`
-- `dbQuery.count()` → `number`
-- `dbQuery.exists()` → `boolean`
-- `dbQuery.delete()` → `number`
-- `dbQuery.set(field, value)` → `dbQuery`
-- `dbQuery.unset(field)` → `dbQuery`
-- `dbQuery.inc(field, n)` → `dbQuery`
-- `dbQuery.mul(field, n)` → `dbQuery`
-- `dbQuery.min(field, value)` → `dbQuery`
-- `dbQuery.max(field, value)` → `dbQuery`
-- `dbQuery.push(field, value)` → `dbQuery`
-- `dbQuery.pull(field, value)` → `dbQuery`
-- `dbQuery.rename(field, newField)` → `dbQuery`
-- `dbQuery.apply()` → `number`
+- `value.insertOne(doc)` → `any`
+- `value.insertMany(docs)` → `array`
+- `value.find(filter, ...opts)` → `array`
+- `value.findOne(filter)` → `object`
+- `value.findById(id)` → `object`
+- `value.all()` → `array`
+- `value.count(filter)` → `number`
+- `value.exists(filter)` → `boolean`
+- `value.updateOne(filter, changes)` → `number`
+- `value.updateMany(filter, changes)` → `number`
+- `value.replaceOne(filter, doc)` → `number`
+- `value.deleteOne(filter)` → `number`
+- `value.deleteMany(filter)` → `number`
+- `value.drop()` → `boolean`
+- `value.save(doc)`
+- `value.query()` → `*db.Query`
+- `value.where(field, op, value)` → `*db.Query`
+- `value.fields(...cols)` → `*db.Query`
+- `value.sort(field, dir)` → `*db.Query`
+
+## Returned object: `*db.Query`
+
+Returned by `db` methods; call these on the value you get back.
+
+- `value.where(field, op, value)` → `*db.Query`
+- `value.and(field, op, value)` → `*db.Query`
+- `value.sort(field, dir)` → `*db.Query`
+- `value.fields(...cols)` → `*db.Query`
+- `value.limit(n)` → `*db.Query`
+- `value.skip(n)` → `*db.Query`
+- `value.matched()` → `array`
+- `value.all()` → `array`
+- `value.get()` → `array`
+- `value.first()` → `object`
+- `value.count()` → `number`
+- `value.exists()` → `boolean`
+- `value.delete()` → `number`
+- `value.set(field, value)` → `*db.Query`
+- `value.unset(field)` → `*db.Query`
+- `value.inc(field, n)` → `*db.Query`
+- `value.mul(field, n)` → `*db.Query`
+- `value.min(field, value)` → `*db.Query`
+- `value.max(field, value)` → `*db.Query`
+- `value.push(field, value)` → `*db.Query`
+- `value.pull(field, value)` → `*db.Query`
+- `value.rename(field, newField)` → `*db.Query`
+- `value.apply()` → `number`
 
 ## Complete API reference
 
@@ -111,7 +111,7 @@ Returned by `db` methods; call these on the value you get back.
 | `value.close()` | `error` | Closes the resource. |
 | `value.exec(query: any, ...args: any)` | `boolean` |  |
 | `value.query(query: any, ...args: any)` | `array` |  |
-| `value.queryOne(query: any, ...args: any)` | `DBRow` |  |
+| `value.queryOne(query: any, ...args: any)` | `db.Row` |  |
 | `value.queryMap(query: any, ...args: any)` | `array` |  |
 | `value.queryMapOne(query: any, ...args: any)` | `object` |  |
 | `value.insert(table: any, data: object)` | `number` |  |
@@ -129,10 +129,10 @@ Returned by `db` methods; call these on the value you get back.
 | `value.transaction(fn: any)` | `error` |  |
 | `value.lastInsertId()` | `number` |  |
 | `value.rowsAffected(query: any, ...args: any)` | `number` |  |
-| `value.collection(name: any)` | `*dbCollection` |  |
+| `value.collection(name: any)` | `*db.Collection` |  |
 | `value.collections()` | `array` |  |
 
-### `DBRow` values
+### `db.Row` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -143,7 +143,7 @@ Returned by `db` methods; call these on the value you get back.
 | `value.isEmpty()` | `boolean` |  |
 | `value.count()` | `number` |  |
 
-### `dbCollection` values
+### `*db.Collection` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -162,21 +162,21 @@ Returned by `db` methods; call these on the value you get back.
 | `value.deleteMany(filter: object)` | `number` | Deletes all matching documents and returns the count. |
 | `value.drop()` | `boolean` |  |
 | `value.save(doc: object)` | `void` |  |
-| `value.query()` | `*dbQuery` |  |
-| `value.where(field: any, op: any, value: any)` | `*dbQuery` |  |
-| `value.fields(...cols: any)` | `*dbQuery` |  |
-| `value.sort(field: any, dir: any)` | `*dbQuery` |  |
+| `value.query()` | `*db.Query` |  |
+| `value.where(field: any, op: any, value: any)` | `*db.Query` |  |
+| `value.fields(...cols: any)` | `*db.Query` |  |
+| `value.sort(field: any, dir: any)` | `*db.Query` |  |
 
-### `dbQuery` values
+### `*db.Query` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.where(field: any, op: any, value: any)` | `*dbQuery` |  |
-| `value.and(field: any, op: any, value: any)` | `*dbQuery` |  |
-| `value.sort(field: any, dir: any)` | `*dbQuery` |  |
-| `value.fields(...cols: any)` | `*dbQuery` |  |
-| `value.limit(n: any)` | `*dbQuery` |  |
-| `value.skip(n: any)` | `*dbQuery` |  |
+| `value.where(field: any, op: any, value: any)` | `*db.Query` |  |
+| `value.and(field: any, op: any, value: any)` | `*db.Query` |  |
+| `value.sort(field: any, dir: any)` | `*db.Query` |  |
+| `value.fields(...cols: any)` | `*db.Query` |  |
+| `value.limit(n: any)` | `*db.Query` |  |
+| `value.skip(n: any)` | `*db.Query` |  |
 | `value.matched()` | `array` |  |
 | `value.all()` | `array` |  |
 | `value.get()` | `array` | Returns a value. |
@@ -184,16 +184,16 @@ Returned by `db` methods; call these on the value you get back.
 | `value.count()` | `number` |  |
 | `value.exists()` | `boolean` |  |
 | `value.delete()` | `number` | Deletes a value. |
-| `value.addUpdate(kind: string, field: any, value: any)` | `*dbQuery` | Adds update. |
-| `value.set(field: any, value: any)` | `*dbQuery` | Sets a value. |
-| `value.unset(field: any)` | `*dbQuery` |  |
-| `value.inc(field: any, n: any)` | `*dbQuery` |  |
-| `value.mul(field: any, n: any)` | `*dbQuery` |  |
-| `value.min(field: any, value: any)` | `*dbQuery` |  |
-| `value.max(field: any, value: any)` | `*dbQuery` |  |
-| `value.push(field: any, value: any)` | `*dbQuery` |  |
-| `value.pull(field: any, value: any)` | `*dbQuery` |  |
-| `value.rename(field: any, newField: any)` | `*dbQuery` |  |
+| `value.addUpdate(kind: string, field: any, value: any)` | `*db.Query` | Adds update. |
+| `value.set(field: any, value: any)` | `*db.Query` | Sets a value. |
+| `value.unset(field: any)` | `*db.Query` |  |
+| `value.inc(field: any, n: any)` | `*db.Query` |  |
+| `value.mul(field: any, n: any)` | `*db.Query` |  |
+| `value.min(field: any, value: any)` | `*db.Query` |  |
+| `value.max(field: any, value: any)` | `*db.Query` |  |
+| `value.push(field: any, value: any)` | `*db.Query` |  |
+| `value.pull(field: any, value: any)` | `*db.Query` |  |
+| `value.rename(field: any, newField: any)` | `*db.Query` |  |
 | `value.apply()` | `number` |  |
 
 ## Notes
