@@ -55,13 +55,15 @@ index        lastIndex     count         match
 replace      replaceFirst  split         left          right
 trim         trimText      strip         stripStart    stripEnd
 toUpper      toLower       toTitle       toMixed
-padStart     padEnd        reverse       repeat
+padStart     padEnd        reverse
 toArr        ord           btoa          atob
 encodeHex    decodeHex     encodeBin     decodeBin
 hashMD5      hashSHA1      hashSHA256    hashSHA512
 ```
 
 String positions are 1-based. Indexing and iteration use Unicode code points. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
+
+There is no `repeat` method. Use multiplication, as in `"a" * 3`.
 
 ## Arrays
 
