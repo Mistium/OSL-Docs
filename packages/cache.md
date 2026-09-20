@@ -11,10 +11,12 @@ import "std:cache"
 ```osl
 import "std:cache"
 
-auto c = cache.create(100, 60)
+*cache.Cache c = cache.create(100, 60)
 c.set("token", "abc")
 log c.get("token")
 ```
+
+Cache handles can be declared as `*cache.Cache`, including function parameters and return types.
 
 ## API reference
 
@@ -22,8 +24,8 @@ log c.get("token")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `cache.create(capacity: any, ttl: any)` | `*Cache` |  |
-| `cache.createDefault()` | `*Cache` | Creates a cache with default settings. |
+| `cache.create(capacity: any, ttl: any)` | `*cache.Cache` |  |
+| `cache.createDefault()` | `*cache.Cache` | Creates a cache with default settings. |
 
 ### `Cache` values
 

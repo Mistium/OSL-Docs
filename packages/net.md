@@ -21,9 +21,9 @@ log addrs
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `net.dial(network: any, address: any)` | `*TCPConn` |  |
-| `net.listen(protocol: any, address: any)` | `*TCPConn` |  |
-| `net.listenUDP(network: any, address: any)` | `*UDPConn` |  |
+| `net.dial(network: any, address: any)` | `*net.TCPConn` |  |
+| `net.listen(protocol: any, address: any)` | `*net.TCPConn` |  |
+| `net.listenUDP(network: any, address: any)` | `*net.UDPConn` |  |
 | `net.lookupHost(hostname: any)` | `array` | Returns the host's DNS addresses. |
 | `net.lookupIP(hostname: any)` | `array` | Returns the host's IP addresses. |
 | `net.lookupPort(service: any, network: any)` | `number` |  |

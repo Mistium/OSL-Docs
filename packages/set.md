@@ -2,15 +2,11 @@
 
 Use `set` when you need a collection of unique values with membership checks.
 
-```osl
-import "std:set"
-```
+`set` is a built-in language type. It needs no package import.
 
 ## Example
 
 ```osl
-import "std:set"
-
 set names = set()
 names.add("ada")
 log names.contains("ada")
@@ -18,11 +14,11 @@ log names.contains("ada")
 
 ## API reference
 
-### `Set` values
+### `set` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.add(v: any)` | `*Set` | Adds a comparable value. |
+| `value.add(v: any)` | `set` | Adds a comparable value. |
 | `value.delete(v: any)` | `error` | Deletes through the same guard. |
 | `value.contains(v: any)` | `boolean` | Checks membership through the same guard. |
 | `value.size()` | `number` | Returns the number of stored values. |
@@ -30,8 +26,6 @@ log names.contains("ada")
 | `value.toArr()` | `array` | Converts the value to an array. |
 
 ## Notes
-
-- Prefer `import "std:set"`; the older `import "osl/set"` spelling remains supported.
 
 Composite and cyclic values are compared safely. Sets synchronize
 concurrent reads and writes.

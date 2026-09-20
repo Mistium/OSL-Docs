@@ -2,9 +2,7 @@
 
 Use `xml` for parsing XML documents, querying paths, reading attributes, editing text or attributes, and serialising back to XML.
 
-```osl
-import "std:xml"
-```
+`xml` is a built-in language type. It needs no package import.
 
 ## API reference
 
@@ -14,7 +12,7 @@ import "std:xml"
 | --- | --- | --- |
 | `xml.toStr()` | `string` | Converts to str. |
 | `xml.toArr()` | `array` | Recursively converts the document and its children to arrays and objects. |
-| `xml.findNode(path: any)` | `*xmlNode` |  |
+| `xml.findNode(path: any)` | `*xml.Node` |  |
 | `xml.getText(path: any)` | `any` | Returns text. |
 | `xml.getAttr(path: any, attr: any)` | `any` | Returns an attribute, or `null` when either the node or attribute is missing. |
 | `xml.get(path: any)` | `object` | Returns a value. |
@@ -26,10 +24,6 @@ import "std:xml"
 | `xml.count(path: any)` | `number` |  |
 | `xml.remove(path: any)` | `void` | Removes a value or resource. |
 | `xml.clear(path: any)` | `void` | Clears all stored values. |
-
-## Notes
-
-- Prefer `import "std:xml"`; the older `import "osl/xml"` spelling remains supported.
 
 ## Behavior and limits
 

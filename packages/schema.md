@@ -192,7 +192,7 @@ additional fields.
 
 ## Validating values
 
-#### `value.safeParse(input)` → `result.Result`
+#### `value.safeParse(input)` → `result`
 
 Validates `input` without throwing. Returns `ok(normalizedValue)` on success. On failure it returns
 `err(error)`, where `error` contains `message`, `path`, and `issues`. The current implementation

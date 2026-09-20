@@ -12,8 +12,8 @@ import "std:ftp"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `ftp.connect(host: any, port: any, user: any, password: any)` | `*FTP` | Opens a connection. |
-| `ftp.connectEx(host: any, port: any, user: any, password: any)` | `*FTP` |  |
+| `ftp.connect(host: any, port: any, user: any, password: any)` | `*ftp.FTP` | Opens a connection. |
+| `ftp.connectEx(host: any, port: any, user: any, password: any)` | `*ftp.FTP` |  |
 | `ftp.list(path: any)` | `array` | Lists entries at the remote path. |
 | `ftp.upload(localFile: any, remotePath: any)` | `boolean` |  |
 | `ftp.download(remotePath: any, localPath: any)` | `boolean` |  |

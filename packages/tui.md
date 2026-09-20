@@ -47,7 +47,7 @@ log tui.table(["Name"], [["Ada"]])
 | `tui.drawBox(x: any, y: any, width: any, height: any, title: any)` | `void` |  |
 | `tui.table(headers: array, rows: array)` | `string` | Formats headers and data through one padded-row renderer. |
 | `tui.tableColored(headers: array, rows: array, colorFn: any)` | `string` | Uses the shared row renderer and colors data cells with `colorFn`. |
-| `tui.Select(prompt: any, options: array)` | `any` |  |
+| `tui.select(prompt: any, options: array)` | `any` |  |
 | `tui.confirm(prompt: any)` | `boolean` |  |
 | `tui.menu(title: any, items: array)` | `any` |  |
 | `tui.input(prompt: any)` | `string` |  |
@@ -63,7 +63,7 @@ log tui.table(["Name"], [["Ada"]])
 | `tui.width()` | `number` |  |
 | `tui.height()` | `number` |  |
 | `tui.size()` | `array` | Returns terminal width and height as [width, height]. |
-| `tui.newScreen()` | `*Screen` |  |
+| `tui.newScreen()` | `*tui.Screen` |  |
 | `tui.readKey()` | `string` | Reads one key, preserving buffered keys from fast typing or pasted input for later calls. |
 | `tui.keyPressed()` | `boolean` |  |
 | `tui.interactiveSelect(prompt: any, options: array)` | `any` |  |
@@ -72,10 +72,10 @@ log tui.table(["Name"], [["Ada"]])
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.Set(x: any, y: any, text: string)` | `void` |  |
-| `value.Clear()` | `void` |  |
-| `value.Render()` | `void` |  |
-| `value.WriteCenter(y: any, text: string)` | `void` | Writes center. |
+| `value.set(x: any, y: any, text: string)` | `void` |  |
+| `value.clear()` | `void` |  |
+| `value.render()` | `void` |  |
+| `value.writeCenter(y: any, text: string)` | `void` | Writes center. |
 
 ## Notes
 

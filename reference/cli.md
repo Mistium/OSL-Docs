@@ -14,7 +14,9 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 
 `compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
 
-`transpile` stops after Go generation. It prints Go to standard output unless `-o` selects a file.
+`transpile` stops after Go generation. It prints formatted Go to standard output unless `-o`
+selects a file. Runtime panic metadata keeps path-qualified OSL locations so files with the same
+basename remain distinct.
 
 `--no-cache` disables compiler artifacts, module snapshots, generated workspaces, and native binary reuse for that command. Verbose mode keeps the timing for each compiler stage in the terminal.
 
@@ -22,16 +24,19 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 
 ```text
 osl fmt <file-or-directory> [...]
+osl fix <file-or-directory> [...]
 osl ast <file.osl>
 osl lsp [check <file>]
 osl package <name>
 ```
 
-`fmt` rewrites valid OSL source with canonical spacing and two-space indentation. It walks directory arguments recursively.
+`fmt` rewrites valid OSL source with canonical spacing and two-space indentation. It walks directory arguments recursively. Validation resolves locally imported type declarations relative to each file, so parameters such as `Entry[]` work when `Entry` is declared in an imported module.
+
+`fix` applies the same automatic fixes the editor offers as one-click actions: redundant `.assert(...)` and `.<T>` assertions are removed and repeated top-level `import` lines are deleted. It takes the same file-or-directory arguments as `fmt` and prints only the files it changed. With `-v` it logs one line per checked file.
 
 `ast` prints the parsed syntax tree as JSON. `compile`, `run`, and `transpile` can also consume that JSON representation.
 
-`lsp` starts the language server over standard input and output. `lsp check` prints project diagnostics without an editor.
+`lsp` starts the language server over standard input and output. `lsp check` prints project diagnostics without an editor. It accepts `-v` for per-file logging.
 
 `package` prints the embedded source for a standard package.
 
@@ -65,3 +70,5 @@ osl version
 ```
 
 `setup` installs both `osl` and `opal`.
+
+Local imports are deduplicated by their resolved file paths. Matching relative names in separate directories, such as `db/attachments/storage.osl` and `attachments/storage.osl`, refer to separate modules.

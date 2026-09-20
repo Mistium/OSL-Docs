@@ -21,7 +21,9 @@ object data = schema.safeParse(input) catch (
 )
 ```
 
-Inside the catch block, `_` is the failed result or error value supplied by the expression. A catch block returns its replacement value with `return`.
+Inside the catch block, `_` is the failed result supplied by the expression. A `return` exits the enclosing function. A `continue` or `break` applies to the enclosing loop. If the block reaches its end, OSL rethrows the original error.
+
+A catch expression preserves the success type of `result<T, E>`. For example, `json.parse<string[int]>(text) catch (...)` produces `string[int]` on success. The source expression runs once.
 
 ## Result values
 
@@ -59,7 +61,17 @@ number value = calculated.unwrap()
 object payload = decoded.assert(object)
 ```
 
-Use `.assertElse(...)` when a fallback is valid. Do not use it to hide malformed required data. The OriginChats server validates protocol input with schemas, then uses `.assert(...)` after validation has established the type.
+Use `.assertElse(...)` when a fallback is valid. Do not use it to hide malformed required data. The
+OriginChats server validates protocol input with schemas, then uses `.assert(...)` after validation
+has established the type.
+
+The compiler rejects a possibly absent typed-map value when code passes, assigns, or returns it as
+a non-nullable reference. Handle the missing case explicitly:
+
+```osl
+string[object] users = {}
+object user = users["ada"].assertElse(object, {name: "Unknown"})
+```
 
 ## Process exits
 

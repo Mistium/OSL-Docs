@@ -167,6 +167,7 @@ Each package page lists handle methods in a separate section.
 ### Media & documents
 | Package | Description |
 | --- | --- |
+| [exif](exif.md) | Inspect and strip EXIF image metadata. |
 | [img](img.md) | Load, transform and save images. |
 | [qr](qr.md) | QR codes and barcodes. |
 | [pdf](pdf.md) | Generate PDF documents. |

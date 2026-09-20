@@ -45,3 +45,19 @@ The OriginChats test files use this style for domain behavior. It keeps the fail
 ## Discovery and output
 
 The runner sorts discovered paths, compiles each file separately, and prints `PASS` or `FAIL` for each one. It returns status `1` if any file fails.
+
+## Compiler repository checks
+
+The compiler repository's CI runs the full suite with `go test -p 4 ./...` to limit simultaneous package builds. Tests that invoke the OSL CLI report process startup failures and timeouts even when the process produces no output.
+
+When working in the compiler repository, enable Go's race detector for the behavioral
+suites with `OSL_TEST_RACE=1`:
+
+```bash
+OSL_TEST_RACE=1 go test ./tests/language/runtime -run TestUnitThreadSafety -count=1
+OSL_TEST_RACE=1 go test ./tests/language/functions -run TestRecords -count=1
+```
+
+A race report fails the batch even if individual cases already printed successful
+results. A timed-out batch preserves completed results and retries unfinished cases
+individually to identify the timeout.
