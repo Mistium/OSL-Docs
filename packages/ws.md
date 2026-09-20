@@ -12,11 +12,11 @@ import "std:ws"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `ws.connect(url: string, ...protocols: string)` | `*wsConnection` | Opens a WebSocket client connection. |
-| `ws.new(...args: string)` | `*wsServer` | Builds a server meant to be mounted on `serve` (`app.ws`, `c.upgrade`). No listen address. Optional: `new(path)` or `new(addr, path)`. Path defaults to `"/"`. |
-| `ws.newServer(addr: string, path: string)` | `*wsServer` | Builds a standalone server that can `start`/`startTLS` on `addr+path`, or still be mounted on serve like `new()`. |
+| `ws.connect(url: string, ...protocols: string)` | `*ws.Connection` | Opens a WebSocket client connection. |
+| `ws.new(...args: string)` | `*ws.Server` | Builds a server meant to be mounted on `serve` (`app.ws`, `c.upgrade`). No listen address. Optional: `new(path)` or `new(addr, path)`. Path defaults to `"/"`. |
+| `ws.newServer(addr: string, path: string)` | `*ws.Server` | Builds a standalone server that can `start`/`startTLS` on `addr+path`, or still be mounted on serve like `new()`. |
 
-### `wsConnection` values
+### `*ws.Connection` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ import "std:ws"
 | `value.onMessage(handler: function)` | `void` | Registers a callback for incoming messages. |
 | `value.onClose(handler: function)` | `void` | Registers a callback for connection close. |
 
-### `wsServer` values
+### `*ws.Server` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |

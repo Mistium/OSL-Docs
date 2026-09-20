@@ -12,7 +12,7 @@ Use `xml` for parsing XML documents, querying paths, reading attributes, editing
 | --- | --- | --- |
 | `xml.toStr()` | `string` | Converts to str. |
 | `xml.toArr()` | `array` | Recursively converts the document and its children to arrays and objects. |
-| `xml.findNode(path: any)` | `*xmlNode` |  |
+| `xml.findNode(path: any)` | `*xml.Node` |  |
 | `xml.getText(path: any)` | `any` | Returns text. |
 | `xml.getAttr(path: any, attr: any)` | `any` | Returns an attribute, or `null` when either the node or attribute is missing. |
 | `xml.get(path: any)` | `object` | Returns a value. |

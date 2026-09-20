@@ -306,23 +306,23 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `serve.new()` | `*serveRouter` |  |
-| `serve.logger()` | `serveHandler` |  |
-| `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serveHandler` |  |
-| `serve.corsOpen()` | `serveHandler` |  |
-| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serveHandler` | Limits requests per client without a background worker; nonpositive windows use one second. |
-| `serve.requireBearer(token: string)` | `serveHandler` |  |
-| `serve.requireHeader(key: string, value: string)` | `serveHandler` |  |
-| `serve.maxBodySize(maxBytes: number)` | `serveHandler` |  |
-| `serve.recover()` | `serveHandler` |  |
-| `serve.timeout(seconds: number)` | `serveHandler` | Cancels the downstream request context at the deadline and returns a buffered 503 response without allowing late handler writes to reach the client. |
-| `serve.setKey(key: string, value: any)` | `serveHandler` | Sets key. |
-| `serve.basicAuth(username: string, password: string)` | `serveHandler` |  |
-| `serve.requestID()` | `serveHandler` |  |
-| `serve.secureHeaders()` | `serveHandler` |  |
-| `serve.noCache()` | `serveHandler` |  |
+| `serve.new()` | `*serve.Router` |  |
+| `serve.logger()` | `serve.Handler` |  |
+| `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serve.Handler` |  |
+| `serve.corsOpen()` | `serve.Handler` |  |
+| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serve.Handler` | Limits requests per client without a background worker; nonpositive windows use one second. |
+| `serve.requireBearer(token: string)` | `serve.Handler` |  |
+| `serve.requireHeader(key: string, value: string)` | `serve.Handler` |  |
+| `serve.maxBodySize(maxBytes: number)` | `serve.Handler` |  |
+| `serve.recover()` | `serve.Handler` |  |
+| `serve.timeout(seconds: number)` | `serve.Handler` | Cancels the downstream request context at the deadline and returns a buffered 503 response without allowing late handler writes to reach the client. |
+| `serve.setKey(key: string, value: any)` | `serve.Handler` | Sets key. |
+| `serve.basicAuth(username: string, password: string)` | `serve.Handler` |  |
+| `serve.requestID()` | `serve.Handler` |  |
+| `serve.secureHeaders()` | `serve.Handler` |  |
+| `serve.noCache()` | `serve.Handler` |  |
 
-### `serveContext` values
+### `*serve.Context` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
@@ -352,7 +352,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.ip()` | `string` |  |
 | `value.isWebSocket()` | `boolean` | `true` when the request is a WebSocket upgrade. |
 | `value.isWebsocket()` | `boolean` | Same as `isWebSocket()` with the more natural OSL casing. |
-| `value.upgrade(server: *wsServer)` | `boolean` | Hijacks this request into the given websocket server. Returns `false` if already written, not an upgrade, or server is nil. |
+| `value.upgrade(server: *ws.Server)` | `boolean` | Hijacks this request into the given websocket server. Returns `false` if already written, not an upgrade, or server is nil. |
 | `value.contentType()` | `string` |  |
 | `value.isJSON()` | `boolean` |  |
 | `value.isForm()` | `boolean` |  |
@@ -401,26 +401,26 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.redirectPermanent(url: string)` | `void` |  |
 | `value.basicAuth()` | `object` |  |
 
-### `serveRouter` values
+### `*serve.Router` values
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.get(pattern: string, ...handlers: serveHandler)` | `void` | Registers a GET route handler. |
-| `value.post(pattern: string, ...handlers: serveHandler)` | `void` | Registers a POST route handler. |
-| `value.put(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PUT route handler. |
-| `value.patch(pattern: string, ...handlers: serveHandler)` | `void` | Registers a PATCH route handler. |
-| `value.delete(pattern: string, ...handlers: serveHandler)` | `void` | Registers a DELETE route handler. |
-| `value.options(pattern: string, ...handlers: serveHandler)` | `void` | Registers an OPTIONS route handler. |
-| `value.head(pattern: string, ...handlers: serveHandler)` | `void` | Registers a HEAD route handler. |
-| `value.any(pattern: string, ...handlers: serveHandler)` | `void` | Registers a handler for any method. |
-| `value.ws(pattern: string, server: *wsServer)` | `void` | Mounts a WebSocket server on `pattern`. Upgrades reach the socket; other requests continue to the HTTP handlers on the same path. |
+| `value.get(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a GET route handler. |
+| `value.post(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a POST route handler. |
+| `value.put(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a PUT route handler. |
+| `value.patch(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a PATCH route handler. |
+| `value.delete(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a DELETE route handler. |
+| `value.options(pattern: string, ...handlers: serve.Handler)` | `void` | Registers an OPTIONS route handler. |
+| `value.head(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a HEAD route handler. |
+| `value.any(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a handler for any method. |
+| `value.ws(pattern: string, server: *ws.Server)` | `void` | Mounts a WebSocket server on `pattern`. Upgrades reach the socket; other requests continue to the HTTP handlers on the same path. |
 | `value.static(prefix: string, dir: string)` | `void` |  |
 | `value.staticFile(pattern: string, filepath: string)` | `void` |  |
 | `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
-| `value.views(dir: string)` | `*serveRouter` | Sets the views directory for `c.render`. |
-| `value.layout(name: string)` | `*serveRouter` | Sets the layout template wrapping `c.render` output. |
-| `value.use(...handlers: serveHandler)` | `*serveRouter` |  |
-| `value.group(prefix: string, ...fn?: func(router))` | `*serveRouter` | Creates a route group with optional router callback functions. |
+| `value.views(dir: string)` | `*serve.Router` | Sets the views directory for `c.render`. |
+| `value.layout(name: string)` | `*serve.Router` | Sets the layout template wrapping `c.render` output. |
+| `value.use(...handlers: serve.Handler)` | `*serve.Router` |  |
+| `value.group(prefix: string, ...fn?: func(router))` | `*serve.Router` | Creates a route group with optional router callback functions. |
 | `value.run(addr: string)` | `error` |  |
 | `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
 | `value.serve(addr: string)` | `error` | Starts the active HTTP server and blocks until it stops. |
