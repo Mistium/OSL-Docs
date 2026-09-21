@@ -162,6 +162,7 @@ Returned by `env` methods; call these on the value you get back.
 
 ## Behavior and limits
 
-The parser accepts a UTF-8 BOM, CRLF line endings, and quoted values. It detects expansion cycles.
+The parser accepts a UTF-8 BOM, CRLF line endings, and quoted values. Text output quotes values that
+contain whitespace, `#`, or quote characters, including backticks, so they parse back unchanged. It detects expansion cycles.
 When a file repeats a key, the later value wins. Typed getters return their fallback for missing or
 malformed values. Key lists are sorted.

@@ -10,7 +10,7 @@ osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [-v|--verbose]
 osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 ```
 
-`run` builds a temporary executable and runs it with the source directory as its working directory. It forwards the program's exit status.
+`run` builds a temporary executable and runs it with the source directory as its working directory. It forwards the program's exit status. When the program is killed by a signal, `run` exits with 128 plus the signal number, as shells do.
 
 `compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
 
@@ -30,7 +30,7 @@ osl lsp [check <file>]
 osl package <name>
 ```
 
-`fmt` rewrites valid OSL source with canonical spacing and two-space indentation. It walks directory arguments recursively. Validation resolves locally imported type declarations relative to each file, so parameters such as `Entry[]` work when `Entry` is declared in an imported module.
+`fmt` rewrites valid OSL source with canonical spacing and two-space indentation. When a path is a symlink, `fmt` and `fix` rewrite the file it points to and leave the link in place. Formatting never changes program meaning: a prefix operator written as `a -b` keeps its form, string and template literals are left untouched, and each closing bracket on a line such as `))` restores the indentation of the line that opened it. Validation errors report the line where the problem starts. It walks directory arguments recursively. Validation resolves locally imported type declarations relative to each file, so parameters such as `Entry[]` work when `Entry` is declared in an imported module.
 
 `fix` applies the same automatic fixes the editor offers as one-click actions: redundant `.assert(...)` and `.<T>` assertions are removed and repeated top-level `import` lines are deleted. It takes the same file-or-directory arguments as `fmt` and prints only the files it changed. With `-v` it logs one line per checked file.
 

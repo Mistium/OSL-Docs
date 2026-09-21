@@ -29,6 +29,7 @@ log template.render("Hello {{name}}", {name: "Ada"})
 
 ## Behavior and limits
 
-`false`, zero, `null`, and a missing value remain distinct. Invalid loops and unclosed directives
+Loops and conditions accept typed arrays such as `string[]`, and an empty typed array or map is
+false. `false`, zero, `null`, and a missing value remain distinct. Invalid loops and unclosed directives
 return errors. HTML rendering escapes all HTML-sensitive characters. A nested block receives its
 parent scope without leaking local values back into it.

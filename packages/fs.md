@@ -27,7 +27,8 @@ byte[] body = fs.readFileBytes("image.png")
 Writes `data` (a string) to `path`, replacing any existing contents and creating the file if needed.
 The replacement is atomic: data is written to a temporary file in the same directory and renamed
 only after the complete file has been flushed and closed. A failed write leaves an existing file
-unchanged and removes the temporary file. Returns `true` on success.
+unchanged and removes the temporary file. A symlinked path updates the file the link points to,
+and an existing file keeps its permissions. Returns `true` on success.
 
 ```osl
 fs.writeFile("out.txt", "hello world")
