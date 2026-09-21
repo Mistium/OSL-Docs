@@ -4,6 +4,8 @@
 
 The server provides diagnostics, completion, hover text, signature help, definitions, type definitions, references, rename, semantic highlighting, inferred-type hints, document symbols, links, folding, selection ranges, call hierarchy, import organization, quick fixes, and formatting.
 
+Positions and ranges use UTF-16 code units, as the protocol requires, and identifiers may contain non-ASCII letters, so references, rename, and definitions work for names such as `año`.
+
 It keeps one project-aware compiler engine. Unsaved editor buffers become in-memory overlays, so diagnostics can resolve imports without writing those buffers to disk.
 
 ## Check from a terminal

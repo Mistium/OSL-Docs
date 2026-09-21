@@ -155,7 +155,8 @@ Returns an object schema where every declared field is optional. This is useful 
 #### `value.extend(shape)` → `*schema.Schema`
 
 Returns an object schema containing its existing fields plus the supplied fields. Supplied fields
-replace existing fields with the same name.
+replace existing fields with the same name. Modifiers such as `strict`, `optional`, `nullable`, `requireAny`, and
+defaults carry over from the base schema.
 
 ```osl
 *schema.Schema account = user.extend({active: schema.boolean()})

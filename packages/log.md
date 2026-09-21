@@ -39,10 +39,10 @@ log.warn("cache is empty")
 | `log.timestamp(message: any)` | `void` |  |
 | `log.enableHistory()` | `void` |  |
 | `log.disableHistory()` | `void` |  |
-| `log.getHistory()` | `array` | Returns history. |
+| `log.getHistory()` | `array` | Returns history entries with `timestamp` (`HH:MM:SS`), `level`, and `message` fields. |
 | `log.clearHistory()` | `void` |  |
 | `log.countByLevel()` | `object` |  |
-| `log.exportHistory(path: any)` | `boolean` |  |
+| `log.exportHistory(path: any)` | `boolean` | Writes one `[HH:MM:SS] [LEVEL] message` line per history entry. |
 | `log.withTimestamp(level: any, message: any, ...args: any)` | `void` |  |
 | `log.group(title: any)` | `void` |  |
 | `log.groupEnd()` | `void` |  |

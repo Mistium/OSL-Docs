@@ -27,6 +27,8 @@ Use `xml` for parsing XML documents, querying paths, reading attributes, editing
 
 ## Behavior and limits
 
-Malformed or truncated XML returns a parse error without exposing a partial document. Queries
+Malformed or truncated XML returns a parse error without exposing a partial document. An element's
+text joins its own text segments and trims only the outer whitespace, so `<p>Hello <b>big</b> world</p>`
+has the text `Hello  world`. `getAll` also returns matches nested inside other matches, each once. Queries
 handle namespaces, attributes, mixed content, entities, and nested elements. Empty child lists
 return empty arrays. Serialization sorts attributes for stable output.
