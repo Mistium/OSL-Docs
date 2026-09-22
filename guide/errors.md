@@ -73,6 +73,12 @@ string[object] users = {}
 object user = users["ada"].assertElse(object, {name: "Unknown"})
 ```
 
+## Runaway recursion
+
+A function that keeps calling itself without reaching a base case eventually exhausts the stack.
+`osl run` reports this as `RecursionError: Maximum call depth exceeded` and points at the recursive
+call, rather than printing the Go runtime's stack dump.
+
 ## Process exits
 
 The language command `exit status` terminates the process. The `std:process` package also provides `process.exit(status)`.

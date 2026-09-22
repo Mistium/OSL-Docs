@@ -12,6 +12,20 @@ Imports are relative to the file that contains them.
 | `import "owner/repository"` | Git package installed by Opal |
 | `import "go:net/http"` | Go package |
 
+Call exported Go functions through the package name:
+
+```osl
+import "go:strings"
+string upper = strings.ToUpper("abc")
+```
+
+Go arguments follow the Go signature, and a misspelled member is reported as
+`ReferenceError: Go package 'strings' has no exported member '...'`.
+
+A local import that cannot be found reports the import line and, when a file in that directory has
+a similar name, suggests it. Import paths are case-sensitive, so `./caseonly.osl` does not match
+`CaseOnly.osl` on Linux.
+
 Directory imports are sorted by filename and are not recursive. Import each child directory explicitly.
 The compiler emits runtime initialization only for imported files that contain top-level executable
 statements. A file containing declarations alone adds no runtime initializer.
