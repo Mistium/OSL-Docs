@@ -16,6 +16,25 @@ OSL can keep values dynamic or check them against declared types. Types affect d
 | `null` | `null` |
 
 An integer literal has type `int`. A decimal literal has type `number`.
+Negating an `int` gives an `int`. Words such as `NaN`, `inf`, and `_1` are ordinary identifiers, not
+number literals; use `"NaN".toNum()` to produce NaN.
+
+## Strings
+
+Strings use double or single quotes. A backslash escapes the next character, so a string whose
+closing quote is escaped, such as `"abc\"`, is unterminated and reported as an error.
+
+Backtick strings interpolate `${...}` expressions:
+
+```osl
+string[] items = ["p", "q"]
+log `items: ${items.join(`, `)}`
+log `total: ${ {a: 1}["a"] }`
+log `literal \${name}`
+```
+
+Escapes in the literal text are processed once, and code inside `${...}` is compiled as written, so it
+can contain braces, quotes, and nested backtick strings. Write `\${` for a literal `${`.
 
 ## Nullable values
 

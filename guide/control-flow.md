@@ -134,6 +134,8 @@ string label = match status (
 )
 ```
 
+On a dynamic subject, `match` and `switch` treat whole numbers as equal across `int` and `number`, so a JSON value `2` matches `case 2`. A case whose type can never match a typed subject is a compile error.
+
 Use `match` for new code. `switch` also exists for command-style fallthrough cases, but it is easier to get wrong because cases continue until `break`.
 
 ## Assignments in conditional branches

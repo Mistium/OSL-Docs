@@ -14,10 +14,10 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `boolean(value)` | Converts a value using OSL truthiness. Prefer `.toBool()`. |
 | `array(value)` | Converts a supported value to an array. |
 | `object(value)` | Converts a supported value to an object. |
-| `min(...values)` | Returns the smallest numeric value. |
-| `max(...values)` | Returns the largest numeric value. |
+| `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. |
+| `max(...values)` | Returns the largest numeric value, or NaN when any value is NaN. |
 | `clamp(value, low, high)` | Restricts a number to a range. |
-| `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. |
+| `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. |
 | `sqrt(value)`, `pow(base, exponent)` | Roots and powers. |
 | `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions. |
 | `random(low, high)` | Returns a random number in the requested range. |
@@ -61,7 +61,7 @@ encodeHex    decodeHex     encodeBin     decodeBin
 hashMD5      hashSHA1      hashSHA256    hashSHA512
 ```
 
-String positions are 1-based. Indexing and iteration use Unicode code points. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
+String positions are 1-based. Indexing, iteration, `trimText`, and `toMixed` use Unicode code points. `match(pattern)` always returns an array of matches, which is empty when nothing matches. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
 
 There is no `repeat` method. Use multiplication, as in `"a" * 3`.
 
@@ -81,7 +81,11 @@ min          max           sum           product
 resize
 ```
 
-Array positions are 1-based. Mutating methods change the original array. `.clone()` creates an independent deep copy.
+Array positions are 1-based. Mutating methods change the original array, including arrays stored in object fields or array items, so `o.list.append(x)` and `grid[1].pop()` update the stored array. `.clone()` creates an independent deep copy.
+
+`sort` orders numbers numerically and other values by their string form. `sortBy("field")` places elements missing the field last. `join` renders nested arrays and objects as JSON, like `.toStr()`.
+
+`left`, `right`, `trim`, and `delete` return arrays that do not share storage with the source, so appending to the result never changes the original. `trim(start, end)` is inclusive and accepts negative positions counted from the end, so `"hello".trim(-3, -1)` is `"llo"`; reversed bounds are swapped.
 
 ## Objects
 
