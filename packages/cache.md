@@ -61,6 +61,8 @@ Cache handles can be declared as `*cache.Cache`, including function parameters a
 
 ## Behavior and limits
 
-The cache removes expired entries before reads and snapshots. A stored `null` still counts as a
+The cache removes expired entries before reads and snapshots. Snapshot helpers such as `values`,
+`entries`, `filter`, and `toArray` list entries from most to least recently used and do not change
+eviction order. A stored `null` still counts as a
 present value. Concurrent `getOrSetFunc` calls for the same key run the loader once, while loaders
 for different keys can run at the same time.

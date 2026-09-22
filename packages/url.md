@@ -22,7 +22,7 @@ log u["host"]
 | Method | Returns | Notes |
 | --- | --- | --- |
 | `url.parse(raw: any)` | `object` | Parses a URL into its components. |
-| `url.build(parts: object)` | `string` | Builds a URL using the same scalar and repeated query-value applicator as `encode` and `withParams`. |
+| `url.build(parts: object)` | `string` | Builds a URL using the same scalar and repeated query-value applicator as `encode` and `withParams`. Reads `user`, `password`, `rawPath`, and `hostname` with `port` when `host` is absent, so `url.build(url.parse(u))` round-trips. |
 | `url.encode(m: object)` | `string` | Encodes scalar and array values as a query string. |
 | `url.decode(query: any)` | `object` | Decodes a URL-encoded query string into an object. |
 | `url.escape(s: any)` | `string` |  |

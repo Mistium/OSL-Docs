@@ -36,5 +36,9 @@ log jwt.verify(token, "secret")
 
 ## Behavior and limits
 
+Tokens are standard HS256 JWTs: each part is unpadded base64url and the signature is HMAC-SHA256 over
+`header.payload`, so tokens interoperate with other JWT libraries. Tokens signed by releases that used
+the earlier hash construction no longer verify and must be reissued.
+
 Verification rejects malformed tokens, unexpected algorithms, invalid signatures, and invalid or
 expired time claims. Both verified and unverified decoding limit the token to three bounded parts.

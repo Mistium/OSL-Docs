@@ -36,6 +36,23 @@ int[] values = [1, 2] ++ [3]
 object options = defaults ++ overrides
 ```
 
+## Compound assignment
+
+Every binary operator has a compound form, such as `+=`, `^=`, `++=`, `&=`, and `<<=`. It uses the
+same OSL meaning as the operator, so `^=` raises to a power and `++=` concatenates. Compound forms,
+`++`, and `--` work on variables, object keys, struct and class fields, and array items, including
+nested paths:
+
+```osl
+o = {y: {z: 2}}
+o.y.z ++
+counts = [1]
+counts[1] += 1
+```
+
+Integer operands keep an integer result, and a computed index such as `items[next()] += 1` is
+evaluated once.
+
 ## Comparison
 
 | Operator | Meaning |
