@@ -21,14 +21,14 @@ log t.wait()
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `thread.new(fn: any, ...args: any)` | `*thread.Thread` | Creates and starts a new thread. |
+| `thread.new(fn: any, ...args: any)` | `*thread.Thread` | Creates and starts a new thread. Stops with a `TypeError` when `fn` is not a function. |
 | `thread.wait()` | `any` | Waits for the result. If the task failed, rethrows its error with the original task and spawn locations. |
 | `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. If a completed task failed, rethrows its error. A timeout stops waiting; it does not cancel the task. |
 | `thread.isDone()` | `boolean` |  |
 | `thread.age()` | `number` | Returns the age of the thread in milliseconds. |
 | `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with additional failures attached. |
 | `thread.race(threads: array)` | `any` | Waits for the first thread in the array to complete and returns its result. If the winning task failed, rethrows its error. |
-| `thread.parallel(items: array, fn: any, limit?: number)` | `array` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. |
+| `thread.parallel(items: array, fn: any, limit?: number)` | `array` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. Stops with a `TypeError` when `fn` is not a function. |
 | `thread.channel(capacity?: number)` | `*thread.Channel` | Creates a thread-safe message channel with optional buffer capacity. |
 
 ### `*thread.Channel`

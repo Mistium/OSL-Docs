@@ -31,7 +31,7 @@ auto upper = username.toUpper()
 Use `any` for a value that is intentionally dynamic:
 
 ```osl
-any payload = json.parse(raw)
+any payload = json.parse(raw, {})
 payload = "invalid"
 ```
 
@@ -44,6 +44,14 @@ payload = {ok: true}
 The first assignment fixes the variable's type. Assigning a value of an incompatible type later,
 such as `x = 1` followed by `x = "s"`, is a compile error; declare the variable as `any` when it must
 hold different types.
+
+Repeating a declaration with the same type updates the variable, so `int count = 1` followed by
+`int count = 2` leaves `count` at `2`. Repeating it with a different type, such as `string count = "a"`,
+is a compile error; assign without a type or choose a new name.
+
+OSL has no `let`, `var`, or `const` keywords. Write the type, or `auto`, in their place. Text
+assigned to an `int` or `number` must be numeric: `int parsed = "7"` stores `7`, while
+`int parsed = "many"` stops with a `TypeError` instead of storing `0`.
 
 Production OSL tends to declare types at function boundaries and for long-lived state. Short local values often use `auto` when their type is obvious from the right side.
 
