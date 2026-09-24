@@ -1,6 +1,8 @@
 # img
 
-Use `img` for loading, creating, resizing, drawing, encoding, and saving raster images.
+Use `img` for loading, creating, resizing, drawing, encoding, and saving raster images. Decoded
+images keep their ICC color profile, and the encoders write it back, so resized or re-encoded
+images render with the same colors as the source.
 
 ```osl
 import "std:img"
@@ -33,6 +35,7 @@ import "std:img"
 | `img.isAnimatedBytes(data: byte[])` | `boolean` | Detects animated GIF, PNG, and WebP containers. |
 | `img.encodePNGBytes(i: *img.Image)` | `byte[]` | Encodes an image as PNG. |
 | `img.encodeJPEGBytes(i: *img.Image, q: number)` | `byte[]` | Encodes an image as JPEG. |
+| `img.setColorProfile(i: *img.Image, profile: byte[])` | `boolean` | Replaces the ICC profile the encoders write. An empty profile removes it. |
 | `img.normalizeOrientation(i: *img.Image, reader)` | `*img.Image` | Applies orientation found in an EXIF reader. |
 | `img.normalizeOrientationBytes(i: *img.Image, data: byte[])` | `*img.Image` | Applies orientation found in EXIF bytes. |
 
@@ -44,6 +47,7 @@ import "std:img"
 | `value.width()` | `number` | Returns the width, or zero after `close`. |
 | `value.height()` | `number` | Returns the height, or zero after `close`. |
 | `value.size()` | `object` | Returns `{w, h}`, or an empty object after `close`. |
+| `value.colorProfile()` | `byte[]` | Returns a copy of the embedded ICC profile, or `null` when the image has none. |
 
 ## Notes
 
@@ -55,3 +59,9 @@ The decoder checks image dimensions before allocating the full image. Invalid si
 rotation angles, corrupt input, and write errors return failure values. Closing an image releases
 its pixel data. Save methods report encoding and file-close errors. Orientation normalization
 returns the original image when no transform is needed, and a new image when it applies a transform.
+
+Decoding reads the ICC profile from a JPEG `APP2` segment or a PNG `iCCP` chunk, along with PNG
+`gAMA`, `cHRM`, and `sRGB` chunks. `clone`, `resize`, `rotate`, and `orient` carry that color data
+to the image they return, and `draw` and `drawOver` copy it onto a destination that has none.
+`encodePNGBytes`, `encodeJPEGBytes`, `savePNG`, and `saveJPEG` write the profile back, converting
+between the JPEG and PNG containers as needed. Profiles larger than 8 MiB are ignored.
