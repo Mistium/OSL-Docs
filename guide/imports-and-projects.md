@@ -76,6 +76,42 @@ log math.add(2, 3)
 
 Native builds look for `go.mod` in the entry file's directory and its parents. The compiler copies the selected module files into its generated workspace. A project without `go.mod` uses a generated module in the OSL cache.
 
+## Go packages
+
+Refer to an imported Go package by its Go package name, which is usually the last path element:
+
+```osl
+import "go:net/http"
+import "go:image"
+import "go:strings"
+import "go:path"
+
+log http.MethodGet
+image.Point p = image.Pt(1, 2)
+p.X = 5
+
+def reader() *strings.Reader (
+  return strings.NewReader("abc")
+)
+
+def shift(function f, string text) string (
+  return strings.Map(f, text)
+)
+
+string[] parts = ["b", "c"]
+log path.Join("a", ...parts)
+```
+
+- Exported constants and variables are read directly, as in `http.MethodGet`.
+- Go types work as variable, parameter, and return types, both as values (`image.Point`) and pointers
+  (`*strings.Reader`). Field writes on a value variable update that variable. Numbers convert to the
+  field's numeric type, and an unknown field is a `TypeError`.
+- A `function` or `fnc(...)` parameter can be passed to a Go callback parameter. Arguments and results
+  convert to the Go signature, so `def(int r) int -> (...)` satisfies `func(rune) rune`.
+- Spreading an array into a Go variadic parameter converts each element to the parameter's element type.
+
+Go struct literals such as `image.Point{X: 1}` are not OSL syntax. Use a constructor function.
+
 ## Opal projects
 
 Opal manages Git and Go dependencies, exact lock data, scripts, and package commands. An Opal project uses `opal.json`, `opal.lock`, and an ignored `.opal/` directory. See [Opal projects](../reference/opal.md).
