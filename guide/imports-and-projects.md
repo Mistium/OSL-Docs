@@ -103,6 +103,8 @@ log path.Join("a", ...parts)
 ```
 
 - Exported constants and variables are read directly, as in `http.MethodGet`.
+- A Go import is always reachable by its package name, including packages the runtime also imports
+  internally, such as `io`, `os`, and `errors`.
 - Go types work as variable, parameter, and return types, both as values (`image.Point`) and pointers
   (`*strings.Reader`). Field writes on a value variable update that variable. Numbers convert to the
   field's numeric type, and an unknown field is a `TypeError`.

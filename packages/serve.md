@@ -125,6 +125,23 @@ app.use(serve.requestID())
 Other built-in middleware: `corsOpen()`, `requireHeader(key, value)`, `maxBodySize(bytes)`,
 `timeout(seconds)`, `basicAuth(user, pass)`, `noCache()`, `setKey(key, value)`.
 
+### Body size limits
+
+Every router caps request bodies at 32 MiB. Change the cap with `app.bodyLimit(bytes)`, or pass
+`0` to remove it. `serve.maxBodySize(bytes)` sets a tighter cap for the routes it wraps:
+
+```osl
+app.bodyLimit(1024 * 1024)
+app.post("/avatar", serve.maxBodySize(64 * 1024), def(*serve.Context c) -> ( ... ))
+```
+
+A request whose declared `Content-Length` exceeds the cap is answered with
+`413 {"error": "request body exceeds <bytes> bytes"}` before any handler after the limit runs.
+A chunked body with no declared length is cut off while it is read: the first of `body()`,
+`bodyBytes()`, `bodyJSON()`, `bodyJSONArray()`, `bindJSON()`, or `formFile()` to exceed the cap
+aborts the context with the same `413` response. The helper still returns its empty or error value,
+and anything the handler writes afterwards is discarded, so the client sees only the `413`.
+
 `timeout` buffers downstream output until the handler completes and cancels the request context at
 the deadline. Do not place streaming, flushing, or WebSocket handlers behind it.
 
@@ -267,6 +284,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 - `app.get(pattern, ...handlers)` · `post` · `put` · `patch` · `delete` · `options` · `head` · `any`
 - `app.ws(pattern, wsServer)`
 - `app.use(...handlers)` → `*serve.Router`
+- `app.bodyLimit(bytes)` → `*serve.Router` - cap request bodies (default 32 MiB, `0` for none)
 - `app.group(prefix, fn?)` → `*serve.Router`
 - `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
 - `app.setFuncMap(funcs)` - register template functions (call before `loadHTMLGlob`)
@@ -313,7 +331,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serve.Handler` | Limits requests per client without a background worker; nonpositive windows use one second. |
 | `serve.requireBearer(token: string)` | `serve.Handler` |  |
 | `serve.requireHeader(key: string, value: string)` | `serve.Handler` |  |
-| `serve.maxBodySize(maxBytes: number)` | `serve.Handler` |  |
+| `serve.maxBodySize(maxBytes: number)` | `serve.Handler` | Answers `413` when the body exceeds `maxBytes`. |
 | `serve.recover()` | `serve.Handler` |  |
 | `serve.timeout(seconds: number)` | `serve.Handler` | Cancels the downstream request context at the deadline and returns a buffered 503 response without allowing late handler writes to reach the client. |
 | `serve.setKey(key: string, value: any)` | `serve.Handler` | Sets key. |
@@ -420,6 +438,7 @@ app.serveTLS(":443", "cert.pem", "key.pem")
 | `value.views(dir: string)` | `*serve.Router` | Sets the views directory for `c.render`. |
 | `value.layout(name: string)` | `*serve.Router` | Sets the layout template wrapping `c.render` output. |
 | `value.use(...handlers: serve.Handler)` | `*serve.Router` |  |
+| `value.bodyLimit(maxBytes: number)` | `*serve.Router` | Caps request bodies; oversized requests get `413`. Defaults to 32 MiB; `0` disables the cap. |
 | `value.group(prefix: string, ...fn?: func(router))` | `*serve.Router` | Creates a route group with optional router callback functions. |
 | `value.run(addr: string)` | `error` |  |
 | `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
