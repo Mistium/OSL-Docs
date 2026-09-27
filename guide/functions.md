@@ -111,6 +111,16 @@ def render(object value, Formatter format) string (
 
 The assignment form `type Formatter = def(object) string` declares the same type, and `fnc` or `function` may replace `def`. Compiler diagnostics always print function types with `def`, such as `def(object) string`, and name functions as written in source. A lambda assigned to a signature type declares its return type, as in `def(object value) string -> value.toStr()`.
 
+A function name used without a call is a value of its signature type. It can be stored in `any`, `function`, or a matching signature type. Assigning, passing, or returning it as a string, number, boolean, object, array, or record is a compile error, such as `Cannot use def(int) int as string; call the function or declare a function type`:
+
+```osl
+def double(int x) int -> x * 2
+
+type Transform def(int) int
+Transform step = double
+string label = double(4).toStr()
+```
+
 The compiler checks arguments and return values when a function has a signature type. Imported signature types also apply to callbacks passed from other modules. Nullable array and dictionary parameters give literals their declared element and value types.
 
 ## Generics
