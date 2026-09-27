@@ -74,6 +74,12 @@ direct Git dependency, or one named dependency when given an argument. Pass `--o
 `update`, or `sync` to prohibit network access. Offline Git packages must already exist in
 `.opal/packages` at the locked commit. Offline Go modules must already be in Go's module cache.
 
+Import a package by its repository path. As with `opal add`, `import "mist/project"` is short for
+`import "git.rotur.dev/mist/project"`; packages from other hosts include the host. A
+package's own `goDependencies` join the project's lock, with the project's entry winning when both
+name a module. Builds fetch missing Go packages at their locked versions. To move a Go dependency to
+a newer version, add it again, for example `opal add go:example.com/module@latest`.
+
 Inspect dependency state with:
 
 ```bash
