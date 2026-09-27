@@ -121,6 +121,11 @@ Allows `null` in addition to the schema's normal type.
 
 Uses `default` when the input is absent or `null`. The normalized output contains the default.
 
+A `null` default keeps a nullable schema nullable in either order:
+`schema.array(schema.string()).nullable().defaultValue(null)` accepts `null` and produces `null` for
+a missing key. On a schema that is not nullable or optional, a `null` default still reports
+`Required`.
+
 #### `value.trim()` → `*schema.Schema`
 
 Trims leading and trailing whitespace from a string in the normalized output.

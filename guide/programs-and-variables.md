@@ -76,7 +76,25 @@ def readStatus() string (
 )
 ```
 
-Blocks do not create a separate variable lifetime in the same way a function does. Keep declarations close to their use and avoid reusing one name for unrelated values.
+Blocks do not create a separate variable lifetime in the same way a function does. A variable declared in an `if`, loop, or other block remains readable after that block ends. Keep declarations close to their use and avoid reusing one name for unrelated values.
+
+Sibling blocks may each declare the same name with a different type. The later declaration applies until its block ends. After that block, the name refers to the earlier declaration again.
+
+```osl
+def describe(boolean compact) (
+  if compact (
+    int size = 1
+    log size
+  ) else (
+    string size = "large"
+    log size
+  )
+)
+```
+
+A typed redeclaration with another type still reports `'size' is already declared as int` when it appears in the same block, in a block nested inside the original declaration's block, or at function level after that block. Assign without a type to update the existing variable, or choose a new name.
+
+Statement keywords cannot name a variable or parameter: `return`, `if`, `else`, `for`, `while`, `until`, `loop`, `switch`, `case`, `default`, `break`, `continue`, `def`, `class`, `struct`, `enum`, `import`, `export`, `defer`, `mainloop`, and `throw`. The compiler reports the declaration, for example `'until' is a reserved keyword and cannot be used as a variable name; choose another name such as 'untilValue'`.
 
 ## Explicit `main`
 

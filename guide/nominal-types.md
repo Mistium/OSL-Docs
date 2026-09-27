@@ -151,6 +151,8 @@ log counter.increment()
 
 `self` refers to the instance. A field that starts with `_` is private outside class methods. External access to a private field returns `null`.
 
+Methods belong to their class. Call them through an instance or `self`, as in `self.path()`. A method name never declares a global function, so a method may share its name with a global function or a local variable.
+
 Extend another class with `extends`:
 
 ```osl

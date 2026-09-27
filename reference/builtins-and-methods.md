@@ -19,11 +19,11 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `clamp(value, low, high)` | Restricts a number to a range. |
 | `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. |
 | `sqrt(value)`, `pow(base, exponent)` | Roots and powers. |
-| `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions. |
+| `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions of an angle in degrees, matching the number methods. |
 | `random(low, high)` | Returns a random number in the requested range. |
 | `range(start, end)` | Creates an inclusive range. The `to` operator is usually clearer. |
 | `keys(object)`, `values(object)`, `entries(object)` | Reads object contents. |
-| `btoa(value)`, `atob(value)` | Base64 encode and decode. |
+| `btoa(value)`, `atob(value)` | Base64 encode and decode. `atob` returns the decoded bytes as a string, or `""` for invalid input. |
 | `symbol(name)` | Creates a symbol value. |
 | `sleep(seconds)` | Blocks for a duration in seconds. |
 
@@ -42,7 +42,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `.len` or `.len()` | Length where supported |
 | `.contains(value)` | Membership where supported |
 
-Assertion shorthand uses `value.<type>` for `.assert(type)` and `value.<type>(fallback)` for `.assertElse(type, fallback)`. Keep the fallback's opening parenthesis adjacent to `>`. A space separates a following block, as in `for value in items.<array> (`.
+Assertion shorthand uses `value.<type>` for `.assert(type)` and `value.<type>(fallback)` for `.assertElse(type, fallback)`. A nullable type such as `value.<string?>` accepts `null`. Assertions check the runtime type and never convert, so asserting a string as `byte[]` fails; use `.toBytes()`. Keep the fallback's opening parenthesis adjacent to `>`. A space separates a following block, as in `for value in items.<array> (`.
 
 ## Strings
 
@@ -55,7 +55,7 @@ index        lastIndex     count         match
 replace      replaceFirst  split         left          right
 trim         trimText      strip         stripStart    stripEnd
 toUpper      toLower       toTitle       toMixed
-padStart     padEnd        reverse
+padStart     padEnd        reverse       toBytes
 toArr        ord           btoa          atob
 encodeHex    decodeHex     encodeBin     decodeBin
 hashMD5      hashSHA1      hashSHA256    hashSHA512
@@ -64,6 +64,8 @@ hashMD5      hashSHA1      hashSHA256    hashSHA512
 String positions are 1-based. Indexing, iteration, `trimText`, and `toMixed` use Unicode code points. `match(pattern)` always returns an array of matches, which is empty when nothing matches. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
 
 There is no `repeat` method. Use multiplication, as in `"a" * 3`.
+
+`.toBytes()` returns a string's raw bytes as `byte[]`, so `data.atob().toBytes()` decodes base64 text to bytes.
 
 ## Arrays
 
@@ -102,11 +104,16 @@ copied["user"].position = 2
 log roles["user"].position // 1
 ```
 
+A bare key name is literal: `{key: 1}` has the key `"key"`. Wrap an expression in brackets to compute the key, as in `{[key]: 1}` or `{["user_" ++ id]: data}`. Parentheses group an expression as they do everywhere else, so `{(key): 1}` also computes the key.
+
 Object shorthand resolves variable names even when they match a command name. For example, `string error = "failed"` followed by `{error}` creates `{error: "failed"}`.
 
 ## Numbers and booleans
 
 Numbers provide methods such as `round`, `floor`, `ceiling`, `abs`, `sqrt`, `clamp`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `log`, `ln`, `sign`, `isPrime`, and `chr`.
+
+`sqrt`, `asin`, and `acos` return `number?`: `null` when the input is outside their domain. Use a
+fallback such as `x.sqrt() ?? 0.0` where a number is required.
 
 Booleans support the universal conversion, type, assertion, and prototype methods.
 

@@ -146,6 +146,23 @@ Shorthand assertion aliases are also supported:
 - `.<>(fallback)` is an alias for `.assertElse(fallback)` (e.g. `val.<>("")`).
 - `.<type>()` defaults to the zero value of the type (e.g. `val.<array>()` becomes `.assertElse(array, [])`, `val.<string>()` becomes `.assertElse(string, "")`).
 - Negated type assertions `!type` assert that a value is never that type. For example, `.<!null>` asserts that a value is non-null, and `.<!null>(fallback)` provides a default when null.
+- Nullable type assertions `type?` accept `null` and return it unchanged. `.assert(string?)`, `.<string?>`, and `.<string?>(fallback)` return `null` for a null or missing value, the value when it is a string, and fail (or return the fallback) for any other type. A failed assertion names the requested type, as in `TypeError: Expected string, got int`.
+
+```osl
+def label(string? name) string -> name ?? "anonymous"
+
+object user = {name: "Ada", age: 36}
+log label(user.name.<string?>)     // Ada
+log label(user.nickname.<string?>) // anonymous
+log label(user.age.<string?>("?")) // ?
+```
+
+An assertion checks the runtime type and never converts the value. A string is never a `byte[]`, so `text.<byte[]>` fails and `text.<byte[]>(fallback)` returns the fallback. When the string's type is known, the compiler reports the conversion to use instead. Convert text to bytes with `.toBytes()`, and decode base64 text, such as a data URI payload, with `atob`:
+
+```osl
+string upload = "aGk="
+byte[] body = upload.atob().toBytes()
+```
 
 Asserting a value as `any` is meaningless and rejected as a compile error. The compiler also warns about assertions it can prove redundant and rejects assertions it can prove impossible.
 
@@ -187,6 +204,8 @@ boolean enabled = value.toBool()
 
 Conversion is different from assertion. Conversion attempts to produce another representation. Assertion checks the existing runtime type.
 
+Strings convert to bytes with `.toBytes()`, which returns the string's raw bytes. Bytes convert back with `.toStr()`.
+
 The compiler warns about conversions it can prove redundant. A conversion on a value that already has the target type can be removed, a repeated conversion such as `.toNum().toNum()` names the duplication, and a `.toStr().toNum()` or `.toNum().toStr()` roundtrip collapses to the final conversion:
 
 ```osl
@@ -204,5 +223,7 @@ Comparing a known `boolean` to `true` or `false` also warns; use the value or it
 ## Null values and type checks
 
 `typeof` reports `"null"` for null values, including missing nullable entries in typed dictionaries. A null object or array fails the corresponding `typeof(value) == "object"` or `"array"` guard. Allocated empty objects and arrays retain their collection type.
+
+A null dynamic value flows into any nullable parameter or declaration. `array? items = record.missing` and a call such as `count(record.missing)` for `def count(array? items)` receive `null`. A present value of another type still fails, for example `TypeError: Expected array, got int`. A non-nullable `array` parameter or declaration checks a dynamic value in the same way: a present non-array value fails with `TypeError: Expected array, got string; use .assertElse(array, []) for a fallback` instead of being wrapped, and a null value becomes an empty array, as a null value becomes an empty object for `object`. Use `.toArray()` to convert a value to an array explicitly. Assigning a dynamic value to a non-nullable collection that the compiler cannot convert reports both types and the valid narrowing: `.assert(array)`, `.assertElse(array, fallback)`, or `.<array?>` when null is allowed.
 
 The quoted string `"null"` is an ordinary string. Assigning it to a string variable or comparing against it does not make it a null literal or narrow a nullable variable. Use the unquoted `null` value for null checks.

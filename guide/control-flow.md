@@ -1,6 +1,17 @@
 # Control flow
 
-OSL uses parentheses for statement blocks.
+OSL uses parentheses for statement blocks. A block's opening `(` belongs on the same line as the statement that owns it. A header expression may span lines inside its own brackets, so a multi-line collection literal can end on the opener's line:
+
+```osl
+for update in [
+  {a: 1},
+  {b: 2}
+] (
+  log update
+)
+```
+
+Moving the opener onto its own line, as in `if ready` followed by `(` on the next line, is a compile error.
 
 ## Conditions
 

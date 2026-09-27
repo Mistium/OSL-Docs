@@ -65,6 +65,8 @@ evaluated once.
 
 Loose string equality is case-insensitive and may coerce values. Use `===` when case and runtime type matter.
 
+Objects and arrays compare by contents. Handles such as class instances, connections, files, channels, and functions compare by identity: two distinct handles are never loosely equal, even when they print the same, and a handle equals only itself.
+
 Comparing a value to itself is normally true for `==` (normally false for `!=`) and warns; it is usually a copy-paste mistake. NaN is the exception: it is unequal to itself, so `value != value` is true for NaN. Use `math.isNan(value)` when that is the intended check.
 
 ## Boolean and nullish operators
@@ -99,6 +101,8 @@ The ternary form has no colon:
 ```osl
 string label = ready ? "ready" "waiting"
 ```
+
+When one branch is `null`, the result has the nullable type of the other branch, so `on ? result.ok(3) null` is a `result?` and `on ? {a: 1} null` is an `object?`.
 
 ## Pipe and bitwise operators
 

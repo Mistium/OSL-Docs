@@ -26,13 +26,15 @@ def optionalConnections() *ws.Connection[]? (
 
 `*ws.Connection[]` is an array of connection pointers. `*ws.Connection[][]` is an array of those arrays. The trailing `?` allows the entire array to be null.
 
-Named concise functions use `->` and one expression. Statements after the definition execute normally:
+Named concise functions use `->` and one expression. The return type may be any type, including generic, keyed, and nullable types such as `result<T, string>`, `result<T, string>?`, `string[number]`, and `number[]?`. Statements after the definition execute normally:
 
 ```osl
 def greeting() string -> "hello"
 log greeting()
 log "after"
 ```
+
+A function cannot share its name with a runtime helper or an imported package, such as `none`, `atob`, or `json` after `import "std:json"`. The compiler reports the declaration, for example `Function 'none' clashes with a built-in runtime name; rename it, for example to 'noneFn'`.
 
 For a function that does nothing, use `def noop() ( return )`. An empty `()` body is invalid; the diagnostic suggests this correction.
 
@@ -106,6 +108,8 @@ def render(object value, Formatter format) string (
   return format(value)
 )
 ```
+
+The assignment form `type Formatter = def(object) string` declares the same type, and `fnc` or `function` may replace `def`. Compiler diagnostics always print function types with `def`, such as `def(object) string`, and name functions as written in source. A lambda assigned to a signature type declares its return type, as in `def(object value) string -> value.toStr()`.
 
 The compiler checks arguments and return values when a function has a signature type. Imported signature types also apply to callbacks passed from other modules. Nullable array and dictionary parameters give literals their declared element and value types.
 
