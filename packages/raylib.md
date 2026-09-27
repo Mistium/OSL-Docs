@@ -65,10 +65,8 @@ Key names include letters, arrows, space, escape, enter, modifiers, and F1 throu
 
 ## Audio
 
-- `initAudioDevice()` and `closeAudioDevice()` manage native audio device lifecycle.
-- `audioReady()` checks if audio device is initialized.
-- `setMasterVolume(volume)` adjusts master volume between `0.0` and `1.0`.
-- `loadSound(path)` loads a WAV/OGG/MP3 sound handle with `play()`, `stop()`, `setVolume(vol)`, `setPitch(pitch)`, `unload()`, and `valid()`.
+raylib has no audio API of its own. Import [`std:sound`](sound.md) alongside it to play sounds in a
+raylib window.
 
 ## Textures and Render Textures
 

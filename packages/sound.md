@@ -1,9 +1,15 @@
 # sound
 
-Use `sound` for loading and controlling audio playback.
+Use `sound` for loading and controlling audio playback. It is the only audio API in OSL and works
+with or without a window, including alongside [`raylib`](raylib.md) and [`window`](window.md).
 
 ```osl
 import "std:sound"
+
+string id = sound.new("jump.wav")
+sound.volume(id, 0.5)
+sound.pitch(id, 1.5)
+sound.play(id)
 ```
 
 ## API reference
@@ -12,21 +18,32 @@ import "std:sound"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `sound.new(url: any)` | `string` |  |
+| `sound.new(url: any)` | `string` | Loads a sound and returns its id, or `""` on failure. |
 | `sound.load(url: any)` | `string` | Alias of `sound.new`. |
-| `sound.play(id: any)` | `boolean` | Starts or resumes playback. |
+| `sound.play(id: any)` | `boolean` | Starts playback, or resumes it when paused. Does nothing if already playing. |
 | `sound.start(id: any)` | `boolean` | Alias of `sound.play`. |
+| `sound.stop(id: any)` | `boolean` | Ends playback. The next `play` starts from the beginning. |
 | `sound.pause(id: any)` | `boolean` | Pauses active playback. |
 | `sound.unpause(id: any)` | `boolean` | Resumes paused playback. |
-| `sound.unload(id: any)` | `boolean` | Removes the loaded sound. |
+| `sound.unload(id: any)` | `boolean` | Stops and removes the loaded sound. |
 | `sound.clear(id: any)` | `boolean` | Alias of `sound.unload`. |
-| `sound.volume(id: any, value: number)` | `boolean` | Stores the sound's reported volume, clamped from 0 to 1. |
-| `sound.currentTime(id: any)` | `number` | Returns the current playback time in seconds. |
+| `sound.volume(id: any, value: number)` | `boolean` | Sets the sound's volume, clamped from 0 to 1. Applies immediately. |
+| `sound.pitch(id: any, value: number)` | `boolean` | Sets the playback rate multiplier. `2.0` plays an octave higher and twice as fast. Must be greater than 0. |
+| `sound.masterVolume(value: number)` | | Scales every sound, clamped from 0 to 1. |
+| `sound.ready()` | `boolean` | Opens the audio device if needed and reports whether it is available. |
+| `sound.close()` | | Stops every sound and releases the audio device. The next `play` or `ready` reopens it. |
+| `sound.currentTime(id: any)` | `number` | Current playback position in seconds, or 0 when stopped. |
 | `sound.loaded(id: any)` | `boolean` |  |
-| `sound.playing(id: any)` | `boolean` |  |
-| `sound.duration(id: any)` | `number` |  |
-| `sound.percent(id: any)` | `number` |  |
-| `sound.info(id: string, field: string)` | `number` |  |
+| `sound.playing(id: any)` | `boolean` | True from `play` until the sound ends or is stopped, including while paused. |
+| `sound.duration(id: any)` | `number` | Length in seconds. |
+| `sound.percent(id: any)` | `number` | `currentTime / duration`, from 0 to 1. |
+| `sound.info(id: string, field: string)` | `number` | `loaded`, `playing`, `volume`, `pitch`, `duration`, or `current_time`. Booleans are 1 or 0. |
+
+## Sources and formats
+
+`url` can be a plain file path, a `file://` path, or an `http://` or `https://` URL. Other schemes
+fail. WAV, MP3, OGG Vorbis, and QOA are supported. The format is detected from the file contents,
+so the extension does not matter.
 
 ## Notes
 
@@ -34,9 +51,9 @@ import "std:sound"
 
 ## Behavior and limits
 
-Audio downloads and in-memory sources have size limits. HTTP status codes are checked. Speaker
-setup waits until the first playback, and audio with a different sample rate is resampled. Pause
-state belongs to each sound value. Calling `unload` or `clear` more than once is safe.
-
-The exported `sound` value is an alias of the player instance. Its methods keep the
-same argument and return types when accessed through that alias.
+Sources are limited to 64 MiB. HTTP status codes are checked. Loading a sound does not open the
+audio device, so sounds can be loaded and inspected on machines without audio hardware. The device
+opens on the first `play` or `ready` call and mixes every sound at 44.1 kHz, resampling sources at
+other rates. Each sound has one playback position, so calling `play` on a playing sound does not
+start a second copy. Call `stop` then `play` to restart it. Calling `unload` or `clear` more than
+once is safe.
