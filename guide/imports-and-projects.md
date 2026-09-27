@@ -106,8 +106,9 @@ log path.Join("a", ...parts)
 - Go types work as variable, parameter, and return types, both as values (`image.Point`) and pointers
   (`*strings.Reader`). Field writes on a value variable update that variable. Numbers convert to the
   field's numeric type, and an unknown field is a `TypeError`.
-- A `function` or `fnc(...)` parameter can be passed to a Go callback parameter. Arguments and results
-  convert to the Go signature, so `def(int r) int -> (...)` satisfies `func(rune) rune`.
+- Untyped values, such as `function` parameters and object properties, convert to the Go parameter
+  type when passed to a Go function. Functions adapt their arguments and results, so
+  `def(int r) int -> (...)` satisfies `func(rune) rune`.
 - Spreading an array into a Go variadic parameter converts each element to the parameter's element type.
 
 Go struct literals such as `image.Point{X: 1}` are not OSL syntax. Use a constructor function.

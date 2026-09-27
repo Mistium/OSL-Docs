@@ -15,7 +15,7 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 `compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
 
 `transpile` stops after Go generation. It prints formatted Go to standard output unless `-o`
-selects a file. Runtime panic metadata keeps path-qualified OSL locations so files with the same
+selects a file. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
 basename remain distinct.
 
 `--no-cache` disables compiler artifacts, module snapshots, generated workspaces, and native binary reuse for that command. Verbose mode keeps the timing for each compiler stage in the terminal.
