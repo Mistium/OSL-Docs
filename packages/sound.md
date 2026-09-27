@@ -55,6 +55,10 @@ so the extension does not matter.
 Playback needs no C libraries or system audio headers to build. On Linux it uses PulseAudio,
 including PipeWire and WSLg, and falls back to ALSA at runtime.
 
+Audio playback synchronizes its own state internally. Importing `sound` alone keeps OSL code
+in single-threaded execution mode. Programs using `thread` or concurrent callbacks still use
+the compiler's shared-state synchronization.
+
 Sources are limited to 64 MiB. HTTP status codes are checked. Loading a sound does not open the
 audio device, so sounds can be loaded and inspected on machines without audio hardware. The device
 opens on the first `play` or `ready` call and mixes every sound at 44.1 kHz, resampling sources at
