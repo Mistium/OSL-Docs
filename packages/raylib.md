@@ -100,3 +100,12 @@ Use `beginSmoothLines()`, `drawSmoothLine(x1, y1, x2, y2, thickness, color)` and
 native call, with unchanged round caps, per-line colour and premultiplied alpha.
 Raylib may flush a full vertex buffer within a batch; drawing order and colours
 remain intact across those flushes. A zero-length line draws a round dot.
+
+For repeated pen calls, `beginSmoothBatch()` starts a buffered version of
+`beginSmoothLines()`. Submit lines with `drawSmoothLine()` and finish with
+`endSmoothLines()`. Up to 1,024 lines share one native call, using a fixed 52 KiB
+queue. Geometry, colours and submission order match the unbuffered API.
+Call `endSmoothLines()` before clearing, drawing anything else, changing the
+render target, reading pixels or closing the window. It submits any remaining
+lines before ending the shader and blend modes. Use `beginSmoothLines()` when
+other drawing operations must be interleaved within the batch.
