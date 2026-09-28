@@ -93,3 +93,10 @@ raylib window.
 - `drawFullscreen()` draws a fullscreen quad using the shader.
 - `unload()` frees the shader from GPU memory.
 
+## Dense pen drawing
+
+Use `beginSmoothLines()`, `drawSmoothLine(x1, y1, x2, y2, thickness, color)` and
+`endSmoothLines()` for dense pen drawing. Each line submits its quad through one
+native call, with unchanged round caps, per-line colour and premultiplied alpha.
+Raylib may flush a full vertex buffer within a batch; drawing order and colours
+remain intact across those flushes. A zero-length line draws a round dot.
