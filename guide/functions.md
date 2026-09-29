@@ -157,6 +157,12 @@ result<string[object], string> records = checked<string[object]>(input)
 
 ## Calling and binding
 
+Keep the opening `(` next to the function or method name: `greet("Ada")` and `name.toUpper()`. A space or tab before the argument parentheses is invalid, so `greet ("Ada")` reports a syntax error.
+
+For generic calls, keep `(` next to the closing `>`: `checked<string>(input)`.
+
+Commands require whitespace before their arguments. `log (10 + 10)` uses the `log` command and prints `20`; the parentheses group its argument. In `log name (10 + 10)`, `name` and `(10 + 10)` are separate arguments. Spaces before statement blocks, such as `if ready ( log "ready" )`, remain valid.
+
 Functions are values. `.call(...)` invokes a function, and `.bind(...)` returns a function with leading arguments fixed.
 
 ```osl
