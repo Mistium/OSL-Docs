@@ -27,7 +27,7 @@ raylib.closeWindow()
 ```
 
 `bounds` is a rectangle from `raylib.rect(x, y, width, height)` or any `{x, y, width, height}`
-object. Lists of items are an array of strings or one string separated by `;`. Styles, text
+object; use [`layout`](layout.md) to compute them from the window size. Lists of items are an array of strings or one string separated by `;`. Styles, text
 measurement and every control need an open window; calling them earlier raises
 `raygui needs an open window; call raylib.initWindow first`.
 

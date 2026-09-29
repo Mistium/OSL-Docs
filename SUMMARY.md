@@ -87,6 +87,7 @@
   * [shader](packages/shader.md)
   * [raylib](packages/raylib.md)
   * [raygui](packages/raygui.md)
+  * [layout](packages/layout.md)
 * [Concurrency and embedded languages](packages/categories/concurrency.md)
   * [testing](packages/testing.md)
   * [js](packages/js.md)
