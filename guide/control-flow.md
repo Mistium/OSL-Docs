@@ -25,6 +25,12 @@ if score >= 90 (
 )
 ```
 
+`else` and `else if` may also start their own line after the closing `)`.
+
+To choose a value rather than run statements, use an `if` expression:
+`string grade = if score >= 90 then "A" else "B"`. See
+[conditional expressions](operators.md#ranges-and-conditional-expressions).
+
 A one-statement guard may stay on one line:
 
 ```osl
