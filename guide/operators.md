@@ -7,7 +7,7 @@
 | `+` | Addition, or string concatenation when both operands are strings |
 | `-` | Subtraction |
 | `*` | Multiplication or repetition |
-| `/` | Division |
+| `/` | Division. Always produces a `number`, so `7 / 2` is `3.5` |
 | `%` | Remainder |
 | `^` | Power |
 

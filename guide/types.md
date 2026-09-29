@@ -204,6 +204,15 @@ boolean enabled = value.toBool()
 
 Conversion is different from assertion. Conversion attempts to produce another representation. Assertion checks the existing runtime type.
 
+Integer values widen into `number` targets freely, so an `int` variable can be assigned or passed wherever a `number` is expected. Going the other way, a `number` narrows into an `int` target automatically only when the value is written out directly: a literal, an operator result such as `n + 1`, or a compound assignment such as `count += n`. A value flowing through a variable, call, or member access must convert explicitly with `.toInt()`:
+
+```osl
+number n = 1.5
+int a = n + 1   // fine: the operator result narrows automatically
+int b = n       // TypeError: convert the value explicitly with .toInt()
+int c = n.toInt() // fine
+```
+
 Strings convert to bytes with `.toBytes()`, which returns the string's raw bytes. Bytes convert back with `.toStr()`.
 
 The compiler warns about conversions it can prove redundant. A conversion on a value that already has the target type can be removed, a repeated conversion such as `.toNum().toNum()` names the duplication, and a `.toStr().toNum()` or `.toNum().toStr()` roundtrip collapses to the final conversion:
