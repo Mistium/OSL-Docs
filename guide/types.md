@@ -71,6 +71,10 @@ string[] names = []
 names.append("Ada")
 ```
 
+Elements are converted to `T` when they are added. A numeric string such as `"7"` becomes a number
+in `int[]` or `number[]`, but a string that is not a number is a `TypeError`, at compile time for a
+literal and at runtime for a value.
+
 `T[size]` is a fixed-size array. Omitted elements receive the type's zero value, and methods that change the length are compile errors.
 
 ```osl
