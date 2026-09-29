@@ -153,6 +153,34 @@ log counter.increment()
 
 Methods belong to their class. Call them through an instance or `self`, as in `self.path()`. A method name never declares a global function, so a method may share its name with a global function or a local variable.
 
+Typed fields compile to native Go struct fields, so reads and writes of known fields are direct.
+Array fields keep their element type, including arrays of classes, and support mutation methods:
+
+```osl
+class Node (
+  Node[] children = []
+)
+
+Node root = Node()
+root.children.append(Node())
+```
+
+A field with a function type is called like a method and keeps its signature:
+
+```osl
+type Step def(Box, int) int
+
+class Box (
+  int n = 1
+  Step run = twice
+)
+
+def twice(Box b, int by) int -> b.n * by * 2
+
+Box box = Box()
+log box.run(box, 3)
+```
+
 Extend another class with `extends`:
 
 ```osl

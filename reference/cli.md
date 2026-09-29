@@ -44,12 +44,12 @@ osl package <name>
 
 ```text
 osl test [path ...]
-osl bench <file.osl> [--time 1s] [--runs N] [--top N] [--profile cpu.pprof]
+osl bench <file.osl> [--time 1s] [--runs N] [--top N] [--profile cpu.pprof] [-- program args]
 ```
 
 `test` discovers `.test.osl` files. See [Testing](testing.md).
 
-`bench` repeats a program, records a CPU profile, and reports time against OSL source lines. Use `--runs 1` for code with external side effects.
+`bench` repeats a program, records a CPU profile, and reports time against OSL source lines. Use `--runs 1` for code with external side effects. Arguments after `--` are passed to the program on every run.
 
 ## Cache
 

@@ -74,6 +74,7 @@ import "std:math"
 - `math.correlation(a, b)` → `number`
 - `math.zScores(numbers)` → `array`
 - `math.normalize(numbers)` → `array`
+- `math.jsSin(x)`, `math.jsCos(x)`, `math.jsTan(x)`, `math.jsAsin(x)`, `math.jsAcos(x)`, `math.jsAtan(x)`, `math.jsAtan2(y, x)`, `math.jsLog(x)`, `math.jsExp(x)`, `math.jsPow(x, y)` → `number`
 
 ## Complete API reference
 
@@ -149,6 +150,46 @@ import "std:math"
 | `math.correlation(a: array, b: array)` | `number` |  |
 | `math.zScores(numbers: array)` | `array` |  |
 | `math.normalize(numbers: array)` | `array` |  |
+| `math.jsSin(x: number)` | `number` | Same result as JavaScript's `Math.sin`. |
+| `math.jsCos(x: number)` | `number` | Same result as JavaScript's `Math.cos`. |
+| `math.jsTan(x: number)` | `number` | Same result as JavaScript's `Math.tan`. |
+| `math.jsAsin(x: number)` | `number` | Same result as JavaScript's `Math.asin`. |
+| `math.jsAcos(x: number)` | `number` | Same result as JavaScript's `Math.acos`. |
+| `math.jsAtan(x: number)` | `number` | Same result as JavaScript's `Math.atan`. |
+| `math.jsAtan2(y: number, x: number)` | `number` | Same result as JavaScript's `Math.atan2`. |
+| `math.jsLog(x: number)` | `number` | Same result as JavaScript's `Math.log`. |
+| `math.jsExp(x: number)` | `number` | Same result as JavaScript's `Math.exp`. |
+| `math.jsPow(x: number, y: number)` | `number` | JavaScript's `Math.pow` rules, correctly rounded. See below. |
+
+## JavaScript-exact math
+
+Go's `math` functions often differ from JavaScript's `Math.*` in the last bit, for example
+`math.acos(0.5)` is `1.0471975511965976` but JavaScript gives `1.0471975511965979`. The `js*`
+methods port V8's fdlibm code (`src/base/ieee754.cc`, the version in Node 24), so they return
+the same bits as JavaScript. Use them when a program must reproduce a JavaScript engine exactly,
+for example a Scratch interpreter.
+
+```osl
+import "std:math"
+log math.jsAcos(0.5)   // 1.0471975511965979
+log math.jsLog(1000)   // 6.907755278982137
+log math.jsPow(10, -2) // 0.01
+```
+
+`jsPow` is the one exception. V8 handles a few special cases itself (`y` is `NaN`,
+`(±1) ** ±Infinity`, `x ** 2`, `x ** 0.5`) and passes everything else to the operating system's
+`pow`, so JavaScript's own results differ between platforms. `jsPow` applies V8's special
+cases, then returns the correctly rounded result. That matches JavaScript whenever the platform's
+`pow` is correctly rounded (on macOS it isn't for about 0.1% of inputs).
+
+Newer V8 builds (from mid-2026) replace fdlibm with LLVM's libm, which changes some results.
+These methods follow the fdlibm behaviour shipped in Node 24.
+
+
+`math.fround(x)` rounds to the nearest 32-bit float, like JavaScript's `Math.fround`.
+
+`math.jsToFixed(x, digits)` returns `x.toFixed(digits)` exactly as JavaScript formats it: the nearest
+decimal, halfway cases rounded away from zero, and the sign kept when a negative value rounds to zero.
 
 ## Notes
 

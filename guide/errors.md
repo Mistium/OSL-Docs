@@ -85,3 +85,7 @@ if invalidConfig (
 ```
 
 `osl run` returns the program's exit status to the shell.
+
+## Null values at runtime
+
+`RuntimeError: Tried to use a null value` means the program dereferenced null. The marked line is where the value was used, not necessarily where it became null. Check for a variable read before assignment, or a global from a file that loads after the one using it. Directory imports load files alphabetically and run each file's top-level statements in load order, so a file that calls into a global defined in a later-loading file crashes at startup. Importing the defining file first fixes it.
