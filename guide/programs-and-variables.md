@@ -96,7 +96,7 @@ def describe(boolean compact) (
 
 A typed redeclaration with another type still reports `'size' is already declared as int` when it appears in the same block, in a block nested inside the original declaration's block, or at function level after that block. Assign without a type to update the existing variable, or choose a new name.
 
-Statement keywords cannot name a variable or parameter: `return`, `if`, `else`, `for`, `while`, `until`, `loop`, `switch`, `case`, `default`, `break`, `continue`, `def`, `class`, `struct`, `enum`, `import`, `export`, `defer`, `mainloop`, and `throw`. The compiler reports the declaration, for example `'until' is a reserved keyword and cannot be used as a variable name; choose another name such as 'untilValue'`.
+Statement keywords cannot name a variable or parameter: `return`, `if`, `else`, `for`, `while`, `until`, `loop`, `switch`, `case`, `default`, `break`, `continue`, `def`, `class`, `struct`, `enum`, `import`, `export`, `defer`, and `throw`. The compiler reports the declaration, for example `'until' is a reserved keyword and cannot be used as a variable name; choose another name such as 'untilValue'`.
 
 ## Explicit `main`
 

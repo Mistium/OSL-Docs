@@ -180,8 +180,6 @@ Each package page lists handle methods in a separate section.
 | --- | --- |
 | [shader](shader.md) | GLSL and OSL-style shader transpilation and rendering to images and windows. |
 | [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, shaders, and textures. |
-| [window](window.md) | Open a window and draw to it (the originOS graphics model). |
-| [win-buttons](win-buttons.md) | Install native window controls. |
 
 ### Scripting & concurrency
 | Package | Description |
@@ -196,6 +194,7 @@ Each package page lists handle methods in a separate section.
 | Package | Description |
 | --- | --- |
 | [box2d](box2d.md) | Box2D-compatible rigid-body worlds, bodies, and fixtures. |
+| [events](events.md) | Named in-process events with thread-safe listeners. |
 | [map](map.md) | An ordered key-value map type. |
 | [set](set.md) | A set type. |
 | [option](option.md) | Optional values (`some`/`none`). |

@@ -86,8 +86,6 @@
 * Graphics and windowing
   * [shader](packages/shader.md)
   * [raylib](packages/raylib.md)
-  * [window](packages/window.md)
-  * [win-buttons](packages/win-buttons.md)
 * [Concurrency and embedded languages](packages/categories/concurrency.md)
   * [testing](packages/testing.md)
   * [js](packages/js.md)
@@ -96,6 +94,7 @@
   * [sync](packages/sync.md)
 * [Utilities and data structures](packages/categories/utilities.md)
   * [box2d](packages/box2d.md)
+  * [events](packages/events.md)
   * [map](packages/map.md)
   * [set](packages/set.md)
   * [option](packages/option.md)

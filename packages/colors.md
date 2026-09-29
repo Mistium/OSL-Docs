@@ -1,6 +1,6 @@
 # colors
 
-Use `colors` to construct color values for image, canvas, QR, PDF, and window drawing APIs.
+Use `colors` to construct color values for image, canvas, QR, and PDF APIs.
 
 ```osl
 import "std:colors"

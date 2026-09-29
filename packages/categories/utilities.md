@@ -3,6 +3,7 @@
 Packages for data structures and utility types.
 
 - [box2d](../box2d.md) - Box2D-compatible rigid-body worlds, bodies, and fixtures.
+- [events](../events.md) - Named in-process events with thread-safe listeners.
 - [map](../map.md) - An ordered key-value map type.
 - [set](../set.md) - A set type.
 - [option](../option.md) - Optional values (`some`/`none`).

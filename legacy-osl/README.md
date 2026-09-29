@@ -8,7 +8,7 @@ The current OSL compiler builds standalone native programs. It does not include 
 
 | originOS feature | Current OSL replacement |
 | --- | --- |
-| Browser window commands | [`std:window`](../packages/window.md) or [`std:raylib`](../packages/raylib.md) |
+| Browser window commands | [`std:raylib`](../packages/raylib.md) |
 | originOS filesystem | [`std:fs`](../packages/fs.md) |
 | Browser HTTP and WebSocket methods | [`std:requests`](../packages/requests.md) and [`std:ws`](../packages/ws.md) |
 | Desktop notifications | [`std:notify`](../packages/notify.md) |

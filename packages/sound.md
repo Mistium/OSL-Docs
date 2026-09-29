@@ -1,7 +1,7 @@
 # sound
 
 Use `sound` for loading and controlling audio playback. It is the only audio API in OSL and works
-with or without a window, including alongside [`raylib`](raylib.md) and [`window`](window.md).
+with or without a window, including alongside [`raylib`](raylib.md).
 
 ```osl
 import "std:sound"
