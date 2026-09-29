@@ -93,7 +93,7 @@ The null coalescing operator `??` narrows types:
 
 Logical operators have precedence rules, with `and` binding more tightly than `or`. The compiler warns when different logical operators are mixed without parentheses. Parenthesize the intended grouping when an expression uses both.
 
-## Ranges and the ternary form
+## Ranges and conditional expressions
 
 `start to end` creates an inclusive integer range in either direction.
 
@@ -102,13 +102,26 @@ int[] forward = 1 to 3
 int[] backward = 3 to 1
 ```
 
-The ternary form has no colon:
+`if condition then a else b` chooses between two values. It works anywhere a value does: in an
+assignment, as an argument, or inside an array. Chain further choices with `else if`, and put each
+`else` on its own line when the expression gets long:
 
 ```osl
-string label = ready ? "ready" "waiting"
+string label = if ready then "ready" else "waiting"
+log if count == 1 then "item" else "items"
+
+number fee = if member then 0
+  else if total > 100 then 5
+  else 10
 ```
 
-When one branch is `null`, the result has the nullable type of the other branch, so `on ? result.ok(3) null` is a `result?` and `on ? {a: 1} null` is an `object?`.
+The `else` value runs to the end of the expression, so `"n: " ++ if ok then 1 else 2 ++ "!"`
+appends `"!"` to the `else` value. Wrap the whole `if` in parentheses to combine it with other
+operators. When one branch is `null`, the result has the nullable type of the other branch, so
+`if on then result.ok(3) else null` is a `result?`.
+
+The older `condition ? a b` form still compiles but warns (`OSL-LEGACY-TERNARY`), and `osl fix`
+rewrites it to `if … then … else`.
 
 ## Pipe and bitwise operators
 
