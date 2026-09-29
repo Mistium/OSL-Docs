@@ -80,8 +80,10 @@ map          filter        some          every
 sort         sortBy        reverse       randomOf
 join         clone         getKeys       getValues
 min          max           sum           product
-resize
+resize       iter
 ```
+
+`iter()` returns a lazy iterator over the items; see [Iterators and generators](../guide/iterators.md).
 
 Array positions are 1-based. Mutating methods change the original array, including arrays stored in object fields or array items, so `o.list.append(x)` and `grid[1].pop()` update the stored array. `.clone()` creates an independent deep copy.
 

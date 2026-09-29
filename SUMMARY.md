@@ -12,6 +12,7 @@
 * [Arrays and objects](guide/collections.md)
 * [Control flow](guide/control-flow.md)
 * [Functions](guide/functions.md)
+* [Iterators and generators](guide/iterators.md)
 * [Structs, enums, and classes](guide/nominal-types.md)
 * [Operators](guide/operators.md)
 * [Errors and results](guide/errors.md)
