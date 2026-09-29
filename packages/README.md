@@ -180,6 +180,7 @@ Each package page lists handle methods in a separate section.
 | --- | --- |
 | [shader](shader.md) | GLSL and OSL-style shader transpilation and rendering to images and windows. |
 | [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, shaders, and textures. |
+| [raygui](raygui.md) | Immediate-mode GUI controls drawn in a raylib window. |
 
 ### Scripting & concurrency
 | Package | Description |

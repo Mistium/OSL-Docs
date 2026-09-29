@@ -1,7 +1,8 @@
 # raylib
 
 `osl/raylib` wraps raylib-go with OSL values and a compact frame-loop API. It is for native desktop
-builds. Use `osl compile` or `osl run`.
+builds. Use `osl compile` or `osl run`. For buttons, sliders, text boxes and other GUI controls,
+use [`raygui`](raygui.md).
 
 ```osl
 import "std:raylib"
