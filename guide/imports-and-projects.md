@@ -112,6 +112,8 @@ log path.Join("a", ...parts)
   type when passed to a Go function. Functions adapt their arguments and results, so
   `def(int r) int -> (...)` satisfies `func(rune) rune`.
 - Spreading an array into a Go variadic parameter converts each element to the parameter's element type.
+- A Go import that the program never uses still builds, and the compiler reports an
+  `UnusedImportWarning` (`OSL-UNUSED-IMPORT`) on the import line.
 
 Go struct literals such as `image.Point{X: 1}` are not OSL syntax. Use a constructor function.
 
