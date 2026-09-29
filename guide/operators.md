@@ -20,9 +20,15 @@ number right = 10 + (2 * 3)
 
 The first expression is `(10 + 2) * 3`. The compiler warns about unparenthesized mixed arithmetic. Parenthesize the intended grouping, especially for time, sizes, and persisted values.
 
-The compiler rejects integer overflow when both operands are known. Arithmetic whose values are
+For `int`, the compiler rejects overflow when both operands are known. Arithmetic whose values are
 only available at runtime keeps the same checked operations and raises an overflow error instead of
 wrapping. A divisor that the compiler knows is zero is also a compile error.
+
+When both operands have the same fixed-width integer type, such as `int64`, `+`, `-`, and `*`
+preserve that type and use native integer arithmetic without converting through `number`.
+These operations wrap at the declared width. For example, adding two `int8` values of `127` and
+`1` gives `-128`. This differs from checked `int` arithmetic. An `int64` Fibonacci benchmark can
+continue after overflow, but its result is no longer the exact mathematical Fibonacci number.
 
 String repetition rejects a count that the compiler knows is negative.
 

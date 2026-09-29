@@ -71,6 +71,11 @@ loop 3 (
 )
 ```
 
+`loop` evaluates its count once, including counts returned by functions. Integer counts retain their
+type, so `loop` accepts fixed-width bounds such as `int64` without converting them to `number` or
+narrowing them to `int`. Zero and negative integer counts skip the body. Changing the count variable
+inside the body does not change the number of iterations.
+
 ## Collection loops
 
 `in` yields values. With two names it yields the 1-based position and value:
