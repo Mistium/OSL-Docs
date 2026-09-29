@@ -23,7 +23,7 @@ if parsed.isOk() (
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `json.parse(data: any, options: object)` | `result` | Parses one root value using the same trailing-data validation as streams. |
+| `json.parse(data: any, options?: object)` | `result` | Parses one root value using the same trailing-data validation as streams. `options.type` may be `"object"` or `"array"` to require that root. |
 | `json.parseObject(data: any)` | `result` | Parses one JSON object, returning an error result for invalid JSON or another root type. |
 | `json.parseArray(data: any)` | `result` | Parses one JSON array, returning an error result for invalid JSON or another root type. |
 | `json.stringify(data: any)` | `string` | Serialises a value as compact JSON without HTML escaping. Safe while another OSL thread mutates shared data. |

@@ -22,7 +22,7 @@ log jwt.verify(token, "secret")
 | Method | Returns | Notes |
 | --- | --- | --- |
 | `jwt.encode(header: any, payload: any, secret: any)` | `string` | Builds a signed three-part token from raw header and payload text. |
-| `jwt.sign(claims: object, secret: any, expiresIn: any)` | `string` | JSON-encodes claims and uses the same token construction as `encode`. |
+| `jwt.sign(claims: object, secret: any, expiresIn?: number)` | `string` | JSON-encodes claims and uses the same token construction as `encode`. A positive `expiresIn` (seconds) adds `exp` and `iat` claims, like `signWithExpiry`. |
 | `jwt.signWithExpiry(claims: object, secret: any, expiresIn: any)` | `string` | Signs with expiry. |
 | `jwt.verify(token: any, secret: any)` | `object` | Verifies the signature, JSON structure, and expiry. Signature comparison is constant-time. |
 | `jwt.getClaim(token: any, claim: any)` | `any` | Returns claim. |

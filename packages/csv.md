@@ -12,7 +12,7 @@ import "std:csv"
 import "std:csv"
 
 array rows = csv.parse("name,age\nAda,36")
-log rows[0]["name"]
+log rows[1]["name"]
 ```
 
 ## API reference

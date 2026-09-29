@@ -9,7 +9,7 @@ import "std:raylib"
 
 player = {x: 20}
 raylib.run({width: 800, height: 450, title: "OSL raylib", fps: 60}, def(dt) -> (
-  if raylib.keyDown("right") player.x += 200 * dt
+  if raylib.keyDown("right") ( player.x += 200 * dt )
 ), def() -> (
   raylib.clear("#181825")
   raylib.drawRectangle(player.x, 200, 40, 40, "#89b4fa")

@@ -7,13 +7,13 @@ them into valid GLSL code, and rendering procedural graphics directly to images 
 import "std:shader"
 import "std:img"
 
-string plasma = "def mainImage(fragCoord) (
+string plasma = `def mainImage(fragCoord) (
     vec2 uv = fragCoord / iResolution.xy
     number t = iTime * 1.5
     number v = sin(uv.x * 10.0 + t) + sin(uv.y * 10.0 + t)
     vec3 col = 0.5 + 0.5 * cos(v + vec3(0.0, 2.0, 4.0))
     return vec4(col, 1.0)
-)"
+)`
 
 // Render directly to an image without opening a window
 auto image = shader.renderImage(plasma, 400, 300, {time: 1.0})

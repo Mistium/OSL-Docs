@@ -83,7 +83,7 @@ Creates (or truncates) `path` and returns a buffered write handle. Returns `null
 ```osl
 auto out = fs.create("out.txt")
 for i 1000 (
-  out.write("row " + i + "\n")
+  out.write("row " ++ i ++ "\n")
 )
 out.close() // flushes automatically
 ```
