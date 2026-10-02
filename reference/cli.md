@@ -18,6 +18,11 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 selects a file. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
 basename remain distinct.
 
+For packages with platform-specific Go companions, `transpile -o` automatically writes those
+files next to the selected output. Build the generated directory with Go so its platform file
+selection includes the companions. Standard-output transpilation is useful for inspecting the
+main generated source; `compile` and `run` handle all required sources automatically.
+
 `--no-cache` disables compiler artifacts, module snapshots, generated workspaces, and native binary reuse for that command. Verbose mode keeps the timing for each compiler stage in the terminal.
 
 ## Source tools
