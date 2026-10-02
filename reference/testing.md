@@ -1,14 +1,53 @@
 # Testing
 
-`osl test` discovers files ending in `.test.osl`. With no path, it walks the current directory. Hidden directories, `vendor`, and `node_modules` are skipped.
+`osl test` discovers top-level `test (...)` blocks in ordinary `.osl` source files and executable files ending in `.test.osl`. With no path, it walks the current directory. Hidden directories, `vendor`, and `node_modules` are skipped.
 
 ```bash
 osl test
 osl test src/
+osl test src/users/validation.osl
 osl test src/users/validation.test.osl
 ```
 
-Test files are ordinary OSL programs. A thrown error or failed assertion makes the file fail.
+## Inline checks
+
+Keep a small block of examples beside the implementation:
+
+```osl
+def clamp(number value, number low, number high) number (
+  return min(high, max(low, value))
+)
+
+test (
+  clamp(-1, 0, 10) == 0
+  clamp(5, 0, 10) == 5
+  clamp(11, 0, 10) == 10
+)
+```
+
+Each bare expression in a test body must be boolean and is checked automatically. A false result fails the block. Comparisons report both operand values and evaluate each operand once, using the same equality and comparison rules as ordinary OSL. No assertion package is needed.
+
+Use ordinary declarations and control flow to keep cases compact:
+
+```osl
+test (
+  for row in [[-1, 0], [5, 5], [11, 10]] (
+    clamp(row[1], 0, 10) == row[2]
+  )
+)
+```
+
+Bare boolean expressions are also checked inside the block's loops and conditional branches. Function and lambda bodies keep their ordinary semantics. Use `void` for a call whose result should be ignored, and use `defer` for cleanup. A thrown error fails the current block, runs its deferred cleanup, and lets later blocks run.
+
+Test blocks must be at the top level. Each block has its own local scope; blocks in the same file share globals and execute in source order. Each discovered file runs in a separate process. Wait explicitly for any threads whose results the block needs.
+
+In test mode, the compiler retains definitions, imports, and global initialization assignments while skipping top-level startup statements and the automatic `main()` call. Imported source files follow the same rule, and their test blocks are not run merely by importing them. **Global initializers still execute**, including calls made by those initializers. Put application startup in `main()` or a standalone call when it must be skipped during checks.
+
+Imports inside a test block are available to its checks and are omitted with the block during normal compilation. `osl run`, `osl compile`, and `osl transpile` omit inline blocks and their test-only dependencies. Production and test artifacts have separate compiler cache keys.
+
+## Standalone test files
+
+Existing `.test.osl` files remain ordinary executable OSL programs. A thrown error or failed assertion makes the file fail. If a file contains inline blocks, it uses the inline test mode described above, regardless of its filename.
 
 ## Assertions
 
@@ -40,11 +79,11 @@ if parsed.name != "Ada" (
 )
 ```
 
-The OriginChats test files use this style for domain behavior. It keeps the failure message next to the rule being tested.
+This style keeps the failure message next to the rule being tested.
 
 ## Discovery and output
 
-The runner sorts discovered paths, compiles each file separately, and prints `PASS` or `FAIL` for each one. It returns status `1` if any file fails.
+The runner sorts discovered paths and compiles each file separately. Inline blocks print `PASS` or `FAIL` with their source file and opening line; failures also show the failing expression's source location and values. Standalone files print `PASS` or `FAIL` for the file. The final totals count files, and status `1` means at least one file failed.
 
 ## Compiler repository checks
 
