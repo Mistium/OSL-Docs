@@ -45,8 +45,10 @@ log t.wait()
 ## Thread safety
 
 OSL uses shared statement and collection locks for concurrent access. Captured locals
-are protected in both the parent function and its callbacks. Array reads protect the
-slice header as well as its elements when another thread can grow the array.
+are protected in both the parent function and its callbacks, unless the closure is only
+ever called by name in the function that defines it; such a closure cannot reach another
+thread, so its captures stay private. Array reads protect the slice header as well as
+its elements when another thread can grow the array.
 
 Index writes, array mutations, and scalar read-modify-write expressions such as
 `count += 1` use automatic synchronization. Function and method calls run outside
@@ -80,6 +82,11 @@ that lookup. Dynamic callbacks use the safe fallback.
 Generic, typed, read, and write array operations share the same lock path. Read-only statements
 can run in parallel. Shared scalar reads in polling conditions and conversions use that read
 boundary as well. The compiler leaves constant expressions outside the boundary. It can also omit collection locks for fresh local arrays of scalar values when their aliases do not escape. Parameters, globals, callback captures, and arrays passed to unknown functions retain locking. Raw Go in a function disables this local ownership optimization.
+Statements that only touch thread-local state take no statement lock. That covers assigning
+a literal or another local to a local variable, and storing a locally computed value under one
+key of an object or array held in a local variable, where the collection lock alone makes the
+store atomic. Assigning to a local from shared state takes the read boundary, so it runs in
+parallel with other readers.
 Mutable statements use a shared statement boundary so scalar and collection updates remain
 atomic. Method and package calls use their own synchronization and run outside that boundary, so
 HTTP and WebSocket callbacks can update captured values without deadlocking their caller.
@@ -88,6 +95,12 @@ Automatic collection locking uses a single world lock, so growing or replacing a
 backing storage needs no lock-identity propagation and cyclic values need no recursive
 registration. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
 always release them and use a consistent order when acquiring more than one.
+
+`json.stringify`, `.toStr()` on objects and arrays, and `.clone()` copy one object or array
+at a time under the collection lock and then work on that copy, so encoding or cloning a large
+tree never stalls writers elsewhere in the program. The result reflects each container as it was
+when it was reached, not one instant across the whole tree. Guard the call with a `sync` lock
+when the tree must be captured as a single consistent state.
 
 Collection iteration takes a shallow snapshot when the source may be shared, including
 collections returned by functions. Array callbacks for `map`, `filter`, `some`, and

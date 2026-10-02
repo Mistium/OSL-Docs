@@ -69,6 +69,10 @@ log regex.findAll("[0-9]+", "abc123def456")
 
 ## Behavior and limits
 
+Compiled patterns are cached, so calling a helper repeatedly with the same pattern compiles it
+once. The cache keeps up to 1,024 distinct patterns; further patterns still work and are compiled
+on each call.
+
 Invalid patterns and replacement callback failures return errors. Matching code makes bounded
 progress after an empty match. Truncation counts Unicode code points and treats a negative limit as
 zero, while `charCount` reports UTF-8 bytes. IP and Base64 validators use Go's parsers.
