@@ -40,8 +40,9 @@ type Account (
 )
 ```
 
-Initialize const fields with defaults or constructor field arguments. Assigning them in an
-`init` method counts as a later write and is rejected. Structs and classes also accept const
+Initialize const fields with defaults or constructor field arguments. Supplied constructor
+arguments must be const values or literals; field defaults establish the const view
+directly. Assigning them in an `init` method counts as a later write and is rejected. Structs and classes also accept const
 fields. A const view of an entire instance protects all of its fields; custom instance methods
 on that view are rejected because their mutation behavior is not declared.
 

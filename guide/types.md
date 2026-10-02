@@ -72,9 +72,24 @@ def defaults() const<int[]> (
 log total(defaults())
 ```
 
-A const parameter accepts mutable or const values. A const return protects the caller's
-view. Callbacks receiving reference elements from a const collection must also accept
-const parameters; inferred lambda parameters retain that protection. A generic function
+A const parameter requires a const value or a literal. Mutable variables do not satisfy
+it implicitly, including scalar variables initialized with literals. Create an explicit
+view with a `const<T>` declaration or `.as<const<T>>`:
+
+```osl
+def read(const<int> value) int -> value
+int editable = 10
+const<int> fixed = editable
+log read(fixed)
+log read(10)
+log read(editable.as<const<int>>)
+// read(editable) // compile error
+```
+
+Const return contracts also require a const value or a literal. Constructor arguments,
+collection element types such as `const<int>[]`, and function type contracts retain the
+same requirement. A const return protects the caller's view. Callbacks receiving
+reference elements from a const collection must also accept const parameters; inferred lambda parameters retain that protection. A generic function
 returning an element of `const<T[]>` should return `const<T>` when `T` might be a reference.
 
 User-defined and foreign methods on const reference receivers are rejected because the
