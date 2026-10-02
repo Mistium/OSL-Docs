@@ -44,6 +44,11 @@ This page covers language-level APIs that do not require an import. Standard-lib
 
 Assertion shorthand uses `value.<type>` for `.assert(type)` and `value.<type>(fallback)` for `.assertElse(type, fallback)`. A nullable type such as `value.<string?>` accepts `null`. Assertions check the runtime type and never convert, so asserting a string as `byte[]` fails; use `.toBytes()`. Keep the fallback's opening parenthesis adjacent to `>`. A space separates a following block, as in `for value in items.<array> (`.
 
+Assertions and conversions preserve read-only protection for reference values obtained
+through `const<T>`. Built-in read operations remain available on const collections, while
+mutating methods are rejected. `.clone()` creates an independent deep copy that can be
+modified. See [const types](../guide/types.md#const-types) for binding and alias rules.
+
 ## Strings
 
 Common string methods include:

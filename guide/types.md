@@ -19,6 +19,73 @@ An integer literal has type `int`. A decimal literal has type `number`.
 Negating an `int` gives an `int`. Words such as `NaN`, `inf`, and `_1` are ordinary identifiers, not
 number literals; use `"NaN".toNum()` to produce NaN.
 
+## Const types
+
+`const<T>` makes a binding non-reassignable and provides a read-only view of `T`:
+
+```osl
+const<int> limit = 10
+const<int[]> values = [1, 2, 3]
+log limit
+log values[1]
+```
+
+Reassignment, compound assignment, increments, item and field writes, and mutating
+methods such as `append`, `sort`, `reverse`, and `delete` produce compile errors.
+The checks also apply inside closures, through nested collection reads, and when
+assigning existing destructuring targets.
+
+Const collections support reading and nonmutating methods. Reference values obtained
+from a const view remain read-only through assertions, conversions, method chains,
+iteration, and inferred aliases. A const reference cannot be assigned to an explicitly
+mutable destination, returned with a mutable return type, or passed to a mutable
+parameter. Copy a scalar normally, or clone a collection for an independent deep copy:
+
+```osl
+int editableLimit = limit
+editableLimit++
+int[] editableValues = values.clone()
+editableValues.append(4)
+```
+
+Const is a view rather than a global freeze. Another existing mutable alias can still
+change the shared data:
+
+```osl
+int[] source = [1, 2]
+const<int[]> view = source
+source[1] = 9
+log view[1] // 9
+```
+
+Use const in parameter and return contracts:
+
+```osl
+def total(const<int[]> values) int (
+  return values.sum().as<int>
+)
+
+def defaults() const<int[]> (
+  return [1, 2, 3]
+)
+
+log total(defaults())
+```
+
+A const parameter accepts mutable or const values. A const return protects the caller's
+view. Callbacks receiving reference elements from a const collection must also accept
+const parameters; inferred lambda parameters retain that protection. A generic function
+returning an element of `const<T[]>` should return `const<T>` when `T` might be a reference.
+
+User-defined and foreign methods on const reference receivers are rejected because the
+compiler has no declaration proving those methods do not mutate the receiver. Built-in
+read operations and deep cloning remain available.
+
+Aliases can name const types. Record, struct, and class fields may also use `const<T>`;
+initialize them with their declaration or constructor rather than updating them later.
+Const requires exactly one explicit type. Nullable forms include `const<string?>`.
+Bare `const name = ...` and `const<auto>` are unsupported.
+
 ## Strings
 
 Strings use double or single quotes. A backslash escapes the next character, so a string whose

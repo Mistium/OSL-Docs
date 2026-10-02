@@ -48,6 +48,21 @@ test (
 
 Run them with `osl test`. Normal builds omit the blocks and their test-only imports.
 
+## Const parameters and returns
+
+Use `const<T>` to accept a value without modifying it through the parameter:
+
+```osl
+def total(const<int[]> values) int (
+  return values.sum().as<int>
+)
+```
+
+The parameter accepts mutable and const inputs, and rejects reassignment and collection
+writes in the function body. A mutable collection parameter cannot accept a const view.
+A `const<T>` return type preserves read-only protection for callers. See
+[const types](types.md#const-types) for copies, aliases, callbacks, and generic returns.
+
 ## Lambdas
 
 Use `->` for an anonymous function:
