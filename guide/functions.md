@@ -38,6 +38,16 @@ A function cannot share its name with a runtime helper or an imported package, s
 
 For a function that does nothing, use `def noop() ( return )`. An empty `()` body is invalid; the diagnostic suggests this correction.
 
+Small [inline check blocks](../reference/testing.md#inline-checks) can sit beside a function in the same source file:
+
+```osl
+test (
+  greeting() == "hello"
+)
+```
+
+Run them with `osl test`. Normal builds omit the blocks and their test-only imports.
+
 ## Lambdas
 
 Use `->` for an anonymous function:

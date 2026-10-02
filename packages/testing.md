@@ -1,8 +1,7 @@
 # testing
 
 The `testing` package provides assertion helpers that stop the current test with an
-`AssertionError`. Test files end in `.test.osl` and can be run with `osl test`. Reserve that suffix for executable assertion suites; name ordinary demos
-and manually run programs with the plain `.osl` suffix so test discovery does not run them.
+`AssertionError`. Standalone test files end in `.test.osl` and can be run with `osl test`. Ordinary `.osl` source files can also contain [inline `test (...)` blocks](../reference/testing.md#inline-checks), whose bare boolean expressions are checked without importing this package. Files with neither test blocks nor the `.test.osl` suffix are omitted from discovery.
 
 ```osl
 import "std:testing"
