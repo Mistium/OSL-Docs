@@ -40,6 +40,87 @@ replacement guarantees as `fs.writeFile`. Returns `true` on success.
 
 #### `fs.appendToFile(path, data)` → `boolean`
 Appends `data` to the end of `path`, creating the file if it doesn't exist. Returns `true` on success.
+It does not perform a durability flush or provide atomic replacement.
+
+#### `fs.syncFile(path)` → `boolean`
+Syncs an existing file, then closes the handle. Returns `false` on open, sync, or close failure.
+Does not create a missing file. Use it after `appendToFile` when a commit requires a durability
+flush.
+
+### Automatic durable write batching on macOS
+
+Existing `writeFile`, `writeFileBytes`, `tryWriteFile`, and `syncFile` calls automatically share
+full disk flushes when concurrent writes reach the runtime on the same filesystem. No new API,
+options, settings, or application changes are required. Persistent writes retain their existing
+file-sync guarantee; the runtime never acknowledges a write before its durability barrier
+completes.
+
+A single pending write uses Go's `File.Sync` directly. For a group, the runtime first calls ordinary
+`fsync` on every file, then calls `File.Sync` on one file to perform the shared full disk flush.
+Only after that barrier completes can the atomic writers close and rename their temporary files.
+[Apple documents `F_FULLFSYNC`](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fcntl.2.html)
+as syncing the file and asking the drive to flush all buffered data to permanent storage.
+[Go's macOS implementation](https://go.dev/src/internal/poll/fd_fsync_darwin.go) uses this operation,
+with an ordinary `fsync` fallback on `ENOTSUP`.
+
+The runtime groups by filesystem device ID, processes up to 64 requests per group, and yields once
+to collect already-concurrent requests. It does not add a timer or return early. Different devices
+have independent workers. If a per-file preparation fails, that file falls back to its original
+`File.Sync`. If the shared full flush fails, every prepared file falls back to its own `File.Sync`,
+so failures remain attached to the affected file. Other operating systems keep the original
+per-file sync behavior.
+
+Atomicity and durability remain different guarantees. Both the original implementation and the
+batched implementation sync file contents before rename; neither syncs the parent directory
+after rename. The API therefore does not guarantee that a new directory entry or replacement
+survives power loss. Failed writes leave existing contents unchanged and clean up their temporary
+files. Readers that already opened a replaced file can continue reading the old file.
+
+Batching helps overlapping writes. It cannot combine sequential writes whose caller waits for one
+to finish before starting the next. Application-wide locks such as OriginChats' `unreads` and
+`shard-buffers` locks still serialize their operations, and the runtime cannot safely infer which
+files are rebuildable caches or change those locks. No writes are silently made non-durable.
+
+### Measuring the generated executable
+
+Build the benchmark in the OSL repository and run the executable on the application's filesystem:
+
+```sh
+go build -o osl
+./osl compile examples/other/fs_write_bench.osl -o ./fs-write-bench
+./fs-write-bench ./bench-data text 100 1
+./fs-write-bench ./bench-data text 100 16
+./fs-write-bench ./bench-data bytes 100 16
+./fs-write-bench ./bench-data result 100 16
+./fs-write-bench ./bench-data append 100 16
+```
+
+Arguments are the directory, API mode, writes per worker, and number of workers. `append` calls
+`appendToFile` followed by `syncFile`; every mode waits for durability. Each worker repeatedly writes
+1 KiB to its own file. Output includes throughput and mean, p50, p95, and p99 latency in milliseconds.
+The executable creates process-specific files and removes them on exit; use a dedicated directory.
+Compilation time is excluded. Repeat untraced runs and compare one worker with concurrent workers.
+Avoid a memory-backed directory such as Linux `/tmp` when measuring disk latency.
+
+Separately trace the generated executable to count flushes and successful renames. On Linux:
+
+```sh
+strace -f -c -e trace=fsync,fdatasync,rename,renameat,renameat2 ./fs-write-bench ./bench-data text 100 1
+strace -f -c -e trace=fsync,fdatasync,rename,renameat,renameat2 ./fs-write-bench ./bench-data text 100 16
+```
+
+On macOS, where DTrace is permitted, use `sudo dtruss -f ./fs-write-bench ./bench-data text 100 16`.
+Count `fcntl` calls with command `51` (`0x33`,
+[Apple's `F_FULLFSYNC`](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/sys/fcntl.h)),
+ordinary `fsync` calls, and renames. Inspect return values. A successful group uses ordinary per-file
+syncs and one full flush; isolated writes use one full flush each. Failed grouping can produce extra
+calls while falling back. Tracing adds overhead, so measure latency in separate untraced runs.
+If system policy prevents DTrace, use Instruments to profile the generated executable.
+
+The implementation was developed on Linux. Cross-compilation for macOS verifies the platform
+code builds; coordinator tests verify barrier ordering, flush counts, device isolation, and failure
+fallbacks. These checks do not measure macOS latency or simulate actual power loss. A slow write is
+consistent with a durability barrier and does not, by itself, establish a transpilation defect.
 
 ## Streaming
 
@@ -138,7 +219,8 @@ Buffers `data` as a string, `byte[]`, or array of byte numbers. Returns `true` o
 success. Data is flushed when the buffer fills, on `flush()`, and on `close()`.
 
 #### `file.flush()` → `boolean`
-Forces buffered writes to disk without closing. Use it for long-lived logs.
+Drains the userspace write buffer to the operating system without closing. It does not call
+`File.Sync` or provide a durability barrier.
 
 #### `file.close()` → `boolean`
 Flushes any buffered writes and closes the file. Always call this when done with a handle.
@@ -313,7 +395,8 @@ Lists a directory, returning `ok(names)` or `err(message)`.
 | `fs.readFileBytes(path: any)` | `byte[]` | Reads bytes, returning an empty byte array on failure. |
 | `fs.writeFile(path: any, data: any)` | `boolean` | Writes file. |
 | `fs.writeFileBytes(path: any, data: any)` | `boolean` | Writes file bytes. |
-| `fs.appendToFile(path: any, data: any)` | `boolean` |  |
+| `fs.appendToFile(path: any, data: any)` | `boolean` | Appends without syncing. |
+| `fs.syncFile(path: any)` | `boolean` | Syncs an existing file without creating it. |
 | `fs.open(path: any)` | `file` | Opens a buffered read stream, `null` on failure. |
 | `fs.create(path: any)` | `file` | Opens a buffered write stream (truncates), `null` on failure. |
 | `fs.append(path: any)` | `file` | Opens a buffered append stream, `null` on failure. |
@@ -378,7 +461,7 @@ call on a failed handle.
 | `file.tail(n?: number)` | `array` | Last `n` lines of the file, read from the end. |
 | `file.grep(pattern: any)` | `array` | Remaining lines matching a regex (or substring). |
 | `file.write(data: any)` | `boolean` | Buffered write of a string, bytes or byte array. |
-| `file.flush()` | `boolean` | Forces buffered writes to disk. |
+| `file.flush()` | `boolean` | Drains buffered writes to the OS; does not sync. |
 | `file.close()` | `boolean` | Flushes and closes the handle. |
 
 ## Notes
