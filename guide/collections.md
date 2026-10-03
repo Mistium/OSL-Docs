@@ -104,7 +104,24 @@ array pair = ["Ada", "Grace"]
 {id, profile: details} = user
 ```
 
-Use `_` to discard a position. The source expression runs once.
+Use `_` to discard a position. The source expression runs once. Patterns can nest and collect the remaining array elements or object entries with a final `...name` target:
+
+```osl
+int8[][] rows = [[1, 2, 3], [4]]
+[[first, ...remaining], second] = rows
+{profile: {name, scores: [best, ...scores]}, ...other} = user
+```
+
+New targets retain known element and field types; existing targets keep their declared types. For example, `first` above is `int8` and `remaining` is `int8[]`. Dynamic fields require an explicit target type or a later assertion. Rest collections are shallow copies. Arrays must have enough elements, and requested object fields must exist. A failed extraction leaves existing target bindings unchanged. Duplicate target names are rejected across the entire pattern.
+
+Typed object literals also accept spread, checking keys and values against the destination type. Later entries override earlier ones, and each spread source runs once:
+
+```osl
+string[int8] defaults = {limit: 10, retries: 2}
+string[int] settings = {...defaults, retries: 3}
+```
+
+Known incompatible types and narrowing spreads are compile errors. Dynamic spread values are checked at runtime; invalid fields or overflowing values fail instead of being silently converted.
 
 ## Iteration
 
