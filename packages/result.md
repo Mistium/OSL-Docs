@@ -11,6 +11,15 @@ auto ok = result.ok(42)
 log ok.unwrapOr(0)
 ```
 
+Checked conversions produce a typed result without needing an import:
+
+```osl
+result<int8, string> parsed = text.tryAs<int8>
+int8 value = parsed.unwrapOr(0)
+```
+
+See [checked conversion](../guide/types.md#checked-conversion) for validation rules.
+
 ## API reference
 
 ### `result`
