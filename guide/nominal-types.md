@@ -29,6 +29,8 @@ log user.username
 log user.hasRole("user")
 ```
 
+Methods may declare [generic type parameters and constraints](functions.md#generic-methods), such as `def keep<T: integer>(T value) T -> value`. Call `instance.keep(10)` or `instance.keep<int8>(10)`. Record `init` methods cannot be generic.
+
 Without `init`, the constructor accepts either no arguments or one argument per declared field. Methods returning a value must declare their return type; `init` does not return a value. Assignment shares a record. Use `.clone()` for an independent deep copy.
 
 Fields can use `const<T>` to prevent later replacement or mutation through the field:
@@ -204,7 +206,7 @@ class AdminCounter extends Counter (
 )
 ```
 
-Calls between methods retain their declared return types, including typed arrays. Child classes inherit fields, methods, and constructors. A child method with the same name replaces the inherited method.
+Calls between methods retain their declared return types, including typed arrays. [Generic methods](functions.md#generic-methods) retain their constraints and return types through inheritance and calls through `self`. Child classes inherit fields, methods, and constructors. A child method with the same name replaces the inherited method.
 
 Class assignment shares the instance. Use `.clone()` for an independent copy.
 
