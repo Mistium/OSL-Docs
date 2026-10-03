@@ -24,6 +24,8 @@ def optionalConnections() *ws.Connection[]? (
 )
 ```
 
+Pointer parameters and return values must match the declared pointee type. A pointer to `int16` cannot satisfy `*int8`, and an unrelated value cannot satisfy a pointer return type.
+
 `*ws.Connection[]` is an array of connection pointers. `*ws.Connection[][]` is an array of those arrays. The trailing `?` allows the entire array to be null.
 
 Named concise functions use `->` and one expression. The return type may be any type, including generic, keyed, and nullable types such as `result<T, string>`, `result<T, string>?`, `string[number]`, and `number[]?`. Statements after the definition execute normally:
@@ -236,6 +238,18 @@ log keep<int8>(12)
 ```
 
 Numeric constraints enable arithmetic and ordering in the function body. Addition, subtraction, and multiplication preserve the concrete type, including its integer width. Integer constraints also enable remainder, bitwise AND, OR, XOR, complement, and left and arithmetic right shifts. Division returns `number64`, as ordinary integer division does. A constrained generic can forward its type argument to another generic when its permitted types satisfy that function's constraint.
+
+A named [interface](nominal-types.md#interfaces) can constrain a type parameter by its methods:
+
+```osl
+interface Reader (
+  def read() int
+)
+
+def load<Reader T>(T source) int -> source.read()
+```
+
+Explicit and inferred type arguments must supply matching methods. The function body can call the declared methods and retains `T` for its inputs and returns. The same constraints work on generic records, classes, and methods.
 
 Integer targets also work with `.as<T>`. `.tryAs<T>` returns `result<T, string>` and reports invalid values or overflow. Const inputs and parameter defaults compose with generics:
 
