@@ -187,7 +187,7 @@ assertion:
 string[object] users = {}
 
 object? found = users["ada"]
-object displayed = users["ada"].assertElse(object, {name: "Unknown"})
+object displayed = users["ada"].<object>({name: "Unknown"})
 ```
 
 Map values with non-nullable scalar types keep their zero-value behavior. For example, a missing
@@ -207,32 +207,27 @@ import "std:serve"
 
 ## Assertions
 
-Use `.assert(type)` when a dynamic value must have a specific runtime type:
+Use `.<T>` when a dynamic value must already have a specific runtime type:
 
 ```osl
 any value = loadValue()
-object record = value.assert(object)
-```
-
-The generic shorthand is equivalent:
-
-```osl
 object record = value.<object>
 *ws.Connection conn = raw.<*ws.Connection>
 ```
 
-`.assertElse(type, fallback)` returns the fallback after a mismatch. When the fallback has an unambiguous type, omit the type argument:
+`.<T>(fallback)` returns the fallback after a mismatch. When the fallback has an unambiguous type, omit `T`:
 
 ```osl
-string name = value.assertElse("")
-object data = value.assertElse(object, {})
+string name = value.<>("")
+object data = value.<object>({})
 ```
 
-Shorthand assertion aliases are also supported:
-- `.<>(fallback)` is an alias for `.assertElse(fallback)` (e.g. `val.<>("")`).
-- `.<type>()` defaults to the zero value of the type (e.g. `val.<array>()` becomes `.assertElse(array, [])`, `val.<string>()` becomes `.assertElse(string, "")`).
-- Negated type assertions `!type` assert that a value is never that type. For example, `.<!null>` asserts that a value is non-null, and `.<!null>(fallback)` provides a default when null.
-- Nullable type assertions `type?` accept `null` and return it unchanged. `.assert(string?)`, `.<string?>`, and `.<string?>(fallback)` return `null` for a null or missing value, the value when it is a string, and fail (or return the fallback) for any other type. A failed assertion names the requested type, as in `TypeError: Expected string, got int`.
+- `.<T>()` uses the zero value of the type as its fallback, such as `value.<array>()` or `value.<string>()`.
+- Negated assertions `.<!T>` check that a value is never that type. `.<!null>` asserts a non-null value, and `.<!null>(fallback)` supplies a default when null.
+- Nullable assertions `.<T?>` accept null unchanged. `.<string?>` and `.<string?>(fallback)` return null for null or missing values, retain strings, and fail or use the fallback for other values.
+- `.as<T>` converts a value. An assertion checks its existing type; a failed known assertion recommends the relevant conversion.
+
+Compiler and runtime diagnostics use these current forms for assertions, fallbacks, and conversions. Assertion warning codes remain unchanged.
 
 ```osl
 def label(string? name) string -> name ?? "anonymous"
@@ -319,6 +314,6 @@ Comparing a known `boolean` to `true` or `false` also warns; use the value or it
 
 `typeof` reports `"null"` for null values, including missing nullable entries in typed dictionaries. A null object or array fails the corresponding `typeof(value) == "object"` or `"array"` guard. Allocated empty objects and arrays retain their collection type.
 
-A null dynamic value flows into any nullable parameter or declaration. `array? items = record.missing` and a call such as `count(record.missing)` for `def count(array? items)` receive `null`. A present value of another type still fails, for example `TypeError: Expected array, got int`. A non-nullable `array` parameter or declaration checks a dynamic value in the same way: a present non-array value fails with `TypeError: Expected array, got string; use .assertElse(array, []) for a fallback` instead of being wrapped, and a null value becomes an empty array, as a null value becomes an empty object for `object`. Use `.toArray()` to convert a value to an array explicitly. Assigning a dynamic value to a non-nullable collection that the compiler cannot convert reports both types and the valid narrowing: `.assert(array)`, `.assertElse(array, fallback)`, or `.<array?>` when null is allowed.
+A null dynamic value flows into any nullable parameter or declaration. `array? items = record.missing` and a call such as `count(record.missing)` for `def count(array? items)` receive `null`. A present value of another type still fails, for example `TypeError: Expected array, got int`. A non-nullable `array` parameter or declaration checks a dynamic value in the same way: a present non-array value fails with `TypeError: Expected array, got string; use .<array>([]) for a fallback` instead of being wrapped, and a null value becomes an empty array, as a null value becomes an empty object for `object`. Use `.toArray()` to convert a value to an array explicitly. Assigning a dynamic value to a non-nullable collection that the compiler cannot convert reports both types and the valid narrowing: `.<array>`, `.<array>(fallback)`, or `.<array?>` when null is allowed.
 
 The quoted string `"null"` is an ordinary string. Assigning it to a string variable or comparing against it does not make it a null literal or narrow a nullable variable. Use the unquoted `null` value for null checks.
