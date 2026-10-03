@@ -267,6 +267,26 @@ This assertion rejects numeric strings and fractional values; it does not parse 
 
 The former `<T: integer>` form is replaced by `<int* T>`. Explicit calls keep their existing syntax, such as `is<int16>(value)`.
 
+### Array pointer constraints
+
+Use `<*T[]>` to require a pointer to an array with any element type. `T` represents the whole pointer type. Calls infer it from `@arrayVariable`:
+
+```osl
+def del<*T[]>(T arr, int item) (
+  arr.delete(item)
+)
+
+int[] myArr = make(int[], 10)
+del(@myArr, 3)
+log myArr.len // 9
+```
+
+`@myArr` refers to the original variable's storage. Calling `.delete(item)` through that pointer updates its array and length. Positions are 1-based; deletion outside `1` through the current length leaves the array unchanged. The method returns the same pointer, so calls can be chained. `.len` reads the current length through the pointer.
+
+This constraint works in functions, record methods, class methods, and generic forwarding. An array passed by value or a pointer to a scalar fails the constraint. Const arrays cannot provide mutable pointers, and a `const<T>` parameter cannot call `.delete()`.
+
+The `<*T[]>` declaration describes a pointer to the whole array. The ordinary annotation `*ws.Connection[]` continues to describe an array of connection pointers.
+
 ### Generic methods
 
 Record and class methods declare type parameters after the method name. Calls infer their types or accept explicit arguments:
