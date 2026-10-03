@@ -29,7 +29,7 @@ log user.username
 log user.hasRole("user")
 ```
 
-Methods may declare [generic type parameters and constraints](functions.md#generic-methods), such as `def keep<T: integer>(T value) T -> value`. Call `instance.keep(10)` or `instance.keep<int8>(10)`. Record `init` methods cannot be generic.
+Methods may declare [generic type parameters and constraints](functions.md#generic-methods), such as `def keep<int* T>(T value) T -> value`. Call `instance.keep(10)` or `instance.keep<int8>(10)`. Record `init` methods cannot be generic.
 
 Without `init`, the constructor accepts either no arguments or one argument per declared field. Methods returning a value must declare their return type; `init` does not return a value. Assignment shares a record. Use `.clone()` for an independent deep copy.
 

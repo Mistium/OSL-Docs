@@ -199,10 +199,10 @@ result<string[object], string> records = checked<string[object]>(input)
 
 ### Constraints
 
-Use `T: constraint` to restrict a type parameter:
+Generic declarations put the constraint before its name, like ordinary parameters. Use `<int* T>` to allow any integer width:
 
 ```osl
-def add<T: integer>(T left, T right) T -> left + right
+def add<int* T>(T left, T right) T -> left + right
 
 int8 left = 10
 int8 right = 20
@@ -210,25 +210,28 @@ int8 total = add(left, right)
 log add<int16>(12, 30)
 ```
 
+The trailing `*` denotes a type family in generic declarations: `int*` includes signed and unsigned integers, `uint*` includes unsigned integers, and `number*` includes floating types. It does not declare a pointer. `@value` creates a pointer, while pointer type annotations use a leading `*`, such as `*ws.Connection`.
+
 Both explicit and inferred type arguments must satisfy the constraint. Integer literals infer `int`; an `int8` variable infers `int8`. A single type parameter represents one concrete type for the call. Convert arguments explicitly when different integer widths need to share that parameter.
 
 | Constraint | Accepted types |
 | --- | --- |
-| `integer` | `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64` |
+| `int*` | `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64` |
 | `signed` | The signed integer types |
-| `unsigned` | The unsigned integer types |
+| `uint*` | The unsigned integer types |
+| `number*` | `number32`, `number64`, and their `number` alias |
 | `numeric` | All integer types, `number32`, and `number64` |
 | `comparable` | Scalars and named structs or enums whose fields or payloads support equality |
 | `any` | Any type; also the default when no constraint is written |
 
 `byte` and `char` satisfy integer constraints as aliases of `uint8` and `int32`.
 
-A scalar type union can serve as a constraint directly or through an alias:
+Other constraints also go before the name: `<numeric T>`, `<signed T>`, and `<comparable T>`. `<T>` or `<any T>` remains unconstrained. A scalar type union can serve as a constraint directly, such as `<int8 | int16 T>`, or through an alias:
 
 ```osl
 type Small = int8 | int16
 
-def keep<T: Small>(T value) T -> value
+def keep<Small T>(T value) T -> value
 log keep<int8>(12)
 ```
 
@@ -237,15 +240,32 @@ Numeric constraints enable arithmetic and ordering in the function body. Additio
 Integer targets also work with `.as<T>`. `.tryAs<T>` returns `result<T, string>` and reports invalid values or overflow. Const inputs and parameter defaults compose with generics:
 
 ```osl
-def constant<T: integer>(const<T> value) T -> value
+def constant<int* T>(const<T> value) T -> value
 log constant<int8>(10)
 
-def double<T: integer>(T value, T other = value) T -> value + other
+def double<int* T>(T value, T other = value) T -> value + other
 log double<int8>(5)
 
-def parse<T: integer>(any value) result<T, string> -> value.tryAs<T>
+def parse<int* T>(any value) result<T, string> -> value.tryAs<T>
 log parse<int8>("128").isErr()
 ```
+
+
+A `T value` parameter stays checked at the call site. To test an arbitrary value against `T` at runtime, accept `any`:
+
+```osl
+def is<int* T>(any value) boolean (
+  return try(value.<T>).isOk()
+)
+
+log is<int16>("lmao") // false
+log is<int8>(10)      // true
+log is<int8>(128)     // false: out of range
+```
+
+This assertion rejects numeric strings and fractional values; it does not parse or truncate them. Use `.tryAs<T>` when conversion is intended. With `T value` instead of `any value`, `is<int16>("lmao")` is a compile error.
+
+The former `<T: integer>` form is replaced by `<int* T>`. Explicit calls keep their existing syntax, such as `is<int16>(value)`.
 
 ### Generic methods
 
@@ -253,7 +273,7 @@ Record and class methods declare type parameters after the method name. Calls in
 
 ```osl
 type Calculator (
-  def add<T: integer>(T left, T right) T -> left + right
+  def add<int* T>(T left, T right) T -> left + right
 )
 
 Calculator calculator = Calculator()
