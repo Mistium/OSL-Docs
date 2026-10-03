@@ -331,6 +331,8 @@ log calculator.add<int8>(2, 3)
 
 Generic methods can use `self`, defaults, const inputs, and rest parameters. Classes inherit generic methods, and calls between methods keep the concrete return type. Constructors (`init`, `new`, and `constructor`) cannot declare method type parameters. Supply explicit type arguments when the inputs do not determine every type parameter.
 
+Generic records and classes also declare type parameters after their names. Their fields and methods retain those types; see [generic records and classes](nominal-types.md#generic-records-and-classes).
+
 ## Calling and binding
 
 Keep the opening `(` next to the function or method name: `greet("Ada")` and `name.toUpper()`. A space or tab before the argument parentheses is invalid, so `greet ("Ada")` reports a syntax error.
