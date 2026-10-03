@@ -109,18 +109,20 @@ def page(int limit, string? cursor) object (
 page(20)
 ```
 
-Default values in parameter declarations, such as `boolean enabled = true`, are unsupported. The compiler reports the parameter name and suggests a nullable parameter with a fallback in the body:
+Default values apply when an argument is omitted:
 
 ```osl
-def enabled(boolean? value) boolean (
-  return value ?? true
-)
+def greet(string name = "world") string -> "Hello " ++ name
+log greet()
+log greet("OSL")
 
-log enabled()
-log enabled(false)
+def page(int limit, int offset = limit * 2) object -> {limit, offset}
+log page(20)
 ```
 
-The omitted argument uses the fallback; an explicit `false` remains `false`. Apply the same pattern to arrays and other nullable parameters.
+Defaults evaluate on each call in the function's scope and may use earlier parameters. Array and object literals create fresh values. Supplied values, including `false`, empty strings, and empty arrays, keep their meaning. An explicit `null` stays `null` for a nullable parameter and is rejected for a nonnullable parameter.
+
+Required parameters must come before default parameters. A rest parameter may follow defaults and cannot itself have a default. Defaults work in named functions, lambdas, class methods, and record methods and constructors, including calls through function values and spread arguments.
 
 Use `...name` to collect extra arguments:
 
