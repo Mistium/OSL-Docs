@@ -283,7 +283,31 @@ log arr // [1, 3, 4]
 
 The call infers the whole pointer type as `T`; it does not bind `T` to the array's element type. `<T>` by itself remains an unconstrained generic parameter.
 
-`@arr` refers to the original variable's storage. Calling `.delete(item)` through that pointer updates its array and length. Positions are 1-based; deletion outside `1` through the current length leaves the array unchanged. The method returns the same pointer, so calls can be chained. `.len` reads the current length through the pointer.
+`@arr` refers to the original variable's storage. Calling collection mutation methods through that pointer updates its array and length. Positions are 1-based; deletion outside `1` through the current length leaves the array unchanged. Deletion, append, prepend, insertion, and resizing return the same pointer, so calls can be chained. Pop and shift return an element. `.len` reads the current length through the pointer.
+
+Indexing, indexed assignment, `for ... in`, and collection methods preserve the matched element type. A loop through an array pointer iterates a snapshot. Callbacks for `map`, `filter`, `some`, `every`, and `sortBy` infer their input type:
+
+```osl
+def duplicate<*_[] T>(T values) (
+  values.append(values[1])
+  for value in values (
+    log value
+  )
+)
+
+string[] words = ["hello"]
+duplicate(@words) // words is now ["hello", "hello"]
+```
+
+The wildcard element stays abstract inside the function. Appending an existing element is safe; appending `10` is rejected because the caller could pass a string array. Use an element parameter when the function needs a specific capability:
+
+```osl
+def doubled<int* T>(T[] values) T[] -> values.map(value -> value * 2)
+int8[] small = [2, 3]
+int8[] larger = doubled(small) // [4, 6], retains int8[]
+```
+
+Single-expression callback returns infer element reads, literals, comparisons, unary signs, and arithmetic. More complex callbacks can declare their return type explicitly. A declared callback input must accept the collection element type. Inference requires repeated uses of a type parameter to agree; different numeric widths do not silently select a wider type.
 
 Wildcard shapes keep pointer depth explicit: `*_[]` matches a pointer to any array, `**_[]` matches a pointer to an array pointer, and `_[][]` matches nested arrays. An array can contain pointers or other composite element types. A type argument must match the complete declared shape, whether supplied explicitly or inferred.
 
