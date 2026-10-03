@@ -277,6 +277,33 @@ def display(Identifier id) string (
 )
 ```
 
+## Checked conversion
+
+`.tryAs<T>` returns `result<T, string>` instead of silently producing zero or wrapping
+an out-of-range integer:
+
+```osl
+result<int8, string> parsed = "42".tryAs<int8>
+int8 value = parsed.unwrapOr(0)
+log parsed.isOk()
+log (128).tryAs<int8>.isErr()
+```
+
+Targets include signed and unsigned integer widths, floating point types, strings,
+booleans, aliases, typed arrays, and typed objects (`array<T>` and `map<K, V>` included).
+Invalid numeric text, null numeric inputs, nonfinite values, overflow, and negative
+integers converted to unsigned types produce an error. Fractions truncate toward zero
+before checking the target range. Integer text retains exact 64-bit precision.
+Boolean targets accept booleans and the strings `"true"` and `"false"`; other inputs fail.
+String targets use the usual text conversion.
+
+Collection targets build a new collection and validate every element and key
+recursively. A failed element conversion leaves the source intact. Converted object
+keys must remain distinct. Null and noncollection sources fail collection conversion.
+
+Use `.isErr()` or `.unwrapErr()` to inspect the error, or `.unwrapOr(fallback)` to choose
+a default. `.unwrap()` returns the typed success value and throws for an error result.
+
 ## Conversion
 
 The most common conversions are methods:
