@@ -77,6 +77,18 @@ object second = first.clone()
 
 Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
 
+An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
+
+```osl
+int[] values = [1, 2, 3]
+auto reference = @values
+reference.delete(2)
+log values // [1, 3]
+log reference.len // 2
+```
+
+[Array pointer constraints](functions.md#array-pointer-constraints) let functions accept these references for any element type.
+
 ## Merging and spreading
 
 `++` merges arrays and objects as well as concatenating strings:

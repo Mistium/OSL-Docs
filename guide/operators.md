@@ -135,6 +135,12 @@ Bitwise operators are `&`, `|`, `^^`, `<<`, and `>>`. Shift counts cannot be neg
 rejects a negative count when it can prove the value, including a known variable. Dynamic counts
 remain checked by Go at runtime.
 
+## Pointer references
+
+`@variable` creates a pointer to a mutable variable's storage. Changes made through the pointer affect that variable. For an expression such as `@[1, 2, 3]`, it creates storage for the expression's value. Const values cannot provide mutable pointers.
+
+Array pointers support `.delete(position)` and `.len`. See [array pointer constraints](functions.md#array-pointer-constraints) for passing them to generic functions.
+
 ## Regular-expression literals
 
 Prefix a backtick string with `$` to create a regular expression. Flags follow the closing backtick:
