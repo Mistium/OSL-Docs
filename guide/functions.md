@@ -196,6 +196,73 @@ Generic result types preserve both success and error types:
 result<string[object], string> records = checked<string[object]>(input)
 ```
 
+
+### Constraints
+
+Use `T: constraint` to restrict a type parameter:
+
+```osl
+def add<T: integer>(T left, T right) T -> left + right
+
+int8 left = 10
+int8 right = 20
+int8 total = add(left, right)
+log add<int16>(12, 30)
+```
+
+Both explicit and inferred type arguments must satisfy the constraint. Integer literals infer `int`; an `int8` variable infers `int8`. A single type parameter represents one concrete type for the call. Convert arguments explicitly when different integer widths need to share that parameter.
+
+| Constraint | Accepted types |
+| --- | --- |
+| `integer` | `int`, `int8`, `int16`, `int32`, `int64`, `uint`, `uint8`, `uint16`, `uint32`, `uint64` |
+| `signed` | The signed integer types |
+| `unsigned` | The unsigned integer types |
+| `numeric` | All integer types, `number32`, and `number64` |
+| `comparable` | Scalars and named structs or enums whose fields or payloads support equality |
+| `any` | Any type; also the default when no constraint is written |
+
+`byte` and `char` satisfy integer constraints as aliases of `uint8` and `int32`.
+
+A scalar type union can serve as a constraint directly or through an alias:
+
+```osl
+type Small = int8 | int16
+
+def keep<T: Small>(T value) T -> value
+log keep<int8>(12)
+```
+
+Numeric constraints enable arithmetic and ordering in the function body. Addition, subtraction, and multiplication preserve the concrete type, including its integer width. Integer constraints also enable remainder, bitwise AND, OR, XOR, complement, and left and arithmetic right shifts. Division returns `number64`, as ordinary integer division does. A constrained generic can forward its type argument to another generic when its permitted types satisfy that function's constraint.
+
+Integer targets also work with `.as<T>`. `.tryAs<T>` returns `result<T, string>` and reports invalid values or overflow. Const inputs and parameter defaults compose with generics:
+
+```osl
+def constant<T: integer>(const<T> value) T -> value
+log constant<int8>(10)
+
+def double<T: integer>(T value, T other = value) T -> value + other
+log double<int8>(5)
+
+def parse<T: integer>(any value) result<T, string> -> value.tryAs<T>
+log parse<int8>("128").isErr()
+```
+
+### Generic methods
+
+Record and class methods declare type parameters after the method name. Calls infer their types or accept explicit arguments:
+
+```osl
+type Calculator (
+  def add<T: integer>(T left, T right) T -> left + right
+)
+
+Calculator calculator = Calculator()
+log calculator.add(2, 3)
+log calculator.add<int8>(2, 3)
+```
+
+Generic methods can use `self`, defaults, const inputs, and rest parameters. Classes inherit generic methods, and calls between methods keep the concrete return type. Constructors (`init`, `new`, and `constructor`) cannot declare method type parameters. Supply explicit type arguments when the inputs do not determine every type parameter.
+
 ## Calling and binding
 
 Keep the opening `(` next to the function or method name: `greet("Ada")` and `name.toUpper()`. A space or tab before the argument parentheses is invalid, so `greet ("Ada")` reports a syntax error.
