@@ -8,6 +8,10 @@ Positions and ranges use UTF-16 code units, as the protocol requires, and identi
 
 It keeps one project-aware compiler engine. Unsaved editor buffers become in-memory overlays, so diagnostics can resolve imports without writing those buffers to disk.
 
+Type completion includes a `const<T>` snippet. Compiler-derived hover information retains
+const declarations and read-only property and method results. Const write violations are
+reported as source diagnostics by the same compiler used for builds.
+
 ## Check from a terminal
 
 ```bash

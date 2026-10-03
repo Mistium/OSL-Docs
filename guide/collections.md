@@ -40,6 +40,23 @@ A missing property returns `null`. Useful object methods include `getKeys`, `get
 
 Typed maps preserve their key and value types in `getKeys()` and `getValues()`. Both methods take a snapshot under the runtime's shared collection lock in concurrent programs, including HTTP and WebSocket servers. Concurrent inserts, replacements, and deletions cannot invalidate the traversal. Values in the snapshot can still refer to shared records or objects. Use a named lock when several operations must form one transaction.
 
+## Const collection views
+
+`const<T[]>` and `const<object>` protect collections from mutation through that view:
+
+```osl
+const<int[]> values = [1, 2]
+log values[1]
+log values.join(",")
+int[] editable = values.clone()
+editable.append(3)
+```
+
+Nested references remain read-only, and casts and assertions preserve their protection.
+Another existing mutable alias can still change the shared value. Use `.clone()` for an
+independent mutable copy. See [const types](types.md#const-types) for function contracts
+and the operations rejected by the compiler.
+
 ## References and copies
 
 Assigning an array, object, or class instance with `=` shares the same mutable value:

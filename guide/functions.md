@@ -48,6 +48,35 @@ test (
 
 Run them with `osl test`. Normal builds omit the blocks and their test-only imports.
 
+## Const parameters and returns
+
+Use `const<T>` to require a const argument and prevent writes through the parameter:
+
+```osl
+def total(const<int[]> values) int (
+  return values.sum().as<int>
+)
+```
+
+The parameter accepts const values and literals. A mutable variable cannot be passed
+implicitly, even when its current value is known:
+
+```osl
+def read(const<int> value) int -> value
+const<int> fixed = 10
+int editable = 20
+log read(fixed) // accepted
+log read(10) // accepted: literal
+log read(editable.as<const<int>>) // accepted: explicit const conversion
+// read(editable) // compile error: requires const<int>
+```
+
+This requirement also applies to generic calls, callbacks, spread arguments, and typed
+constructor inputs. Reassignment and collection writes are rejected inside the function.
+A `const<T>` return type requires a const value or literal and preserves read-only
+protection for callers. A mutable collection parameter cannot accept a const view. See
+[const types](types.md#const-types) for copies, aliases, callbacks, and generic returns.
+
 ## Lambdas
 
 Use `->` for an anonymous function:

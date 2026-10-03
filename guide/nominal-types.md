@@ -31,6 +31,21 @@ log user.hasRole("user")
 
 Without `init`, the constructor accepts either no arguments or one argument per declared field. Methods returning a value must declare their return type; `init` does not return a value. Assignment shares a record. Use `.clone()` for an independent deep copy.
 
+Fields can use `const<T>` to prevent later replacement or mutation through the field:
+
+```osl
+type Account (
+  const<int> id = 1
+  const<string[]> roles = ["reader"]
+)
+```
+
+Initialize const fields with defaults or constructor field arguments. Supplied constructor
+arguments must be const values or literals; field defaults establish the const view
+directly. Assigning them in an `init` method counts as a later write and is rejected. Structs and classes also accept const
+fields. A const view of an entire instance protects all of its fields; custom instance methods
+on that view are rejected because their mutation behavior is not declared.
+
 ### Dynamic properties
 
 Add a `string[value]` index type between the name and body to allow additional properties:

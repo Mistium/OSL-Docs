@@ -51,6 +51,17 @@ Production OSL tends to declare types at function boundaries and for long-lived 
 
 `auto` is limited to declarations with an initializer. Function parameters cannot use it because there is no declaration-site value to infer from. Use `any` for a dynamically typed parameter or write its explicit type.
 
+Use `const<T>` when a binding should remain fixed:
+
+```osl
+const<int> limit = 10
+const<string[]> names = ["Ada", "Grace"]
+```
+
+The compiler rejects reassignment and mutation through const bindings. Ordinary aliases
+can still change shared data; const provides a read-only view. See [const types](types.md#const-types)
+for collection reads, deep copies, parameters, and return types.
+
 ## Assignment and mutation
 
 ```osl
