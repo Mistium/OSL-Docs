@@ -94,7 +94,7 @@ resize       iter
 
 Array positions are 1-based. Mutating methods change the original array, including arrays stored in object fields or array items, so `o.list.append(x)` and `grid[1].pop()` update the stored array. `.clone()` creates an independent deep copy.
 
-Array pointers created with `@arrayVariable` support `.delete(position)` and `.len`. Pointer deletion updates the original variable's array and length and returns the same pointer. It uses 1-based positions and leaves the array unchanged for out-of-range positions. Generic functions can require an array pointer with [`<*T[]>`](../guide/functions.md#array-pointer-constraints).
+Array pointers created with `@arrayVariable` support `.delete(position)` and `.len`. Pointer deletion updates the original variable's array and length and returns the same pointer. It uses 1-based positions and leaves the array unchanged for out-of-range positions. Generic functions can require an array pointer with [`<*_[] T>`](../guide/functions.md#array-pointer-constraints).
 
 `sort` orders numbers numerically and other values by their string form. `sortBy("field")` places elements missing the field last. `join` renders nested arrays and objects as JSON, like `.toStr()`.
 
