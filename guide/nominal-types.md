@@ -1,6 +1,6 @@
-# Record types, structs, enums, and classes
+# Record types, structs, enums, classes, and interfaces
 
-OSL has named record types, structs, enums, and classes.
+OSL has named record types, structs, enums, classes, and interfaces.
 
 Types exposed by packages use a qualified name such as `*img.Image`. Names beginning with `OSL`
 belong to generated Go code and are rejected in OSL source.
@@ -140,6 +140,35 @@ int8 value = read(small)
 ```
 
 Methods can also declare their own type parameters, but cannot shadow the owner's parameters. An `init` method uses the owner's type parameters rather than introducing its own. Field checks, const views, collection mutations, and record JSON validation retain the concrete type arguments. JSON decoding applies defaults without calling `init`.
+
+## Interfaces
+
+An interface declares the methods a value must provide. It can be used as a parameter, variable, return type, or generic constraint:
+
+```osl
+interface Reader (
+  def read() int
+)
+
+class Source (
+  int value = 7
+  def read() int -> self.value
+)
+
+def load<Reader T>(T source) int -> source.read()
+log load(Source())
+
+Reader reader = Source()
+log reader.read()
+```
+
+Records and classes satisfy an interface automatically when their instance methods have matching parameter and return types. There is no `implements` declaration. Extra methods are allowed. Generic record and class instances use their concrete method types when checked. An interface requiring more methods can be passed to one requiring a subset with matching signatures.
+
+A constrained generic retains its concrete type. Only the methods declared by its interface are available in the function body; instance fields are not exposed. Missing methods, incompatible signatures, and invalid method arguments produce compile-time errors.
+
+Interface methods declare signatures without bodies or parameter defaults. Variadic parameters are supported. An implementation with default parameters does not satisfy an interface method. Interfaces must have at least one method and cannot declare type parameters or generic methods. Built-in collection operations and package helper methods do not automatically implement interfaces.
+
+Interface values share their underlying record or class. Calls through `const<Reader>` are rejected because interface signatures do not declare whether a method mutates its receiver. Interface declarations can be imported like other named types.
 
 ## Structs
 
