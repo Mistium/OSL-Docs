@@ -7,7 +7,7 @@ belong to generated Go code and are rejected in OSL source.
 
 ## Record types
 
-Use `type Name (...)` for a named record with typed fields and instance methods. Fields have defaults. An `init` method runs when you call the type's constructor, and its parameters become the constructor parameters.
+Use `type Name (...)` for a named record with typed fields and instance methods. Fields may have defaults. A typed field without a default starts with its type's zero value. An `init` method runs when you call the type's constructor, and its parameters become the constructor parameters.
 
 ```osl
 type User (
@@ -90,6 +90,56 @@ Use `.assert(User)` to validate a dynamic object at a boundary, or `json.parse<U
 Array-field mutations preserve the stored slice, including bracket access and chained mutations. In concurrent programs, the runtime locks the complete record-array update once. Mutation arguments are evaluated before acquiring that lock.
 
 Records serialize as JSON objects, including extension fields. `.toObject()` creates a dynamic object with the record's keys; `.clone()` preserves the record type. The object methods `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, and `omit` are available. `pick` and `omit` return dynamic objects because their results may omit declared fields.
+
+## Generic records and classes
+
+Put type parameters after the declaration name. Fields and methods can use those types:
+
+```osl
+type Box<T> (
+  T value
+  T[] items = []
+  def get() T -> self.value
+  def set(T value) (
+    self.value = value
+  )
+)
+
+Box<int8> small = Box<int8>(10, [1, 2])
+int8 value = small.get()
+Box<string> text = Box("hello", ["world"])
+```
+
+Explicit type arguments use `Box<int8>`. Constructors infer omitted type arguments from their arguments; calls without enough information require explicit types. Without `init`, record constructors accept either no arguments or one per field. With `init`, its typed parameters control construction and inference. Defaults evaluate separately for each instance. Fields without defaults use zero values, such as `0`, `false`, an empty string, or a null reference.
+
+The same form works for classes:
+
+```osl
+class Holder<T> (
+  T value
+  def init(T value) (
+    self.value = value
+  )
+  def get() T -> self.value
+)
+
+Holder<int8> holder = Holder<int8>(10)
+log holder.get()
+```
+
+A class using `new` or `constructor` is constructed with `Holder<int8>.new(...)`. Generic classes support inheritance, including `class Child<T> extends Holder<T> (...)`. Records remain shared typed maps; classes remain shared native objects.
+
+Type parameters retain the [function constraint syntax](functions.md#constraints), such as `type SmallBox<int* T> (...)` and `type Cache<comparable K, V> (...)`. Constraints are checked for construction and type annotations. Different instantiations are different types: `Box<int>` cannot be assigned to `Box<string>`.
+
+Generic instance types can appear in arrays, nullable types, nested containers, aliases, and generic function signatures:
+
+```osl
+def read<T>(Box<T> box) T -> box.get()
+Box<int8> small = Box<int8>(10, [])
+int8 value = read(small)
+```
+
+Methods can also declare their own type parameters, but cannot shadow the owner's parameters. An `init` method uses the owner's type parameters rather than introducing its own. Field checks, const views, collection mutations, and record JSON validation retain the concrete type arguments. JSON decoding applies defaults without calling `init`.
 
 ## Structs
 
