@@ -22,7 +22,7 @@ This runs the same project diagnostic path, reports diagnostics from every reach
 
 Self-comparison warnings flag expressions such as `value != value`. They do not prevent compilation. NaN is an exception to ordinary self-equality: it is unequal to itself. Use `math.isNan(value)` when that is the intended check.
 
-Boundary warnings flag explicit `any` or `unknown` contracts that hide where unknown input should be decoded: loose function parameters and returns (`OSL-LOOSE-PARAM`, `OSL-LOOSE-RETURN`), loose type aliases (`OSL-LOOSE-ALIAS`), and dictionaries with loose values (`OSL-LOOSE-DICTIONARY`). Related warnings flag a known literal widened into `any`/`unknown` and narrowed again with `.assert()` (`OSL-WIDENED-VALUE`), chained `.assert()` calls (`OSL-CHAINED-ASSERT`), conditional expressions nested inside another outside an `else if` chain (`OSL-NESTED-TERNARY`), `go:reflect` imports (`OSL-REFLECT-IMPORT`), and `raw()` calls without a `//` safety comment explaining why verbatim Go is needed (`OSL-RAW-WITHOUT-COMMENT`). They do not prevent compilation. Suppress one with an `osl-disable` comment like any other `OSL-*` code.
+Boundary warnings flag explicit `any` or `unknown` contracts that hide where unknown input should be decoded: loose function parameters and returns (`OSL-LOOSE-PARAM`, `OSL-LOOSE-RETURN`), loose type aliases (`OSL-LOOSE-ALIAS`), and dictionaries with loose values (`OSL-LOOSE-DICTIONARY`). Related warnings flag a known literal widened into `any`/`unknown` and narrowed again with `.<T>` (`OSL-WIDENED-VALUE`), chained `.<T>` calls (`OSL-CHAINED-ASSERT`), conditional expressions nested inside another outside an `else if` chain (`OSL-NESTED-TERNARY`), `go:reflect` imports (`OSL-REFLECT-IMPORT`), and `raw()` calls without a `//` safety comment explaining why verbatim Go is needed (`OSL-RAW-WITHOUT-COMMENT`). They do not prevent compilation. Suppress one with an `osl-disable` comment like any other `OSL-*` code.
 
 A function that is itself the decoding boundary does not receive `OSL-LOOSE-PARAM` for a parameter it narrows on entry: when the parameter's first use is a `typeof(param)` check or a schema `.safeParse(param)` or `.isValid(param)` call. A parameter used any other way first, such as being logged or passed along, still warns.
 
@@ -46,7 +46,7 @@ All of these run for every reachable imported file, not only the entry file. `os
 
 ## Quick fixes
 
-Redundant `.assert()` calls flagged by `OSL-REDUNDANT-ASSERT` offer a quick-fix code action that removes the call, readability warnings that carry a replacement offer a "Replace with" action, and repeated top-level `import` lines are removed through organize imports. The same fixes run from a terminal with `osl fix`, which takes the same file-or-directory arguments as `osl fmt`. A fix is applied only when the file still contains the exact text the compiler reported, so stale diagnostics never rewrite code.
+Redundant `.<T>` calls flagged by `OSL-REDUNDANT-ASSERT` offer a quick-fix code action that removes the call, readability warnings that carry a replacement offer a "Replace with" action, and repeated top-level `import` lines are removed through organize imports. The same fixes run from a terminal with `osl fix`, which takes the same file-or-directory arguments as `osl fmt`. A fix is applied only when the file still contains the exact text the compiler reported, so stale diagnostics never rewrite code.
 
 ## Formatting
 

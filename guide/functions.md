@@ -184,7 +184,7 @@ Explicit type arguments are useful when a runtime assertion should preserve the 
 
 ```osl
 def checked<T>(any value) result<T, string> (
-  return try(value.assert(T))
+  return try(value.<T>)
 )
 
 result<string, string> name = checked<string>(input)
