@@ -87,7 +87,7 @@ log values // [1, 3]
 log reference.len // 2
 ```
 
-[Array pointer constraints](functions.md#array-pointer-constraints) let functions accept these references for any element type.
+[Array pointer constraints](functions.md#array-pointer-constraints), written `<*_[] T>`, let functions accept these references for any element type. `T` represents the whole matched pointer type.
 
 ## Merging and spreading
 

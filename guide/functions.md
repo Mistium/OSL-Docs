@@ -269,23 +269,27 @@ The former `<T: integer>` form is replaced by `<int* T>`. Explicit calls keep th
 
 ### Array pointer constraints
 
-Use `<*T[]>` to require a pointer to an array with any element type. `T` represents the whole pointer type. Calls infer it from `@arrayVariable`:
+Use `<*_[] T>` to require a pointer to an array with any element type. `_` is the wildcard within the constraint shape, and `T` names the entire matched pointer type:
 
 ```osl
-def del<*T[]>(T arr, int item) (
+def del<*_[] T>(T arr, int item) (
   arr.delete(item)
 )
 
-int[] myArr = make(int[], 10)
-del(@myArr, 3)
-log myArr.len // 9
+int[] arr = [1, 2, 3, 4]
+del(@arr, 2)
+log arr // [1, 3, 4]
 ```
 
-`@myArr` refers to the original variable's storage. Calling `.delete(item)` through that pointer updates its array and length. Positions are 1-based; deletion outside `1` through the current length leaves the array unchanged. The method returns the same pointer, so calls can be chained. `.len` reads the current length through the pointer.
+The call infers the whole pointer type as `T`; it does not bind `T` to the array's element type. `<T>` by itself remains an unconstrained generic parameter.
 
-This constraint works in functions, record methods, class methods, and generic forwarding. An array passed by value or a pointer to a scalar fails the constraint. Const arrays cannot provide mutable pointers, and a `const<T>` parameter cannot call `.delete()`.
+`@arr` refers to the original variable's storage. Calling `.delete(item)` through that pointer updates its array and length. Positions are 1-based; deletion outside `1` through the current length leaves the array unchanged. The method returns the same pointer, so calls can be chained. `.len` reads the current length through the pointer.
 
-The `<*T[]>` declaration describes a pointer to the whole array. The ordinary annotation `*ws.Connection[]` continues to describe an array of connection pointers.
+Wildcard shapes keep pointer depth explicit: `*_[]` matches a pointer to any array, `**_[]` matches a pointer to an array pointer, and `_[][]` matches nested arrays. An array can contain pointers or other composite element types. A type argument must match the complete declared shape, whether supplied explicitly or inferred.
+
+These constraints work in functions, record methods, class methods, and generic forwarding. Arrays passed by value and scalar pointers cannot satisfy `*_[]`. Const arrays cannot provide mutable pointers, and a `const<T>` parameter cannot call `.delete()`.
+
+The earlier `<*T[]>` form remains supported with its original whole-pointer meaning. Ordinary type annotations also retain their existing meaning: `*ws.Connection[]` is an array of connection pointers. Wildcard constraint shapes do not change pointer-array annotation precedence.
 
 ### Generic methods
 
