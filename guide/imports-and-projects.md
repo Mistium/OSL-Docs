@@ -112,6 +112,11 @@ log path.Join("a", ...parts)
   type when passed to a Go function. Functions adapt their arguments and results, so
   `def(int r) int -> (...)` satisfies `func(rune) rune`.
 - Spreading an array into a Go variadic parameter converts each element to the parameter's element type.
+- A Go struct builds from named fields, lowering directly to a Go struct literal. Omitted fields keep their Go zero values. Lowercase names map to the exported field (`x` sets `X`); names that already start uppercase pass through unchanged:
+
+```osl
+image.Point p = image.Point(y = 2, x = 1)
+```
 - A Go import that the program never uses still builds, and the compiler reports an
   `UnusedImportWarning` (`OSL-UNUSED-IMPORT`) on the import line.
 
