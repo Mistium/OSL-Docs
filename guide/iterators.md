@@ -64,6 +64,54 @@ log best
 | `skip(count)` | `iter<T>` | Skips the first `count` values. |
 | `toArray()` | `T[]` | Collects every value into an array. |
 | `count()` | `int` | Counts the values. |
+| `done()` | `boolean` | Reports whether the iterator yields no values. |
+| `next()` | `result<T, error>` | Returns the next value, advancing the iterator. |
+
+Any array method can be called on an iterator directly. The iterator is collected with
+an implicit `.toArray()` first, so a lazy chain can end in an eager summary:
+
+```osl
+def naturals() iter<int> (
+  int n = 0
+  while true (
+    n += 1
+    yield n
+  )
+)
+
+log naturals().take(100).sum()
+```
+
+`.len` on an iterator counts its values, like `count()`. Once a cursor is attached, both
+report what remains. Calling `.iter()` on
+an iterator has no effect, so the compiler warns about it; remove the
+extra call.
+
+`next()` pulls one value at a time in O(1), returning `result<T, error>`: `ok` with the
+value, or `err("iterator is done")` once exhausted. Assigning an iterator shares its
+cursor rather than copying it.
+
+Reads without `next()` or `done()` re-run the sequence from the start, so plain loops and
+`toArray()` stay cheap. Calling `next()` or `done()` attaches a cursor instead: from then
+on, every read of that iterator - loops, chains, collections, further `next()` calls -
+continues from the cursor.
+
+```osl
+def upTo(int limit) iter<int> (
+  for i limit (
+    yield i
+  )
+)
+
+iter<int> it = upTo(3)
+while !it.done() (
+  log it.next().unwrap()
+)
+```
+
+`done()` peeks without consuming, so it stays safe to call any time. Once a cursor is
+attached, collecting the iterator twice yields the remaining values the first time and
+nothing the second; call the generator or `.iter()` again to start over.
 
 Iterators are ordinary values, so they can be stored in `iter<T>` variables and passed to
 functions:
