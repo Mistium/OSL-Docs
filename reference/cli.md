@@ -6,13 +6,15 @@ Run `osl` without arguments for the command summary.
 
 ```text
 osl run <file.osl> [--no-cache] [-v|--verbose] [-- program args]
-osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [-v|--verbose]
+osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [--optimise] [-v|--verbose] [-- program args]
 osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 ```
 
 `run` builds a temporary executable and runs it with the source directory as its working directory. It forwards the program's exit status. When the program is killed by a signal, `run` exits with 128 plus the signal number, as shells do.
 
 `compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
+
+`--optimise` builds a profile-guided binary. It runs the program under the `bench` harness first, collects a CPU profile, then rebuilds with Go's `-pgo`, so the toolchain can inline and lay out the code the program actually runs. The profile is collected from repeated runs, so arguments after `--` are passed to the program every time. The final binary is written to the same output path `compile` would use.
 
 `transpile` stops after Go generation. It prints formatted Go to standard output unless `-o`
 selects a file. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
