@@ -5,7 +5,7 @@ Run `osl` without arguments for the command summary.
 ## Build commands
 
 ```text
-osl run <file.osl> [--no-cache] [-v|--verbose]
+osl run <file.osl> [--no-cache] [-v|--verbose] [-- program args]
 osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [-v|--verbose]
 osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 ```
