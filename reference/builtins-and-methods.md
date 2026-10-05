@@ -32,7 +32,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | Method | Result |
 | --- | --- |
 | `.as<T>` | Explicit conversion to a scalar or collection type |
-| `.tryAs<T>` | Checked conversion returning `result<T, string>` |
+| `.tryAs<T>` | Checked conversion returning `result<T, error>` |
 | `.toStr()` | String conversion |
 | `.toNum()` | Number conversion |
 | `.toInt()` | Integer conversion |

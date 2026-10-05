@@ -139,9 +139,9 @@ string[string[]?] groups = {}
 string[] values = groups["missing"] ?? []
 ```
 
-Built-in types such as `result`, `set`, `map`, `option`, `canvas`, and `xml` use bare
+Built-in types such as `result`, `error`, `unit`, `set`, `map`, `option`, `canvas`, and `xml` use bare
 language names. They do not have qualified package type names or require imports.
-For example, use `result<int, string>` for a typed result.
+For example, use `result<int, error>` for a typed result.
 
 Explicit types on imported global variables are available to top-level statements in
 importing files, including typed arrays, dictionaries, and package handles. Accessing

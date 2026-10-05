@@ -274,11 +274,11 @@ def display(Identifier id) string (
 
 ## Checked conversion
 
-`.tryAs<T>` returns `result<T, string>` instead of silently producing zero or wrapping
+`.tryAs<T>` returns `result<T, error>` instead of silently producing zero or wrapping
 an out-of-range integer:
 
 ```osl
-result<int8, string> parsed = "42".tryAs<int8>
+result<int8, error> parsed = "42".tryAs<int8>
 int8 value = parsed.unwrapOr(0)
 log parsed.isOk()
 log (128).tryAs<int8>.isErr()

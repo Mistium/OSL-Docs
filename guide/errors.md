@@ -32,8 +32,8 @@ Import `std:result` when constructing result values directly:
 ```osl
 import "std:result"
 
-def divide(number left, number right) result<number, string> (
-  if right == 0 return result.err("division by zero")
+def divide(number left, number right) result<number, error> (
+  if right == 0 return result.err(error("division by zero"))
   return result.ok(left / right)
 )
 ```
@@ -41,7 +41,7 @@ def divide(number left, number right) result<number, string> (
 Inspect and unwrap the result:
 
 ```osl
-result<number, string> calculated = divide(10, 2)
+result<number, error> calculated = divide(10, 2)
 
 if calculated.isErr() (
   log calculated.unwrapErr()

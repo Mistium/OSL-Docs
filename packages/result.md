@@ -14,11 +14,44 @@ log ok.unwrapOr(0)
 Checked conversions produce a typed result without needing an import:
 
 ```osl
-result<int8, string> parsed = text.tryAs<int8>
+result<int8, error> parsed = text.tryAs<int8>
 int8 value = parsed.unwrapOr(0)
 ```
 
 See [checked conversion](../guide/types.md#checked-conversion) for validation rules.
+
+## Errors
+
+Build error values with `error(message)` and read them back through `.message`:
+
+```osl
+error problem = error("disk is full")
+log problem.message
+
+result<int, error> missing = result.err(error("not found"))
+log missing.unwrapErr().message
+```
+
+`error` values work with `throw`, `try`, `catch`, string conversion, and every
+`result` accessor. Older code may carry plain strings instead; both are valid
+error payloads, but new code should use `error`.
+
+## Unit
+
+`unit` is the single empty value. Use it for operations that succeed with
+nothing to return:
+
+```osl
+def save(string name) result<, error> (
+  if name == "" return result.err(error("name is required"))
+  return result.ok()
+)
+```
+
+`result.ok()` with no arguments produces a `unit` success. In a `result`
+declaration, either side may be left empty to mean `unit`, so
+`result<, error>` is `result<unit, error>` and `result<int,>` is
+`result<int, unit>`.
 
 ## API reference
 

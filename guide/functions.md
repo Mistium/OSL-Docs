@@ -185,17 +185,17 @@ string? lastWord = shift(["a", "b"])
 Explicit type arguments are useful when a runtime assertion should preserve the requested type or when the type cannot be inferred:
 
 ```osl
-def checked<T>(any value) result<T, string> (
+def checked<T>(any value) result<T, error> (
   return try(value.<T>)
 )
 
-result<string, string> name = checked<string>(input)
+result<string, error> name = checked<string>(input)
 ```
 
 Generic result types preserve both success and error types:
 
 ```osl
-result<string[object], string> records = checked<string[object]>(input)
+result<string[object], error> records = checked<string[object]>(input)
 ```
 
 
@@ -251,7 +251,7 @@ def load<Reader T>(T source) int -> source.read()
 
 Explicit and inferred type arguments must supply matching methods. The function body can call the declared methods and retains `T` for its inputs and returns. The same constraints work on generic records, classes, and methods.
 
-Integer targets also work with `.as<T>`. `.tryAs<T>` returns `result<T, string>` and reports invalid values or overflow. Const inputs and parameter defaults compose with generics:
+Integer targets also work with `.as<T>`. `.tryAs<T>` returns `result<T, error>` and reports invalid values or overflow. Const inputs and parameter defaults compose with generics:
 
 ```osl
 def constant<int* T>(const<T> value) T -> value
@@ -260,7 +260,7 @@ log constant<int8>(10)
 def double<int* T>(T value, T other = value) T -> value + other
 log double<int8>(5)
 
-def parse<int* T>(any value) result<T, string> -> value.tryAs<T>
+def parse<int* T>(any value) result<T, error> -> value.tryAs<T>
 log parse<int8>("128").isErr()
 ```
 
