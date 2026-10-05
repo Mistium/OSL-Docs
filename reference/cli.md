@@ -54,7 +54,7 @@ osl bench <file.osl> [--time 1s] [--runs N] [--top N] [--profile cpu.pprof] [-- 
 
 `test` discovers `.test.osl` files. See [Testing](testing.md).
 
-`bench` repeats a program, records a CPU profile, and reports time against OSL source lines. Use `--runs 1` for code with external side effects. Arguments after `--` are passed to the program on every run.
+`bench` repeats a program, records a CPU profile, and reports hot generated functions and OSL source lines. Function cost folds in called runtime and standard-library code, so a runtime helper such as `OSLtuiPkg.write` shows the write cost its callers pay. Use `--runs 1` for code with external side effects. Arguments after `--` are passed to the program on every run.
 
 ## Cache
 
