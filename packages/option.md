@@ -11,6 +11,13 @@ auto value = some(42)
 log value.unwrapOr(0)
 ```
 
+`some` keeps the value's type, so a typed value produces a typed option:
+
+```osl
+option<int> count = some(1)
+log count.unwrap()
+```
+
 ## API reference
 
 ### `option` values
