@@ -54,7 +54,14 @@ osl bench <file.osl> [--time 1s] [--runs N] [--top N] [--profile cpu.pprof] [-- 
 
 `test` discovers `.test.osl` files. See [Testing](testing.md).
 
-`bench` repeats a program, records a CPU profile, and reports hot generated functions and OSL source lines. Function cost folds in called runtime and standard-library code, so a runtime helper such as `OSLtuiPkg.write` shows the write cost its callers pay. Use `--runs 1` for code with external side effects. Arguments after `--` are passed to the program on every run.
+`bench` repeats a program and reports where it spends time and allocates:
+
+- `CPU self time` splits samples across generated OSL/runtime code, the Go runtime, reflection, and syscalls and I/O. Time in a syscall is attributed to the syscall, not the OSL line that made the call.
+- `Hot generated functions` lists generated and runtime functions by cumulative cost, so a helper such as `OSLtuiPkg.write` shows the cost its callers pay.
+- `Hot OSL source lines` lists user source lines by self time.
+- `Hot allocations` records one extra run with allocation profiling on and lists allocation sites in bytes and object counts, mapped to OSL lines where the compiler can attribute them.
+
+Use `--runs 1` for code with external side effects. Arguments after `--` are passed to the program on every run. The program's own `log` output is discarded while benchmarking.
 
 ## Cache
 
