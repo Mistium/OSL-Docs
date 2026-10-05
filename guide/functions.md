@@ -126,6 +126,34 @@ Defaults evaluate on each call in the function's scope and may use earlier param
 
 Required parameters must come before default parameters. A rest parameter may follow defaults and cannot itself have a default. Defaults work in named functions, lambdas, class methods, and record methods and constructors, including calls through function values and spread arguments.
 
+## Named arguments
+
+Pass arguments by parameter name, in any order, with `name = value`:
+
+```osl
+def greet(string name, string punct = "!") string (
+  return "hi " ++ name ++ punct
+)
+
+log greet(punct = "?", name = "bo")
+```
+
+Omitted arguments use their defaults. Omitting a parameter without a default is an
+error, as are unknown names, duplicates, and skipping a defaulted parameter to
+set a later one. A call is either all positional or all named; the two styles
+cannot mix. Named arguments reach `init` constructors the same way.
+
+Definitions as well as calls may span lines:
+
+```osl
+def add(
+  int a,
+  int b
+) int (
+  return a + b
+)
+```
+
 Use `...name` to collect extra arguments:
 
 ```osl
