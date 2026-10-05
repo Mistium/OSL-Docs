@@ -20,9 +20,9 @@ number right = 10 + (2 * 3)
 
 The first expression is `(10 + 2) * 3`. The compiler warns about unparenthesized mixed arithmetic. Parenthesize the intended grouping, especially for time, sizes, and persisted values.
 
-For `int`, the compiler rejects overflow when both operands are known. Arithmetic whose values are
-only available at runtime keeps the same checked operations and raises an overflow error instead of
-wrapping. A divisor that the compiler knows is zero is also a compile error.
+For `int`, the compiler rejects overflow when both operands are known at compile time. Arithmetic
+whose values are only available at runtime uses native integer arithmetic and wraps on overflow. A
+divisor that the compiler knows is zero is also a compile error.
 
 When both operands have the same fixed-width integer type, such as `int64`, `+`, `-`, and `*`
 preserve that type and use native integer arithmetic without converting through `number`.
