@@ -202,6 +202,14 @@ A constructor accepts either no arguments or one argument for every field. Field
 Point partial = Point(y = 5)
 ```
 
+Braces construct the same way Go writes struct literals. `Point{x: 10}`
+means `Point(x = 10)`, with the same ordering, defaults, and errors:
+
+```osl
+Point braced = Point{x: 10, y: 20}
+log braced.x
+```
+
 Convert a struct to a dynamic object explicitly:
 
 ```osl
@@ -334,6 +342,35 @@ class AdminCounter extends Counter (
 Calls between methods retain their declared return types, including typed arrays. [Generic methods](functions.md#generic-methods) retain their constraints and return types through inheritance and calls through `self`. Child classes inherit fields, methods, and constructors. A child method with the same name replaces the inherited method.
 
 Class assignment shares the instance. Use `.clone()` for an independent copy.
+
+## Nested structs
+
+A struct declared inside a class body belongs to that class. Name it bare
+inside the class and qualified outside; both spellings are the same type.
+The bare name is only visible inside the class, so two classes can each
+declare their own `node` without colliding. Outside the class, always use
+the qualified name:
+
+```osl
+class bf (
+  struct node (
+    string op = ""
+    int amt = 0
+  )
+
+  def parse(string script) bf.node[] (
+    bf.node[] out = []
+    return out
+  )
+)
+
+bf.node[] nodes = bf.parse(">")
+```
+
+Construct nested structs with positional arguments, named arguments, or brace
+literals, inside methods and outside the class. Types are not instance
+members, so they never take `self.` — write `node` inside and `bf.node`
+outside.
 
 ## Which form to choose
 
