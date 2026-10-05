@@ -31,7 +31,16 @@ log user.hasRole("user")
 
 Methods may declare [generic type parameters and constraints](functions.md#generic-methods), such as `def keep<int* T>(T value) T -> value`. Call `instance.keep(10)` or `instance.keep<int8>(10)`. Record `init` methods cannot be generic.
 
-Without `init`, the constructor accepts either no arguments or one argument per declared field. Methods returning a value must declare their return type; `init` does not return a value. Assignment shares a record. Use `.clone()` for an independent deep copy.
+Without `init`, the constructor accepts either no arguments or one argument per declared field. Fields can also be passed by name, in any order; omitted fields keep their defaults. Methods returning a value must declare their return type; `init` does not return a value. Assignment shares a record. Use `.clone()` for an independent deep copy.
+
+```osl
+type NamedUser (
+  string name = ""
+  int age = 0
+)
+
+NamedUser ada = NamedUser(age = 30, name = "ada")
+```
 
 Fields can use `const<T>` to prevent later replacement or mutation through the field:
 
@@ -187,7 +196,13 @@ cursor.x = 12
 
 Field access on structs and closed object shapes is verified at compile time. Accessing an unknown property or typo (such as `cursor.z`) is caught as a compile-time `TypeError`.
 
-A constructor accepts either no arguments or one argument for every field. Convert a struct to a dynamic object explicitly:
+A constructor accepts either no arguments or one argument for every field. Fields can also be passed by name, in any order; omitted fields keep their defaults:
+
+```osl
+Point partial = Point(y = 5)
+```
+
+Convert a struct to a dynamic object explicitly:
 
 ```osl
 object data = cursor.toObject()
