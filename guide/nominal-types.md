@@ -372,6 +372,35 @@ literals, inside methods and outside the class. Types are not instance
 members, so they never take `self.` — write `node` inside and `bf.node`
 outside.
 
+Prefix a type with `*` to store pointers. A pointer array such as
+`*bf.node[]` holds `*bf.node` values, so indexing yields a pointer instead of
+copying the struct. Take a pointer with `@` and read fields through it as
+usual:
+
+```osl
+class bf (
+  struct node (
+    string op = ""
+    int amt = 0
+  )
+
+  def parse(string script) *bf.node[] (
+    *bf.node[] out = []
+    for l in script (
+      out.append(@node(l, out.len))
+    )
+    return out
+  )
+)
+
+*bf.node[] nodes = bf.parse(">")
+log nodes[1].op
+```
+
+An element of a pointer array can be `null`, so guard an empty or missing slot
+before reading it. Returning `*bf.node[]` from a function or method works the
+same as any other array type.
+
 ## Which form to choose
 
 Use a record type for typed fields, constructors, methods, and optional dynamic keys. Use a struct for fixed-size values that should copy by value. Use an enum when a value must be one of a fixed set of cases. Use a class for identity, shared mutation, methods, private state, or inheritance.
