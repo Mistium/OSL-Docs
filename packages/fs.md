@@ -47,13 +47,43 @@ Syncs an existing file, then closes the handle. Returns `false` on open, sync, o
 Does not create a missing file. Use it after `appendToFile` when a commit requires a durability
 flush.
 
+#### `fs.syncLater(path)` → `boolean`
+Queues a durability flush of the file at `path` and returns immediately, without waiting for the
+drive. Data written before the call is already in the operating system's cache, so a process crash
+loses nothing; only a power cut before the flush finishes can lose it. Returns `false` only when
+the request can't be queued, such as for an empty path.
+
+The flush opens the file by path when it runs, so it covers everything written before the call.
+Relative paths resolve against the working directory at the time of the call. A file removed or
+renamed before its flush is skipped. A failed flush prints one line to stderr instead of throwing.
+
+```osl
+fs.appendToFile("messages.log", line)
+fs.syncLater("messages.log")
+```
+
+Flushes start as soon as one is queued, with no added delay. Requests that arrive while a flush is
+running wait for the next one, which covers every file queued in the meantime, and repeated
+requests for the same file in that time become one flush. On macOS that group shares a single full
+disk flush (see [batching](#automatic-durable-write-batching-on-macos)).
+
+#### `fs.syncPending()` → `boolean`
+Blocks until every flush queued by `fs.syncLater` before the call has completed. Returns `false`
+if any of them failed. The runtime does not drain pending flushes when the program ends, whether
+by finishing, `exit`, `process.exit`, a panic, or a signal. Call `fs.syncPending()` before a planned
+shutdown when the last writes must reach the drive.
+
+```osl
+fs.syncPending()
+exit 0
+```
+
 ### Automatic durable write batching on macOS
 
-Existing `writeFile`, `writeFileBytes`, `tryWriteFile`, and `syncFile` calls automatically share
-full disk flushes when concurrent writes reach the runtime on the same filesystem. No new API,
-options, settings, or application changes are required. Persistent writes retain their existing
-file-sync guarantee; the runtime never acknowledges a write before its durability barrier
-completes.
+`writeFile`, `writeFileBytes`, `tryWriteFile`, `syncFile`, and `syncLater` flushes automatically
+share full disk flushes when they reach the runtime concurrently on the same filesystem. No
+options, settings, or application changes are required. Every call except `syncLater` keeps its
+file-sync guarantee: it returns only after its durability barrier completes.
 
 A single pending write uses Go's `File.Sync` directly. For a group, the runtime first calls ordinary
 `fsync` on every file, then calls `File.Sync` on one file to perform the shared full disk flush.
