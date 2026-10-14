@@ -57,15 +57,19 @@ import "std:testing"
 testing.equal(add(2, 3), 5)
 testing.notEqual(status, "failed")
 testing.near(measured, 10, 0.01)
-testing.isNull(optional)
+testing.null(optional)
 testing.notNull(record)
 testing.assert(items.len > 0)
-testing.panics(def() -> (
-  throw "expected"
+error err = testing.throws(def() -> (
+  throw error("ValueError", "expected")
 ))
+testing.equal(err.kind, "ValueError")
 ```
 
-Each assertion accepts an optional final message. `testing.fail(message)` fails immediately.
+Each assertion accepts an optional final message and throws an `AssertionError` when it fails.
+`testing.throws` returns the error the function threw, so its `kind` and `message` can be checked.
+`testing.fail(message)` fails immediately. See [`testing`](../packages/testing.md) for the full
+list.
 
 ## Direct checks
 

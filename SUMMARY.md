@@ -40,6 +40,7 @@
   * [ssh](packages/ssh.md)
   * [s3](packages/s3.md)
   * [webpush](packages/webpush.md)
+  * [rotur](packages/rotur.md)
 * [Data and serialization](packages/categories/data.md)
   * [json](packages/json.md)
   * [yaml](packages/yaml.md)
@@ -67,6 +68,7 @@
 * [Text, math, and time](packages/categories/mathtime.md)
   * [emoji](packages/emoji.md)
   * [regex](packages/regex.md)
+  * [utf16](packages/utf16.md)
   * [semver](packages/semver.md)
   * [math](packages/math.md)
   * [random](packages/random.md)
@@ -83,6 +85,7 @@
   * [pdf](packages/pdf.md)
   * [canvas](packages/canvas.md)
   * [colors](packages/colors.md)
+  * [svg](packages/svg.md)
   * [sound](packages/sound.md)
 * Graphics and windowing
   * [shader](packages/shader.md)

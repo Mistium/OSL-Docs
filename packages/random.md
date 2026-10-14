@@ -1,6 +1,7 @@
 # random
 
-Use `random` for seedable pseudo-random numbers, choices, shuffling, and generated strings. For security-sensitive randomness, use `crypto`.
+Use `random` for fast, seedable pseudo-random numbers, picks, shuffles, and generated strings. For
+secrets, tokens, and anything security-sensitive, use [`crypto`](crypto.md).
 
 ```osl
 import "std:random"
@@ -12,33 +13,48 @@ import "std:random"
 import "std:random"
 
 random.seed(123)
-log random.int(10)         // integer in [0, 10)
-log random.between(1, 10)  // integer in [1, 10] (inclusive)
+log random.between(1, 6)              // a die roll: 1 to 6, both included
+log random.float()                    // 0 up to but not including 1
+log random.pick(["red", "green", "blue"])
+log random.string(8)                  // 8 letters and digits
 ```
 
 ## API reference
 
-### `random`
-
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `random.seed(n: any)` | `void` |  |
-| `random.float(...args: any)` | `number` |  |
-| `random.int(n: any)` | `number` | Random integer in `[0, n)`. Extra arguments are ignored. Use `random.between` for a range. |
-| `random.between(min: any, max: any)` | `number` | Random integer in `[min, max]` (inclusive). |
-| `random.bool(...args: any)` | `boolean` | Returns `true` with the given probability, which defaults to `0.5`. |
-| `random.pick(arr: any)` | `any` |  |
-| `random.shuffle(arr: any)` | `array` | Returns a shuffled copy without mutating the input. |
-| `random.sample(arr: any, n: any)` | `array` | Returns a random sample, clamping the count between zero and the input length. |
-| `random.string(...args: any)` | `string` |  |
-| `random.gaussian(...args: any)` | `number` | Draws from a normal distribution. Mean defaults to `0` and standard deviation to `1`. |
+| `random.seed(seed: int)` | `void` | Restarts the generator. The same seed always produces the same sequence from every function. |
+| `random.float()` | `number` | From 0 up to but not including 1. |
+| `random.float(max: number)` | `number` | From 0 up to `max`. |
+| `random.float(min: number, max: number)` | `number` | From `min` up to `max`. |
+| `random.between(min: int, max: int)` | `int` | A whole number from `min` to `max`, both included. The bounds may come in either order. |
+| `random.bool(probability?: number)` | `boolean` | `true` or `false` with equal odds, or `true` with the given probability from 0 to 1. |
+| `random.pick(items: array)` | `any` | A random item, or `null` when `items` is empty. |
+| `random.shuffle(items: array)` | `array` | A shuffled copy. `items` is unchanged. |
+| `random.sample(items: array, count: int)` | `array` | `count` different items in random order, or all of them shuffled when `count` is larger than `items`. |
+| `random.string(length?: int, alphabet?: string)` | `string` | Random characters. The default is 16 letters and digits; `alphabet` sets the characters to draw from. |
+| `random.gaussian(mean?: number, stdDev?: number)` | `number` | A normally distributed number. The defaults are mean 0 and standard deviation 1. |
+
+## Errors
+
+Bad arguments are a bug in the calling code, so they throw:
+
+- `random.float` throws `TypeError` for more than two arguments or a non-number.
+- `random.bool` throws `ValueError` for a probability outside 0 to 1.
+- `random.sample` throws `ValueError` for a negative count.
+- `random.string` throws `ValueError` for a negative length, a length over 16777216, or an empty
+  alphabet, and `TypeError` for other argument types.
+- `random.gaussian` throws `ValueError` for a negative standard deviation.
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning:
+
+| Deprecated | Use instead |
+| --- | --- |
+| `random.int(max)` | `random.between(0, max - 1)`. `random.int` excludes `max`; `between` includes both bounds. |
 
 ## Notes
 
 - Prefer `import "std:random"`; the older `import "osl/random"` spelling remains supported.
-
-## Behavior and limits
-
-Choice helpers define fallback values for empty collections. Range methods accept reversed bounds,
-and weighted choice rejects invalid weights. A fixed seed produces a repeatable sequence. The
-generator remains safe when several threads use or reseed it.
+- The generator is safe to use and reseed from several threads.

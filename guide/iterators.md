@@ -41,6 +41,37 @@ for n in naturals() (
 End a generator early with a bare `return`. A generator cannot `return` a value; use `yield`
 instead. `for i, value in iterator` also works and counts from 1, like array loops.
 
+## Iterators from packages
+
+Packages return `iter<T>` for anything streamed, lazy, or potentially large, and `for ... in` works
+on them like on a generator:
+
+```osl
+import "std:fs"
+
+fs.writeFile("notes.txt", "one\ntwo\nthree")
+for line in fs.lines("notes.txt") (
+  log line
+)
+
+for i, entry in fs.walkTree(".") (
+  if i > 3 break
+  log entry.path
+)
+```
+
+Examples include `fs.lines(path)` and `file.lines()`, `fs.walkTree(path)`, a channel's
+`values()` in [`thread`](../packages/thread.md), and a `requests` stream's `lines()` and
+`events()`. A package iterator can be typed (`iter<string>`) and chained like any other.
+
+`fs.lines` returns `result<iter<string>, error>`, because opening the file can fail; `for ... in`
+unwraps it and throws the error, such as `NotFoundError`, before the loop starts. An error while
+reading throws from the loop that is iterating.
+
+An iterator that reads from a stream, such as a file's lines, a channel, or an HTTP response, reads
+the stream as it goes and can't start over: a second read continues where the first stopped.
+Call the package function again to read from the start.
+
 ## Iterator chains
 
 Call `.iter()` on an array to get an iterator over its items, then chain lazy steps. Nothing runs
@@ -88,7 +119,7 @@ an iterator has no effect, so the compiler warns about it; remove the
 extra call.
 
 `next()` pulls one value at a time in O(1), returning `result<T, error>`: `ok` with the
-value, or `err("iterator is done")` once exhausted. Assigning an iterator shares its
+value, or a `StateError` with the message `iterator is done` once exhausted. Assigning an iterator shares its
 cursor rather than copying it.
 
 Reads without `next()` or `done()` re-run the sequence from the start, so plain loops and

@@ -1,29 +1,84 @@
 # diff
 
-Use `diff` to compare text by line, word, or character and render the result as plain text, HTML, JSON, or unified diff text.
+Use `diff` to compare two texts line by line, word by word, or character by character, and to format the differences as unified diff text or HTML.
 
 ```osl
 import "std:diff"
+```
+
+## Example
+
+```osl
+import "std:diff"
+
+*diff.Diff changes = diff.text("one\ntwo\nthree", "one\n2\nthree")
+log changes.hasChanges() // true
+log changes.removed()    // ["two"]
+log changes.added()      // ["2"]
+log changes.unified()
+// @@ -1,3 +1,3 @@
+//  one
+// -two
+// +2
+//  three
 ```
 
 ## API reference
 
 ### `diff`
 
+Each function returns a `*diff.Diff`. The `context` option sets how many unchanged items are kept around each change.
+
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `diff.text(oldText: string, newText: string, options?: object)` | `*diff.Diff` | Compares line by line. Default `context` is `3`. |
+| `diff.words(oldText: string, newText: string, options?: object)` | `*diff.Diff` | Compares word by word, splitting on whitespace. Default `context` is `3`. |
+| `diff.chars(oldText: string, newText: string, options?: object)` | `*diff.Diff` | Compares character by character. Default `context` is `0`. |
+
+### `*diff.Diff` methods
+
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `diff.compareLines(oldLines: array, newLines: array)` | `DiffResult` | Compares every positional line, including all trailing additions or removals. |
-| `diff.compareWords(oldText: string, newText: string)` | `DiffResult` | Compares whitespace-delimited words by position. |
-| `diff.tokenize(text: string)` | `array` | Splits text using standard Unicode whitespace rules. |
-| `diff.text(oldStr: string, newStr: string)` | `DiffResult` |  |
-| `diff.words(oldStr: string, newStr: string)` | `DiffResult` |  |
-| `diff.chars(oldStr: string, newStr: string)` | `DiffResult` |  |
-| `diff.unified(result: DiffResult)` | `string` |  |
-| `diff.html(result: DiffResult)` | `string` | Renders escaped HTML using a reusable single-pass replacer. |
-| `diff.json(result: DiffResult)` | `string` | Serializes the tagged result directly without an intermediate object. |
+| `d.hasChanges()` | `boolean` | Whether the texts differ. |
+| `d.removed()` | `string[]` | Lines, words, or characters only in the old text, in order. |
+| `d.added()` | `string[]` | Lines, words, or characters only in the new text, in order. |
+| `d.hunks()` | `diff.Hunk[]` | The changes grouped into hunks. `[]` when the texts are equal. |
+| `d.unified()` | `string` | Unified format: an `@@ -oldStart,oldLines +newStart,newLines @@` header per hunk, then one item per line prefixed `-`, `+`, or a space. `""` when the texts are equal. |
+| `d.html()` | `string` | A `<div class='diff'>` holding one escaped `<div>` per item with class `diff-same`, `diff-old`, or `diff-new`. The outer div is empty when the texts are equal. |
 
-## Notes
+### Hunk records
 
-- Prefer `import "std:diff"`; the older `import "osl/diff"` spelling remains supported.
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `oldStart`, `newStart` | `int` | 1-based position of the hunk in the old and new sequence. As in `diff -u`, an empty side's start is the item before it. |
+| `oldLines`, `newLines` | `int` | How many old and new items the hunk covers (lines, words, or characters). |
+| `changes` | `{kind, text}[]` | Each item, with `kind` `"same"`, `"removed"`, or `"added"`. |
 
-Line, word, and Unicode character comparisons share one builder-backed engine.
+```osl
+import "std:diff"
+
+for hunk in diff.chars("cat", "cut", {context: 1}).hunks() (
+  for change in hunk.changes (
+    log change.kind ++ " " ++ change.text
+  )
+)
+```
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning. The old package-level formatters keep their old output, including `"No differences found"` for equal texts.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `diff.compareLines(oldLines, newLines)` | `diff.text(oldLines.join("\n"), newLines.join("\n"))` |
+| `diff.compareWords(oldText, newText)` | `diff.words(oldText, newText)` |
+| `diff.tokenize(text)` | `text.split(" ")` or your own split |
+| `diff.unified(d)` | `d.unified()` |
+| `diff.html(d)` | `d.html()` |
+| `diff.json(d)` | `json.stringify(d.hunks())` |
+
+Old scripts that read the `Hunks`, `OldText`, and `NewText` fields of a diff still work. Use the methods above instead.
+
+## Behavior and limits
+
+- The older `import "osl/diff"` spelling still works with a migration warning.

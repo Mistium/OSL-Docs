@@ -1,6 +1,7 @@
 # map
 
-Use `map` when you need a mutable key-value map object with explicit methods for reading keys and values.
+Use `map` for a mutable hash map keyed by strings, numbers, booleans, or `null`, with explicit
+methods for reading and writing entries.
 
 `map` is a built-in language type. It needs no package import.
 
@@ -8,8 +9,13 @@ Use `map` when you need a mutable key-value map object with explicit methods for
 
 ```osl
 map users = map()
-users.set("ada", 36)
-log users.get("ada")
+users.set("ada", 36).set("bob", 41)
+
+log users.get("ada")       // 36
+log users.get("zed") ?? 0  // 0
+log users.has("bob")       // true
+log users.delete("bob")    // true
+log users.keys()           // ["ada"]
 ```
 
 ## API reference
@@ -18,15 +24,29 @@ log users.get("ada")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.set(k: any, v: any)` | `map` | Sets a value. Keys must be comparable. |
-| `value.get(k: any)` | `any` | Reads through the same comparable-key guard. |
-| `value.delete(k: any)` | `void` | Deletes through the same comparable-key guard. |
-| `value.size()` | `number` | Returns the number of stored values. |
-| `value.clear()` | `void` | Clears all stored values. |
-| `value.getKeys()` | `K[]` | Returns a snapshot of the keys while preserving the map's key type. |
-| `value.getValues()` | `V[]` | Returns values while preserving the map's value type. |
+| `m.set(key, value)` | `map` | Stores `value` under `key`, replacing any value already there. Mutates the map and returns it, so calls chain: `m.set("a", 1).set("b", 2)`. |
+| `m.get(key)` | `any` | The value, or `null` when the map has no such key. A stored `null` also reads as `null`; use `has` to tell them apart. |
+| `m.has(key)` | `boolean` | Whether the map has an entry for `key`, even one holding `null`. |
+| `m.delete(key)` | `boolean` | Removes the entry in place. `true` when the key was present. |
+| `m.size()` | `int` | The number of entries. |
+| `m.clear()` | `void` | Removes every entry in place. |
+| `m.keys()` | `array` | The keys as a new array, in no particular order. |
+| `m.values()` | `array` | The values as a new array, in no particular order. |
+
+## Errors
+
+`set`, `get`, and `delete` throw `TypeError` for a key that can't be hashed, such as an array or
+object. `has` reports `false` for one.
+
+## Deprecated
+
+These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
+
+| Deprecated | Use instead |
+| --- | --- |
+| `m.getKeys()` | `m.keys()` |
+| `m.getValues()` | `m.values()` |
 
 ## Notes
 
-Composite and cyclic keys are checked safely, and maps synchronize
-concurrent reads and writes.
+Maps synchronize concurrent reads and writes.

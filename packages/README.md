@@ -93,6 +93,39 @@ array rows = handle.query("SELECT * FROM users")
 
 Each package page lists handle methods in a separate section.
 
+## How packages fail
+
+Every package reports failure the same way:
+
+| Situation | Signal | Example |
+| --- | --- | --- |
+| Bad input data or a failure outside the program (a missing file, a network error, unparsable text) | Returns `result<T, error>` | `json.parse(text)`, `fs.readFile(path)` |
+| The thing asked for doesn't exist, and that's a normal answer | Returns `T?` (`null`) | `xml.find(path)`, `mime.typeByExt(ext)` |
+| The calling code is wrong (a bad argument, a closed handle) | Throws a typed error | `TypeError`, `ValueError`, `StateError` |
+
+A result used as a plain value unwraps itself and throws its error on failure, so the simple case needs no extra code. Use `catch`, `try(...)`, or `auto` to handle the error yourself:
+
+```osl
+import "std:json"
+
+object config = json.parse("{\"debug\": true}")
+log config.debug
+
+object fallback = json.parse("{broken") catch (err) (
+  log err.kind ++ ": " ++ err.message
+  return
+)
+log fallback
+```
+
+See [Errors and results](../guide/errors.md) for the error kinds and every way to consume a result.
+
+Options always go in one trailing object, such as `json.stringify(value, {indent: 2})`. An unknown option key throws `ValueError` naming the accepted keys. Durations are in milliseconds and positions are 1-based.
+
+## Deprecated names
+
+When a package renames or reshapes a function, method, option key, or record key, the old form keeps working for one release. Each use draws an `OSL-DEPRECATED` warning at compile time naming the replacement, and the package page lists it under **Deprecated**. Fix the warnings to keep your code working after the next release.
+
 ## The standard library at a glance
 
 ### Web & networking
@@ -108,6 +141,7 @@ Each package page lists handle methods in a separate section.
 | [ssh](ssh.md) | SSH connections, remote commands and SCP. |
 | [s3](s3.md) | S3-compatible object storage client. |
 | [webpush](webpush.md) | Web Push notifications (VAPID). |
+| [rotur](rotur.md) | Client for the rotur.dev API: accounts, posts, groups, economy, storage, and realtime presence. |
 
 ### Data & serialization
 | Package | Description |
@@ -115,12 +149,12 @@ Each package page lists handle methods in a separate section.
 | [json](json.md) | JSON parsing and encoding. |
 | [yaml](yaml.md) | YAML parsing and encoding. |
 | [schema](schema.md) | Composable validation and normalization schemas. |
-| [csv](csv.md) | CSV parsing plus a small dataframe-style toolkit. |
-| [xml](xml.md) | XML parsing and querying. |
-| [template](template.md) | Lightweight `{{ }}` templating with HTML escaping. |
-| [md](md.md) | Markdown to HTML (CommonMark + GFM via goldmark). |
-| [mime](mime.md) | MIME-type lookup and parsing. |
-| [diff](diff.md) | Text/line/word diffing. |
+| [csv](csv.md) | CSV parsing and writing as records or rows of cells. |
+| [xml](xml.md) | XML parsing, querying, and editing. |
+| [template](template.md) | `{{ }}` templates with `if`, `unless`, and `each` blocks and optional HTML escaping. |
+| [md](md.md) | Markdown to HTML (CommonMark + GFM via goldmark) and HTML back to Markdown. |
+| [mime](mime.md) | Media-type lookup by extension and `Content-Type` parsing. |
+| [diff](diff.md) | Line, word, and character diffs as unified text or HTML. |
 
 ### Databases & storage
 | Package | Description |
@@ -149,7 +183,8 @@ Each package page lists handle methods in a separate section.
 | Package | Description |
 | --- | --- |
 | [emoji](emoji.md) | Emoji detection, extraction, replacement, flags, and skin tones. |
-| [regex](regex.md) | Regular expressions plus validators and text helpers. |
+| [regex](regex.md) | Regular expressions, compiled patterns, validators, and text helpers. |
+| [utf16](utf16.md) | JavaScript-compatible string lengths, positions, ordering, and case mapping in UTF-16 code units. |
 | [semver](semver.md) | Semantic-version parsing and comparison. |
 | [math](math.md) | Maths, statistics and number theory. |
 | [random](random.md) | Seedable pseudo-random numbers. |
@@ -173,6 +208,7 @@ Each package page lists handle methods in a separate section.
 | [pdf](pdf.md) | Generate PDF documents. |
 | [canvas](canvas.md) | In-memory pixel canvas. |
 | [colors](colors.md) | Build colour values (used by image-producing packages). |
+| [svg](svg.md) | Render SVG documents to images and read their size and viewBox. |
 | [sound](sound.md) | Audio playback. |
 
 ### Graphics & windowing

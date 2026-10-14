@@ -1,28 +1,63 @@
 # notify
 
-Use `notify` to show desktop notifications from an OSL program.
+Use `notify` to show desktop notifications and alert dialogs on macOS, Linux and Windows.
 
 ```osl
 import "std:notify"
 ```
 
+## Example
+
+```osl
+import "std:notify"
+
+if notify.isAvailable() (
+  notify.send("Build finished", "All 42 tests passed") catch (err) (
+    log "couldn't notify: " ++ err.message
+  )
+)
+```
+
 ## API reference
 
-### `notify`
-
-| Method | Returns | Notes |
+| Function | Returns | Notes |
 | --- | --- | --- |
-| `notify.send(title: any, message: any)` | `boolean` | Sends data. |
-| `notify.sendWithSound(title: any, message: any, sound: any)` | `boolean` | Sends with sound on macOS and otherwise falls back to `send`. |
-| `notify.alert(title: any, message: any)` | `boolean` |  |
-| `notify.isAvailable()` | `boolean` |  |
+| `notify.send(title, message, options?)` | `result<unit, error>` | Shows a desktop notification. Option `sound` (a string) plays a named system sound with it, such as `"Glass"` or `"default"`; only macOS supports sounds. |
+| `notify.alert(title, message)` | `result<unit, error>` | Shows a dialog with an OK button and waits until it is dismissed. |
+| `notify.isAvailable()` | `boolean` | Whether `notify.send` can work here: the system is supported and its helper is installed. |
 
-## Notes
+| System | `send` uses | `alert` uses |
+| --- | --- | --- |
+| macOS | `osascript` | `osascript` |
+| Linux | `notify-send` | `zenity`, falling back to a notification when it isn't installed |
+| Windows | PowerShell | PowerShell |
 
-- Prefer `import "std:notify"`; the older `import "osl/notify"` spelling remains supported.
+Both functions fail with:
+
+| Kind | When |
+| --- | --- |
+| `UnsupportedError` | Another operating system, or a `sound` asked for outside macOS |
+| `NotFoundError` | The helper command isn't installed |
+| `RuntimeError` | The helper command failed |
+
+Used as a plain statement, a failed call throws. Since a missing notification is rarely fatal,
+handle the error with `catch` as in the example.
+
+## Deprecated
+
+This still works for one release, with an `OSL-DEPRECATED` warning at each call.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `notify.sendWithSound(title, message, sound)` | `notify.send(title, message, {sound: name})` |
+
+`send` and `alert` used to return `false` on failure. They now return a result, which still works
+as a condition (`if notify.send(...)`).
 
 ## Behavior and limits
 
-On macOS and Linux, notification text is passed as command arguments rather than shell source. The
-Windows implementation escapes quotes before building its PowerShell literal. `isAvailable`
-checks for the platform command, and send failures return `false`.
+The older `import "osl/notify"` spelling still works, with a migration warning.
+
+On macOS and Linux, the title and message are passed as command arguments rather than shell source,
+and a title starting with `-` is shown rather than read as an option. On Windows, quotes are escaped
+before the text is put into the PowerShell command.

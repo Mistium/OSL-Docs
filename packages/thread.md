@@ -11,8 +11,41 @@ import "std:thread"
 ```osl
 import "std:thread"
 
-auto t = thread.new(def() -> ( return 42 ))
-log t.wait()
+*thread.Thread t = thread.new(def(int a, int b) -> ( return a + b ), 2, 3)
+log t.wait() // 5
+
+log thread.parallel([1, 2, 3], def(int x) -> ( return x * 10 ), 2) // [10,20,30]
+```
+
+Wait with a timeout. A thread still running after it makes `wait` throw `TimeoutError`; the thread
+keeps running and can be waited on again:
+
+```osl
+import "std:thread"
+
+auto slow = thread.new(def() -> (
+  sleep(0.2)
+  return "done"
+))
+log try(slow.wait({timeout: 10})) // TimeoutError: thread.Thread.wait: the thread was still running after 10 ms
+log slow.wait()                   // done
+```
+
+Pass values between threads with a channel, and drain it with `values()`:
+
+```osl
+import "std:thread"
+
+*thread.Channel ch = thread.channel(4)
+thread.new(def() -> (
+  for i 3 (
+    ch.send(i)
+  )
+  ch.close()
+))
+for v in ch.values() (
+  log v
+)
 ```
 
 ## API reference
@@ -21,26 +54,64 @@ log t.wait()
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `thread.new(fn: any, ...args: any)` | `*thread.Thread` | Creates and starts a new thread. |
-| `thread.wait()` | `any` | Waits for the result. If the task failed, rethrows its error with the original task and spawn locations. |
-| `thread.timeout(ms: number)` | `any` | Waits up to `ms` milliseconds for the result; returns the result if the task finished in time, otherwise `null`. If a completed task failed, rethrows its error. A timeout stops waiting; it does not cancel the task. |
-| `thread.isDone()` | `boolean` |  |
-| `thread.age()` | `number` | Returns the age of the thread in milliseconds. |
-| `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with additional failures attached. |
-| `thread.race(threads: array)` | `any` | Waits for the first thread in the array to complete and returns its result. If the winning task failed, rethrows its error. |
-| `thread.parallel(items: array, fn: any, limit?: number)` | `array` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. |
-| `thread.channel(capacity?: number)` | `*thread.Channel` | Creates a thread-safe message channel with optional buffer capacity. |
+| `thread.new(fn: function, ...args)` | `*thread.Thread` | Starts `fn(...args)` on a new thread. |
+| `thread.waitAll(threads: array)` | `array` | Waits for every thread and returns their values in the same order. If any thread threw, rethrows the first failure, listing the others, after all have finished. |
+| `thread.race(threads: array)` | `any` | Waits for the first thread to finish and returns its value, or rethrows its error. The others keep running. |
+| `thread.parallel(items: array, fn: function, limit?: int)` | `array` | Calls `fn(item, index)` for every item on separate threads, at most `limit` at a time, and returns the results in item order. `index` is 1-based. If any call throws, rethrows the first failure after every call has finished. |
+| `thread.channel(capacity?: int)` | `*thread.Channel` | A channel that holds up to `capacity` values (default 0) before `send` waits for a receiver. |
+
+### `*thread.Thread`
+
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `t.wait(options?: object)` | `any` | Blocks until the thread finishes and returns what its function returned. If the function threw, rethrows that error with the thread's stack. Option: `timeout` in milliseconds. |
+| `t.isDone()` | `boolean` | Whether the thread has finished, successfully or not. |
+| `t.age()` | `number` | Milliseconds since the thread started. |
+
+`t.wait({timeout})` throws rather than returning a result, so `wait` keeps returning the thread's
+plain value. Use `try(t.wait({timeout: ms}))` to get a `result` instead.
 
 ### `*thread.Channel`
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `channel.send(value: any)` | `boolean` | Sends a value into the channel. Returns `false` if closed, otherwise `true`. |
-| `channel.recv()` | `any` | Receives a value from the channel, blocking until an item is available or the channel is closed. Returns `null` when closed and empty. |
-| `channel.tryRecv()` | `any` | Non-blocking receive. Returns the next item or `null` if empty or closed. |
-| `channel.close()` | `void` | Closes the channel. |
-| `channel.isClosed()` | `boolean` |  |
-| `channel.len()` | `number` | Returns the number of buffered items currently in the channel. |
+| `ch.send(value: any)` | `result<unit, error>` | Delivers `value`, waiting for a receiver or a free buffer slot. Fails with `StateError` when the channel is closed, or is closed while `send` waits. In a condition it reads as "was it delivered". |
+| `ch.recv()` | `any` | Waits for the next value, or returns `null` once the channel is closed and empty. Use `values()` when `null` itself is sent. |
+| `ch.tryRecv()` | `any` | The next value if one is ready, or `null` without waiting. |
+| `ch.values()` | `iter<any>` | Iterates over received values, waiting for each, and ends once the channel is closed and empty. |
+| `ch.close()` | `void` | Stops new sends, makes waiting senders fail, and lets receivers drain buffered values. Closing twice does nothing. |
+| `ch.isClosed()` | `boolean` | Whether `close` has been called. |
+| `ch.len()` | `int` | How many values are buffered. |
+
+A discarded `ch.send(value)` on a closed channel throws its `StateError`. Check it in a condition
+when a closed channel is expected:
+
+```osl
+import "std:thread"
+
+*thread.Channel ch = thread.channel(1)
+ch.close()
+if !ch.send("late") ( log "channel closed" )
+```
+
+## Errors
+
+- `thread.new` throws `TypeError` when `fn` isn't a function or accepts fewer parameters than
+  there are `args`.
+- `thread.waitAll` and `thread.race` throw `TypeError` when an item isn't a thread; `race` throws
+  `ValueError` for an empty array.
+- `thread.parallel` throws `TypeError` when `fn` isn't a function and `ValueError` when `limit`
+  isn't a whole number of 1 or more.
+- `thread.channel` throws `ValueError` when `capacity` isn't a whole number of 0 or more.
+- `t.wait` throws `TimeoutError` when the timeout passes and `ValueError` for a negative timeout.
+
+## Deprecated
+
+These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
+
+| Deprecated | Use instead |
+| --- | --- |
+| `t.timeout(ms)`, which returns `null` when the thread is still running | `t.wait({timeout: ms})`, which throws `TimeoutError`, so a thread that returned `null` can't be mistaken for one that timed out |
 
 ## Thread safety
 
@@ -60,10 +131,12 @@ import "std:thread"
 object shared = {}
 array threads = []
 for t 8 (
-    threads.append(thread.new(def(o, id) (
-        for i 1000 ( o[id ++ "_" ++ i] = i )
-        return 0
-    ), shared, t))
+  threads.append(thread.new(def(object o, int id) -> (
+    for i 1000 (
+      o[id ++ "_" ++ i] = i
+    )
+    return 0
+  ), shared, t))
 )
 void thread.waitAll(threads)
 log shared.len   // 8000, deterministic
@@ -72,7 +145,7 @@ log shared.len   // 8000, deterministic
 Automatic safety does **not** combine multiple statements into one transaction. For
 example, another thread can change `count` between an `if count < limit` check and the
 assignment inside its block. Guard multi-statement critical sections with
-[`osl/sync`](sync.md).
+[`sync`](sync.md).
 
 Programs that never start a thread skip capture analysis, and the compiler removes automatic
 locking. Named functions passed to `thread.new` or `thread.parallel` use a constant-time scope
@@ -93,7 +166,7 @@ HTTP and WebSocket callbacks can update captured values without deadlocking thei
 
 Automatic collection locking uses a single world lock, so growing or replacing an array's
 backing storage needs no lock-identity propagation and cyclic values need no recursive
-registration. Explicit locks from [`osl/sync`](sync.md) are still your responsibility:
+registration. Explicit locks from [`sync`](sync.md) are still your responsibility:
 always release them and use a consistent order when acquiring more than one.
 
 `json.stringify`, `.toStr()` on objects and arrays, and `.clone()` copy one object or array
@@ -119,6 +192,6 @@ make arbitrary foreign code safe.
 ## Notes
 
 - Prefer `import "std:thread"`; the older `import "osl/thread"` spelling remains supported.
-- `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`), which is handy for releasing an `osl/sync` lock taken inside a thread.
-- Panicking tasks still complete their handle. `wait` and a completed `timeout` rethrow
-  the failure; `waitAll` waits for every task before rethrowing.
+- `defer <statement>` runs a statement when the enclosing function returns (like Go's `defer`), which is handy for releasing a `sync` lock taken inside a thread.
+- A thread that throws still finishes. `wait` rethrows the failure, and `waitAll` waits for every
+  thread before rethrowing.

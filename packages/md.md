@@ -1,8 +1,6 @@
 # md
 
-Use `md` to turn Markdown into HTML (and back with
-[`md.fromHTML`](#mdfromhtmlsource--string)). It is built for serving pages with
-[`serve`](serve.md) and composing markup with [`template`](template.md).
+Use `md` to turn Markdown into HTML and HTML back into Markdown. It pairs with [`serve`](serve.md) for pages and [`template`](template.md) for layouts.
 
 ```osl
 import "std:md"
@@ -14,28 +12,18 @@ import "std:md"
 import "std:md"
 
 log md.toHTML("# Hello\n\n**world**")
-// <h1 id="hello">Hello</h1>\n<p><strong>world</strong></p>\n
+// <h1 id="hello">Hello</h1>
+// <p><strong>world</strong></p>
+
+log md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
+// # Hello
+//
+// a **bold** word
 ```
 
-## With `serve`
+## With `serve` and `template`
 
-Pass the HTML string straight to `ctx.html` when you want a full response body:
-
-```osl
-import "std:md"
-import "std:serve"
-
-*serve.Router app = serve.new()
-
-app.GET("/", def(ctx) -> (
-  string body = md.toHTML("# Home\n\nWelcome.")
-  ctx.html(200, body)
-))
-
-app.run(":8080")
-```
-
-Or wrap it in a small page layout first:
+`template.render` with `{html: true}` escapes inserted values. Use `{{& name}}` for a value that is already HTML from `md.toHTML`:
 
 ```osl
 import "std:md"
@@ -44,74 +32,47 @@ import "std:serve"
 
 *serve.Router app = serve.new()
 
-app.GET("/doc", def(ctx) -> (
+app.get("/doc", def(*serve.Context ctx) -> (
   string content = md.toHTML("# Docs\n\nSee below.")
-  string page = template.renderHTML(`<!doctype html>
-<html><body>
-{{& content}}
-</body></html>`, {content: content})
+  string page = template.render("<!doctype html>\n<html><body>\n{{& content}}\n</body></html>", {content: content}, {html: true})
   ctx.html(200, page)
 ))
 
 app.run(":8080")
 ```
 
-## With `template`
-
-`template.renderHTML` escapes interpolated values by default. Use `{{& name}}`
-when the value is already HTML from `md.toHTML`:
-
-```osl
-import "std:md"
-import "std:template"
-
-string body = md.toHTML("**hi**")
-string out = template.renderHTML("<article>{{& body}}</article>", {body: body})
-// <article><p><strong>hi</strong></p>\n</article>
-```
-
-Using `{{body}}` (without `&`) would escape the tags and show the HTML source.
+Writing `{{content}}` without `&` would escape the tags and show the HTML source.
 
 ## API reference
 
-#### `md.toHTML(source)` → `string`
-Renders Markdown `source` to HTML. Enables GitHub Flavored Markdown (tables,
-strikethrough, autolinks, task lists) and auto heading IDs. Raw HTML tags in the
-source are **not passed through** (safe default for untrusted content).
+### `md`
+
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `md.toHTML(text: string, options?: object)` | `string` | Renders Markdown as HTML with GitHub Flavored Markdown (tables, task lists, strikethrough, autolinks) and an `id` on every heading. Options: `unsafe` (default `false`). |
+| `md.fromHTML(html: string)` | `result<string, error>` | Converts HTML to Markdown. Headings, emphasis, links, lists, and other common elements map to their Markdown forms. Fails with `ParseError` when the HTML can't be converted. |
+| `md.sanitize(text: string)` | `result<string, error>` | Removes raw HTML and unsafe links from Markdown by rendering it to safe HTML and converting that back. Running it twice gives the same text. Fails with `ParseError` when the rendered HTML can't be converted back. |
+
+### Raw HTML and unsafe links
+
+By default `toHTML` drops raw HTML tags and `javascript:` links, so it is safe for untrusted text. Pass `{unsafe: true}` to keep them, and only for text you trust:
 
 ```osl
-string html = md.toHTML("# Title\n\n| a | b |\n| - | - |\n| 1 | 2 |")
+import "std:md"
+
+log md.toHTML("Hello <em>world</em>")                 // <p>Hello <!-- raw HTML omitted -->world<!-- raw HTML omitted --></p>
+log md.toHTML("Hello <em>world</em>", {unsafe: true}) // <p>Hello <em>world</em></p>
 ```
 
-#### `md.toHTMLUnsafe(source)` → `string`
-Same as [`md.toHTML`](#mdtohtmlsource--string), but raw HTML in the Markdown is
-left as-is. It shares the safe engine's GFM and heading options; only raw-HTML
-rendering differs. Only use this with trusted input.
+## Deprecated
 
-```osl
-string html = md.toHTMLUnsafe("Hello <em>world</em>")
-// contains a real <em> element
-```
+These still work for one release and draw an `OSL-DEPRECATED` warning.
 
-#### `md.fromHTML(source)` → `string`
-The inverse of [`md.toHTML`](#mdtohtmlsource--string): converts an HTML `source`
-string into Markdown. Headings, emphasis, links, lists, and other common
-elements map to their Markdown equivalents; unconvertible input yields an empty
-string.
+| Deprecated | Use instead |
+| --- | --- |
+| `md.toHTMLUnsafe(text)` | `md.toHTML(text, {unsafe: true})` |
 
-```osl
-string mdText = md.fromHTML("<h1>Hello</h1><p>a <strong>bold</strong> word</p>")
-// # Hello\n\na **bold** word
-```
+## Behavior and limits
 
-## Notes
-
-- Prefer `import "std:md"`; the older `import "osl/md"` spelling remains supported.
-- Rendering is powered by [goldmark](https://github.com/yuin/goldmark).
-- Return values are ordinary OSL strings. Pass them to `ctx.html`, `ctx.send`,
-  or template slots as needed.
-
-#### `md.sanitize(source)` → `string`
-
-Sanitizes Markdown by rendering it through `md.toHTML` and converting that safe
-HTML back to Markdown. Repeated sanitization is idempotent.
+- Rendering uses [goldmark](https://github.com/yuin/goldmark).
+- The older `import "osl/md"` spelling still works with a migration warning.

@@ -1,6 +1,7 @@
 # set
 
-Use `set` when you need a collection of unique values with membership checks.
+Use `set` for an unordered collection of unique strings, numbers, booleans, or `null`, with
+membership checks.
 
 `set` is a built-in language type. It needs no package import.
 
@@ -8,8 +9,12 @@ Use `set` when you need a collection of unique values with membership checks.
 
 ```osl
 set names = set()
-names.add("ada")
-log names.contains("ada")
+names.add("ada").add("bob").add("ada")
+
+log names.size()             // 2
+log names.contains("ada")    // true
+log names.delete("ada")      // true
+log names.toArray()          // ["bob"]
 ```
 
 ## API reference
@@ -18,14 +23,27 @@ log names.contains("ada")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.add(v: any)` | `set` | Adds a comparable value. |
-| `value.delete(v: any)` | `error` | Deletes through the same guard. |
-| `value.contains(v: any)` | `boolean` | Checks membership through the same guard. |
-| `value.size()` | `number` | Returns the number of stored values. |
-| `value.clear()` | `void` | Clears all stored values. |
-| `value.toArr()` | `array` | Converts the value to an array. |
+| `s.add(value)` | `set` | Adds `value`; adding a member again changes nothing. Mutates the set and returns it, so calls chain: `s.add(1).add(2)`. |
+| `s.delete(value)` | `boolean` | Removes `value` in place. `true` when it was a member. |
+| `s.contains(value)` | `boolean` | Whether `value` is a member. |
+| `s.size()` | `int` | The number of members. |
+| `s.clear()` | `void` | Removes every member in place. |
+| `s.toArray()` | `array` | The members as a new array, in no particular order. |
+
+## Errors
+
+`add` and `delete` throw `TypeError` for a value that can't be hashed, such as an array or object.
+`contains` reports `false` for one.
+
+## Deprecated
+
+These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
+
+| Deprecated | Use instead |
+| --- | --- |
+| `s.toArr()` | `s.toArray()` |
 
 ## Notes
 
-Composite and cyclic values are compared safely. Sets synchronize
-concurrent reads and writes.
+- `delete` reports whether the value was there. Before this release it always reported success.
+- Sets synchronize concurrent reads and writes.
