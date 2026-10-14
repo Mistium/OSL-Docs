@@ -72,23 +72,11 @@ its recency order unchanged.
 - Negative ttl values and invalid `cache.new` options throw `ValueError`. Unknown option keys
   throw `ValueError` with a suggestion.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `cache.create(capacity, ttlSeconds)` | `cache.new({capacity, ttl})`, with `ttl` in milliseconds |
-| `cache.createDefault()` | `cache.new()` |
-| `c.getOrSet(key, value)` | `c.fetch(key, loader)` with a loader that returns `value` |
-| `c.getOrSetFunc(key, fn)` | `c.fetch(key, fn)` |
-| `c.setTTL(key, seconds)` | `c.expire(key, milliseconds)` |
-| `c.getTTL(key)` (seconds, `-1` when missing) | `c.ttl(key)` (milliseconds, `null` when missing) |
-| `c.stats()` (ttl in seconds) | `c.info()` (ttl in milliseconds) and `c.keys()` |
-| `c.getMany(keys)` | `c.pick(keys)` |
+`cache.create(capacity, ttlSeconds)` and `cache.createDefault()` are now `cache.new(options)`, and every duration is in milliseconds: `setTTL`, `getTTL`, and `stats` became `expire`, `ttl`, and `info`. `getOrSet` and `getOrSetFunc` became `fetch(key, loader)`, and `getMany` became `pick`. `delete` now reports whether the key was there instead of always returning `true`.
 
 ## Notes
 
 - Prefer `import "std:cache"`; the older `import "osl/cache"` spelling remains supported.
 - Expired entries are removed before reads and snapshots.
-- `delete` reports whether the key was there. Before this release it always returned `true`.

@@ -16,7 +16,7 @@ log emoji.extract("a👍🏽b1️⃣")        // ["👍🏽","1️⃣"]
 log emoji.remove("Hello 👋")         // Hello
 log emoji.hasEmoji("plain text")     // false
 
-string tone = emoji.findSkinTone("👍🏽") ?? "none"
+string tone = emoji.skinTone("👍🏽") ?? "none"
 log tone                             // medium
 ```
 
@@ -33,19 +33,13 @@ log tone                             // medium
 | `emoji.remove(text: string)` | `string` | The text with every emoji removed. |
 | `emoji.replace(text: string, replacement: string)` | `string` | The text with each emoji replaced. `replacement` is literal, so `$1` is not expanded. |
 | `emoji.hasSkinTone(text: string)` | `boolean` | Whether the text contains a skin-tone modifier. |
-| `emoji.findSkinTone(text: string)` | `string?` | The first skin tone: `"light"`, `"medium-light"`, `"medium"`, `"medium-dark"`, or `"dark"`, or `null` when there is none. |
+| `emoji.skinTone(text: string)` | `string?` | The first skin tone: `"light"`, `"medium-light"`, `"medium"`, `"medium-dark"`, or `"dark"`, or `null` when there is none. |
 | `emoji.isZWJSequence(text: string)` | `boolean` | Whether the text contains a zero-width joiner (U+200D), which joins emoji such as a family into one. |
 | `emoji.isFlag(text: string)` | `boolean` | Whether the text is exactly one flag: a pair of regional indicators or a tag-sequence flag such as England's. |
 | `emoji.isValidReaction(text: string)` | `boolean` | Whether the text is exactly one emoji, or an OriginChats custom reaction `"originChats:<emoji>//"` wrapping one. |
 
-## Deprecated
+OSL matches function names without regard to case, so `emoji.isZwjSequence` also reaches `isZWJSequence`.
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
+## Changes from earlier versions
 
-| Deprecated | Use instead |
-| --- | --- |
-| `emoji.isEmoji(text)` | `emoji.hasEmoji(text)` |
-| `emoji.onlyEmoji(text)` | `emoji.isOnlyEmoji(text)` |
-| `emoji.skinTone(text)` (returns `"none"` when there is no tone) | `emoji.findSkinTone(text)` (returns `null`) |
-
-`emoji.isZwjSequence` still reaches `isZWJSequence`, because OSL matches method names without regard to case.
+`emoji.isEmoji` and `emoji.onlyEmoji` are now `emoji.hasEmoji` and `emoji.isOnlyEmoji`. `emoji.skinTone` now returns `null` rather than `"none"` when the text has no skin tone.

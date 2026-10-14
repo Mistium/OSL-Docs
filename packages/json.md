@@ -33,15 +33,16 @@ if parsed.isErr() (
 )
 ```
 
-Pass a type argument to check the parsed value against an OSL type. A value that doesn't match fails the result:
+Pass a type argument to check the parsed value against an OSL type. A value that doesn't match fails the result with a `ParseError` naming where the mismatch is, with array positions counted from 1:
 
 ```osl
 import "std:json"
 
 log json.parse<int>("41") + 1                 // 42
-log json.parse<string>("5").isErr()           // true
 int[] scores = json.parse<int[]>("[90, 72]")
-log scores
+log scores                                    // [90,72]
+log json.parse<int[]>("[1, \"two\"]").unwrapErr().message
+// json.parse: at [2]: expected int, got string
 ```
 
 ## API reference
@@ -51,7 +52,7 @@ log scores
 | Function | Returns | Notes |
 | --- | --- | --- |
 | `json.parse(text: string, options?: object)` | `result<any, error>` | Parses one JSON document. Options: `type` (`"object"`, `"array"`, or `"any"`, the default). |
-| `json.parse<T>(text: string)` | `result<T, error>` | Parses and checks the value against `T`. |
+| `json.parse<T>(text: string)` | `result<T, error>` | Parses and checks the value against `T`. A mismatch fails with `ParseError` naming the 1-based path, the expected type, and the JSON value found, such as `at users[2].age: expected int, got string`. A key a struct doesn't declare fails too. |
 | `json.parseFile(path: string, options?: object)` | `result<any, error>` | Reads and parses a file. Takes the same options as `parse`. |
 | `json.stringify(value: any, options?: object)` | `string` | Encodes a value as JSON with object keys in sorted order. Options: `indent` (spaces per level, default `0` for compact output). |
 | `json.isValid(text: string)` | `boolean` | Whether `json.parse` accepts the text. |
@@ -64,6 +65,7 @@ log scores
 | Function | Kind | When |
 | --- | --- | --- |
 | `parse`, `parseFile` | `ParseError` | Malformed JSON, duplicate object keys, numbers out of range, trailing data, or a root that doesn't match `type`. The message names the line and column. |
+| `parse<T>` | `ParseError` | The document doesn't fit `T`. The message names the path, such as `at [2].y`. |
 | `parseFile`, `open` | `NotFoundError`, `PermissionError`, `IOError` | The file can't be read. |
 | `open` | `ValueError` | The file is larger than `maxBytes`. |
 | `stringify` | throws `ValueError` | `NaN`, infinite numbers, and cyclic values. |
@@ -116,20 +118,9 @@ Each event is a `json.Event` record `{type, value, depth}`:
 
 `depth` is how many containers enclose the token. The root value has depth `0`, and keys and values directly inside a root object have depth `1`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `json.parseObject(text)` | `json.parse(text, {type: "object"})` |
-| `json.parseArray(text)` | `json.parse(text, {type: "array"})` |
-| `json.format(value)` | `json.stringify(value, {indent: 2})` |
-| `json.open(path, maxBytes)` | `json.open(path, {maxBytes})` (this form doesn't warn yet) |
-| `stream.more()`, `stream.next()` | `for event in stream.events()` |
-| `stream.ok()`, `stream.error()` | Errors are thrown by `events()` and returned by `skip()` and `readObject()`. |
-| `stream.readScalarMap(n)` | `stream.readObject({maxKeys: n})` |
-| `stream.readStringMap(n)` | `stream.readObject({maxKeys: n, stringsOnly: true})` |
+`json.parseObject`, `json.parseArray`, and `json.format` are gone: pass `{type: "object"}`, `{type: "array"}`, or `{indent: 2}` to `parse` and `stringify` instead. `json.open` takes its limit only as `{maxBytes}`. On a stream, `more()`/`next()` became `for event in stream.events()`, and `readScalarMap(n)`/`readStringMap(n)` became `readObject({maxKeys: n})` (add `stringsOnly: true` for the string form).
 
 ## Behavior and limits
 

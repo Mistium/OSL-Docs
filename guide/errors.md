@@ -203,6 +203,9 @@ for name in ["a.txt", "b.txt"] (
 Inside the block, `return` exits the enclosing function, and `continue` or `break` applies to the
 enclosing loop. The expression on the left runs once.
 
+The bound name is the `error`, not the result, so read `err.kind` and `err.message` directly.
+Calling `isOk`, `isErr`, or `unwrapErr` on it is a compile error.
+
 - **As a statement**, `f() catch (err) ( ... )` handles the error and execution continues after it.
   It also catches an error thrown by a call that returns nothing.
 - **Where the value is used**, as in `string text = f() catch (err) ( ... )` or a call argument,

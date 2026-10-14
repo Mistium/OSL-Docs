@@ -65,12 +65,7 @@ There is no wait after the last attempt.
 - An option out of range, an unknown option, or `retry.delayFor` with an attempt below 1 throws
   `ValueError`. An option of the wrong type throws `TypeError`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `retry.run(fn, options)`, which returns `{success, value, error, attempts, elapsed}` and takes seconds | `retry.call(fn, options)`, which returns a result and takes milliseconds |
-| `retry.backoff(attempt, options)` (seconds) | `retry.delayFor(attempt, options)` (milliseconds) |
-| option `max_delay` (seconds, with `retry.run` and `retry.backoff`) | `maxDelay` (milliseconds, with `retry.call` and `retry.delayFor`) |
+`retry.run` and `retry.backoff` are gone; use `retry.call` and `retry.delayFor`. Delays are in
+milliseconds, and the option is `maxDelay`: `max_delay` throws `ValueError`.

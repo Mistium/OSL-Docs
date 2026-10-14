@@ -12,14 +12,14 @@ import "std:js"
 ```osl
 import "std:js"
 
-int sum = js.evaluate("[1, 2, 3].reduce((a, b) => a + b, 0)")
+int sum = js.eval("[1, 2, 3].reduce((a, b) => a + b, 0)")
 log sum // 6
 
-object user = js.evaluate("({name: 'Ada', tags: ['x']})")
+object user = js.eval("({name: 'Ada', tags: ['x']})")
 log user.name // Ada
 
-any value = js.evaluate("while (true) {}", {timeout: 100}) catch (err) (
-  log err // TimeoutError: js.evaluate: the code did not finish within 100ms
+any value = js.eval("while (true) {}", {timeout: 100}) catch (err) (
+  log err // TimeoutError: js.eval: the code did not finish within 100ms
   return
 )
 log value
@@ -29,7 +29,7 @@ log value
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `js.evaluate(code: string, options?: object)` | `result<any, error>` | Runs `code` in a fresh runtime and returns the value of its last expression. |
+| `js.eval(code: string, options?: object)` | `result<any, error>` | Runs `code` in a fresh runtime and returns the value of its last expression. |
 
 The value is converted through JSON: objects, arrays, strings, numbers, booleans, and `null` keep
 their shape, `undefined` becomes `null`, and a promise is awaited.
@@ -43,7 +43,7 @@ Options:
 
 ## Errors
 
-`js.evaluate` fails with:
+`js.eval` fails with:
 
 - `ParseError` for a JavaScript syntax error;
 - `TimeoutError` when the code runs past `timeout`;
@@ -51,10 +51,8 @@ Options:
 
 It throws `ValueError` for a `timeout` or `memoryLimit` of 0 or less.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `js.eval(code, timeoutMs)`, which returns `{success, result}` with the value as a string, or `{success: false, error}` | `js.evaluate(code, {timeout: ms})`, which returns the value itself and fails with a typed error |
+`js.evaluate` is now called `js.eval`. The old `js.eval(code, timeoutMs)`, which returned
+`{success, result}` with the value as a string, is gone: pass the timeout as `{timeout: ms}`, and
+handle failures with `catch`.

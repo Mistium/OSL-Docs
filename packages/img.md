@@ -108,8 +108,9 @@ log info.format ++ " " ++ info.width ++ "x" ++ info.height ++ ", orientation " +
 
 ### Colors
 
-Wherever a method takes a color it accepts `"#rrggbb"`, `"#rrggbbaa"`, `"#rgb"`, `"#rgba"`, a CSS
-color name such as `"white"` or `"transparent"`, or `{r, g, b, a}` with 0-255 channels. Fills,
+Wherever a method takes a color it accepts any CSS color that [`colors.parse`](colors.md) reads
+(`"#rrggbb"`, `"#rgb"`, a name such as `"white"` or `"transparent"`, `"rgb(255 0 0 / 50%)"`,
+`"hsl(210 50% 40%)"`, ...), or `{r, g, b, a}` with 0-255 channels. Fills,
 strokes, and text colors also accept an `*img.Gradient` or `*img.Pattern`. An invalid color throws
 `ValueError`.
 
@@ -227,8 +228,8 @@ chain. Angles are degrees, with 0 pointing right and 90 pointing down.
 | `path.lineTo(point)` | A straight line from the current point. |
 | `path.quadTo(control, point)` | A quadratic Bézier curve. |
 | `path.cubicTo(control1, control2, point)` | A cubic Bézier curve. |
-| `path.arc(center, radius, options?)` | An arc joined to the current point by a line, as canvas `arc()`. Options: `start` (default 0), `end` (default 360), `counterclockwise` (default `false`). |
-| `path.arcTo(control, point, radius)` | An arc rounding the corner at `control`, as canvas `arcTo()`. The path continues from the arc's end. |
+| `path.arc(center, radius, options?)` | An arc joined to the current point by a line, as HTML canvas `arc()`. Options: `start` (default 0), `end` (default 360), `counterclockwise` (default `false`). |
+| `path.arcTo(control, point, radius)` | An arc rounding the corner at `control`, as HTML canvas `arcTo()`. The path continues from the arc's end. |
 | `path.rect(rect, options?)` | A closed rectangle subpath. Option: `radius`. |
 | `path.circle(center, radius)` | A closed circle subpath. |
 | `path.ellipse(center, radii)` | A closed ellipse subpath. |
@@ -312,7 +313,6 @@ log striped.pixel(0, 0) ++ " " ++ striped.pixel(8, 0)
 | `raylib.screenshot()` | [raylib](raylib.md) | The window contents as an `*img.Image`. |
 | `image.toImage()` | [raylib](raylib.md) | Converts a CPU-side `*raylib.Image` to an `*img.Image`. |
 | `doc.drawImage(pic, rect)` | [pdf](pdf.md) | Draws an image on a PDF page. |
-| `c.toImage()` | [canvas](canvas.md) | Converts a `canvas` value. |
 | `exif.orientation(data)`, `exif.strip(data)` | [exif](exif.md) | Read or remove EXIF metadata without re-encoding. |
 
 ## Errors
@@ -328,38 +328,13 @@ log striped.pixel(0, 0) ++ " " ++ striped.pixel(8, 0)
 | any | `ValueError` (thrown) | A bad size, point, rectangle, color, option, or out-of-range amount. |
 | any | `StateError` (thrown) | The image is closed. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. Most returned `null` or
-`false` on failure; their replacements fail with a typed error.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `img.open(path)` | `img.decodeFile(path)` |
-| `img.decodeBytes(data)` | `img.decode(data)` |
-| `img.openSize(path)` | `img.infoFile(path)` |
-| `img.sizeBytes(data)` | `img.info(data)` |
-| `img.isAnimatedBytes(data)` | `img.info(data).animated` |
-| `img.encodePNGBytes(pic)` | `pic.encode("png")` |
-| `img.encodeJPEGBytes(pic, q)` | `pic.encode("jpeg", {quality: q})` |
-| `img.savePNG(pic, path)` | `pic.save(path)` |
-| `img.saveJPEG(pic, path, q)` | `pic.save(path, {quality: q})` |
-| `img.clone(pic)` | `pic.clone()` |
-| `img.resize(pic, w, h)` | `pic.resize(w, h)` |
-| `img.resizeFast(pic, w, h)` | `pic.resize(w, h, {filter: "bilinear"})` |
-| `img.resizeWidth(pic, w)` | `pic.resize(w, 0)` |
-| `img.resizeHeight(pic, h)` | `pic.resize(0, h)` |
-| `img.resizeFit(pic, maxW, maxH)` | `pic.resize(maxW, maxH, {fit: "contain"})` |
-| `img.draw(dst, src, x, y)` | `dst.draw(src, x, y, {blend: "replace"})` |
-| `img.drawOver(dst, src, x, y)` | `dst.draw(src, x, y)` |
-| `img.rotate(pic, angle)` | `pic.rotate(degrees)` |
-| `img.orient(pic, orientation)` | `pic.orient(orientation)` |
-| `img.normalizeOrientationBytes(pic, data)` | `img.decode(data, {autoOrient: true})`, or `pic.orient(img.info(data).orientation)` |
-| `img.fill(pic, r, g, b, a)` | `pic.fill(color)` |
-| `img.setColorProfile(pic, profile)` | `pic.setColorProfile(profile)`, which checks the profile |
-| `w` and `h` keys of `pic.size()` | `width` and `height` |
-
-`img.normalizeOrientation(pic, reader)` has been removed; use `{autoOrient: true}` when decoding.
+`img` replaces the builtin `canvas` type, which has been removed: write
+`img.new(width, height, {fill: background})` where you wrote `canvas(width, height, background)`.
+The package-level helpers such as `img.open`, `img.savePNG`, and `img.resize(pic, w, h)` are gone
+too; use `img.decodeFile`, `pic.save`, and `pic.resize`. `pic.size()` returns only `width` and
+`height`.
 
 ## Behavior and limits
 

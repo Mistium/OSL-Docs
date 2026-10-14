@@ -55,44 +55,17 @@ log csv.stringify([["x", "y"], [1, null]]) // x,y then 1,
 | --- | --- | --- |
 | `parse`, `parseRows` and their `File` forms | `ParseError` | Malformed quoting. `parse` also fails for a repeated column name or a row with more cells than columns. The message names the line. |
 | `parseFile`, `parseRowsFile` | `NotFoundError`, `PermissionError`, `IOError` | The file can't be read. |
-| `stringify` | throws `TypeError` | `data` is not an array of objects or an array of arrays. |
+| `stringify` | throws `TypeError` | `data` is not an array of objects or an array of arrays, including a single object on its own (wrap it as `[record]`) or an array that mixes objects and rows. |
 
 ### Writing values
 
 `stringify` writes `null` and missing keys as empty cells. Other values are written as OSL prints them. Objects don't keep column order, so pass `columns` when the order matters. To write a file, use `fs.writeFile(path, csv.stringify(records))`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. They keep their old behaviour: the `read*` functions return `[]` on failure, the `write*` functions return a success flag, and `insertRow` and `deleteRow` use 0-based indexes.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `csv.parseRaw(text)` | `csv.parseRows(text)` |
-| `csv.readFile(path)` | `csv.parseFile(path)` |
-| `csv.readFileRaw(path)` | `csv.parseRowsFile(path)` |
-| `csv.stringifyRows(records)`, `csv.stringifyArray(rows)` | `csv.stringify(data)` |
-| `csv.writeFile(path, object)` | `fs.writeFile(path, csv.stringify([object]))` |
-| `csv.writeFileRows(path, records)`, `csv.writeFileArray(path, rows)` | `fs.writeFile(path, csv.stringify(data))` |
-| `csv.toRows(records)` | `records.map(...)` |
-| `csv.fromRows(rows)` | `csv.parse(csv.stringify(rows))` or a loop |
-| `csv.getColumn(records, column)` | `records.map(row -> row[column])` |
-| `csv.filter(records, fn)` | `records.filter(fn)` |
-| `csv.mapRows(records, fn)` | `records.map(fn)` |
-| `csv.sortBy(records, key)` | `records.sortBy(key)` |
-| `csv.sortByNum(records, key)` | `records.sortBy(row -> number(row[key]))` |
-| `csv.unique(records, key)` | `records.map(row -> row[key]).toSet()` |
-| `csv.stats(records, key)` | `records.map(row -> number(row[key]))` with `.sum()`, `.min()`, `.max()`, `.average()` |
-| `csv.merge(a, b)` | `a.concat(b)` |
-| `csv.sample(records, count)` | `random.sample(records, count)` |
-| `csv.appendRow(records, row)` | `records.append(row)` |
-| `csv.prependRow(records, row)` | `records.prepend(row)` |
-| `csv.insertRow(records, index, row)` | `records.insert(index, row)` (1-based) |
-| `csv.deleteRow(records, index)` | `records.delete(index)` (1-based) |
-| `csv.removeColumn(records, column)` | Delete the key in a loop, or pass `columns` to `stringify`. |
-| `csv.reduce`, `csv.groupBy`, `csv.aggregate`, `csv.count`, `csv.join`, `csv.pivot`, `csv.transpose`, `csv.chunk`, `csv.flatten`, `csv.addColumn`, `csv.renameColumn` | A `for` loop over the records. |
+The old helpers are gone. `csv.parseRaw`, `csv.readFile`, and `csv.readFileRaw` became `parseRows`, `parseFile`, and `parseRowsFile`. `stringifyRows`, `stringifyArray`, and the `write*` functions became `csv.stringify(data)`, with `fs.writeFile` to save the text. The record helpers such as `csv.filter`, `csv.sortBy`, and `csv.groupBy` are now plain array methods or a `for` loop over the records.
 
 ## Behavior and limits
 
 - A UTF-8 byte order mark at the start of the text is ignored.
-- `stringify` also accepts a single object as one row, for old scripts.
 - The older `import "osl/csv"` spelling still works with a migration warning.

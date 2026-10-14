@@ -106,24 +106,9 @@ binary message) or an object or array (JSON text). Other types throw `TypeError`
 Handlers run on the connection's own thread. A handler that throws has its error printed, and the
 server or connection keeps running.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `ws.connect(url, "proto1", "proto2")` | `ws.connect(url, {protocols: ["proto1", "proto2"]})` |
-| `ws.new(address, path)`, `ws.new(address)`, `ws.new("/path")` | `ws.new({address, path})` |
-| `ws.newServer(address, path)` | `ws.new({address, path})` |
-| `ws.send(conn, message)` (returned `false` on failure) | `conn.send(message)` |
-| `ws.closeConn(conn)` | `conn.close()` |
-| `server.onConnect(fn)`, `server.onMessage(fn)`, `server.onDisconnect(fn)` (replaced the handler) | `server.on("connect" \| "message" \| "disconnect", fn)`, which adds one |
-| `server.getConnections()` | `server.connections()` |
-| `server.start()` | `server.run()` |
-| `server.startTLS(certFile, keyFile)` | `server.runTLS(certFile, keyFile)` |
-| `conn.onMessage(fn)`, `conn.onClose(fn)` | `conn.on("message" \| "close", fn)` |
-| `conn.connected()` | `conn.isConnected()` |
-| `conn.shutdown()` | `conn.close()`, which now also cancels reconnecting |
-| `conn.getAll()` | `conn.data()` |
-| `conn.getHeader(name)` (returned `""` when missing) | `conn.header(name)`, which returns `null` |
-| `conn.getHeaders()` | `conn.headers()` |
+`ws.connect` and `ws.new` take only an options object: write `ws.connect(url, {protocols: [...]})`
+and `ws.new({address, path})`. The older `ws.newServer`, `ws.send`, `ws.closeConn` and the
+`onConnect`/`onMessage`-style setters are gone; use `ws.new`, `conn.send`, `conn.close` and
+`on(event, fn)`.

@@ -194,24 +194,11 @@ client.close()
 | `StateError` | End of a session's output, or writing after `closeInput()`. Using a closed client, session or SFTP handle throws `StateError`. |
 | `ValueError` (thrown) | `username`, or both `password` and `privateKey`, are missing. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `ssh.connect(host, port, user, password, privateKey)` (five arguments, a client whose `isConnected()` is `false` on failure) | `ssh.connect(address, {username, password, privateKey})` |
-| `client.exec(command)` (returned `{success, output, error, timeout, truncated}`) | `client.run(command)` |
-| `client.execLimited(command, maxBytes)` | `client.run(command, {maxOutput: bytes})` |
-| `client.execTimeout(command, seconds)` | `client.run(command, {timeout: ms})` |
-| `client.execTimeoutLimited(command, seconds, maxBytes)` | `client.run(command, {timeout: ms, maxOutput: bytes})` |
-| `client.startCommand(command)` | `client.start(command)`, which returns a session |
-| `client.sendInput(input)` | `session.write(data)` |
-| `client.readOutput(seconds)` (returned `""` on timeout or at the end) | `session.read({timeout: ms})` |
-| `ssh.execRemote(host, port, user, password, privateKey, command)` | `ssh.connect(address, options)` then `client.run(command)` |
-| `ssh.scpUpload(client, localPath, remotePath)` | `client.upload(localPath, remotePath)` |
-| `ssh.scpDownload(client, remotePath, localPath)` | `client.download(remotePath, localPath)` |
-| `ssh.tunnel(localPort, remoteHost, remotePort, sshHost, sshPort)` (read credentials from `SSH_*` environment variables) | `ssh.connect(address, options)` then `client.forward(localAddress, remoteAddress)` |
-
-`ssh.generateRSAKey()` and `ssh.generateEd25519Key()` were removed; use
-`ssh.generateKeyPair("rsa")` or `ssh.generateKeyPair("ed25519")`.
+`ssh.connect` takes only `(address, {options})`; the five-argument form is gone. `client.exec` and
+its `execLimited`/`execTimeout` variants are replaced by `client.run(command, {timeout, maxOutput})`,
+`startCommand`/`sendInput`/`readOutput` by `client.start` and a `*ssh.Session`, `ssh.scpUpload` and
+`ssh.scpDownload` by `client.upload` and `client.download`, and `ssh.tunnel` by `client.forward`.
+`ssh.generateRSAKey()` and `ssh.generateEd25519Key()` are now `ssh.generateKeyPair("rsa")` and
+`ssh.generateKeyPair("ed25519")`.

@@ -37,7 +37,7 @@ go tool pprof -top -base heap-before.pprof heap-after.pprof   # what stayed reac
 | --- | --- | --- |
 | `mem.stats()` | `object` | A snapshot of memory statistics. See [stats records](#stats-records). |
 | `mem.gc()` | `object` | Runs a garbage collection, then returns `mem.stats()`. |
-| `mem.dump(path, options?)` | `result<unit, error>` | Writes a pprof profile to `path`, replacing the file atomically. Option `profile` (default `"heap"`): `"heap"`, `"allocs"`, `"goroutine"`, `"threadcreate"`, `"block"` or `"mutex"`. A heap or allocs profile runs a garbage collection first. Throws `ValueError` for an unknown profile. Fails with `NotFoundError` when the directory doesn't exist, `PermissionError` or `IOError`. |
+| `mem.dump(path, options?)` | `result<unit, error>` | Writes a pprof profile to `path`, replacing the file atomically. Option `profile` (default `"heap"`): `"heap"`, `"allocs"`, `"goroutine"`, `"goroutineleak"` (goroutines blocked on a channel or lock that no running goroutine can reach), `"threadcreate"`, `"block"` or `"mutex"`. A heap or allocs profile runs a garbage collection first. Throws `ValueError` for an unknown profile. Fails with `NotFoundError` when the directory doesn't exist, `PermissionError` or `IOError`. |
 | `mem.profileRate()` | `int` | The average number of bytes allocated between heap profile samples. 0 means heap profiling is off. |
 | `mem.setProfileRate(bytes)` | `int` | Sets the heap profile sampling rate and returns the previous one. `1` records every allocation and `0` turns profiling off. Throws `ValueError` for a negative rate. |
 | `mem.serve(address)` | `result<*mem.Server, error>` | Starts a pprof HTTP server in the background on `address`, such as `"127.0.0.1:6060"` or `":0"` for any free port. Profiles are under `/debug/pprof/`. Fails with `NetworkError` when the address can't be listened on. |
@@ -97,18 +97,11 @@ The server also serves CPU profiles and execution traces at the standard pprof p
 If `heapAlloc` keeps growing across comparable readings taken after `mem.gc()`, compare two heap
 profiles to find what holds the memory.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `mem.dumpProfile(name, path)` | `mem.dump(path, {profile: name})` |
-| `mem.address()` | `server.address()` on the handle from `mem.serve` |
-| `mem.stop()` | `server.close()` on the handle from `mem.serve` |
-
-`mem.serve` used to return a boolean. It now returns a server handle, and fails as a result when it
-can't listen.
+`mem.dumpProfile(name, path)` is now `mem.dump(path, {profile: name})`. `mem.serve` returns a
+server handle instead of a boolean, and the package-level `mem.address()` and `mem.stop()` are now
+`server.address()` and `server.close()` on that handle.
 
 ## Behavior and limits
 

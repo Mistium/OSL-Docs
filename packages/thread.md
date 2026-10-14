@@ -105,13 +105,10 @@ if !ch.send("late") ( log "channel closed" )
 - `thread.channel` throws `ValueError` when `capacity` isn't a whole number of 0 or more.
 - `t.wait` throws `TimeoutError` when the timeout passes and `ValueError` for a negative timeout.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `t.timeout(ms)`, which returns `null` when the thread is still running | `t.wait({timeout: ms})`, which throws `TimeoutError`, so a thread that returned `null` can't be mistaken for one that timed out |
+`t.timeout(ms)` is gone; use `t.wait({timeout: ms})`. It throws `TimeoutError` where `timeout`
+returned `null`, so a thread that returned `null` can't be mistaken for one that timed out.
 
 ## Thread safety
 

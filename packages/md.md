@@ -64,13 +64,9 @@ log md.toHTML("Hello <em>world</em>")                 // <p>Hello <!-- raw HTML 
 log md.toHTML("Hello <em>world</em>", {unsafe: true}) // <p>Hello <em>world</em></p>
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `md.toHTMLUnsafe(text)` | `md.toHTML(text, {unsafe: true})` |
+`md.toHTMLUnsafe(text)` is gone. Use `md.toHTML(text, {unsafe: true})`.
 
 ## Behavior and limits
 

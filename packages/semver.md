@@ -68,13 +68,9 @@ Every function except `isValid` returns a `result` and fails with `ParseError` w
 
 A prerelease version only matches comparators on the same `major.minor.patch`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| The `valid` key of `semver.parse` (always `true` now) | `semver.isValid(text)`. An invalid version fails `parse` with `ParseError`. |
+Parsed versions no longer have a `valid` key. `semver.parse` fails with `ParseError` for text that isn't a version, so check untrusted text with `semver.isValid(text)`.
 
 ## Behavior and limits
 

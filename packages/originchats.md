@@ -158,18 +158,18 @@ keeps running.
 | `client.userRoles(username: string)` | `result<array, error>` | Role names a user has. |
 | `client.status(username: string)` | `result<object, error>` | A user's status object. |
 | `client.unreads()` | `result<object, error>` | Channel to unread state. |
-| `client.recentPings(options?)` | `result<array, error>` | Recent messages that mention the bot. Option: `limit`. |
+| `client.pings(options?)` | `result<array, error>` | Recent messages that mention the bot. Option: `limit`. |
 | `client.emojis()`, `client.stickers()`, `client.stats()` | `result<object, error>` | Server data as the server reports it. |
 | `client.poll(pollID: string)` | `result<object, error>` | A poll with its votes. |
-| `client.vote(pollID: string, ...optionIDs)` | `result<unit, error>` | Votes for one or more option ids. |
+| `client.vote(pollID: string, ...optionIDs: string)` | `result<unit, error>` | Votes for one or more option ids. Throws `ValueError` without one and `TypeError` for an id that isn't a string. |
 | `client.endPoll(pollID: string)` | `result<unit, error>` | Closes a poll. |
 | `client.attachments(offset: int, limit: int)` | `result<array, error>` | The bot's uploaded attachments. |
 | `client.uploadBytes(name: string, data: byte[], options?)` | `result<object, error>` | Stores a file and returns the attachment object for `send({attachments})`. Option: `mimeType` (guessed from `name` by default). |
 | `client.uploadFile(path: string, options?)` | `result<object, error>` | Uploads a local file. Options: `name`, `mimeType`. Fails with `NotFoundError` for a missing file. |
 | `client.updateStatus(status: string, options?)` | `result<unit, error>` | `"online"`, `"idle"`, `"dnd"` or `"offline"`. Option: `text`. |
 | `client.ban(username)`, `client.unban(username)` | `result<unit, error>` | |
-| `client.kickUser(username: string, options?)` | `result<unit, error>` | Option: `reason`. |
-| `client.muteUser(username: string, duration: number, options?)` | `result<unit, error>` | Times a user out for `duration` ms (whole seconds). Option: `reason`. |
+| `client.kick(username: string, options?)` | `result<unit, error>` | Disconnects a user. Option: `reason`. |
+| `client.mute(username: string, duration: number, options?)` | `result<unit, error>` | Times a user out for `duration` ms, rounded up to whole seconds. Option: `reason`. Throws `ValueError` unless `duration` is above 0. |
 | `client.setNickname(username: string, nickname: string)` | `result<unit, error>` | |
 | `client.setRoles(username: string, roles: array)` | `result<unit, error>` | Replaces a user's roles. |
 | `client.createRole(role: object)`, `client.updateRole(role: object)` | `result<unit, error>` | Fields in the server's format; `updateRole` matches on `role.name`. |
@@ -203,7 +203,7 @@ keeps running.
 | `channel.search(query: string, filters?)` | `result<object, error>` | `{results, total, has_more}`. `filters` go to the server as is, such as `{pinned: true}`. |
 | `channel.markRead(options?)` | `result<unit, error>` | Option: `messageID` (read up to it). |
 | `channel.info()` | `result<object, error>` | The channel's or thread's info. |
-| `channel.listThreads(options?)` | `result<array, error>` | Option: `limit`. |
+| `channel.threads(options?)` | `result<array, error>` | The channel's threads. Option: `limit`. |
 | `channel.createThread(name: string)` | `result<*originchats.Channel, error>` | Starts a thread. |
 | `channel.webhooks()` | `result<array, error>` | |
 | `channel.createWebhook(name: string)` | `result<object, error>` | The new webhook, with its token. |
@@ -286,10 +286,10 @@ Each setter changes the embed and returns it, so calls chain.
 | `embed.markdown(on: boolean)` | Markdown rendering. |
 | `embed.timestamp(value: string)` | An ISO 8601 time. |
 | `embed.image(link)`, `embed.thumbnail(link)`, `embed.video(link)`, `embed.audio(link)` | Media. |
-| `embed.withAuthor(name: string, options?)` | Options: `url`, `iconURL`. |
-| `embed.withFooter(text: string, options?)` | Option: `iconURL`. |
+| `embed.author(name: string, options?)` | Options: `url`, `iconURL`. |
+| `embed.footer(text: string, options?)` | Option: `iconURL`. |
 | `embed.addField(name: string, value: string, options?)` | Option: `inline`. |
-| `embed.asPoll(question: string, choices: array, options?)` | Turns the embed into a poll. Option: `multiselect`. |
+| `embed.poll(question: string, choices: array, options?)` | Turns the embed into a poll. `choices` are strings or `{text, emoji}` objects. Option: `multiselect`. |
 | `embed.build()` | Returns the object the server receives. |
 
 ```osl
@@ -300,62 +300,19 @@ bot.start()
 
 *originchats.Embed card = originchats.newEmbed({title: "Release", color: "#4caf50"})
   .addField("Version", "2.0", {inline: true})
-  .withFooter("osl")
+  .footer("osl")
 bot.channel("general").send("New release!", {embeds: [card]})
 bot.channel("general").send("", {embeds: [originchats.newPoll("Lunch?", ["Pizza", "Sushi"])]})
 bot.stop()
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `client.onReady`, `onDisconnect`, `onMessageNew`, `onMessageEdit`, `onMessageDelete`, `onMessagePin`, `onMessageUnpin`, `onReactionAdd`, `onReactionRemove`, `onTyping`, `onUserConnect`, `onUserDisconnect`, `onUserJoin`, `onUserLeave`, `onUserUpdate`, `onMessagesDelete`, `onThreadCreate`, `onThreadUpdate`, `onThreadDelete`, `onPollVote`, `onPollEnd`, `onError`, `onRateLimit` | `client.on("ready" \| "disconnect" \| "message" \| "message_edit" \| ..., handler)` |
-| `client.onStatus(handler)` | `client.on("status_get", handler)` and `client.on("user_status", handler)` |
-| `client.onUnreads(handler)` | `client.on("unreads_update", handler)` |
-| `client.password(pw)`, `invite(code)`, `login(user, pass)`, `register(user, pass)`, `clientName(name)`, `roturApi(base)`, `ignoreSelf(v)` | `originchats.new(url, {serverPassword, invite, username, password, register, clientName, roturURL, ignoreSelf})` |
-| `client.timeout(seconds)` | `originchats.new(url, {timeout: ms})` |
-| `client.signing(enabled)` | `client.setSigning(enabled)` or `originchats.new(url, {signing})` |
-| `client.connect(token?)` (returned a boolean) | `client.start()` |
-| `client.connected()`, `client.ready()` | `client.isConnected()`, `client.isReady()` |
-| `client.serverUrl()` | `client.url()` |
-| `client.signingKey()` (returned the private key) | `client.signingKeyID()` |
-| `client.serverTime()` (seconds) | `client.now()` (unix ms) |
-| `client.pings(limit?)` | `client.recentPings({limit})` |
-| `client.setStatus(status, text?)` | `client.updateStatus(status, {text})` |
-| `client.kick(username, reason?)` | `client.kickUser(username, {reason})` |
-| `client.mute(username, seconds, reason?)` | `client.muteUser(username, ms, {reason})` |
-| `client.send(channel, content)`, `client.sendEmbed(...)`, `client.sendRaw(payload)` | `client.channel(name).send(content, options)` |
-| `client.sendThread(threadID, content)` | `client.thread(threadID).send(content)` |
-| `client.edit`, `delete`, `react`, `unreact`, `pin`, `unpin` (by channel and id) | `client.channel(name).get(id)` then the message method |
-| `client.typing(channel)` | `client.channel(name).typing()` |
-| `client.messages(channel, limit)`, `client.message(channel, id)`, `client.search(channel, query)` | `client.channel(name).messages(limit)`, `.get(id)`, `.search(query)` |
-| `client.upload(name, data, mimeType)` | `client.uploadBytes(name, data, {mimeType})` or `client.uploadFile(path)` |
-| `client.sendCmd(payload)` | `client.call(payload, {wait: false})` |
-| `client.request(payload)`, `client.ok(payload)` | `client.call(payload)` |
-| `client.dispatch(raw)` | None; an internal hook |
-| `channel.sendWith`, `sendEmbed`, `sendAttachment`, `sendAs` | `channel.send(content, {embeds, attachments, alias})` |
-| `channel.edit`, `editWith`, `delete`, `react`, `unreact`, `pin`, `unpin`, `message`, `replies` (by id) | `channel.get(id)` then the message method |
-| `channel.ack(messageID?)` | `channel.markRead({messageID})` |
-| `channel.threads(limit?)` | `channel.listThreads({limit})` |
-| `message.send`, `sendWith`, `sendEmbed`, `typing` | `message.target().send(...)`, `message.target().typing()` |
-| `message.replyNoPing(content)` | `message.reply(content, {ping: false})` |
-| `message.replyWith(payload)`, `message.replyEmbed(content, embed)` | `message.reply(content, options)` |
-| `message.editWith(payload)` | `message.edit(content, options)` |
-| `message.timestamp()` (seconds) | `message.sentAt()` (unix ms) |
-| `call.send(content)`, `call.sendEmbed(content, embed)` | `call.target().send(content, options)` |
-| `cmd.addInput(kind, name, ...)` and the constants `originchats.username`, `string`, `integer`, `number`, `boolean`, `choice` | `cmd.addString`, `addInteger`, `addNumber`, `addBoolean`, `addUser` |
-| `cmd.addChoice(name, choices, ...)` | `cmd.addChoices(name, choices, {description, required})` |
-| `originchats.embed(title?, description?)` | `originchats.newEmbed({title, description})` |
-| `originchats.poll(question, options, multiselect?)` | `originchats.newPoll(question, choices, {multiselect})` |
-| `embed.author(name, url?, iconURL?)` | `embed.withAuthor(name, {url, iconURL})` |
-| `embed.footer(text, iconURL?)` | `embed.withFooter(text, {iconURL})` |
-| `embed.field(name, value, inline?)` | `embed.addField(name, value, {inline})` |
-| `embed.poll(question, options, multiselect?)` | `embed.asPoll(question, choices, {multiselect})` |
-
-Passing the token to `client.run(token)` still works; prefer `originchats.new(url, {token})`.
-
-Message ids, thread ids and user ids that may be missing are now `string?` instead of `""`, and
-times are unix milliseconds.
+Several names are now shorter: `client.kickUser` is `client.kick`, `client.muteUser` is
+`client.mute` (duration in milliseconds), `client.recentPings` is `client.pings`,
+`channel.listThreads` is `channel.threads`, and the embed methods `withAuthor`, `withFooter` and
+`asPoll` are `author`, `footer` and `poll`. `client.run()` takes no token; pass it as
+`originchats.new(url, {token})`. The `onReady`-style handler setters, the chained configuration
+methods (`password`, `login`, `timeout` and the rest), `client.connect` and the `originchats.string`,
+`integer` and other input-type constants are gone; use `client.on(event, handler)`, the options of
+`originchats.new`, `client.start()` and `cmd.addString` and friends.

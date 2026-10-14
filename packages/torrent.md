@@ -162,34 +162,11 @@ arrived. Using a closed client or download throws `StateError`.
 | `StateError` | The download or client was closed while waiting. |
 | `ValueError` | `fromPath` found no files, or seeded data doesn't match. Thrown for invalid options. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `torrent.create(name, files, pieceLength)` (skipped missing files) | `torrent.fromPath(path, options?)` |
-| `torrent.createFromDirectory(dir)` | `torrent.fromPath(dir)` |
-| `torrent.parse(text)` (returned an empty torrent on bad input) | `torrent.decode(data)` |
-| `t.download(torrentPath, outputPath)` (never downloaded; now fails with `UnsupportedError`) | `t.downloadTo(dir, options?)` or `torrent.downloadMagnet(uri, dir, options?)` |
-| `t.seed(torrentPath, port)` (never seeded; now fails with `UnsupportedError`) | `t.seedFrom(dir, options?)` |
-| `t.buildTorrent()` (text) | `t.encode()` (`byte[]`) |
-| `t.getTrackers()` | `t.trackers()` |
-| `t.getInfo()` | `t.name()`, `t.pieceLength()`, `t.files()` |
-| `t.getFiles()`, `t.getFileIndex(path)` | `t.files()` |
-| `t.getFileCount()` | `t.files().len` |
-| `t.getTotalSize()` | `t.size()` |
-| `t.getPieceCount()` | `t.pieceCount()` |
-| `t.getPieceHashes()` | `t.pieces()` |
-| `t.getMagnetLink()`, `t.getMagnetURI()` | `t.magnetURI()` |
-| `t.calculateInfoHash()` | `t.infoHash()` |
-| `t.setPieceHash(...)`, `t.setFiles(...)`, `t.merge(other)` | Build a new torrent with `torrent.fromPath` |
-| `t.validate()` | None; torrents from `fromPath` and `decode` are always valid |
-| `t.addMetadata`, `getMetadata`, `getAllMetadata`, `strip` | Keep extra data in your own object |
-| `t.generatePeerID()` | None; `torrent.newClient` makes its own |
-| `t.exportInfo(path)` | Write the values you need with [json](json.md) and [fs](fs.md) |
-
-The package-level functions that worked on one shared empty torrent (`torrent.save`,
-`torrent.addTracker`, `torrent.getInfo`, `torrent.getMagnetLink`, `torrent.download`,
-`torrent.seed` and the rest) are deprecated too. Call the method on a torrent from `fromPath` or
-`decode` instead.
+`torrent.create`, `torrent.createFromDirectory` and `torrent.parse` are gone; use `torrent.fromPath`
+and `torrent.decode`. So are the package functions that worked on one shared empty torrent, the
+`get`-prefixed methods (`getTrackers` is now `trackers()`, `getMagnetLink` is `magnetURI()`, and so
+on), and `t.download`/`t.seed`, which never transferred anything; use `t.downloadTo` and
+`t.seedFrom`. No torrent is written with per-file `md5sum` keys any more; only the removed
+`torrent.create` added them.

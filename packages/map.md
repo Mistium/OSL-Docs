@@ -38,14 +38,9 @@ log users.keys()           // ["ada"]
 `set`, `get`, and `delete` throw `TypeError` for a key that can't be hashed, such as an array or
 object. `has` reports `false` for one.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `m.getKeys()` | `m.keys()` |
-| `m.getValues()` | `m.values()` |
+`m.getKeys()` and `m.getValues()` are now `m.keys()` and `m.values()`.
 
 ## Notes
 

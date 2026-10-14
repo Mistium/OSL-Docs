@@ -84,20 +84,13 @@ log zip.decompressString(packed)
 | `PermissionError` | Access denied, or a symbolic link already in the output directory would redirect an entry |
 | `IOError` | Any other read or write failure |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old forms
-return `false`, `[]` or `null` on failure instead of a result.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `zip.decompressLimited(path, output, maxBytes, maxFiles)` | `zip.decompress(path, output, {maxBytes, maxFiles})` |
-| `zip.gzipLimited(path, output, maxInputBytes, maxOutputBytes)` | `zip.gzip(path, output, {maxInputBytes, maxBytes})` |
-| `zip.gunzipLimited(path, output, maxOutputBytes)` | `zip.gunzip(path, output, {maxBytes})` |
-| `zip.list(path)` | `zip.entries(path)` |
-| `zip.fileInfo(path, name)` | `zip.entries(path)`, picking the entry by name |
-| `zip.statistics(path)` | `zip.entries(path)`, totalling the sizes |
-| `zip.copyFile(src, dst)` | `fs.copy(from, to)` |
+The `*Limited` functions are gone; pass the limits as options instead, as in
+`zip.decompress(path, output, {maxBytes, maxFiles})`,
+`zip.gzip(path, output, {maxInputBytes, maxBytes})` and `zip.gunzip(path, output, {maxBytes})`.
+`zip.list`, `zip.fileInfo` and `zip.statistics` are replaced by `zip.entries`, and `zip.copyFile` by
+`fs.copy`.
 
 ## Behavior and limits
 

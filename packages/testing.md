@@ -48,11 +48,6 @@ testing.equal([1, 2].map(n -> n * 2), [2, 4])
 testing.near(0.1 + 0.2, 0.3, 0.000001)
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `testing.isNull(value)` | `testing.null(value)`. `is*` names are predicates that never throw. |
-| `testing.panics(fn)` | `testing.throws(fn)`, which also returns the error |
+`testing.isNull` and `testing.panics` are gone; use `testing.null` and `testing.throws`.

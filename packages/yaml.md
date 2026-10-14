@@ -49,21 +49,9 @@ if parsed.isErr() (
 | `stringify` | throws `TypeError` | Values YAML can't represent, such as functions. |
 | `stringify` | throws `ValueError` | A value that contains itself. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. The object helpers change `data` in place, as they always did.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `yaml.toJSON(text)` | `json.stringify(yaml.parse(text))` |
-| `yaml.fromJSON(text)` | `json.parse(text)` |
-| `yaml.get(data, key)` | `data[key]` |
-| `yaml.set(data, key, value)` | `data[key] = value` |
-| `yaml.keys(data)` | `data.getKeys().sort()` |
-| `yaml.values(data)` | `data.getValues()` |
-| `yaml.has(data, key)` | `data.contains(key)` |
-| `yaml.delete(data, key)` | `data.delete(key)` |
-| `yaml.merge(a, b)`, `yaml.mergeCloned(a, b)` | `{...a, ...b}` for a shallow merge, or a loop for nested objects |
+`yaml.toJSON` and `yaml.fromJSON` are gone: combine `yaml.parse` with `json.stringify`, or use `json.parse`. The object helpers (`yaml.get`, `set`, `keys`, `values`, `has`, `delete`, `merge`, and `mergeCloned`) are gone too; work on the parsed object directly, for example `data[key]`, `data.contains(key)`, or `{...a, ...b}`.
 
 ## Behavior and limits
 

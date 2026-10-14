@@ -81,8 +81,8 @@ Positions are in points (1/72 inch) from the **top-left** corner of the page.
 | `doc.encode()` | `byte[]` | The document as PDF bytes. The document can still be added to. |
 | `doc.save(path: string)` | `result<unit, error>` | Writes the document to a file. The document can still be added to. |
 
-Colors are `"#rgb"`, `"#rgba"`, `"#rrggbb"`, or `"#rrggbbaa"` strings, or `{r, g, b, a}` objects with
-0-255 channels. Use `colors.parse` from [colors](colors.md) to turn a CSS color name into one.
+Colors are any CSS color that [`colors.parse`](colors.md) reads, such as `"#3a6ea5"`, `"navy"`, or
+`"rgb(58 110 165 / 50%)"`, or `{r, g, b, a}` objects with 0-255 channels.
 
 ```osl
 import "std:pdf"
@@ -110,40 +110,11 @@ doc.save("chart.pdf")
 | `table` | `TypeError` (thrown) | A row that isn't an array. |
 | `drawImage` | `TypeError`, `StateError` (thrown) | A `null` image, or a closed one. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. The old `*pdf.PDF` methods
-measured `y` from the **bottom-left** corner; the new `*pdf.Document` methods measure from the
-top-left.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `pdf.create()` | `pdf.new()` |
-| `pdf.createCustom(width, height)` | `pdf.new({width: width, height: height})` |
-| `pdf.merge(files)` (skipped unreadable files) | `pdf.mergeFiles(paths)`, which fails for a file it can't read |
-| `pdf.split(path, dir)` (returned `false` on failure) | `pdf.splitFile(path, dir)` |
-| `pdf.getInfo(path)`, `doc.getInfo(path)` | `fs.stat(path)` for file details, or `pdf.decodeFile(path)` |
-| `doc.create()`, `doc.createCustom(w, h)` | `pdf.new(...)` |
-| `doc.save(path)` returning `boolean` | `doc.save(path)` on a `*pdf.Document` |
-| `doc.generateContent()` | `doc.encode()` |
-| `doc.text(content)` returning the text | `doc.text(content)` |
-| `doc.textAt(x, y, content)` | `doc.text(content, {x: x, y: y})` |
-| `doc.paragraph(text)` | `doc.text(text, {wrap: true})` |
-| `doc.line(x1, y1, x2, y2)` | `doc.line({x, y}, {x, y})` |
-| `doc.rectangle(x, y, width, height)` | `doc.rectangle({x, y, width, height})` |
-| `doc.fillRectangle(x, y, width, height, color)` | `doc.rectangle({x, y, width, height}, {fill: color})` |
-| `doc.circle(x, y, radius)` | `doc.circle({x, y}, radius)` |
-| `doc.image(x, y, width, height, path)` | `doc.imageFile(path, {x, y, width, height})` |
-| `doc.addImageBytes(x, y, width, height, data)` | `doc.image(data, {x, y, width, height})` |
-| `doc.table(headers, rows)` drawn from the top margin | `doc.table(headers, rows)`, which draws where the text has reached |
-| `doc.setMetadata(title, author, subject)` | `doc.setTitle`, `doc.setAuthor`, `doc.setSubject` |
-| `doc.addWatermark(text)` | `doc.setWatermark(text)` |
-| `doc.getPageCount()` | `doc.pageCount()` |
-| `doc.merge(files)`, `doc.split(path, dir)` | `pdf.mergeFiles(paths)`, `pdf.splitFile(path, dir)` |
-| `doc.addBookmark(level, title, page)` | `doc.addBookmark(title, page, {level: level})` |
-| `doc.getPageText(page)` | `doc.pageText(page)` |
-
-`escapeString` has been removed; text is escaped automatically.
+`pdf.create()` and the `*pdf.PDF` type it returned have been removed, along with `pdf.merge` and
+`pdf.split`. Use `pdf.new(options?)`, `pdf.mergeFiles`, and `pdf.splitFile`. The old methods
+measured `y` from the bottom-left corner; `*pdf.Document` measures from the top-left.
 
 ## Behavior and limits
 

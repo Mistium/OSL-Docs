@@ -88,28 +88,12 @@ throws has its error printed while the scheduler keeps running.
   function.
 - `s.enable`, `s.disable`, and `s.run` throw `NotFoundError` when there is no such job.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning.
-The package-level job functions use one shared scheduler, and report times in unix seconds with `0`
-for a missing job.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `cron.create()` and its `*cron.Cron` handle | `cron.new()`, which returns a `*cron.Scheduler` |
-| `cron.validateSchedule(schedule)`, `c.validateSchedule(schedule)` | `cron.isValid(schedule)` |
-| `cron.addJob` / `c.addJob(name, schedule, fn)`, which return `false` on failure | `s.add(name, schedule, fn)` |
-| `cron.removeJob`, `c.removeJob` | `s.remove(name)` |
-| `cron.enableJob`, `cron.disableJob`, `c.enableJob`, `c.disableJob` | `s.enable(name)`, `s.disable(name)` |
-| `cron.runJob`, `c.runJob` | `s.run(name)` |
-| `cron.runAll`, `cron.runOnce`, `c.runAll`, `c.runOnce`, which return `{success, duration, count}` per job | `s.runAll()` |
-| `cron.getJobs`, `c.getJobs` | `s.jobs()` |
-| `cron.getJob`, `c.getJob` | `s.job(name)` |
-| `cron.getJobCount`, `c.getJobCount` | `s.jobs().len` |
-| `cron.isEnabled` | `s.isEnabled(name)` |
-| `cron.getLastRun`, `cron.getNextRun`, `cron.getRunCount` (and the `c.` forms) | `s.job(name).lastRun`, `.nextRun`, `.runCount` (milliseconds) |
-| `cron.clear` | `s.clear()` |
-| `cron.start()` / `c.start()`, which return a token for `stop(token)` | `s.start()` and `s.stop()` |
+`cron.create()`, its `*cron.Cron` handle, and the package-level job functions such as
+`cron.addJob` and `cron.getJobs` are gone. Create a scheduler with `cron.new()` and call its
+methods: `addJob` is `s.add`, `getJobs` is `s.jobs()`, and `validateSchedule` is `cron.isValid`.
+Run times are now unix milliseconds.
 
 ## Notes
 

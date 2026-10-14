@@ -75,10 +75,13 @@ if checked.isErr() (
 import "std:schema"
 
 *schema.Schema tags = schema.oneOrMany(schema.string())
-array normalized = tags.parse("news") // ["news"]
+log tags.parse("news")                    // ["news"]
 
 *schema.Schema id = schema.union([schema.string(), schema.integer().gt(0)])
+log id.isValid(0)                         // false
+
 *schema.Schema scores = schema.record(schema.integer().min(0))
+log scores.isValid({ada: 3, linus: 5})    // true
 ```
 
 ## Modifiers
@@ -112,17 +115,17 @@ import "std:schema"
   content: schema.string().optional(),
   embeds: schema.array(schema.any()).optional()
 }).requireAnyValue(["content", "embeds"])
+
+log update.isValid({})                                    // false
+log account.isValid({name: "Ada", age: 36, active: true}) // true
+log message.isValid({content: null})                      // false
 ```
 
 A `null` default keeps a nullable schema nullable: `schema.array(schema.string()).nullable().defaultValue(null)` accepts `null` and gives `null` for a missing key. On a schema that is neither nullable nor optional, a `null` default still reports `Required`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `s.safeParse(value)` (a result whose error is an object `{message, path, issues}` with 0-based indexes) | `try(s.parse(value))` for a result, or `s.issues(value)` to list every problem |
+`s.safeParse(value)` is gone. Use `try(s.parse(value))` for a result, or `s.issues(value)` to list every problem with 1-based array indexes.
 
 ## Behavior and limits
 

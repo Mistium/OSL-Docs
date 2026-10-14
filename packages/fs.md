@@ -252,35 +252,13 @@ working directory.
 | `fs.pathStartsWith(path, prefix)` | `boolean` | Compares whole elements, so `"/a/bc"` does not start with `"/a/b"` |
 | `fs.toPosix(path)` | `string` | Converts OS separators to forward slashes |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old forms
-return `false`, `""`, `0`, `[]` or `null` on failure instead of a result.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `fs.appendToFile(path, data)` | `fs.appendFile(path, text)` |
-| `fs.mkdirAll(path)` | `fs.mkdir(path, {recursive: true})` |
-| `fs.copyDir(src, dst)` | `fs.copy(from, to)` |
-| `fs.readDirAll(path)` | `fs.entries(path)` |
-| `fs.walk(path)`, `fs.walkDir(path, fn)` | `for entry in fs.walkTree(path)` |
-| `fs.eachLine(path, fn)` | `for line in fs.lines(path)` |
-| `fs.create(path)` | `fs.open(path, {mode: "w"})` |
-| `fs.append(path)` | `fs.open(path, {mode: "a"})` |
-| `fs.getSize(path)` | `fs.size(path)` |
-| `fs.getModTime(path)` | `fs.modTime(path)` |
-| `fs.getStat(path)` | `fs.stat(path)` |
-| `fs.getBase`, `fs.getDir`, `fs.getExt`, `fs.getStem` | `fs.base`, `fs.dir`, `fs.ext`, `fs.stem` |
-| `fs.getParts(path)` | `fs.base(path)`, `fs.dir(path)` and `fs.ext(path)` |
-| `fs.getwd()` | `process.cwd()` |
-| `fs.chdir(path)` | `process.chdir(path)` |
-| `fs.tryReadFile(path)` | `fs.readFile(path)` |
-| `fs.tryWriteFile(path, data)` | `fs.writeFile(path, text)` |
-| `fs.tryAppendToFile(path, data)` | `fs.appendFile(path, text)` |
-| `fs.tryRename(old, new)` | `fs.rename(from, to)` |
-| `fs.tryRemove(path)` | `fs.remove(path, {force: true})` |
-| `fs.tryMkdirAll(path)` | `fs.mkdir(path, {recursive: true})` |
-| `fs.tryReadDir(path)` | `fs.readDir(path)` |
+The old `try*` and `get*` functions are gone: `fs.tryReadFile` is now `fs.readFile`,
+`fs.getSize` is `fs.size`, and `fs.getBase` is `fs.base`. `fs.mkdirAll(path)` is
+`fs.mkdir(path, {recursive: true})`, `fs.walk` and `fs.walkDir` are `fs.walkTree`, `fs.eachLine`
+is `fs.lines`, and `fs.create` and `fs.append` are `fs.open` with mode `"w"` or `"a"`. For the
+working directory, use `process.cwd()` and `process.chdir(path)`.
 
 ## Behavior and limits
 

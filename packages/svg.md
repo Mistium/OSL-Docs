@@ -74,11 +74,7 @@ if box == null (
 | `*File` variants, `addFont` | `NotFoundError`, `PermissionError`, `IOError` | The file can't be read. |
 | `render` | `ValueError` (thrown) | An option that isn't more than 0, or `scale` together with `width` or `height`. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `svg.size(path)` (returned `[width, height]`, `[0, 0]` on failure) | `svg.infoFile(path)`, which reports failures |
-| `svg.viewBox(path)` (returned `[x, y, width, height]`) | `svg.infoFile(path).viewBox` |
+`svg.size(path)` and `svg.viewBox(path)` have been removed. Use `svg.infoFile(path)`, which reports
+failures and returns `width`, `height`, and `viewBox` in one record.

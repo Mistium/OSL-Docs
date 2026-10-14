@@ -42,8 +42,9 @@ while !raylib.windowShouldClose() (
 raylib.closeWindow()
 ```
 
-Times are in milliseconds. Positions are `{x, y}` (or `{x, y, z}` in 3D) and rectangles
-`{x, y, width, height}`, in window units from the top-left corner.
+Times are in milliseconds. Positions are `{x, y}` objects (or `{x, y, z}` in 3D) and rectangles
+`{x, y, width, height}`, in window units from the top-left corner. Anything else, such as an array,
+throws `TypeError`.
 
 ## API reference
 
@@ -56,10 +57,11 @@ Times are in milliseconds. Positions are `{x, y}` (or `{x, y, z}` in 3D) and rec
 | `raylib.vec3(x: number, y: number, z: number)` | `{x, y, z}` | A 3D point. |
 
 Every function that takes a color accepts `"#rgb"`, `"#rgba"`, `"#rrggbb"`, `"#rrggbbaa"`,
-`{r, g, b, a}`, an array of 3 or 4 channels, an `int` packed as `0xRRGGBBAA` (no parsing on each
-draw call), or one of raylib's color names: `"black"`, `"white"`, `"red"`, `"green"`, `"blue"`,
+`{r, g, b, a}`, or one of raylib's color names: `"black"`, `"white"`, `"red"`, `"green"`, `"blue"`,
 `"yellow"`, `"orange"`, `"purple"`, `"pink"`, `"gray"`, `"transparent"`, `"raywhite"`. The names
-are raylib's palette, so `"red"` is `#e62937`, not CSS red. Anything else throws `ValueError`.
+are raylib's own palette, so `"red"` is `#e62937`, not CSS red. Anything else, including an array
+or a packed number, throws `ValueError`. To reuse a color every frame without parsing it again,
+keep the `{r, g, b, a}` object that `raylib.color` returns.
 
 ### Window
 
@@ -153,8 +155,8 @@ orthographic camera; default 60), `projection` (`"perspective"` (default) or `"o
 | --- | --- |
 | `camera.use(draw)` | Runs `draw()` with 3D drawing seen through the camera. Call inside `raylib.draw`. |
 | `camera.control(mode: string)` | Moves the camera from this frame's input: `"free"`, `"orbital"`, `"firstPerson"`, or `"thirdPerson"`. |
-| `camera.position()` / `camera.setPosition(point)` | |
-| `camera.target()` / `camera.setTarget(point)` | |
+| `camera.position()` / `camera.setPosition(point)` | `{x, y, z}` / `void` |
+| `camera.target()` / `camera.setTarget(point)` | `{x, y, z}` / `void` |
 | `camera.screenRay(point)` | `*raylib.Ray` from the camera through a screen point. |
 | `camera.centerRay()` | `*raylib.Ray` through the middle of the screen. |
 
@@ -305,66 +307,13 @@ off-screen texture.
 
 Closing a handle twice does nothing. Any other use of a closed handle throws `StateError`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. Old timing functions
-returned seconds; the new ones return milliseconds. Old loaders returned handles to check with
-`valid()`; the new ones return results.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `raylib.run(options, update, draw)` | `raylib.runWindow(frame, options)`; `frame` gets milliseconds |
-| `raylib.beginDrawing()`, `raylib.endDrawing()` | `raylib.draw(frame)` |
-| `raylib.setConfigFlags(flags)` | Window flags as `initWindow` options, such as `{highdpi: true}` |
-| `raylib.onResize(handler)` | `raylib.on("resize", handler)` |
-| `raylib.windowReady()` | `raylib.isWindowReady()` |
-| `raylib.cursorHidden()` | `raylib.isCursorHidden()` |
-| `raylib.frameTime()` (seconds) | `raylib.frameDuration()` (milliseconds) |
-| `raylib.time()` (seconds) | `raylib.elapsed()` (milliseconds) |
-| `raylib.rect(x, y, width, height)` | `{x: x, y: y, width: width, height: height}` |
-| `raylib.drawPixel(x, y, color)` | `raylib.pixel({x, y}, color)` |
-| `raylib.drawLine(x1, y1, x2, y2, thickness, color)` | `raylib.line(from, to, color, {thickness})` |
-| `raylib.drawRectangle(x, y, w, h, color)` | `raylib.rectangle({x, y, width, height}, color)` |
-| `raylib.drawRectangleLines(x, y, w, h, thickness, color)` | `raylib.rectangle(rect, color, {lineWidth})` |
-| `raylib.drawCircle(x, y, radius, color)` | `raylib.circle({x, y}, radius, color)` |
-| `raylib.drawCircleLines(x, y, radius, color)` | `raylib.circle(center, radius, color, {lineWidth: 1})` |
-| `raylib.drawTriangle(a, b, c, color)`, `raylib.fillTriangle(x1, y1, ..., color)` | `raylib.polygon([a, b, c], color)` |
-| `raylib.drawText(text, x, y, size, color)` | `raylib.text(text, {x, y}, {size, color})` |
-| `raylib.drawCube`, `drawCubeWires` | `raylib.cube(center, size, color, {wireframe})` |
-| `raylib.drawSphere`, `drawSphereWires` | `raylib.sphere(center, radius, color, {wireframe, rings, slices})` |
-| `raylib.drawCylinder(position, radiusTop, radiusBottom, height, slices, color)` | `raylib.cylinder(from, to, color, {radius, topRadius, slices})` |
-| `raylib.drawPlane(center, size, color)` | `raylib.plane(center, {x, z}, color)` |
-| `raylib.drawGrid(slices, spacing)` | `raylib.grid(slices, spacing)` |
-| `raylib.drawLine3D(start, end, color)` | `raylib.line3D(from, to, color)` |
-| `raylib.drawBillboard(camera, texture, position, size, tint)` | `texture.drawBillboard(camera, position, {size, tint})` |
-| `raylib.beginBlend(mode)`, `raylib.endBlend()` | `raylib.blend(mode, draw)` |
-| `raylib.beginSmoothLines()`, `beginSmoothBatch()`, `endSmoothLines()` | `raylib.smoothLines(draw)` |
-| `raylib.drawSmoothLine(x1, y1, x2, y2, thickness, color)` | `raylib.smoothLine(from, to, color, {thickness})` inside `smoothLines` |
-| `raylib.beginMode2D(...)`, `raylib.endMode2D()` | `raylib.camera2D({offset, target, rotation, zoom}).use(draw)` |
-| `raylib.begin3D(camera)`, `end3D()`, `draw3D(camera, frame)` | `camera.use(draw)` |
-| `camera.update(mode)` | `camera.control(mode)` (modes are now `"firstPerson"` and `"thirdPerson"`) |
-| `raylib.screenRay(point, camera)` | `camera.screenRay(point)` |
-| `raylib.centerRay(camera)` | `camera.centerRay()` |
-| `raylib.keyPressed`, `keyDown`, `keyReleased` | `raylib.isKeyPressed`, `isKeyDown`, `isKeyReleased` |
-| `raylib.pressedKey()`, `raylib.pressedChar()` (returned `""` when empty) | `raylib.nextKey()`, `raylib.nextChar()` (return `null`) |
-| `raylib.mousePressed`, `mouseDown`, `mouseReleased` | `raylib.isMousePressed`, `isMouseDown`, `isMouseReleased` |
-| `raylib.rectanglesCollide(a, b)` | `raylib.isRectOverlapping(a, b)` |
-| `raylib.circlesCollide(a, ra, b, rb)` | `raylib.isCircleOverlapping({x, y, radius}, {x, y, radius})` |
-| `raylib.pointInRectangle(point, rect)` | `raylib.isPointInRect(point, rect)` |
-| `raylib.svgViewBox(path)` | `svg.infoFile(path)` |
-| `raylib.svgSize(path, scale)` | `raylib.loadSVG(path, scale)` and the image's `width()` and `height()` |
-| `raylib.setSVGFont(family, path)` | `svg.addFont(family, path)` |
-| `raylib.loadShader(vs, fs)`, `loadFragmentShader(fs)`, `raylib.shader(code)` | `raylib.compileShader(code, {vertex})` or `raylib.compileShaderFile(path, {vertex})` |
-| `raylib.beginShader(s)`, `endShader()`, `shader.begin()`, `shader.end()` | `shader.use(draw)` |
-| `raylib.drawShader(s, x, y, w, h)`, `shader.draw(x, y, w, h)` | `shader.drawRect({x, y, width, height})` |
-| `shader.setValue(name, value)` | `shader.setUniform(name, value)` |
-| `raylib.drawToTexture(target, draw)`, `target.begin()`, `target.end()` | `target.use(draw)` |
-| `texture.draw(x, y, rotation, scale, tint)`, `target.draw(...)` | `drawAt({x, y}, {rotation, scale, tint})` |
-| `texture.drawPro(sx, sy, sw, sh, dx, dy, dw, dh, ox, oy, rotation, tint)` | `texture.drawAt({x, y}, {source, width, height, origin, rotation, tint})` |
-| `image.texture()` | `image.toTexture()` |
-| `image.premultipliedTexture()` | `image.toTexture({premultiplied: true})` |
-| `unload()` on textures, images, shaders, render textures | `close()` |
-| `valid()` on textures, images, shaders, render textures | Loaders fail with a result instead; `isClosed()` for closed handles |
+The old raylib-style functions such as `raylib.run`, `beginDrawing`/`endDrawing`, `drawRectangle`,
+`drawText`, and `keyPressed` have been removed. Use `raylib.runWindow` or `raylib.draw`, the
+shape functions above (`raylib.rectangle`, `raylib.text`, ...), and `raylib.isKeyPressed`. Timing
+is in milliseconds (`frameDuration`, `elapsed`), loaders return results, and handles have `close()`
+rather than `unload()`.
 
 ## Behavior and limits
 

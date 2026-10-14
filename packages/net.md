@@ -114,13 +114,8 @@ b.close()
 | `ValueError` | A malformed address or unknown network. Thrown for `maxBytes` below 1. |
 | `TypeError` (thrown) | `write` got something other than a string or `byte[]`. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `net.dial(network, address)` (returned `null` on failure) | `net.connect(network, address)` |
-| `net.getAddressInfo(hostname)` (empty arrays on failure) | `net.addressInfo(hostname)` |
-| `conn.writeBytes(data)` | `conn.write(data)`, which accepts `byte[]` |
-| `conn.setTimeout(seconds)` | Pass `{timeout: ms}` to `read` or `write` |
+`net.dial` and `net.getAddressInfo` are gone; use `net.connect` and `net.addressInfo`, which fail
+with a typed error. `conn.writeBytes(data)` is now `conn.write(data)`, and `conn.setTimeout(seconds)`
+is replaced by a `{timeout: ms}` option on `read` and `write`.

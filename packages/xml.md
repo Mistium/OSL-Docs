@@ -82,19 +82,9 @@ An element's own text joins its text segments and trims only the outer whitespac
 | `parseFile` | `NotFoundError`, `PermissionError`, `IOError` | The file can't be read. |
 | `setText`, `setAttr`, `remove`, `clear` | `NotFoundError` | No element matches the path. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `doc.getText(path)` | `doc.text(path)` |
-| `doc.getAttr(path, name)` | `doc.attr(path, name)` |
-| `doc.get(path)` | `doc.find(path)` |
-| `doc.getAll(path)` | `doc.findAll(path)` |
-| `doc.toArr()` | `doc.root()` |
-
-`doc.findNode(path)` has been removed. Use `doc.find(path)`.
+The `get`-prefixed document methods took their short names: `getText` is now `text`, `getAttr` is `attr`, `get` is `find`, and `getAll` is `findAll`. `toArr()` and `findNode()` are gone; use `root()` and `find()`.
 
 ## Behavior and limits
 

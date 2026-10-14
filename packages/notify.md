@@ -43,16 +43,11 @@ Both functions fail with:
 Used as a plain statement, a failed call throws. Since a missing notification is rarely fatal,
 handle the error with `catch` as in the example.
 
-## Deprecated
+## Changes from earlier versions
 
-This still works for one release, with an `OSL-DEPRECATED` warning at each call.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `notify.sendWithSound(title, message, sound)` | `notify.send(title, message, {sound: name})` |
-
-`send` and `alert` used to return `false` on failure. They now return a result, which still works
-as a condition (`if notify.send(...)`).
+`notify.sendWithSound(title, message, sound)` is now `notify.send(title, message, {sound: name})`.
+`send` and `alert` return a result instead of `false` on failure; it still works as a condition, as
+in `if notify.send(...)`.
 
 ## Behavior and limits
 

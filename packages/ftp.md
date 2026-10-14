@@ -102,32 +102,11 @@ Relative remote paths start from the remote working directory.
 | `UnsupportedError` | The server doesn't offer the requested TLS, MLST (`stat`) or MFMT (`setModTime`). |
 | `ValueError` (thrown) | An address with line breaks or invalid options. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `ftp.connect(host, port, user, password)` (four arguments, a client whose `isConnected()` is `false` on failure) | `ftp.connect(address, {username, password})` |
-| `ftp.connectEx(...)`, `client.connectEx(...)` (returned `null` on failure) | `ftp.connect(address, {username, password})` |
-| `client.login()` | `ftp.connect` logs in; use `client.isConnected()` |
-| `client.disconnect()` | `client.close()` |
-| `client.list(path)` | `client.entries(path)` |
-| `client.delete(path)` | `client.remove(path)` |
-| `client.createDirectory(path)` | `client.mkdir(path)` |
-| `client.deleteDirectory(path)` | `client.removeDir(path)` |
-| `client.changeDirectory(path)` | `client.chdir(path)` |
-| `client.currentDirectory()` | `client.cwd()` |
-| `client.isActive()`, `client.getStatistics()` | `client.isConnected()` |
-| `client.getFileSize(path)` | `client.size(path)` |
-| `client.uploadDirectory(localDir, remoteDir)`, `client.sync(localDir, remoteDir)` | `client.uploadDir(localDir, remoteDir)` |
-| `client.downloadDirectory(remoteDir, localDir)` | `client.downloadDir(remoteDir, localDir)` |
-| `client.setModificationTime(path, timestamp)` | `client.setModTime(path, unixMilliseconds)` |
-| `client.setTimeout(seconds)` (now fails with `UnsupportedError`) | Pass `{timeout: ms}` to `ftp.connect` |
-| `client.setMode(path, mode)` (fails with `UnsupportedError`) | None; FTP has no portable way to change permissions |
-| `client.passiveMode(enabled)` | None; transfers always use passive mode |
-
-The package-level functions of the old global client (`ftp.list`, `ftp.upload`, `ftp.download`,
-`ftp.delete`, `ftp.rename`, `ftp.createDirectory`, `ftp.exists`, `ftp.login`, `ftp.disconnect` and
-the rest) are deprecated too and do nothing: they return `false`, `""`, `0`, `[]` or `{}`. Call the
-matching method on the client from `ftp.connect` instead.
+`ftp.connect` takes only `(address, {options})`; the four-argument `ftp.connect(host, port, user,
+password)`, `connectEx` and the package-level functions of the old global client (`ftp.list`,
+`ftp.upload` and the rest) are gone. Older method names map to the current ones: `list` →
+`entries`, `delete` → `remove`, `createDirectory` → `mkdir`, `deleteDirectory` → `removeDir`,
+`changeDirectory` → `chdir`, `currentDirectory` → `cwd`, `getFileSize` → `size` and `disconnect` →
+`close`.

@@ -23,15 +23,14 @@ object theme = {selected: 1, open: false}
 raylib.runWindow(def(number ms) -> (
   if raygui.button({x: 20, y: 20, width: 120, height: 30}, "Save") ( log "saved " ++ name.text )
   enabled = raygui.checkBox({x: 20, y: 60, width: 20, height: 20}, "Enabled", enabled)
-  volume = raygui.valueSlider({x: 80, y: 90, width: 200, height: 20}, volume, {textLeft: "Volume"})
+  volume = raygui.slider({x: 80, y: 90, width: 200, height: 20}, volume, {textLeft: "Volume"})
   name = raygui.textField({x: 20, y: 120, width: 200, height: 30}, name, {maxLength: 64})
   theme = raygui.dropdown({x: 260, y: 20, width: 140, height: 30}, ["Light", "Dark", "System"], theme)
 ), {width: 480, height: 240, title: "Settings", background: "raywhite"})
 ```
 
 `bounds` is a rectangle `{x, y, width, height}`; use [layout](layout.md) to compute them from the
-window size. `items` is an array of strings (a `";"`-separated string, as older scripts passed, is
-split the same way). Selections and other positions count from **1**.
+window size. `items` is an array of strings. Selections and other positions count from **1**.
 
 ## API reference
 
@@ -58,10 +57,10 @@ split the same way). Selections and other positions count from **1**.
 | `raygui.textField(bounds, state: object, options?)` | `{text, editing}` | A single-line text field. Clicking starts editing; Enter or clicking elsewhere stops. Option: `maxLength` (default 256). |
 | `raygui.spinBox(bounds, state: object, options?)` | `{value, editing}` | A whole-number field with - and + buttons. Options: `min` (0), `max` (100), `text` (a label beside it). |
 | `raygui.valueField(bounds, state: object, options?)` | `{value, editing}` | A whole-number field to type into. Options as for `spinBox`. |
-| `raygui.valueSlider(bounds, value: number, options?)` | `number` | A slider with a handle. Options: `min` (0), `max` (1), `textLeft`, `textRight`. |
-| `raygui.valueBar(bounds, value: number, options?)` | `number` | A slider that fills up to its value. Options as for `valueSlider`. |
-| `raygui.progress(bounds, value: number, options?)` | `void` | A progress bar. Options as for `valueSlider`. |
-| `raygui.scrollSlider(bounds, value: int, options?)` | `int` | A scroll bar. Options: `min` (0), `max` (100). |
+| `raygui.slider(bounds, value: number, options?)` | `number` | A slider with a handle. Options: `min` (0), `max` (1), `textLeft`, `textRight`. |
+| `raygui.sliderBar(bounds, value: number, options?)` | `number` | A slider that fills up to its value. Options as for `slider`. |
+| `raygui.progress(bounds, value: number, options?)` | `void` | A progress bar. Options as for `slider`. |
+| `raygui.scrollBar(bounds, value: int, options?)` | `int` | A scroll bar. Options: `min` (0), `max` (100). |
 | `raygui.colorPicker(bounds, text: string, color)` | `{r, g, b, a}` | |
 | `raygui.colorPanel(bounds, text: string, color)` | `{r, g, b, a}` | A saturation/value square. |
 | `raygui.colorBarAlpha(bounds, text: string, alpha: number)` | `number` | 0 to 1. |
@@ -106,7 +105,7 @@ raylib.runWindow(def(number ms) -> (
 | `raygui.enable()` / `raygui.disable()` | `void` | `disable` greys out the controls drawn afterwards and makes them ignore input. |
 | `raygui.lock()` / `raygui.unlock()` | `void` | `lock` makes controls ignore input but keeps their look. |
 | `raygui.isLocked()` | `boolean` | |
-| `raygui.setState(state: string)` / `raygui.state()` | `void` / `string` | `"normal"`, `"focused"`, `"pressed"`, or `"disabled"`. |
+| `raygui.setState(state: string)` / `raygui.state()` | `void` / `string` | `"normal"`, `"focused"`, `"pressed"`, or `"disabled"`, by name only. |
 | `raygui.setAlpha(alpha: number)` | `void` | Opacity for following controls, 0 to 1. |
 | `raygui.setStyle(control: string, property: string, value)` | `void` | A number, or a color for color properties. |
 | `raygui.style(control: string, property: string)` | `int` | |
@@ -129,34 +128,16 @@ lower case, such as `"base_color_normal"`, `"text_color_focused"`, `"border_widt
 ## Errors
 
 A `selected` or `scroll` outside the items, an unknown state, style control or property, or an
-`alpha` outside 0-1 throws `ValueError`. An item that isn't a string throws `TypeError`. Style
+`alpha` outside 0-1 throws `ValueError`. `items` that isn't an array, or an item that isn't a string
+or number, throws `TypeError`. Style
 functions throw `StateError` when no window is open; `loadStyle` fails with `NotFoundError` or
 `IOError` when the file can't be read.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. Most counted from **0** and
-used -1 for "none"; their replacements count from 1 and use `null`.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `raygui.tabBar(bounds, tabs, active)` | `raygui.tabs(bounds, items, selected)` |
-| `raygui.toggleGroup(bounds, items, active)` | `raygui.buttonGroup(bounds, items, selected)` |
-| `raygui.toggleSlider(bounds, items, active)` | `raygui.toggleSwitch(bounds, items, selected)` |
-| `raygui.comboBox(bounds, items, active)` | `raygui.cycleButton(bounds, items, selected)` |
-| `raygui.dropdownBox(bounds, items, active, editMode)` | `raygui.dropdown(bounds, items, {selected, open})` |
-| `raygui.listView(bounds, items, scroll, active)` | `raygui.list(bounds, items, {selected, scroll})` |
-| `raygui.textBox(bounds, text, maxLength, editMode)` | `raygui.textField(bounds, {text, editing}, {maxLength})` |
-| `raygui.spinner(bounds, text, value, min, max, editMode)` | `raygui.spinBox(bounds, {value, editing}, {min, max, text})` |
-| `raygui.valueBox(bounds, text, value, min, max, editMode)` | `raygui.valueField(bounds, {value, editing}, {min, max, text})` |
-| `raygui.slider(bounds, textLeft, textRight, value, min, max)` | `raygui.valueSlider(bounds, value, {min, max, textLeft, textRight})` |
-| `raygui.sliderBar(...)` | `raygui.valueBar(bounds, value, {min, max, textLeft, textRight})` |
-| `raygui.progressBar(...)` | `raygui.progress(bounds, value, {min, max, textLeft, textRight})` |
-| `raygui.scrollBar(bounds, value, min, max)` | `raygui.scrollSlider(bounds, value, {min, max})` |
-| `raygui.scrollPanel(bounds, text, content, scroll)` | `raygui.scrollView(bounds, content, {title, scroll})` |
-| `raygui.grid(bounds, text, spacing, subdivisions)` (returned `{-1, -1}` outside) | `raygui.gridCell(bounds, spacing, {subdivisions, text})` |
-| `raygui.messageBox(bounds, title, message, buttons)` (returned -1 while open) | `raygui.messageDialog(bounds, message, {title, buttons})` |
-| `raygui.textInputBox(bounds, title, message, buttons, text, maxLength)` | `raygui.inputDialog(bounds, {text}, {title, message, buttons, maxLength})` |
-| `raygui.getStyle(control, property)` | `raygui.style(control, property)` |
-| `raygui.locked()` | `raygui.isLocked()` |
-| `raygui.drawIcon(icon, x, y, scale, color)` | `raygui.icon(id, {x, y}, {scale, color})` |
+The raygui-style functions that counted from 0 (`tabBar`, `comboBox`, `dropdownBox`, `listView`,
+`textBox`, `messageBox`, and the rest) have been removed in favour of the controls above. The value
+controls now have their natural names: `valueSlider` is `raygui.slider`, `valueBar` is
+`raygui.sliderBar`, and `scrollSlider` is `raygui.scrollBar`; the old `slider`, `sliderBar`, and
+`scrollBar` signatures with positional `min` and `max` are gone. `items` must be an array, and
+`setState` takes only a state name.

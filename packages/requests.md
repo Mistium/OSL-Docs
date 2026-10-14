@@ -29,7 +29,7 @@ To handle a failed connection yourself, use `catch`:
 ```osl
 import "std:requests"
 
-object res = requests.post("https://httpbin.org/post", {json: {name: "ada"}, timeoutMs: 5000}) catch (err) (
+object res = requests.post("https://httpbin.org/post", {json: {name: "ada"}, timeout: 5000}) catch (err) (
   log err.kind ++ ": " ++ err.message
   return
 )
@@ -60,11 +60,10 @@ log res.status
 | `query` | `object` | Added to the URL's query string. An array value repeats the key. |
 | `body` | `string`, `byte[]`, `object` or `array` | Strings and bytes are sent as is; objects and arrays are sent as JSON. |
 | `json` | `any` | Sent as JSON with `Content-Type: application/json`. |
-| `timeoutMs` | `number` | Limit for the whole request in milliseconds. Default 30000 (for `stream`, 0). 0 waits forever. For `stream` it also covers reading the body. |
+| `timeout` | `number` | Limit for the whole request in milliseconds. Default 30000 (for `stream`, 0). 0 waits forever. For `stream` it also covers reading the body. |
 | `maxBytes` | `number` | Largest response body accepted. Default 16 MiB. Not used by `stream`. |
 
-Unknown keys throw `ValueError`. Passing a key together with its deprecated form also throws
-`ValueError`.
+Unknown keys throw `ValueError`.
 
 ### Response
 
@@ -123,22 +122,14 @@ stream.close()
 | --- | --- |
 | `NetworkError` | The connection fails or is refused. |
 | `NotFoundError` | The host doesn't resolve. |
-| `TimeoutError` | `timeoutMs` passed. |
+| `TimeoutError` | `timeout` passed. |
 | `ParseError` | The URL is malformed. |
 | `UnsupportedError` | The scheme is not `http` or `https`. |
 | `IOError` | The body is larger than `maxBytes`. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| Option `timeout` (seconds, capped at 300) | `timeoutMs` (milliseconds) |
-| Option `params` (every value sent as a string) | `query` |
-| Option `max_bytes` | `maxBytes` |
-| Response key `success` (always `true`) | Handle failures with `catch`; check `ok` for a 2xx status |
-| Response key `error` (always `""`) | Handle failures with `catch (err)` |
-| Response key `raw` (the Go response) | `status`, `headers` and `body` |
-| `stream.readLine()` (returned `""` at the end and on failure) | `for line in stream.lines()` |
-| `stream.readEvent()` (returned `""` at the end, on failure and for `[DONE]`) | `for event in stream.events()` |
+`timeout` is now in milliseconds and replaces `timeoutMs`; the old seconds-based `timeout`,
+`params` and `max_bytes` are gone (use `query` and `maxBytes`). Responses no longer have `success`,
+`error` or `raw`: handle failures with `catch` and check `ok` for a 2xx status. `stream.readLine()`
+and `stream.readEvent()` are replaced by `stream.lines()` and `stream.events()`.

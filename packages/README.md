@@ -87,8 +87,9 @@ database handle, and you call further methods on *that*:
 import "std:db"
 
 *db.DB handle = db.open("app.db")
-handle.exec("CREATE TABLE users (id INTEGER, name TEXT)")
-array rows = handle.query("SELECT * FROM users")
+handle.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER, name TEXT)")
+*db.Row[] rows = handle.query("SELECT * FROM users")
+log rows.len
 ```
 
 Each package page lists handle methods in a separate section.
@@ -122,31 +123,29 @@ See [Errors and results](../guide/errors.md) for the error kinds and every way t
 
 Options always go in one trailing object, such as `json.stringify(value, {indent: 2})`. An unknown option key throws `ValueError` naming the accepted keys. Durations are in milliseconds and positions are 1-based.
 
-## Deprecated names
-
-When a package renames or reshapes a function, method, option key, or record key, the old form keeps working for one release. Each use draws an `OSL-DEPRECATED` warning at compile time naming the replacement, and the package page lists it under **Deprecated**. Fix the warnings to keep your code working after the next release.
-
 ## The standard library at a glance
 
 ### Web & networking
 | Package | Description |
 | --- | --- |
-| [serve](serve.md) | HTTP server / web framework (routing, middleware, contexts). |
+| [serve](serve.md) | HTTP servers with routes, middleware, templates, static files, and WebSocket endpoints. |
 | [ws](ws.md) | WebSocket client and server. |
-| [originchats](originchats.md) | Bot framework for OriginChats servers. |
-| [requests](requests.md) | HTTP client methods including `get`, `post`, and `put`. |
-| [net](net.md) | Low-level TCP/UDP sockets and DNS lookups. |
-| [url](url.md) | URL parsing, building and query-string handling. |
+| [requests](requests.md) | HTTP client, with whole responses or streams of lines and server-sent events. |
+| [net](net.md) | Low-level TCP, Unix, and UDP sockets and DNS lookups. |
+| [url](url.md) | URL parsing, building, and query-string handling. |
 | [ftp](ftp.md) | FTP file transfers. |
-| [ssh](ssh.md) | SSH connections, remote commands and SCP. |
+| [ssh](ssh.md) | SSH connections, remote commands, SFTP, port forwarding, and SSH keys. |
 | [s3](s3.md) | S3-compatible object storage client. |
 | [webpush](webpush.md) | Web Push notifications (VAPID). |
+| [email](email.md) | Compose email with attachments and send it over SMTP. |
+| [torrent](torrent.md) | A BitTorrent client: download and seed torrents, and create and read `.torrent` files and magnet links. |
+| [originchats](originchats.md) | Bot framework for OriginChats servers. |
 | [rotur](rotur.md) | Client for the rotur.dev API: accounts, posts, groups, economy, storage, and realtime presence. |
 
 ### Data & serialization
 | Package | Description |
 | --- | --- |
-| [json](json.md) | JSON parsing and encoding. |
+| [json](json.md) | JSON parsing, encoding, and streaming. |
 | [yaml](yaml.md) | YAML parsing and encoding. |
 | [schema](schema.md) | Composable validation and normalization schemas. |
 | [csv](csv.md) | CSV parsing and writing as records or rows of cells. |
@@ -159,7 +158,7 @@ When a package renames or reshapes a function, method, option key, or record key
 ### Databases & storage
 | Package | Description |
 | --- | --- |
-| [db](db.md) | Embedded SQLite - SQL plus a document/collection API. |
+| [db](db.md) | Embedded SQLite: SQL plus JSON document collections. |
 | [save](save.md) | Simple persistent key-value storage. |
 | [cache](cache.md) | In-memory LRU cache with TTLs. |
 | [env](env.md) | Environment variables and `.env` files. |
@@ -167,16 +166,16 @@ When a package renames or reshapes a function, method, option key, or record key
 ### Filesystem & system
 | Package | Description |
 | --- | --- |
-| [fs](fs.md) | Files, directories and path utilities. |
+| [fs](fs.md) | Files, directories, and path utilities. |
 | [mem](mem.md) | Runtime memory counters, heap snapshots, and live pprof diagnostics. |
-| [sys](sys.md) | System info, environment, and running shell commands. |
-| [process](process.md) | Spawn, manage and signal processes. |
-| [zip](zip.md) | ZIP / TAR / GZIP compression. |
+| [sys](sys.md) | The operating system, machine, and user, and opening URLs in the default app. |
+| [process](process.md) | Run commands, manage child processes, and read the program's arguments and IDs. |
+| [zip](zip.md) | ZIP and tar archives and gzip compression. |
 
 ### Crypto & security
 | Package | Description |
 | --- | --- |
-| [crypto](crypto.md) | Hashing, HMAC, AES, password hashing, file encryption, random. |
+| [crypto](crypto.md) | Hashing, HMAC, password hashing, encryption, signatures, and secure random values. |
 | [jwt](jwt.md) | JSON Web Token signing and verification. |
 
 ### Text, math & time
@@ -186,38 +185,36 @@ When a package renames or reshapes a function, method, option key, or record key
 | [regex](regex.md) | Regular expressions, compiled patterns, validators, and text helpers. |
 | [utf16](utf16.md) | JavaScript-compatible string lengths, positions, ordering, and case mapping in UTF-16 code units. |
 | [semver](semver.md) | Semantic-version parsing and comparison. |
-| [math](math.md) | Maths, statistics and number theory. |
+| [math](math.md) | Maths, statistics, and number theory. |
 | [random](random.md) | Seedable pseudo-random numbers. |
-| [date](date.md) | Dates, durations and time zones. |
+| [date](date.md) | Dates, durations, and time zones. |
 | [cron](cron.md) | Cron-style job scheduling. |
-| [retry](retry.md) | Bounded retries with exponential backoff and jitter. |
 
 ### Terminal & logging
 | Package | Description |
 | --- | --- |
 | [tui](tui.md) | Terminal UI: colours, boxes, tables, prompts, menus, charts. |
-| [log](log.md) | Levelled, colourful logging. |
+| [log](log.md) | Levelled, timestamped console logging and progress output. |
 | [notify](notify.md) | Desktop notifications. |
 
 ### Media & documents
 | Package | Description |
 | --- | --- |
-| [exif](exif.md) | Inspect and strip EXIF image metadata. |
-| [img](img.md) | Load, transform and save images. |
+| [img](img.md) | Create, draw on, filter, load, and save images. |
+| [svg](svg.md) | Render SVG documents to images and read their size and viewBox. |
+| [colors](colors.md) | Parse CSS colours, and convert, mix, lighten, and darken them. |
+| [exif](exif.md) | Read the EXIF orientation of images and strip their EXIF metadata. |
 | [qr](qr.md) | QR codes and barcodes. |
 | [pdf](pdf.md) | Generate PDF documents. |
-| [canvas](canvas.md) | In-memory pixel canvas. |
-| [colors](colors.md) | Build colour values (used by image-producing packages). |
-| [svg](svg.md) | Render SVG documents to images and read their size and viewBox. |
 | [sound](sound.md) | Audio playback. |
 
 ### Graphics & windowing
 | Package | Description |
 | --- | --- |
-| [shader](shader.md) | GLSL and OSL-style shader transpilation and rendering to images and windows. |
-| [raylib](raylib.md) | Native windowing, input, 2D drawing, collision helpers, shaders, and textures. |
+| [raylib](raylib.md) | Native windows with 2D and 3D drawing, input, textures, and shaders. |
 | [raygui](raygui.md) | Immediate-mode GUI controls drawn in a raylib window. |
-| [layout](layout.md) | Flexbox-style rows, columns, and grids that compute rectangles for raylib and raygui. |
+| [layout](layout.md) | Immediate-mode interfaces on raylib and raygui with rows, columns, and flexbox-style sizing. |
+| [shader](shader.md) | OSL-style shader code transpiled to GLSL for raylib. |
 
 ### Scripting & concurrency
 | Package | Description |
@@ -233,17 +230,12 @@ When a package renames or reshapes a function, method, option key, or record key
 | --- | --- |
 | [box2d](box2d.md) | Box2D-compatible rigid-body worlds, bodies, and fixtures. |
 | [events](events.md) | Named in-process events with thread-safe listeners. |
-| [map](map.md) | An ordered key-value map type. |
-| [set](set.md) | A set type. |
+| [map](map.md) | The built-in hash map type. |
+| [set](set.md) | The built-in set type. |
 | [option](option.md) | Optional values (`some`/`none`). |
 | [result](result.md) | Success/error result values. |
-| [ptr](ptr.md) | Low-level pointer operations. |
-
-### More
-| Package | Description |
-| --- | --- |
-| [email](email.md) | Compose and send email (SMTP). |
-| [torrent](torrent.md) | Create and parse `.torrent` files. |
+| [retry](retry.md) | Bounded retries with exponential backoff and jitter. |
+| [ptr](ptr.md) | Shared mutable cells and low-level pointer operations. |
 
 To read a package's source directly from the CLI:
 

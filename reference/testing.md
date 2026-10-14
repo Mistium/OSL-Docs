@@ -54,10 +54,18 @@ Existing `.test.osl` files remain ordinary executable OSL programs. A thrown err
 ```osl
 import "std:testing"
 
+def add(int a, int b) int -> a + b
+
+string status = "ok"
+number measured = 10.004
+string? nickname = null
+object record = {name: "Ada"}
+int[] items = [1, 2]
+
 testing.equal(add(2, 3), 5)
 testing.notEqual(status, "failed")
 testing.near(measured, 10, 0.01)
-testing.null(optional)
+testing.null(nickname)
 testing.notNull(record)
 testing.assert(items.len > 0)
 error err = testing.throws(def() -> (
@@ -76,7 +84,9 @@ list.
 For small focused tests, direct checks and `throw` are often clearer than an assertion wrapper:
 
 ```osl
-object parsed = parseInput(source)
+def parseInput(string source) object -> {name: source.trim()}
+
+object parsed = parseInput("  Ada ")
 
 if parsed.name != "Ada" (
   throw "parseInput should preserve the name"

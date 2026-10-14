@@ -1,11 +1,11 @@
 # Media & documents
 
-Packages for image, PDF, and graphics operations.
+Packages for images, documents, and audio.
 
-- [raylib](../raylib.md) - Native windowing, input, 2D drawing, collision helpers, and textures.
-- [img](../img.md) - Load, transform and save images.
+- [img](../img.md) - Create, draw on, filter, load, and save images.
+- [svg](../svg.md) - Render SVG documents to images and read their size and viewBox.
+- [colors](../colors.md) - Parse CSS colours, and convert, mix, lighten, and darken them.
+- [exif](../exif.md) - Read the EXIF orientation of images and strip their EXIF metadata.
 - [qr](../qr.md) - QR codes and barcodes.
 - [pdf](../pdf.md) - Generate PDF documents.
-- [canvas](../canvas.md) - In-memory pixel canvas.
-- [colors](../colors.md) - Build colour values (used by image-producing packages).
 - [sound](../sound.md) - Audio playback.

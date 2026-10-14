@@ -39,7 +39,7 @@ log qr.checkDigit("590123412345") // 7
 | Option | Notes |
 | --- | --- |
 | `kind` | `"qr"` (default), `"code128"`, `"ean13"`, `"upca"`, or `"code39"`. |
-| `color`, `background` | Default `"#000000"` on `"#ffffff"`. Hex strings or `{r, g, b, a}`. |
+| `color`, `background` | Default `"#000000"` on `"#ffffff"`. Any CSS color that [`colors.parse`](colors.md) reads, or `{r, g, b, a}`. |
 | `size` | QR only: the image's width and height in pixels, 1 to 4096, default 256. Grown when too small for the code. |
 | `height` | Barcodes only: pixels, 1 to 4096, default 120. |
 
@@ -66,26 +66,9 @@ upright and unrotated, as `encode` makes them; a UPC-A barcode reads as its 12 d
 | `save`, `scanFile` | `NotFoundError`, `PermissionError`, `IOError` | The file can't be read or written. |
 | `encode`, `save` | `ValueError` (thrown) | An invalid option. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. Most returned `false` or
-`""` on failure.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `qr.generate(data, size, path)` | `qr.save(text, path, {size: size})` |
-| `qr.generateColored(data, size, color, path)` | `qr.save(text, path, {size: size, color: color})` |
-| `qr.generateToDataURL(data, size)` | `"data:image/png;base64," ++ btoa(qr.encode(text, {size: size}))` |
-| `qr.generate128(data, path?)` | `qr.save(text, path, {kind: "code128"})` |
-| `qr.generateEAN13(data, path?)` | `qr.save(text, path, {kind: "ean13"})` |
-| `qr.generateUPCA(data, path?)` | `qr.save(text, path, {kind: "upca"})` |
-| `qr.generateCode39(data, path?)` | `qr.save(text, path, {kind: "code39"})` |
-| `qr.decode(path)`, `qr.scanBarcode(path)` | `qr.scanFile(path)` |
-| `qr.barcodeError(kind, data)` | `qr.encode`, `qr.save`, and `qr.matrix` fail with a `ValueError` giving the reason |
-| `qr.barcodeModules(kind, data)` | `qr.matrix(text, {kind: kind})` |
-| `qr.generateBarcode(data, length)` | Pad the digits yourself and use `qr.checkDigit(digits)` |
-| `qr.generateSimpleBarcode(digits)` | `digits ++ qr.checkDigit(digits)` |
-| `qr.generateCode39Barcode(text)` | `"*" ++ text.toUpper() ++ "*"` for the readable form, `qr.encode(text, {kind: "code39"})` to draw it |
-| `qr.calculateChecksum(digits)` | `qr.checkDigit(digits)` |
-| `qr.verifyBarcode(digits)` | `qr.hasValidCheckDigit(digits)` |
-| `qr.getInfo(path)` | `fs.stat(path)` |
+The `qr.generate*` functions have been removed; `qr.save(text, path, {size, color, kind})` and
+`qr.encode` draw every kind. `qr.decode` and `qr.scanBarcode` became `qr.scanFile`,
+`qr.calculateChecksum` became `qr.checkDigit`, and `qr.verifyBarcode` became
+`qr.hasValidCheckDigit`.

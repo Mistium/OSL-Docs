@@ -64,20 +64,9 @@ for hunk in diff.chars("cat", "cut", {context: 1}).hunks() (
 )
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. The old package-level formatters keep their old output, including `"No differences found"` for equal texts.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `diff.compareLines(oldLines, newLines)` | `diff.text(oldLines.join("\n"), newLines.join("\n"))` |
-| `diff.compareWords(oldText, newText)` | `diff.words(oldText, newText)` |
-| `diff.tokenize(text)` | `text.split(" ")` or your own split |
-| `diff.unified(d)` | `d.unified()` |
-| `diff.html(d)` | `d.html()` |
-| `diff.json(d)` | `json.stringify(d.hunks())` |
-
-Old scripts that read the `Hunks`, `OldText`, and `NewText` fields of a diff still work. Use the methods above instead.
+`diff.compareLines` and `diff.compareWords` became `diff.text` and `diff.words`, and the package-level `diff.unified(d)`, `diff.html(d)`, and `diff.json(d)` became the `d.unified()` and `d.html()` methods and `json.stringify(d.hunks())`. A diff no longer has `Hunks`, `OldText`, or `NewText` fields; read `d.hunks()` instead.
 
 ## Behavior and limits
 

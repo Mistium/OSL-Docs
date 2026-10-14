@@ -58,13 +58,9 @@ if page.isErr() (
 | `ParseError` | A malformed template: an unclosed `{{` or block, a closing tag that doesn't match its block, a stray or repeated `{{else}}`, an unknown block, or an empty tag. The message names the line and column. |
 | `ValueError` | With `strict: true`, a key that has no value. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `template.renderHTML(text, data)` | `template.render(text, data, {html: true})`. `renderHTML` never fails: it renders unclosed blocks to the end and writes stray tags out as they are. |
+`template.renderHTML(text, data)` is gone. Use `template.render(text, data, {html: true})`, which fails with `ParseError` for a malformed template instead of rendering it anyway.
 
 ## Behavior and limits
 

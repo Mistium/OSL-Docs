@@ -112,30 +112,11 @@ Non-ASCII subjects use MIME encoded-words. Bodies and attachments stay within SM
 line limit. Control characters in attachment names are dropped and non-ASCII names are encoded, so
 a name can't inject headers.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `email.create()`, `message.create()` | `email.new(options?)` |
-| `email.fromMap(data)`, `message.fromMap(data)` (skipped invalid addresses) | `email.new(options)`, which fails with `ValueError` |
-| `message.getTo()`, `getCc()`, `getBcc()`, `getSubject()`, `getBody()`, `getRecipients()`, `getHeaders()` | `to()`, `cc()`, `bcc()`, `subject()`, `body()`, `recipients()`, `headers()` |
-| `message.getRecipientCount()` | `message.recipients().len` |
-| `message.addToMany(addresses)` | `message.addTo(address)` for each, or `email.new({to: addresses})` |
-| `message.setHTML(html)` | `message.setBody(html, {html: true})` |
-| `message.setText(text)` | `message.setBody(text, {html: false})` |
-| `message.wrapText(width)` | `message.setBody(text, {wrap: width})` |
-| `message.attachContent(files)` | `message.attach(name, data)` |
-| `message.buildMessage(from)` | `message.stringify()` |
-| `message.queue()` (queued nothing) | `message.toMap()` |
-| `message.sendWithSmtp(host, port, username, password, auth)` (returned `{success, message}` or `{success: false, error}`) | `message.send(host, {port, username, password})` |
-| `message.sendGmail(username, password)` | `message.send("smtp.gmail.com", {username, password})` |
-| `message.sendOutlook(username, password)` | `message.send("smtp-mail.outlook.com", {username, password})` |
-| `message.sendOffice365(username, password)` | `message.send("smtp.office365.com", {username, password})` |
-| `message.sendLocalhost()` | `message.send("localhost", {port: 25})` |
-
-The package-level functions that edited one shared message (`email.setFrom`, `email.addTo`,
-`email.setSubject`, `email.setBody`, `email.setHTML`, `email.attachFile`, `email.sendGmail`,
-`email.sendWithSmtp`, `email.getTo`, `email.validate`, `email.toMap`, `email.reset` and the rest)
-are deprecated too. Build a message with `email.new` and call the matching method on it.
+There is no shared package-level message any more: `email.setFrom`, `email.addTo`,
+`email.sendGmail` and the other package functions that edited it are gone, as are `email.create`
+and `email.fromMap`. Build a message with `email.new(options)` and call its methods. The
+`get`-prefixed getters are now `to()`, `subject()`, `recipients()` and so on, and
+`sendWithSmtp`, `sendGmail`, `sendOutlook` and the other senders are replaced by
+`message.send(host, {port, username, password})`.

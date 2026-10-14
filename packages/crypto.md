@@ -118,27 +118,14 @@ Bad arguments throw:
   valid seed or private key.
 - `TypeError` for `randomFloat` with more than two arguments or a non-number.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `crypto.sha3_256(data)` | `crypto.hash("sha3-256", data)` |
-| `crypto.md5Hash(data)` | `crypto.md5(data)` |
-| `crypto.hmacSha256(key, data)`, `crypto.hmacSha512(key, data)` | `crypto.hmac("sha256", key, data)`, `crypto.hmac("sha512", key, data)` |
-| `crypto.sign(key, data)`, `crypto.verify(key, data, signature)` | `crypto.hmac("sha256", key, data)` checked with `crypto.constantTimeCompare`, or `crypto.ed25519Sign` / `ed25519Verify`. `sign` is `sha256(key + data)`, which anyone who has seen one signature can extend, so it is not a secure signature. |
-| `crypto.randomBytes(size)` | `crypto.randomHex(size)` |
-| `crypto.randomInt(max)`, `crypto.randomInt(min, max)`, `crypto.random(min, max)` (max excluded) | `crypto.randomBetween(min, max)` (both included) |
-| `crypto.uuidv4()` | `crypto.randomUUID()` |
-| `crypto.hexEncode(data)` | `crypto.toHex(data)` or `text.encodeHex()` |
-| `crypto.hexDecode(text)` (`""` for invalid hex) | `crypto.fromHex(text)` or `text.decodeHex()` |
-| `crypto.binEncode(data)`, `crypto.binDecode(text)` | `text.encodeBin()`, `text.decodeBin()` |
-| `crypto.base64Encode(data)`, `crypto.base64Decode(text)` | `btoa(data)`, `atob(text)` |
-| `crypto.generateKeyPair()` (hex keys) | `crypto.ed25519GenerateKeyPair()` (base64url keys; both encodings sign and verify) |
-| `crypto.bcryptHash(password, cost)` (`""` on failure) | `crypto.hashPassword(password, {algorithm: "bcrypt", cost})`, or `crypto.hashPassword(password)` for Argon2id |
-| `crypto.bcryptVerify(password, hash)` | `crypto.verifyPassword(password, hash)` |
-| `crypto.pbkdf2(password, salt, iterations, length, hash)` (`""` on failure) | `crypto.deriveKey(password, salt, {iterations, length, hash})` |
+`crypto.sign` and `crypto.verify` are gone, since `sign` was an extendable `sha256(key + data)`:
+use `crypto.hmac` with `crypto.constantTimeCompare`, or the Ed25519 functions. The old helpers are
+gone too: `uuidv4` is `randomUUID`, `randomInt` is `randomBetween`, `bcryptHash` is
+`hashPassword(password, {algorithm: "bcrypt"})`, `pbkdf2` is `deriveKey`, and the hex, binary,
+and base64 helpers are `toHex`, `fromHex`, the string methods `encodeHex` and `decodeHex`, and
+`btoa` and `atob`.
 
 ## Notes
 

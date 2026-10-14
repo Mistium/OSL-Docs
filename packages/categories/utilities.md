@@ -4,9 +4,9 @@ Packages for data structures and utility types.
 
 - [box2d](../box2d.md) - Box2D-compatible rigid-body worlds, bodies, and fixtures.
 - [events](../events.md) - Named in-process events with thread-safe listeners.
-- [map](../map.md) - An ordered key-value map type.
-- [set](../set.md) - A set type.
+- [map](../map.md) - The built-in hash map type.
+- [set](../set.md) - The built-in set type.
 - [option](../option.md) - Optional values (`some`/`none`).
 - [result](../result.md) - Success/error result values.
 - [retry](../retry.md) - Bounded retries with exponential backoff and jitter.
-- [ptr](../ptr.md) - Low-level pointer operations.
+- [ptr](../ptr.md) - Shared mutable cells and low-level pointer operations.

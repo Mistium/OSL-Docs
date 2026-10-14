@@ -48,19 +48,11 @@ Each item is one file in the store's directory. A name without an extension is s
 To store structured data, convert it to text first, for example with
 `json.stringify(value)` and `json.parse(text)` from [`json`](json.md).
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old API used a
-shared or separately created store that had to be initialised with `init` before use, and reported
-failure with `""`, `false` or a `{app, filename, exists, data, size}` object.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `save.init(appName)`, `save.create()` and `store.init(appName)` | `save.open(appName)` |
-| `save.setItem(name, value)`, `store.setItem(name, value)` | `store.set(name, text)` |
-| `save.getItem(name)`, `store.getItem(name)` | `store.get(name)` and `store.has(name)` |
-| `save.exists(name)`, `store.exists(name)` | `store.has(name)` |
-| `save.all()`, `store.all()` | `store.keys()` |
+The shared store and `save.init` are gone: open a store with `save.open(appName)` and call its
+methods. `setItem` and `getItem` are now `store.set` and `store.get`, `exists` is `store.has`, and
+`all` is `store.keys`.
 
 ## Behavior and limits
 

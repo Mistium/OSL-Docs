@@ -19,7 +19,7 @@ import "std:rotur"
 for post in api.posts().list({limit: 5}) (
   log post.user ++ ": " ++ post.content
 )
-log api.profiles().userExists("mist")
+log api.profiles().exists("mist")
 log rotur.avatarURL("mist")
 ```
 
@@ -60,7 +60,7 @@ Every API method returns `result<T, error>`. The message carries the API's own e
 import "std:rotur"
 
 *rotur.Client api = rotur.new()
-object profile = api.profiles().lookup("no-such-user-here") catch (err) (
+object profile = api.profiles().get("no-such-user-here") catch (err) (
   log err.kind // NotFoundError
   return
 )
@@ -80,7 +80,7 @@ Response objects keep the API's own keys, which are snake_case in places.
 | `rotur.loadToken()` | `result<string?, error>` | `ROTUR_TOKEN`, else the token in the rotur CLI config file, else `null`. Fails with `IOError` or `ParseError` when the config file can't be read. |
 | `rotur.logout()` | `result<unit, error>` | Removes the saved token and username from the config file. |
 | `rotur.configPath()` | `result<string, error>` | The rotur CLI config file, `~/.config/rotur/config.json`. |
-| `rotur.avatarURL(username: string, options?)` | `string` | Profile picture URL. Option: `version` (appended as `?v=` so a changed picture isn't cached). |
+| `rotur.avatarURL(username: string, options?)` | `string` | Profile picture URL. Option: `version` (appended as `?v=` so a changed picture isn't cached; without it the URL has no query). |
 | `rotur.bannerURL(username, options?)`, `rotur.overlayURL(username, options?)`, `rotur.backgroundURL(username, options?)` | `string` | Banner, avatar overlay and background video URLs. Same option. |
 | `rotur.canonical(value)` | `string` | Canonical JSON (sorted keys, JavaScript number formatting), the bytes rotur signatures cover. |
 | `rotur.signWith(seed: string, content)` | `result<string, error>` | Signs `content`'s canonical JSON with a base64url Ed25519 seed (a private JWK's `d`). Fails with `ValueError` for a bad seed. |
@@ -165,13 +165,13 @@ Methods marked *public* below work without a token; the rest need one and fail w
 | `list(options?)` | Public. `result<array, error>`: the feed, newest first. Options: `limit` (1-100, default 100), `offset`. |
 | `following(options?)` | `result<array, error>`: posts from followed accounts. Option: `limit`. |
 | `popular(options?)` | Public. `result<array, error>`: most liked recent posts. Options: `limit` (default 50), `period` (ms to look back, default 86400000, whole hours). |
-| `find(query: string, options?)` | Public. `result<array, error>`. Option: `limit` (1-20). |
+| `search(query: string, options?)` | Public. `result<array, error>`. Option: `limit` (1-20, default 20). |
 | `get(id: string)` | Public. Fails with `NotFoundError`. |
 | `create(content: string, options?)` | Publishes a post. Options: `attachment` (URL), `attachments` (array of URLs), `profileOnly`, `os` (a system to tag), `poll` (2-6 option strings), `scheduledFor` (unix ms). |
 | `edit(id, content)`, `delete(id)` | |
 | `reply(id, content)`, `repost(id)` | Return the new post. |
 | `like(id)`, `unlike(id)`, `pin(id)`, `unpin(id)`, `bookmark(id)`, `unbookmark(id)` | |
-| `castVote(id: string, option: int)` | Votes in a post's poll; `option` 1 is the first. Throws `ValueError` below 1. |
+| `vote(id: string, option: int)` | Votes in a post's poll, replacing an earlier vote, and returns `{poll}`. Options count from 1, so 1 is the first. Throws `ValueError` below 1. |
 | `view(id)`, `viewMany(ids: array)` | Count views. |
 | `bookmarks()`, `scheduled()` | `result<array, error>`. |
 | `limits()` | Public. Posting limits per tier. |
@@ -199,8 +199,8 @@ Methods marked *public* below work without a token; the rest need one and fail w
 
 | Method | Notes |
 | --- | --- |
-| `lookup(username: string, options?)` | Public. A profile. Option: `includePosts` (default `true`). Fails with `NotFoundError`. |
-| `userExists(username: string)` | Public. `result<boolean, error>`. |
+| `get(username: string, options?)` | Public. A profile. Option: `includePosts` (default `true`). Fails with `NotFoundError`. |
+| `exists(username: string)` | Public. `result<boolean, error>`. |
 | `supporters()` | Public. `result<array, error>` of `{username, subscription}`. |
 | `delete(username: string)` | Deletes the signed-in account, which must be `username`. |
 
@@ -212,14 +212,14 @@ Methods marked *public* below work without a token; the rest need one and fail w
 | `popular(options?)` | Public. Option: `limit` (default 10). |
 | `create(tag: string, name: string, options?)` | Options: `description`, `iconURL`, `bannerURL`, `public`, `joinPolicy` (such as `"open"` or `"request"`). |
 | `get(tag)`, `update(tag, updates)`, `delete(tag)` | |
-| `join(tag)`, `askToJoin(tag, options?)`, `leave(tag)` | `askToJoin` option: `message`. |
+| `join(tag)`, `requestJoin(tag, options?)`, `leave(tag)` | `requestJoin` option: `message`. |
 | `represent(tag)`, `disrepresent(tag)`, `report(tag)` | |
 | `announcements(tag)` | Public. `result<array, error>`. |
 | `announce(tag, title, body, options?)` | Option: `pingMembers`. |
 | `deleteAnnouncement(tag, id)`, `muteAnnouncements(tag)` | |
 | `events(tag)`, `createEvent(tag, event)`, `updateEvent(tag, eventID, updates)`, `deleteEvent(tag, eventID)` | |
 | `tips(tag)`, `tip(tag, amount, options?)`, `withdrawTip(tag, amount)`, `tipWithdrawals(tag, options?)` | `tip` option: `note`; `tipWithdrawals` option: `limit` (default 20). |
-| `products(tag)`, `createProduct(tag, product)`, `deleteProduct(tag, productID)`, `purchaseProduct(tag, productID)`, `cancelProductSubscription(tag, productID)`, `myProductSubscriptions()` | `product` has `name`, `description`, `priceCredits`, `roleID`, `subscription`, `frequency`, `period`. |
+| `products(tag)`, `createProduct(tag, product)`, `deleteProduct(tag, productID)`, `purchaseProduct(tag, productID)`, `cancelProductSubscription(tag, productID)`, `myProductSubscriptions()` | `product` has `name`, `description`, `priceCredits`, `roleID`, `subscription`, `frequency`, `period`; any other key throws `ValueError`. |
 | `productOwnership(tag, productID, username)` | Public. |
 | `members(tag, options?)` | A page of members. Options: `page` (1-based), `perPage`, `search`. |
 | `roles(tag)`, `createRole(tag, role)`, `updateRole(tag, roleID, updates)`, `deleteRole(tag, roleID)` | |
@@ -227,7 +227,7 @@ Methods marked *public* below work without a token; the rest need one and fail w
 | `assignRole(tag, userID, roleID)`, `removeRole(tag, userID, roleID)` | |
 | `invites(tag)`, `invite(tag, username)`, `revokeInvite(tag, inviteID)`, `myInvites()`, `acceptInvite(tag, inviteID)`, `declineInvite(tag, inviteID)` | |
 | `joinRequests(tag)`, `acceptJoinRequest(tag, requestID)`, `declineJoinRequest(tag, requestID)` | |
-| `kick(tag, userID)`, `banMember(tag, userID, options?)`, `unban(tag, userID)`, `bans(tag)`, `checkBan(tag, userID)` | `banMember` option: `reason`. |
+| `kick(tag, userID)`, `ban(tag, userID, options?)`, `unban(tag, userID)`, `bans(tag)`, `checkBan(tag, userID)` | `ban` option: `reason`. |
 | `memberInfo(tag, userID)`, `transferOwnership(tag, userID)` | |
 
 ### Economy: `client.keys()`, `client.items()`, `client.gifts()`
@@ -399,71 +399,11 @@ wait 5
 socket.stop()
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `rotur.login(timeoutSecs?)` (returned the client or `null`) | `rotur.new().login(options?)` |
-| `rotur.savedToken()` (returned `""` when none) | `rotur.loadToken()`, which returns `null` |
-| `client.token()` | `client.hasToken()`; tokens are write-only |
-| `client.setToken(token)` | `client.useToken(token)` |
-| `client.loggedIn()` | `client.hasToken()` |
-| `client.baseUrl(url)` | `client.useBaseURL(url)` |
-| `client.save(username?)` | `client.saveToken({username})` |
-| `client.get(path, params?)`, `post`, `put`, `patch`, `delete` | `client.request(method, path, {query, body})` |
-| `me().checkAuth()` | `client.whoami()` |
-| `me().requests()`, `me().outgoing()` | `friends().requests()`, `friends().outgoing()` |
-| `me().transfer(to, amount, note?)` | `me().pay(to, amount, {note})` |
-| `me().deleteAccount(username)` | `profiles().delete(username)` |
-| `posts().vote(id, option)` (0-based) | `posts().castVote(id, option)` (1-based) |
-| `posts().feed(limit?, offset?)` | `posts().list({limit, offset})` |
-| `posts().followingFeed(limit?)` | `posts().following({limit})` |
-| `posts().top(limit?, hours?)` | `posts().popular({limit, period: ms})` |
-| `posts().search(query, limit?)` | `posts().find(query, {limit})` |
-| `notifications().list(afterDays?)` | `notifications().recent({period: ms})` |
-| `notifications().markRead(ids?)` | `notifications().readMany(ids)` or `readAll()` |
-| `items().selling(limit?)` | `items().forSale({limit})` |
-| `groups().top(limit?)` | `groups().popular({limit})` |
-| `groups().requestJoin(tag, message?)` | `groups().askToJoin(tag, {message})` |
-| `groups().createAnnouncement(tag, title, body, pingMembers?)` | `groups().announce(tag, title, body, {pingMembers})` |
-| `groups().sendTip(tag, amount, note?)` | `groups().tip(tag, amount, {note})` |
-| `groups().withdrawals(tag, limit?)` | `groups().tipWithdrawals(tag, {limit})` |
-| `groups().ban(tag, userID, reason?)` | `groups().banMember(tag, userID, {reason})` |
-| `stats().mostGained(max?)` | `stats().topEarners({limit})` |
-| `stats().followers(max?)` | `stats().topFollowed({limit})` |
-| `stats().posts(days?)` | `stats().postActivity({period: ms})` |
-| `link().getCode()` | `link().code()` |
-| `link().wait(code, timeoutSecs?)` (returned `""` on timeout) | `link().waitForToken(code, {timeout: ms})` |
-| `cosmetics().gift(id, to, note?)` | `cosmetics().give(id, to, {note})` |
-| `push().register(endpoint, p256dh, auth, source, fingerprint)` | `push().addDevice({endpoint, p256dh, auth, source, fingerprint})` |
-| `files().getByUUID(uuid)`, `files().getByPath(path)` | `files().byUUID(uuid)`, `files().byPath(path)` |
-| `profiles().get(username, includePosts?)` | `profiles().lookup(username, {includePosts})` |
-| `profiles().exists(username)` (returned `{exists}`) | `profiles().userExists(username)` (a boolean) |
-| `profiles().avatarUrl`, `bannerUrl`, `overlayUrl`, `backgroundUrl`, and `avatars().url`, `bannerUrl`, `overlayUrl`, `backgroundUrl` | `rotur.avatarURL`, `bannerURL`, `overlayURL`, `backgroundURL` with `{version}` |
-| `storage().getKey(id, key)` | `storage().value(id, key)` |
-| `systems().setBadgeProgress(system, badge, username, progress)` | `systems().updateBadgeProgress(system, badge, {username: progress})` |
-| `signing().key()` (returned the private key) | `signing().identity()` |
-| `signing().publicKey(userID, keyID, refresh?)` | `signing().lookupKey(userID, keyID, {refresh})` |
-| `socket.socketUrl(url)` | `socket.setURL(url)` |
-| `socket.connected()` | `socket.isConnected()` |
-| `socket.connect()` (returned a boolean) | `socket.start(options?)` |
-| `socket.disconnect()` | `socket.stop()` |
-| `socket.getKey(key)` | `socket.key(key)` |
-| `socket.sendGroupMessage(room, value, listener?)` | `socket.broadcast(room, value, {listener})` |
-| `socket.sendPrivateMessage(room, to, value, listener?)` | `socket.sendPrivate(room, to, value, {listener})` |
-| `socket.setStatus(status, presence?)` | `socket.updateStatus(status, {presence})` |
-| `socket.setMusic(application, media, title?)` | `socket.setListening(application, media, {title})` |
-
-Deprecated option names that still work:
-
-| Method | Deprecated option | Use instead |
-| --- | --- | --- |
-| `posts().create` | `profile_only`, `scheduled_for` | `profileOnly`, `scheduledFor` |
-| `notifications().create` | `platform_data` | `platformData` |
-| `gifts().create`, `tokens().create` | `expiresInHrs`, `expires_in_hrs` (hours) | `expiresIn` (milliseconds) |
-| `groups().create` | `icon_url`, `iconUrl`, `banner_url`, `bannerUrl`, `join_policy` | `iconURL`, `bannerURL`, `joinPolicy` |
-| `groups().members` | `per_page` | `perPage` |
-| `trust().verify` | `user_id`, `userId`, `account_token`, `min_score`, `required_standing`, `max_risk` | `userID`, `accountToken`, `minScore`, `requiredStanding`, `maxRisk` |
-| `ai().chat` | `return_history` | `returnHistory` |
+A few methods now have their natural names: `posts().find` is `posts().search`, `posts().castVote`
+is `posts().vote` (options count from 1), `profiles().lookup` is `profiles().get`,
+`profiles().userExists` is `profiles().exists`, `groups().askToJoin` is `groups().requestJoin` and
+`groups().banMember` is `groups().ban`. Option keys are camelCase only, and durations such as
+`expiresIn` and `period` are in milliseconds; the snake_case keys and `expiresInHrs` are gone. The
+asset URL functions add `?v=` only when you pass a `version`.

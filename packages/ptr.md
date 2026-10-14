@@ -78,17 +78,11 @@ log ptr.deref(p)   // 9
 - `ptr.offsetOf` throws `ValueError` when the value isn't a struct or has no such field.
 - `p.swap` throws `TypeError` when `other` is `null`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `ptr.ref(value)`, `ptr.alloc(value)` | `ptr.new(value)` |
-| `ptr.pointer(value)` | `ptr.addressOf(value)` |
-| `ptr.swap(a, b)` | `a.swap(b)` |
-| `ptr.copy(dst, src)` | `dst.set(src.value())` |
-| `ptr.allocTyped(typeName, value)` and its `deref()` / `setValue()` methods | `ptr.new(value)` with `p.value()` and `p.set(value)`, converting the value yourself |
+`ptr.ref`, `ptr.alloc`, and `ptr.allocTyped` are gone; use `ptr.new(value)`. `ptr.pointer` is
+`ptr.addressOf`, `ptr.swap(a, b)` is `a.swap(b)`, and `ptr.copy(dst, src)` is
+`dst.set(src.value())`.
 
 ## Notes
 

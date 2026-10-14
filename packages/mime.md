@@ -55,17 +55,11 @@ All return `boolean`. Case and parameters are ignored.
 | `mime.isAudioFile(path)` | A file name or path whose extension has an audio type. |
 | `mime.isVideoFile(path)` | A file name or path whose extension has a video type. |
 
-For compatibility, `isText`, `isImage`, `isAudio`, and `isVideo` still treat a value without `/` as a file name or extension (`"notes.txt"`, `"txt"`). Use the `File` forms for paths.
+`isText`, `isImage`, `isAudio`, and `isVideo` also treat a value without `/` as a file name or extension (`"notes.txt"`, `"txt"`). Use the `File` forms for paths.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `mime.byFilename(name)` (returns `""` when unknown) | `mime.typeByFilename(path)` (returns `null`) |
-| `mime.resolve(input)` | `mime.parse(text).type` for a media type, or `mime.typeByFilename(path)` / `mime.typeByExt(ext)` for a file name |
-| The `valid` key of `mime.parse` (always `true` now) | A malformed value fails `parse` with `ParseError`. |
+`mime.byFilename` is now `mime.typeByFilename`, which returns `null` rather than `""` for an unknown extension. `mime.resolve` is gone: use `mime.parse(text).type` for a media type, or `typeByFilename`/`typeByExt` for a file name. Parsed values no longer have a `valid` key.
 
 ## Behavior and limits
 

@@ -35,15 +35,10 @@ log names.toArray()          // ["bob"]
 `add` and `delete` throw `TypeError` for a value that can't be hashed, such as an array or object.
 `contains` reports `false` for one.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `s.toArr()` | `s.toArray()` |
+`s.toArr()` is now `s.toArray()`, and `delete` reports whether the value was there instead of always reporting success.
 
 ## Notes
 
-- `delete` reports whether the value was there. Before this release it always reported success.
 - Sets synchronize concurrent reads and writes.

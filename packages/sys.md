@@ -38,26 +38,13 @@ if (sys.uid() ?? -1) == 0 ( log "running as root" )
 `uid` and `gid` are nullable, so compare them through a fallback such as `(sys.uid() ?? -1) == 0`;
 comparing an `int?` directly with `0` is a compile error.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old forms
-return `""` or `false` on failure instead of a result.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `sys.getArgs()` | `process.args()`, which leaves out the program |
-| `sys.getEnv(key)` | `env.get(key)` |
-| `sys.setEnv(key, value)` | `env.set(key, value)` |
-| `sys.unsetEnv(key)` | `env.unset(key)` |
-| `sys.getCwd()` | `process.cwd()` |
-| `sys.chdir(path)` | `process.chdir(path)` |
-| `sys.getPid()` | `process.pid()` |
-| `sys.getPpid()` | `process.ppid()` |
-| `sys.getUid()`, `sys.getGid()` | `sys.uid()`, `sys.gid()` |
-| `sys.getUsername()` | `sys.username()` |
-| `sys.getHomeDir()` | `sys.homeDir()` |
-| `sys.cmd(cmd, ...args)` | `process.exec(command, ...args)` |
-| `sys.getExecutablePath()` | `process.executable()` |
+The `get*` names are now plain ones, so `sys.getUsername()` is `sys.username()` and
+`sys.getHomeDir()` is `sys.homeDir()`. The program's own details moved to `process`:
+`sys.getArgs()` is `process.args()`, `sys.getCwd()` is `process.cwd()`, `sys.getPid()` is
+`process.pid()`, and `sys.cmd(...)` is `process.exec(...)`. `sys.getEnv`, `sys.setEnv` and
+`sys.unsetEnv` are `env.get`, `env.set` and `env.unset`.
 
 ## Behavior and limits
 

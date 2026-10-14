@@ -62,7 +62,7 @@ In both forms:
 - Line endings end statements; no semicolons are needed.
 - The uniforms `iResolution`, `iTime`, `iTimeDelta`, `iFrame`, `iMouse`, `iDate`, `iChannel0`,
   `iChannel1`, `texture0`, and `colDiffuse` are declared unless the code declares them. Set them
-  with `shader.setUniform` on the compiled `*raylib.Shader`.
+  with `setUniform` on the compiled `*raylib.Shader`.
 
 ```osl
 import "std:shader"
@@ -77,12 +77,9 @@ string rings = `def mainImage(fragCoord) (
 log shader.transpile(rings)
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `shader.toGLSL(code, "vert")` | `shader.transpile(code, {stage: "vertex"})` |
-| `shader.renderImage(code, width, height, uniforms?)` | Shaders run only on the GPU. Use `raylib.compileShader(code)` and draw into a `raylib.renderTexture`, then `target.toImage()` for an `*img.Image`. It never ran the shader (it drew one of three built-in effects picked by words in the code) and now fails with `UnsupportedError`. |
-| `shader.eval(expr, context?)` | Shader expressions can't be evaluated on the CPU. It now fails with `UnsupportedError`. |
+`shader.toGLSL(code, "vert")` is now `shader.transpile(code, {stage: "vertex"})`. `shader.renderImage`
+and `shader.eval` have been removed, since shaders run only on the GPU: compile with
+`raylib.compileShader(code)`, draw into a `raylib.renderTexture`, and call `target.toImage()` for an
+`*img.Image`.

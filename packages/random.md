@@ -46,13 +46,10 @@ Bad arguments are a bug in the calling code, so they throw:
   alphabet, and `TypeError` for other argument types.
 - `random.gaussian` throws `ValueError` for a negative standard deviation.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `random.int(max)` | `random.between(0, max - 1)`. `random.int` excludes `max`; `between` includes both bounds. |
+`random.int(max)` is gone. Write `random.between(0, max - 1)`: `between` includes both bounds,
+where `int` excluded `max`.
 
 ## Notes
 

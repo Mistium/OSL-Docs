@@ -133,7 +133,7 @@ that nullability in OSL checks. A valid `== null` check on those results is acce
 ## Package handle types
 
 Use the package name when declaring a handle, for example `*cache.Cache`, `*db.DB`,
-`*process.Process`, or `*ptr.Pointer`. The same names work in function parameters and
+`*process.Child`, or `*ptr.Pointer`. The same names work in function parameters and
 return types. Go types for package handles use `OSL<package><Type>` consistently, so `*cache.Cache`
 resolves to `*OSLcacheCache` without a special compiler alias.
 
@@ -144,8 +144,8 @@ string[string[]?] groups = {}
 string[] values = groups["missing"] ?? []
 ```
 
-Built-in types such as `result`, `error`, `unit`, `set`, `map`, `option`, `canvas`, and `xml` use bare
-language names. They do not have qualified package type names or require imports.
+Built-in types such as `result`, `error`, `unit`, `set`, `map`, `option`, and `xml` use bare language
+names. They do not have qualified package type names or require imports.
 For example, use `result<int, error>` for a typed result.
 
 Explicit types on imported global variables are available to top-level statements in

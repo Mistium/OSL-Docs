@@ -105,7 +105,7 @@ Each `process.list()` record has these keys:
 | `pid`, `ppid` | `int` | Process and parent process ID |
 | `user` | `string` | Owner |
 | `cpu`, `mem` | `number` | Percent of CPU and memory |
-| `rssBytes`, `vszBytes` | `int` | Resident and virtual memory, in bytes |
+| `rss`, `vsz` | `int` | Resident and virtual memory, in bytes |
 | `stat` | `string` | Process state, as `ps` prints it |
 | `start` | `string` | Start time as `ps aux` prints it: `"15:04"` today, `"Oct06"` this year, otherwise the year |
 | `startTime` | `int` | Start time in unix milliseconds |
@@ -114,7 +114,7 @@ Each `process.list()` record has these keys:
 
 ```osl
 for p in process.list() (
-  if p.command.contains("node") ( log p.pid ++ " uses " ++ p.rssBytes ++ " bytes" )
+  if p.command.contains("node") ( log p.pid ++ " uses " ++ p.rss ++ " bytes" )
 )
 ```
 
@@ -133,46 +133,14 @@ for p in process.list() (
 
 With `osl run`, pass program arguments after `--`: `osl run app.osl -- --port 8080`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old forms
-return `false`, `""`, `0` or objects with `success` and `error` keys on failure instead of a result.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `process.spawn(command, ...args)` and its `run`, `start`, `wait`, `kill`, `signal`, `isRunning`, `getPID` methods | `process.run(command, args, options?)`, or `process.start(command, args, options?)` and the `*process.Child` methods |
-| `p.runLimited(maxBytes)` | `process.run(command, args, {maxOutput: bytes})` |
-| `p.runTimeout(seconds)` | `process.run(command, args, {timeout: milliseconds})` |
-| `p.runTimeoutLimited(seconds, maxBytes)` | `process.run(command, args, {timeout, maxOutput})` |
-| `process.spawnShell(command)` | `process.run("sh", ["-c", command])` |
-| `process.background(command, ...args)` | `process.start(command, args)` |
-| `process.daemonize(command, ...args)` | `process.start(command, args)` and `process.exit(0)` |
-| `process.pipe(p1, p2)` | `process.run(command, args, {input: text})`, or `process.run("sh", ["-c", "a \| b"])` |
-| `process.waitPID(pid)` | `process.start(command, args)` and `child.wait()` |
-| `process.execAsUser(user, command, ...args)` | `process.run("sudo", ["-u", user, command, ...])` |
-| `process.fork()` | `process.start(process.executable(), process.args())`; `fork` always fails with `UnsupportedError` |
-| `process.getPID()`, `process.getPPID()` | `process.pid()`, `process.ppid()` |
-| `process.killPID(pid)` | `process.kill(pid)` |
-| `process.signalPID(pid, sig)` | `process.signal(pid, name)` |
-| `process.isPIDRunning(pid)` | `process.isRunning(pid)` |
-| `process.findByPID(pid)`, `process.findByName(name)` | `process.list()`, filtered by `pid` or `command` |
-| `process.killByName(name)` | `process.list()` and `process.kill(pid)` |
-| `process.environment()` | `env.all()` |
-| `process.getEnvironment(key)` | `env.get(key)` |
-| `process.setEnvironment(key, value)` | `env.set(key, value)` |
-| `process.workingDir()` | `process.cwd()` |
-| `process.setWorkingDir(path)` | `process.chdir(path)` |
-| `process.getArguments()` | `process.args()`, which leaves out the program |
-| `process.getArg(index)` | `process.args()[index]` |
-| `process.getExecutablePath()` | `process.executable()` |
-| `process.getMemoryMB()` | `mem.stats().sys`, in bytes |
-| `process.getCPUTime()` | `process.cpuTime()`, in milliseconds |
-| `process.getNumGoroutines()` | `mem.stats().goroutines` |
-| `process.getNumCPU()` | `sys.cpus()` |
-| `process.setNumCPU(n)` | No replacement |
-| `process.sleep(seconds)` | The `wait` statement, as in `wait 0.5` |
-| `process.getExitCode()` | No replacement; it always throws `UnsupportedError` |
-| Record keys `rss`, `vsz` from `process.list()` (kilobyte strings) | `rssBytes`, `vszBytes` |
+`process.spawn` and its `*process.Process` handle are gone: use `process.run` for a command that
+runs to completion, or `process.start` and the `*process.Child` methods. The `get*` names are now
+plain ones, such as `process.pid()` for `process.getPID()` and `process.args()` for
+`process.getArguments()`, and `process.killPID(pid)` is `process.kill(pid)`. The `rss` and `vsz`
+keys of a `process.list()` record are now whole numbers of bytes, where they used to be kilobyte
+strings. Read the environment with the [`env`](env.md) package.
 
 ## Behavior and limits
 

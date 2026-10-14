@@ -40,15 +40,9 @@ log colors.toHSL("#3a6ea5").h
 0-1, or a malformed HSL object throws `ValueError`. `colors.parse` fails with `ParseError` for
 anything it can't read.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. They returned objects with
-upper-case `R`, `G`, `B`, `A` keys and wrapped channels modulo 256.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `colors.rgba(r, g, b, a)` / `colors.RGBA(...)` | `{r: r, g: g, b: b, a: a}` or `colors.stringify` |
-| `colors.rgb(r, g, b)` | `{r: r, g: g, b: b}` or `colors.stringify` |
-| `colors.nrgba(r, g, b, a)` | `{r: r, g: g, b: b, a: a}` |
-| `colors.gray(v)` | `{r: v, g: v, b: v}` |
-| `colors.hex(text)` (gave opaque black for bad input) | `colors.parse(text)`, which reports invalid input |
+`colors.rgba`, `colors.RGBA`, `colors.rgb`, `colors.nrgba`, and `colors.gray` are gone; write the
+color as an `{r, g, b, a}` object, or pass it to `colors.stringify` for a hex string.
+`colors.hex(text)` is replaced by `colors.parse(text)`, which reports invalid input instead of
+returning black.

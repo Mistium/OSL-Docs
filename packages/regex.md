@@ -111,16 +111,9 @@ All return `string[]`, in order of appearance.
 | `regex.charCount(text, includeSpaces)` | `int` | How many characters the text has, leaving out spaces unless `includeSpaces` is `true`. |
 | `regex.sentenceCount(text)` | `int` | The pieces between `.`, `!`, and `?` that contain more than whitespace. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `regex.test(pattern)` | `regex.isValid(pattern)` |
-| `regex.find(pattern, text)` (returns `""` for no match or an invalid pattern) | `regex.findFirst(pattern, text)` (returns `null`, throws `ValueError` for an invalid pattern) |
-| `regex.extractEmail(text)` | `regex.extractEmails(text)` |
-| `regex.highlight(text, pattern, color)` | `regex.replace(pattern, text, "\x1b[31m$0\x1b[0m")` with the color code you want |
+`regex.test(pattern)` is now `regex.isValid(pattern)`, and `regex.find` is now `regex.findFirst`, which returns `null` for no match and throws for an invalid pattern. `regex.extractEmail` gave way to `regex.extractEmails`, and `regex.highlight` to `regex.replace` with an ANSI color code around `$0`.
 
 ## Behavior and limits
 

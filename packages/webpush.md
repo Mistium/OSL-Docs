@@ -73,14 +73,8 @@ Options for `webpush.send`:
 | `NetworkError`, `TimeoutError` | The push service can't be reached. |
 | `RuntimeError` | Any other refusal. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `webpush.generateVAPIDKeys()` (returned `{private_key, public_key}` or `{error}`) | `webpush.generateKeys()` |
-| `webpush.ensureVAPIDKeys(configPath, privateKeyPath)` | `webpush.ensureKeys(path)`, which keeps everything in the private key file and never overwrites a file it can't read |
-| `webpush.sendWebPush(endpoint, p256dh, auth, data, privateKey, claimsEmail, ttl)` (`ttl` in seconds, returned `{success, status, error}`) | `webpush.send(subscription, payload, {privateKey, subject, ttl: ms})` |
-| `webpush.signVapidJWT(audience, expiresIn, privateKey, claimsEmail)` (seconds) | `webpush.signJWT(audience, privateKey, {subject, expires: ms})` |
-| `webpush.verifyVapidJWT(token, publicKey)` (ignored expiry) | `webpush.verifyJWT(token, publicKey)` |
+`generateVAPIDKeys`, `ensureVAPIDKeys`, `sendWebPush`, `signVapidJWT` and `verifyVapidJWT` are gone;
+use `generateKeys`, `ensureKeys`, `send`, `signJWT` and `verifyJWT`, which take times in
+milliseconds. Every token now carries the `sub` claim, so a `subject` is always required.

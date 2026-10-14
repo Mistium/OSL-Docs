@@ -32,7 +32,7 @@ log url.join("https://x.com/a/", "b") // https://x.com/a/b
 | --- | --- | --- |
 | `url.parse(text: string)` | `result<url.Parts, error>` | Splits a URL into its components. Relative references such as `"../a"` parse too. |
 | `url.build(parts: object)` | `string` | Assembles a URL from the keys `url.parse` returns. Every key is optional. Throws `ValueError` for an unknown key. `url.build(url.parse(u))` gives the URL back. |
-| `url.isValid(text: string)` | `boolean` | Whether the text is an absolute URL with a scheme and a host, such as `"https://example.com"`. |
+| `url.isValid(text: string)` | `boolean` | Whether the text is an absolute URL with a scheme and a host, such as `"https://example.com"`, that `url.parse` accepts. |
 | `url.join(base: string, ref: string)` | `result<string, error>` | Resolves a relative reference against a base URL, as a browser resolves a link. |
 | `url.param(url: string, key: string)` | `result<string?, error>` | The first value of a query parameter, or `null` when it is absent. |
 | `url.withParams(url: string, params: object)` | `result<string, error>` | Sets query parameters, replacing existing values for those keys and keeping the others. An array value repeats the key. |
@@ -64,19 +64,13 @@ Every string key is `""` when the URL has no such part.
 
 | Function | Kind | When |
 | --- | --- | --- |
-| `parse`, `param`, `withParams`, `join` | `ParseError` | A malformed URL, such as a bad percent-escape or port. |
+| `parse`, `param`, `withParams`, `join` | `ParseError` | A malformed URL, such as a bad percent-escape or a port that isn't a number from 0 to 65535. |
 | `parseQuery`, `unescape` | `ParseError` | A bad percent-escape. `parseQuery` also rejects `;` separators. |
 | `join` | `ValueError` | `ref` names its own scheme or host (`"https://other.example"`, `"//other.example"`). The result always stays on the base URL's origin. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `url.encode(params)` | `url.stringifyQuery(params)` |
-| `url.decode(text)` (returns `{}` for malformed input) | `url.parseQuery(text)` (fails with `ParseError`) |
-| The `valid` key of `url.parse` (always `true` now) | `url.isValid(text)`. A malformed URL fails `parse` with `ParseError`. |
+`url.encode` and `url.decode` are now `url.stringifyQuery` and `url.parseQuery`; `parseQuery` fails with `ParseError` for malformed input instead of returning `{}`. Parsed URLs no longer have a `valid` key: `url.parse` fails for a malformed URL, and `url.isValid(text)` checks one.
 
 ## Behavior and limits
 

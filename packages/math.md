@@ -157,18 +157,12 @@ These methods follow the fdlibm behaviour shipped in Node 24.
 `math.jsToFixed(x, digits)` returns `x.toFixed(digits)` exactly as JavaScript formats it: the nearest
 decimal, halfway cases rounded away from zero, and the sign kept when a negative value rounds to zero.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `math.isInf(x)`, which returns `1`, `-1`, or `0` | `math.isInfinite(x)`, and `math.sign(x)` for the direction |
-| `math.stdDev(numbers)` (sample, `0` for fewer than two numbers) | `math.standardDeviation(numbers, {sample: true})` |
-| `math.random(min, max)` | `random.float(min, max)` from [`std:random`](random.md) |
-| `math.randomInt(min, max)` | `random.between(min, max)` |
-| `math.randomChoice(choices)` | `random.pick(items)` |
-| `math.randomSeed(seed)` | `random.seed(seed)` |
+`math.isInf` is now `math.isInfinite`, which returns a boolean (use `math.sign` for the direction).
+`math.stdDev(numbers)` is `math.standardDeviation(numbers, {sample: true})`. The random functions
+moved to [`random`](random.md): `math.random` is `random.float`, `math.randomInt` is
+`random.between`, `math.randomChoice` is `random.pick`, and `math.randomSeed` is `random.seed`.
 
 ## Notes
 

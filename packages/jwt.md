@@ -58,20 +58,6 @@ if err != null (
 )
 ```
 
-## Deprecated
-
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `jwt.encode(header, payload, secret)` | `jwt.create(claims, secret, options)`, which writes a header that matches the signature |
-| `jwt.sign(claims, secret, expiresIn?)` | `jwt.create(claims, secret, {expiresIn: ms})`; `expiresIn` there is milliseconds, not seconds |
-| `jwt.signWithExpiry(claims, secret, expiresIn)` | `jwt.create(claims, secret, {expiresIn: ms})` |
-| `jwt.verify(token, secret)` (returned `{valid, error, header, payload}`) | `jwt.check(token, secret)`, which returns the claims and fails with a typed error |
-| `jwt.refresh(token, secret, expiresIn)` (returned `""` on failure) | `jwt.renew(token, secret, {expiresIn: ms})` |
-| `jwt.getClaim(token, claim)` | `jwt.check(token, secret)[claim]`, or `jwt.decode(token).payload[claim]` for an unverified read |
-| `error` key of `jwt.decode` | Always `null`; a malformed token fails with `ParseError` instead |
-
 ## Behavior and limits
 
 Tokens are standard JWTs: each part is unpadded base64url and the signature is HMAC over
@@ -81,3 +67,10 @@ constant-time.
 `jwt.check` rejects unsigned tokens and unknown algorithms, and enforces both `exp` and `nbf`.
 `expiresIn` is rounded up to a whole second, so even a short lifetime gives a token that is valid
 now.
+
+## Changes from earlier versions
+
+`jwt.encode`, `jwt.sign`, `jwt.signWithExpiry`, `jwt.verify`, `jwt.refresh` and `jwt.getClaim` are
+gone. Use `jwt.create` and `jwt.renew` (with `expiresIn` in milliseconds), `jwt.check` for verified
+claims and `jwt.decode(token).payload` for an unverified read. `jwt.decode` no longer has an `error`
+key; a malformed token fails with `ParseError`.

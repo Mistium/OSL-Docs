@@ -77,31 +77,11 @@ copy; call `stop` then `play` to restart it. Several sounds play at once, mixed 
 | setters, `seek` | `ValueError` (thrown) | A value out of range. |
 | any `*sound.Sound` method | `StateError` (thrown) | The sound is closed. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning. They took a string ID
-returned by `sound.new`, returned `""`, `0`, or `false` on failure, and reported times in
-**seconds**; the `*sound.Sound` methods use milliseconds.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `sound.new(url)`, `sound.load(url)` | `sound.decodeFile(path)` or `sound.fetch(url)` |
-| `sound.play(id)`, `sound.start(id)` | `snd.play()` |
-| `sound.pause(id)` | `snd.pause()` |
-| `sound.unpause(id)` | `snd.resume()` |
-| `sound.stop(id)` | `snd.stop()` |
-| `sound.unload(id)`, `sound.clear(id)` | `snd.close()` |
-| `sound.volume(id, value)` | `snd.setVolume(volume)` |
-| `sound.pitch(id, value)` | `snd.setPitch(pitch)` |
-| `sound.pan(id, value)` | `snd.setPan(pan)` |
-| `sound.masterVolume(value)` | `sound.setGlobalVolume(volume)` |
-| `sound.ready()` | `sound.isReady()` |
-| `sound.loaded(id)` | `snd.isClosed()` |
-| `sound.playing(id)` | `snd.isPlaying()` or `snd.isPaused()` |
-| `sound.currentTime(id)` (seconds) | `snd.position()` (milliseconds) |
-| `sound.duration(id)` (seconds) | `snd.duration()` (milliseconds) |
-| `sound.percent(id)` | `snd.progress()` |
-| `sound.info(id, field)` | The `*sound.Sound` methods |
+The string-ID functions (`sound.new`, `sound.play(id)`, `sound.volume(id, value)`, and the rest) have
+been removed. Load a `*sound.Sound` with `sound.decodeFile` or `sound.fetch` and call its methods;
+times are in milliseconds, not seconds. `sound.masterVolume` is now `sound.setGlobalVolume`.
 
 ## Behavior and limits
 

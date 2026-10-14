@@ -30,6 +30,7 @@ world.destroy()
 
 With the default gravity `y` points down, so things fall down the screen. Distances are world
 units; Box2D works best with metres for objects from 0.1 to 10 units across. Angles are radians.
+Vectors (gravity, positions, velocities, forces, polygon points) are `{x, y}` objects.
 
 ## API reference
 
@@ -95,15 +96,10 @@ Shape options: `density` (default 1), `friction` (0.2), `restitution` (bouncines
 Using a destroyed world, or a body whose world or self has been destroyed, is a `StateError`:
 methods that return a result fail with it, and the others throw it. A negative `advance` duration, a
 shape size or radius that isn't positive, or a polygon with fewer than 3 or more than 8 points
-throws `ValueError`.
+throws `ValueError`. A vector that isn't an `{x, y}` object, such as an array, throws `TypeError`.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `box2d.newWorld(gravity)` | `box2d.new({gravity: {x, y}})` |
-| `world.step(dt, velocityIterations?, positionIterations?)` (seconds) | `world.advance(ms, {velocityIterations, positionIterations})` (milliseconds) |
-| `world.destroyBody(body)` | `body.destroy()` |
-| `body.awake()` | `body.isAwake()` |
+`box2d.newWorld(gravity)` is now `box2d.new({gravity})`, `world.step(seconds)` is
+`world.advance(ms)`, `world.destroyBody(body)` is `body.destroy()`, and `body.awake()` is
+`body.isAwake()`. Vectors are read only as `{x, y}` objects, not `[x, y]` arrays.

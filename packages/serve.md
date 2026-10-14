@@ -335,31 +335,6 @@ Middleware factories, each returning a `serve.Handler`:
 | `c.set(key: string, value)` | `void` | Stores a value for later handlers. |
 | `c.get(key: string)` | `any` | A stored value, or `null`. |
 
-## Deprecated
-
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `c.string(status, format, ...values)` | `c.text(status, body)` with a string template |
-| `c.data(status, contentType, bytes)` | `c.send(status, contentType, body)` |
-| `c.ok(value)` | `c.json(200, value)` |
-| `c.created(value)` | `c.json(201, value)` |
-| `c.redirectPermanent(url)` | `c.redirect(301, url)` |
-| `c.queryDefault(key, def)` | `c.query(key) ?? def` |
-| `c.formValueDefault(key, def)` | `c.formValue(key) ?? def` |
-| `c.getString(key)`, `c.getInt(key)`, `c.getBool(key)`, `c.getFloat(key)` | `c.get(key)` with a typed declaration |
-| `c.written()` | `c.isWritten()` |
-| `c.basicAuth()` (returned `{ok, username, password}`) | `c.credentials()`, which returns `null` when there are none |
-| `c.setCookie(name, value, maxAge, path, domain, secure, httpOnly)` (`maxAge` in seconds) | `c.setCookie(name, value, {maxAge: ms, path, domain, secure, httpOnly})` |
-| `c.html(status, name, data)` with Go templates | `app.views(dir)` and `c.render(name, data)` |
-| `app.serve(address)` | `app.run(address)` |
-| `app.serveTLS(address, certFile, keyFile)` | `app.runTLS(address, certFile, keyFile)` |
-| `app.loadHTMLGlob(pattern)`, `app.setFuncMap(funcs)` | `app.views(dir)` and `c.render(name, data)`, which use std:template syntax |
-| `serve.rateLimit(maxRequests, windowSeconds)` | `serve.limitRequests(maxRequests, {window: ms})` |
-| `serve.timeout(seconds)` | `serve.timeLimit(ms)` |
-| `serve.recover()` | Drop it; handlers that throw already answer `500` and print their error |
-
 ## Behavior and limits
 
 `c.query`, `c.header`, `c.cookie`, `c.bearer` and `c.formValue` return `null` for a missing value,
@@ -367,5 +342,11 @@ not `""`. Comparing one with `""` or joining it into a string with `++` is a com
 write `?? ""` or check for `null` first.
 
 Body helpers cache the request bytes, so reading JSON, a form or a bound value doesn't consume the
-body for later helpers. `c.html` answers `500` instead of writing template error text into a `200`
-response.
+body for later helpers.
+
+## Changes from earlier versions
+
+`c.setCookie` takes only an options object, with `maxAge` in milliseconds, and `c.html` takes no
+template data: render views with `app.views(dir)` and `c.render(name, data)`. Older helpers such as
+`c.string`, `c.ok`, `app.serve`, `serve.rateLimit` and `serve.timeout` are gone; use `c.text`,
+`c.json(200, value)`, `app.run`, `serve.limitRequests` and `serve.timeLimit`.

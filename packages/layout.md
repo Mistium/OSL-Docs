@@ -23,7 +23,7 @@ string name = "Ada"
 layout.run({title: "Settings", width: 480, height: 320}, () -> (
   layout.column({padding: 20, gap: 12, width: "grow"}, () -> (
     layout.text("Settings", {size: 24, bold: true})
-    layout.column("card", () -> (
+    layout.column({style: "card"}, () -> (
       dark = layout.checkbox("Dark mode", dark)
       volume = layout.slider(volume, 0, 1, {width: "grow"})
       name = layout.input(name, {width: "grow", maxLength: 40})
@@ -52,7 +52,7 @@ your own raylib loop, call `layout.frame(body)` inside `raylib.draw`.
 
 `layout.run` options: `title` (default `"OSL"`), `width` (800), `height` (600), `fps` (60),
 `background` (default `"#f5f5f5"`), `resizable` (default `true`), `frames` (stop after this many;
-0 runs until closed), and `style` (the root column's style). It fails with `RuntimeError` when a
+0 runs until closed), and `style` (an object of style keys for the root column). It fails with `RuntimeError` when a
 window can't be opened.
 
 A frame laid out once without a window is enough for `layout.rect`, which makes layouts testable:
@@ -72,8 +72,9 @@ log layout.rect("right") ?? {x: 0, y: 0, width: 0, height: 0}
 
 ### Containers and widgets
 
-Every container and widget takes optional style arguments: an object of style keys, a style name
-string, or both. Widgets must be called inside `layout.frame` or `layout.run`.
+Every container and widget takes an optional options object of style keys. To apply a named style,
+give its name in the `style` key: `layout.column({style: "card"}, body)`. Widgets must be called
+inside `layout.frame` or `layout.run`.
 
 | Function | Returns | Notes |
 | --- | --- | --- |
@@ -89,8 +90,8 @@ string, or both. Widgets must be called inside `layout.frame` or `layout.run`.
 | `layout.area(options?, draw?)` | `void` | Reserves space and calls `draw(rect)` with its rectangle, to draw custom content with raylib. |
 | `layout.spacer(options?)` | `void` | Empty space that grows to fill its container unless a size is given. |
 
-Pass each widget's result back in next frame (`dark = layout.checkbox("Dark", dark)`).
-`layout.button` also accepts a function argument, which is called when the button is clicked.
+Pass each widget's result back in next frame (`dark = layout.checkbox("Dark", dark)`), and test
+`layout.button`'s result to act on a click.
 
 ### Style keys
 
@@ -101,30 +102,28 @@ Pass each widget's result back in next frame (`dark = layout.checkbox("Dark", da
 | `gap` | Space between children. |
 | `justify` | Leftover space along the main axis: `"start"`, `"center"`, `"end"`, `"space-between"`, `"space-around"`, `"space-evenly"`. |
 | `align` | Placement across the main axis: `"start"`, `"center"`, `"end"`. |
-| `background`, `color` | Colors, as for [raylib](raylib.md). |
+| `background`, `color` | Any CSS color that [`colors.parse`](colors.md) reads, or `{r, g, b, a}`. Names are CSS colors, so `"red"` is `#ff0000`, unlike raylib's palette. |
 | `radius` | Rounded corners. |
 | `size` | Font size. |
 | `bold` | Bold text. |
 | `id` | A name for `layout.rect`. |
 | `maxLength` | For `input`. |
-| `style` | Style names to merge in, such as `"card wide"`. |
+| `style` | Names of styles defined with `layout.style` to merge in, such as `"card wide"`. |
 
 Several style names separated by spaces (`"card wide"`) merge left to right, later ones winning, and
-an inline object is merged last.
+the other keys of the options object are merged last.
 
 ## Errors
 
 | Situation | Kind |
 | --- | --- |
 | An unknown style key, an undefined style name, or a bad value (`width: "wide"`, `justify: "middle"`, an invalid color), or `min` more than `max` in `slider` | `ValueError` (thrown) |
-| A wrong kind of argument (`gap: "1"`, a number where options or a function belong, two functions) | `TypeError` (thrown) |
+| A wrong kind of argument (`gap: "1"`, a string or number where options or a function belong, two functions) | `TypeError` (thrown) |
 | A widget called outside `layout.frame`/`layout.run`, or `layout.frame` nested inside another | `StateError` (thrown) |
 | `layout.run` can't open a window | `RuntimeError` (result) |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `layout.run("Title", body)` | `layout.run({title: "Title"}, body)` |
+Style names are no longer passed as bare strings: write `layout.column({style: "card"}, body)`
+instead of `layout.column("card", body)`, and `layout.run({title: "Title"}, body)` instead of
+`layout.run("Title", body)`. `layout.button` no longer takes a click callback; test its result.

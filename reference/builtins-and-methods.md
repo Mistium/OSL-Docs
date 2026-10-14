@@ -11,7 +11,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `string(value)` | Converts a value to text. Prefer `.toStr()` in application code. |
 | `number(value)` | Converts a value to a decimal number. Prefer `.toNum()`. |
 | `int(value)` | Converts a value to an integer. Prefer `.toInt()`. |
-| `boolean(value)` | Converts a value using OSL truthiness. Prefer `.toBool()`. |
+| `boolean(value)` | Converts a value using OSL truthiness, so `boolean(1)` is `true`. `.toBool()` is stricter. |
 | `array(value)` | Converts a supported value to an array. |
 | `object(value)` | Converts a supported value to an object. |
 | `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. |
@@ -39,7 +39,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `.toStr()` | String conversion |
 | `.toNum()` | Number conversion |
 | `.toInt()` | Integer conversion |
-| `.toBool()` | Boolean conversion |
+| `.toBool()` | `true` for `true` and the string `"true"`, otherwise `false` |
 | `.getType()` | Runtime type name |
 | `.assert(type)` | Runtime type assertion |
 | `.assertElse(type, fallback)` | Assertion with a fallback |
@@ -93,11 +93,12 @@ contains     index         first         last
 left         right         trim          concat
 map          filter        some          every
 sort         sortBy        reverse       randomOf
-join         clone         getKeys       getValues
+join         clone         getKeys
 min          max           sum           product
 resize       iter
 ```
 
+`getKeys(key)` returns the `key` field of each object in the array, `null` where it is missing.
 `iter()` returns a lazy iterator over the items; see [Iterators and generators](../guide/iterators.md).
 
 Array positions are 1-based. Mutating methods change the original array, including arrays stored in object fields or array items, so `o.list.append(x)` and `grid[1].pop()` update the stored array. `.clone()` creates an independent deep copy.
@@ -146,5 +147,7 @@ Strings, arrays, objects, numbers, and functions can resolve methods through pro
 
 Null guards also narrow nullable typed arrays, typed dictionaries, and named records. After `if values == null return`, a `string[]?` value can use string-array methods without an assertion.
 
-Package handles report their qualified `typeof` name, such as `*cache.Cache` or `*process.Process`.
-Built-in `xml`, `map`, `set`, `canvas`, `option`, and `result` values keep their language type names.
+Package handles report their qualified `typeof` name, such as `*cache.Cache` or `*process.Child`.
+Built-in `xml`, `map`, `set`, `option`, and `result` values keep their language type names. For
+images, use [`img`](../packages/img.md): the builtin `canvas` type has been removed, and
+`canvas(...)` is a compile error that points at `img.new(width, height, {fill: color})`.

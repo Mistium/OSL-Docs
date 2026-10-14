@@ -82,24 +82,12 @@ The run, eval, and call functions fail with:
 
 A state stays usable after a timeout.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `lua.create()` | `lua.new(options)` |
-| `lua.doString(code)` | `lua.new()` and `L.run(code)`, which reports failure |
-| `lua.runTimeout(code, seconds)` | `lua.run(code, {timeout: milliseconds})` |
-| `lua.runFile(path)`, which returns `{success, error}` | `lua.evalFile(path)` |
-| `lua.get(code, name)` | `L.run(code)` in a `lua.new()` state, then `L.get(name)` |
-| `lua.newTable()` | `{}` |
-| `L.doString(code)`, `L.loadString(code)` | `L.run(code)` |
-| `L.doStringTimeout(code, seconds)` | `L.run(code, {timeout: milliseconds})` |
-| `L.doFile(path)`, `L.loadFile(path)` | `L.runFile(path)` |
-| `L.getGlobal(name)`, `L.setGlobal(name, value)` | `L.get(name)`, `L.set(name, value)` |
-| `L.callTimeout(name, seconds, ...args)` | `L.call(name, ...args)` with the timeout set by `lua.new({timeout: ms})` |
-| `L.getError()` | The error the new methods return, as in `L.run(code) catch (err) ( ... )` |
+`lua.create`, `lua.doString`, `lua.runTimeout`, `lua.get`, and `lua.newTable` are gone, along with
+the `L.doString`, `L.loadString`, `L.doFile`, `L.getGlobal`, `L.setGlobal`, `L.callTimeout`, and
+`L.getError` methods. Use `lua.new`, `L.run`, `L.runFile`, `L.get`, and `L.set`, which report
+failures with `catch`. Timeouts are in milliseconds. `lua.runFile` is now `lua.evalFile`.
 
 ## Notes
 

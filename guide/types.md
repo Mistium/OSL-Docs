@@ -171,7 +171,8 @@ silently go wrong, because `null` equals none of `""`, `0`, and `false` and has 
 
 Compare with `null` to test for a missing value, or give a fallback first:
 `(c.ttl("token") ?? 0) == 0`, `"left: " ++ (c.ttl("token") ?? 0)`. After `if x != null`, the
-value is narrowed and these forms compile.
+value is narrowed and these forms compile. An `else if` condition also sees the checks before it,
+so after `if name == null ( ... )`, `else if name.len > 3` reads `name` as a `string`.
 
 `log`, `say`, `warn`, and `error` may still print a `T?` as it is, so `log "left: " ++ c.ttl("x")`
 prints `left: null`.
@@ -264,34 +265,37 @@ A field that may be absent has a nullable type, such as the `int?` `nextRun` of 
 no record returns a nullable record, written `{name: string, ...}?` in diagnostics. A record
 converts to an ordinary `object` when you assign or pass it as one.
 
-A record key that has been replaced stays readable for one release with a deprecation warning that
-names the replacement:
-
-```text
-DeprecationWarning: the record key 'valid' is deprecated: it is always true now that semver.parse fails with ParseError for an invalid version; use semver.isValid(text) to check one
-```
-
 ## Assertions
 
 Use `.<T>` when a dynamic value must already have a specific runtime type:
 
 ```osl
-any value = loadValue()
-object record = value.<object>
-*ws.Connection conn = raw.<*ws.Connection>
+import "std:ws"
+
+any[] values = [{name: "Ada"}, null]
+object record = values[1].<object>
+log record.name
+
+any raw = values[2]
+*ws.Connection? conn = raw.<*ws.Connection?>
+log conn == null // true
 ```
 
 `.<T>(fallback)` returns the fallback after a mismatch. When the fallback has an unambiguous type, omit `T`:
 
 ```osl
-string name = value.<>("")
-object data = value.<object>({})
+any[] values = [42]
+string name = values[1].<>("")
+object data = values[1].<object>({})
+log name.len // 0
+log data     // {}
 ```
 
 - `.<T>()` uses the zero value of the type as its fallback, such as `value.<array>()` or `value.<string>()`.
 - Negated assertions `.<!T>` check that a value is never that type. `.<!null>` asserts a non-null value, and `.<!null>(fallback)` supplies a default when null.
 - Nullable assertions `.<T?>` accept null unchanged. `.<string?>` and `.<string?>(fallback)` return null for null or missing values, retain strings, and fail or use the fallback for other values.
 - `.as<T>` converts a value. An assertion checks its existing type; a failed known assertion recommends the relevant conversion.
+- `.<number>` accepts an `int` too and gives it back as a `number`, as a `number` parameter does. `typeof(x) == "number"` still compares the type name, so it is `false` for an `int`.
 
 Compiler and runtime diagnostics use these current forms for assertions, fallbacks, and conversions. Assertion warning codes remain unchanged.
 
@@ -370,10 +374,13 @@ a default. `.unwrap()` returns the typed success value and throws for an error r
 The most common conversions are methods:
 
 ```osl
-string text = value.toStr()
+any[] values = ["12.5", "true"]
+string text = values[1].toStr()
 number decimal = text.toNum()
 int whole = decimal.toInt()
-boolean enabled = value.toBool()
+boolean enabled = values[2].toBool()
+log whole   // 12
+log enabled // true
 ```
 
 Conversion is different from assertion. Conversion attempts to produce another representation. Assertion checks the existing runtime type.
@@ -383,7 +390,7 @@ Integer values widen into `number` targets freely, so an `int` variable can be a
 ```osl
 number n = 1.5
 int a = n + 1   // fine: the operator result narrows automatically
-int b = n       // TypeError: convert the value explicitly with .toInt()
+int b = n       // TypeError: convert the value explicitly
 int c = n.toInt() // fine
 ```
 
@@ -418,6 +425,15 @@ the same way for every package:
 - An options object is checked too: an unknown or misspelled key throws `ValueError` with a
   suggestion and the accepted keys, such as
   `retry.call: unknown option "max_delay" (did you mean "maxDelay"?)`.
+
+Some mistakes are caught before the program runs. Each of these is a compile error:
+
+- a package function or constant that doesn't exist, such as `random.int(6)`, with a suggestion
+  when a current name is close;
+- the wrong number of arguments to a package function or handle method, such as
+  `random.between(1)`;
+- a value that isn't an object where an options object is expected, such as
+  `retry.delayFor(1, 100)`.
 
 ## Null values and type checks
 

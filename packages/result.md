@@ -77,15 +77,7 @@ types its error side as `string`; use `result<T, error>` to type both.
 | `r.expect(message)` | `T` | The value, or throws `message` when the result failed. |
 | `r.unwrapErr(message?)` | `E` | The error. Throws `StateError`, or `message` when given, when the result holds a value. |
 | `r.expectErr(message)` | `E` | The error, or throws `message` when the result holds a value. |
-| `r.unwrapAs(type)` | `type` | The value checked against an OSL type, as in `r.unwrapAs(int)` or `r.unwrapAs(string[])`; `any` accepts every value. Throws the error when the result failed and `TypeError` when the value has another type. |
+| `r.unwrapAs(type: string)` | `type` | The value checked against an OSL type named as a string, as in `r.unwrapAs("int")` or `r.unwrapAs("string[]")`. `"any"` accepts every value, and `"number"` accepts an int too and returns it as a number. Throws the error when the result failed and `TypeError` when the value has another type. |
 
 `log` prints an ok result as its value and a failed one as its error, `Kind: message`, without
 throwing. `typeof` reports `"result"`.
-
-## Deprecated
-
-These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
-
-| Deprecated | Use instead |
-| --- | --- |
-| `r.fromGo(value, err)` on a result value | `result.fromGo(value, err)` |

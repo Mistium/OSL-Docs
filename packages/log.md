@@ -39,7 +39,7 @@ and `ERROR`. Messages below the current level are neither printed nor recorded. 
 
 | Function | Returns | Notes |
 | --- | --- | --- |
-| `log.setLevel(level)` | `void` | Sets the least severe level that is printed and recorded. Names are case-insensitive. Throws `ValueError` for any other name. |
+| `log.setLevel(level)` | `void` | Sets the least severe level that is printed and recorded. Names are case-insensitive, and `INFORMATION`, `WARNING`, `ERR` and `OK` are accepted as aliases. Throws `ValueError` for any other name. |
 | `log.level()` | `string` | The current level's name, such as `"INFO"`. |
 
 ## Logging
@@ -124,18 +124,12 @@ for entry in log.history() (
 log.exportHistory("session.log")
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `log.getLevel()` | `log.level()` |
-| `log.progressBar(current, total, width, label)` | `log.progress(current, total, {width, label})` |
-| `log.getHistory()` (entries with an `HH:MM:SS` `timestamp` string) | `log.history()` (entries with a unix-millisecond `time`) |
-
-`log.log` and `log.withTimestamp` now throw `ValueError` for an unknown level instead of logging at
-`INFO`. `log.shouldLog` has been removed.
+`log.getLevel()` is now `log.level()`, `log.progressBar(current, total, width, label)` is
+`log.progress(current, total, {width, label})`, and `log.getHistory()` is `log.history()`, whose
+entries carry a unix-millisecond `time` instead of an `HH:MM:SS` `timestamp` string. `log.log` and
+`log.withTimestamp` throw `ValueError` for an unknown level instead of logging at `INFO`.
 
 ## Behavior and limits
 

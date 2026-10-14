@@ -22,7 +22,7 @@ for row in d.queryMap("SELECT name, age FROM users WHERE age > ?", 30) (
   log row.name ++ " is " ++ row.age
 )
 
-auto changed = d.run("UPDATE users SET age = age + 1 WHERE id = ?", id)
+auto changed = d.exec("UPDATE users SET age = age + 1 WHERE id = ?", id)
 log changed.rowsAffected
 ```
 
@@ -41,8 +41,7 @@ joining user input into the string.
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `d.exec(query, ...args)` | `result<unit, error>` | Runs one statement. As a condition (`if d.exec(...)`) it is true when the statement succeeded. |
-| `d.run(query, ...args)` | `result<object, error>` | Runs one statement and returns `{rowsAffected, lastInsertID}`. `lastInsertID` is the rowid of the last inserted row, or 0. |
+| `d.exec(query, ...args)` | `result<{rowsAffected, lastInsertID}, error>` | Runs one statement and returns how many rows it changed and the rowid of the last inserted row, or 0. |
 | `d.query(query, ...args)` | `result<*db.Row[], error>` | The rows as `*db.Row` handles. |
 | `d.queryOne(query, ...args)` | `result<*db.Row?, error>` | The first row, or `null` when there are none. |
 | `d.queryMap(query, ...args)` | `result<object[], error>` | The rows as objects keyed by column name. |
@@ -56,7 +55,7 @@ joining user input into the string.
 | `d.dropTable(table)` | `result<unit, error>` | Deletes a table and its rows. A missing table is not an error. |
 | `d.tables()` | `result<string[], error>` | Table names in alphabetical order, including the `coll_` tables behind collections. |
 | `d.columns(table)` | `result<string[], error>` | Column names in table order, or `[]` when there is no such table. |
-| `d.lastInsertID()` | `result<int, error>` | The rowid of the most recent successful `INSERT` on this database, or 0. Prefer the value from `run` or `insert`, which belongs to one statement. |
+| `d.lastInsertID()` | `result<int, error>` | The rowid of the most recent successful `INSERT` on this database, or 0. Prefer the `lastInsertID` from `exec` or the rowid `insert` returns, which belong to one statement. |
 | `d.close()` | `result<unit, error>` | Closes the database, rolling back an open transaction. Closing twice does nothing. |
 
 `insert`, `update`, `delete`, `count`, `exists`, `createTable`, `dropTable` and `columns` throw
@@ -165,8 +164,10 @@ if doc != null (
 A filter object matches documents whose fields equal its values: `{role: "admin"}`. For other
 comparisons, give an object of operators: `{age: {"$gte": 18, "$lt": 65}}`. Quote keys that start
 with `$`. The operators are `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$contains`,
-`$regex` and `$exists`, matching the query operators below. An unknown operator throws `ValueError`,
-and an invalid `$regex` fails with `ParseError`.
+`$regex` and `$exists`, matching the query operators below. `$and`, `$or` and `$nor` take an array
+of filters and `$not` takes one filter, to combine conditions:
+`{"$or": [{role: "admin"}, {age: {"$gte": 30}}]}`. An unknown operator throws `ValueError`, and an
+invalid `$regex` fails with `ParseError`.
 
 ### `*db.Query` methods
 
@@ -174,7 +175,7 @@ Query builders mutate the query and return it, so calls chain. Conditions combin
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `q.where(field, op, value)` | `*db.Query` | Adds a condition. `field` may be a dot path. `op` is `"=="`, `"!="`, `">"`, `">="`, `"<"`, `"<="`, `"in"` or `"notIn"` (value is an array), `"contains"` (a substring of a string or a member of an array), `"matches"` (value is a regular expression) or `"exists"` (value is `true` or `false`). The filter forms such as `"$gt"` work too. Throws `ValueError` for any other operator. |
+| `q.where(field, op, value)` | `*db.Query` | Adds a condition. `field` may be a dot path. `op` is `"=="`, `"!="`, `">"`, `">="`, `"<"`, `"<="`, `"in"` or `"notIn"` (value is an array), `"contains"` (a substring of a string or a member of an array), `"matches"` (value is a regular expression) or `"exists"` (value is `true` or `false`). Throws `ValueError` for any other operator, including the filter forms such as `"$gt"`. |
 | `q.sort(field, direction)` | `*db.Query` | Orders by `field`, `"asc"` or `"desc"`, after earlier sort fields. Mixed types order as null, booleans, numbers, strings, objects, arrays. Throws `ValueError` for another direction. |
 | `q.fields(...names)` | `*db.Query` | Returns only the named fields (dot paths allowed) plus `_id`. |
 | `q.limit(n)` | `*db.Query` | Returns at most `n` documents. Throws `ValueError` for a negative `n`. |
@@ -222,23 +223,9 @@ SQL and collection methods fail with these kinds:
 | `TimeoutError` | The database is locked |
 | `StateError` | The database is closed, or a transaction call is out of order (thrown) |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each use.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `db.openMemory()` | `db.open(":memory:")` |
-| `d.getTables()` | `d.tables()` |
-| `d.getColumns(table)` | `d.columns(table)` |
-| `d.rowsAffected(query, ...args)` | `d.run(query, ...args).rowsAffected` |
-| `row.getByName(name)` | `row.get(name)` |
-| `q.and(field, op, value)` | `q.where(field, op, value)` |
-| `q.get()` | `q.all()` |
-| Operator constants `db.equal`, `db.eq`, `db.notEqual`, `db.ne`, `db.greater`, `db.gt`, `db.greaterEqual`, `db.gte`, `db.less`, `db.lt`, `db.lessEqual`, `db.lte`, `db.oneOf`, `db.in`, `db.notOneOf`, `db.nin`, `db.contains`, `db.matches`, `db.present` | The operator as a string: `"=="`, `"!="`, `">"`, `">="`, `"<"`, `"<="`, `"in"`, `"notIn"`, `"contains"`, `"matches"`, `"exists"` |
-| Sort constants `db.asc`, `db.desc` | `"asc"`, `"desc"` |
-
-`query.matched()` has been removed; use `query.all()`.
+`d.exec` now returns `{rowsAffected, lastInsertID}`, so `d.run` and `d.rowsAffected` are gone. `db.openMemory()` is `db.open(":memory:")`, `getTables` and `getColumns` are `tables` and `columns`, `row.getByName` is `row.get`, and `q.and` and `q.get` are `q.where` and `q.all`. The operator and sort constants such as `db.gte` and `db.desc` are gone: pass the operator (`">="`) or direction (`"desc"`) as a string.
 
 ## Behavior and limits
 

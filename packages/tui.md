@@ -49,7 +49,7 @@ Text widths are measured in terminal columns, so wide characters such as CJK and
 | `tui.table(headers: array, rows: array, options?)` | `string` | A table drawn with `+`, `-`, and `\|`, each column as wide as its widest cell. Option: `cellColor`, a function called with each body cell that returns its color as for `tui.color`; it also turns on cyan borders and bold headers. |
 | `tui.grid(items: array, columns: int)` | `string` | Items in `columns` columns (2 when 0 or less). |
 | `tui.tree(items: array, prefix: string)` | `string` | A tree with `├──` and `└──`. An item is a value, or `{name, children}`. |
-| `tui.barChart(data: array, width: int, colored: boolean)` | `string` | A horizontal bar chart of `{label, value}` objects or `[label, value]` arrays. |
+| `tui.barChart(data: array, width: int, colored: boolean)` | `string` | A horizontal bar chart of `{label, value}` objects or `[label, value]` arrays: a scale line `width` columns long, then each label with a bar scaled so the largest value fills `width`, and the value. `colored` draws the bars in green. |
 | `tui.drawPanel(rect: object, options?)` | `void` | Draws a box filling `{x, y, width, height}` in terminal cells and blanks its inside. The cursor stays put. Option: `title`. |
 
 ```osl
@@ -124,18 +124,10 @@ if pick == null (
 | cursor and drawing functions | `ValueError` (thrown) | A negative position, count, or width; a panel smaller than 2 x 2. |
 | `table`, `barChart` | `TypeError` (thrown) | A row that isn't an array, or a chart item of the wrong shape. |
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `tui.moveCursor(x, y)` (counted from 1) | `tui.moveTo(x, y)` (counts from 0) |
-| `tui.rgbColor(r, g, b, text)` | `tui.color({r: r, g: g, b: b}, text)` or `tui.color("#rrggbb", text)` |
-| `tui.rgbBg(r, g, b, text)` | `tui.bgColor({r: r, g: g, b: b}, text)` or `tui.bgColor("#rrggbb", text)` |
-| `tui.tableColored(headers, rows, colorFn)` | `tui.table(headers, rows, {cellColor: colorFn})` |
-| `tui.select(prompt, options)`, `tui.menu(title, items)`, `tui.interactiveSelect(prompt, options)` | `tui.choose(prompt, choices)`, which returns `null` when the user cancels |
-| `tui.drawBox(x, y, width, height, title)` | `tui.drawPanel({x, y, width, height}, {title})` |
-| `tui.size()` | `tui.width()` and `tui.height()` |
-
-`tui.center` now centres in the terminal's width; pass `{width: 80}` for the old fixed width.
+`tui.moveCursor(x, y)`, which counted from 1, is now `tui.moveTo(x, y)`, counting from 0.
+`tui.rgbColor` and `tui.rgbBg` became `tui.color` and `tui.bgColor` with `{r, g, b}` or `"#rrggbb"`,
+`tui.tableColored` became the `cellColor` option of `tui.table`, `tui.select`, `tui.menu`, and
+`tui.interactiveSelect` became `tui.choose`, `tui.drawBox` became `tui.drawPanel`, and `tui.size()`
+became `tui.width()` and `tui.height()`.

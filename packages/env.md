@@ -113,31 +113,13 @@ Files and the environment:
 
 `read` and `save` throw `StateError` when the file has no path.
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old typed
-getters return the default for a malformed value instead of failing.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `env.getDefault(key, def)` | `env.get(key, def)` |
-| `env.getInt(key, def)` | `env.int(key, def)` |
-| `env.getFloat(key, def)` | `env.number(key, def)` |
-| `env.getBool(key, def)` | `env.bool(key, def)` |
-| `env.value(key)` and its `key`, `exists`, `string`, `fallback`, `int`, `float`, `bool` methods | `env.get`, `env.has`, `env.int`, `env.number`, `env.bool` |
-| `env.overload(...paths)` | `env.parseFile(path).apply({override: true})` |
-| `env.local()` | `env.load()` |
-| `env.localOverload()` | `env.parseFile(".env").apply({override: true})` |
-| `env.read(path)` | `env.parseFile(path)`, which fails when the file can't be read |
-| `env.file(path)` | `env.from({}).setPath(path)`, or `env.parseFile(path)` for a file that exists |
-| `env.home()` | `sys.homeDir()` |
-| `env.cwd()` | `process.cwd()` |
-| `file.value(key)` | `file.get`, `file.has`, `file.int`, `file.number`, `file.bool` |
-| `file.getDefault`, `file.getInt`, `file.getFloat`, `file.getBool` | `file.get`, `file.int`, `file.number`, `file.bool` |
-| `file.loaded()` | `env.parseFile` and `file.read()` now fail when the file can't be read |
-| `file.load()` | `file.read()` then `file.apply()` |
-| `file.overload()` | `file.read()` then `file.apply({override: true})` |
-| `file.applyOverload()` | `file.apply({override: true})` |
+The old getters are gone: `env.getDefault` is now `env.get`, and `env.getInt`, `env.getFloat` and
+`env.getBool` are `env.int`, `env.number` and `env.bool`, which fail on a malformed value. Replace
+`env.local()` with `env.load()`, `env.overload(path)` with
+`env.parseFile(path).apply({override: true})`, and `env.read(path)` with `env.parseFile(path)`.
+`env.home()` and `env.cwd()` are `sys.homeDir()` and `process.cwd()`.
 
 ## Behavior and limits
 

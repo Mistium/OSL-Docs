@@ -131,19 +131,9 @@ if parsed.isErr() (
 )
 ```
 
-## Deprecated
+## Changes from earlier versions
 
-These still work for one release and draw an `OSL-DEPRECATED` warning.
-
-| Deprecated | Use instead |
-| --- | --- |
-| `date.nowUs()` | `date.now().unixMicros()` |
-| `date.fromUnixMs(ms)` | `date.fromUnixMillis(ms)` |
-| `date.fromUnixUs(us)` | `date.fromUnixMicros(us)` |
-| `date.duration(us)` (microseconds) | `date.millis(ms)` (milliseconds) |
-| `dt.unixMs()` | `dt.unixMillis()` |
-| `dt.unixUs()` | `dt.unixMicros()` |
-| `dt.round(unit)` (never rounds up) | `dt.truncate(unit)` |
+The abbreviated names are gone: `fromUnixMs`, `fromUnixUs`, `unixMs`, and `unixUs` are now `fromUnixMillis`, `fromUnixMicros`, `unixMillis`, and `unixMicros`, and `date.nowUs()` is `date.now().unixMicros()`. `date.duration(us)` gave way to `date.millis(ms)`, which takes milliseconds, and `dt.round(unit)` to `dt.truncate(unit)`.
 
 ## Behavior and limits
 
