@@ -1,6 +1,8 @@
 # crypto
 
-Use `crypto` for hashing, random values, encoding helpers, password checks, signatures, and file encryption helpers.
+Use `crypto` for hashes, HMACs, password hashing, authenticated encryption, Ed25519 signatures, and
+cryptographically secure random values. For fast, seedable randomness that isn't secret, use
+[`random`](random.md).
 
 ```osl
 import "std:crypto"
@@ -11,121 +13,135 @@ import "std:crypto"
 ```osl
 import "std:crypto"
 
-string digest = crypto.sha256("hello")
-string id = crypto.randomUUID()
-log digest
+log crypto.sha256("hello")
+log crypto.hash("sha3-256", "hello")
+
+string mac = crypto.hmac("sha256", "secret-key", "message")
+log crypto.constantTimeCompare(mac, crypto.hmac("sha256", "secret-key", "message")) // true
+
+string stored = crypto.hashPassword("hunter2")
+log crypto.verifyPassword("hunter2", stored) // true
+
+string sealed = crypto.encrypt("top secret", "correct horse")
+string plain = crypto.decrypt(sealed, "correct horse") catch (err) (
+  log err // PermissionError for a wrong password or modified data
+  return
+)
+log plain
 ```
+
+Parameters typed `byte[]` below also accept a string, which is used as its UTF-8 bytes.
 
 ## API reference
 
-### `crypto`
+### Hashes and HMACs
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `crypto.sha1(data: any)` | `string` | Returns a hexadecimal SHA-1 digest. |
-| `crypto.sha256(data: any)` | `string` | Returns a hexadecimal SHA-256 digest. |
-| `crypto.sha512(data: any)` | `string` | Returns a hexadecimal SHA-512 digest. |
-| `crypto.md5(data: any)` | `string` | Returns a hexadecimal MD5 digest. |
-| `crypto.sha3_256(data: any)` | `string` | Returns a hexadecimal SHA3-256 digest. |
-| `crypto.hmacSha256(key: any, data: any)` | `string` | Returns a hexadecimal HMAC-SHA256 value. |
-| `crypto.hmacSha512(key: any, data: any)` | `string` | Returns a hexadecimal HMAC-SHA512 value. |
-| `crypto.md5Hash(data: any)` | `string` | Alias of `crypto.md5`. |
-| `crypto.aes256Encrypt(key: any, plaintext: any)` | `string` | Encrypts with AES-GCM using a normalized 256-bit key. |
-| `crypto.aes256Decrypt(key: any, ciphertext: any)` | `string` | Authenticates and decrypts AES-GCM ciphertext, returning empty on failure. |
-| `crypto.randomBytes(size: any)` | `string` | Generates random bytes. |
-| `crypto.randomInt(...args: any)` | `number` | Returns a secure integer in `[0, max)` or `[min, max)`. |
-| `crypto.randomString(length: any)` | `string` | Generates random string. |
-| `crypto.randomFloat(...args: any)` | `number` | Generates random float. |
-| `crypto.uuidv4()` | `string` |  |
-| `crypto.randomUUID()` | `string` | Generates random uuid. |
-| `crypto.random(min: any, max: any)` | `any` | Returns a secure integer in `[min, max)`. |
-| `crypto.hash(hashFunc: any, data: any)` | `string` |  |
-| `crypto.pbkdf2(password: any, salt: any, iterations: any, keyLen: any, hashFunc: any)` | `string` |  |
-| `crypto.hexEncode(data: any)` | `string` |  |
-| `crypto.hexDecode(data: any)` | `string` |  |
-| `crypto.binEncode(data: any)` | `string` |  |
-| `crypto.binDecode(data: any)` | `string` |  |
-| `crypto.base64Encode(data: any)` | `string` |  |
-| `crypto.base64Decode(data: any)` | `string` |  |
-| `crypto.ed25519GenerateKeyPair()` | `object` | Generates an Ed25519 key pair encoded as unpadded base64url. |
-| `crypto.ed25519Sign(privateKey: any, data: any)` | `string` | Signs data with an Ed25519 seed or private key and returns an unpadded base64url signature. |
-| `crypto.ed25519Verify(publicKey: any, data: any, signature: any)` | `boolean` | Verifies an unpadded base64url Ed25519 signature. |
-| `crypto.hashPassword(password: any)` | `string` |  |
-| `crypto.verifyPassword(password: any, storedHash: any)` | `boolean` | Verifies password. |
-| `crypto.bcryptHash(password: any, cost?: any)` | `string` | Creates a bcrypt password hash using cost 10 by default. |
-| `crypto.bcryptVerify(password: any, storedHash: any)` | `boolean` | Verifies a password against a bcrypt hash. |
-| `crypto.generateKeyPair()` | `object` |  |
-| `crypto.sign(key: any, data: any)` | `string` |  |
-| `crypto.verify(key: any, data: any, signature: any)` | `boolean` |  |
-| `crypto.constantTimeCompare(a: any, b: any)` | `boolean` | Uses the standard constant-time comparison, including unequal-length rejection. |
-| `crypto.encrypt(data: any, password: any)` | `string` |  |
-| `crypto.decrypt(data: any, password: any)` | `string` |  |
-| `crypto.encryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Encrypts a file. A failure removes partial output. |
-| `crypto.decryptFile(inputPath: any, outputPath: any, password: any)` | `boolean` | Decrypts a file. Authentication failure removes partial output. |
-| `crypto.hashFile(filePath: any)` | `string` |  |
-| `crypto.hashDirectory(dirPath: any)` | `string` |  |
-| `crypto.secureErase(filePath: any)` | `boolean` |  |
+| `crypto.hash(algorithm: string, data: byte[])` | `string` | The hex digest of `data`. Algorithms: `md5`, `sha1`, `sha224`, `sha256`, `sha384`, `sha512`, `sha3-224`, `sha3-256`, `sha3-384`, `sha3-512`, in any case. |
+| `crypto.md5(data: byte[])` | `string` | Hex MD5. MD5 is broken for security; use it only for checksums and compatibility. |
+| `crypto.sha1(data: byte[])` | `string` | Hex SHA-1. Broken for security; use it only for checksums and compatibility. |
+| `crypto.sha256(data: byte[])` | `string` | Hex SHA-256. |
+| `crypto.sha512(data: byte[])` | `string` | Hex SHA-512. |
+| `crypto.hmac(algorithm: string, key: byte[], data: byte[])` | `string` | The hex HMAC of `data` under `key`, with any algorithm `crypto.hash` accepts. |
+| `crypto.constantTimeCompare(a: byte[], b: byte[])` | `boolean` | Whether `a` and `b` are equal, taking the same time wherever they differ. Use it to compare secrets such as HMACs. |
+| `crypto.hashFile(path: string, options?: object)` | `result<string, error>` | The hex digest of a file, read in pieces. Option: `algorithm` (default `"sha256"`). |
+| `crypto.hashDirectory(path: string, options?: object)` | `result<string, error>` | One hex digest covering every file below a directory: each file's relative path and contents, so it changes when a file is added, removed, renamed, or edited. Option: `algorithm` (default `"sha256"`). |
 
-## Bcrypt password hashing
+### Passwords and keys
 
-#### `crypto.bcryptHash(password, cost?)` → `string`
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `crypto.hashPassword(password: string, options?: object)` | `result<string, error>` | Hashes a password for storage with a random salt. Argon2id by default, giving a `$argon2id$...` string. Options: `algorithm` (`"argon2id"` or `"bcrypt"`) and `cost` (bcrypt's work factor from 4 to 31, default 10). |
+| `crypto.verifyPassword(password: string, hash: string)` | `boolean` | Whether `password` matches a hash from `hashPassword`: Argon2id, bcrypt, or the salted SHA-256 format earlier versions produced. A hash it can't read is `false`. |
+| `crypto.needsRehash(hash: string)` | `boolean` | Whether a stored hash is weaker than what `hashPassword` produces now (bcrypt, old salted SHA-256, or lighter Argon2id settings). After a successful `verifyPassword`, store a fresh `hashPassword(password)`. |
+| `crypto.deriveKey(password: string, salt: byte[], options?: object)` | `string` | A PBKDF2 key as hex. Use a random salt of at least 16 bytes and store it with the result. Options: `iterations` (default 600000), `length` in bytes (default 32), and `hash` (default `"sha256"`). |
 
-Hashes the string representation of `password` with bcrypt. The optional cost
-must be between 4 and 31 and defaults to 10. Invalid costs and passwords longer
-than bcrypt's 72-byte limit return `""`.
+### Encryption
+
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `crypto.encrypt(data: byte[], password: string)` | `string` | Encrypts with a password. The password is stretched with Argon2id and a random salt, and the data is sealed with AES-256-GCM, so the result reveals only the data's length and any change to it is detected. |
+| `crypto.decrypt(data: string, password: string)` | `result<string, error>` | Decrypts text from `crypto.encrypt`, including text from earlier versions. |
+| `crypto.encryptFile(inputPath: string, outputPath: string, password: string)` | `result<unit, error>` | Encrypts a file like `crypto.encrypt` and writes the text to `outputPath`. |
+| `crypto.decryptFile(inputPath: string, outputPath: string, password: string)` | `result<unit, error>` | Decrypts a file from `encryptFile` and writes the original bytes, readable only by the owner when new. |
+| `crypto.aes256Encrypt(key: string, data: byte[])` | `string` | AES-256-GCM under a raw key, as hex, with a fresh random nonce. `key` should be 32 random bytes; a shorter key is zero-padded and a longer one hashed with SHA-256. To encrypt with a password, use `crypto.encrypt`. |
+| `crypto.aes256Decrypt(key: string, ciphertext: string)` | `result<string, error>` | Decrypts text from `aes256Encrypt` with the same key. |
+| `crypto.secureErase(path: string)` | `result<unit, error>` | Overwrites a regular file with random bytes three times, flushing each pass to the device, then deletes it. Best effort: on SSDs, copy-on-write or journaling filesystems, and wherever backups or snapshots exist, copies can survive. |
+
+### Signatures
+
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `crypto.ed25519GenerateKeyPair()` | `{private, public}` | A new Ed25519 key pair: the 32-byte private seed and the public key, each as unpadded base64url. Keep `private` secret. |
+| `crypto.ed25519Sign(privateKey: string, data: byte[])` | `string` | Signs `data`. The key may be base64url or hex, as the 32-byte seed or the 64-byte private key. Returns an unpadded base64url signature. |
+| `crypto.ed25519Verify(publicKey: string, data: byte[], signature: string)` | `boolean` | Whether `signature` is a valid signature of `data` by `publicKey` (base64url or hex). A malformed key or signature is `false`. |
 
 ```osl
-string stored = crypto.bcryptHash("secret")
-```
+import "std:crypto"
 
-#### `crypto.bcryptVerify(password, storedHash)` → `boolean`
-
-Verifies the string representation of `password` against a standard bcrypt
-hash. Both `$2a$` and `$2b$` hashes are accepted. Malformed hashes return
-`false`.
-
-```osl
-boolean valid = crypto.bcryptVerify("secret", stored)
-```
-
-## Ed25519 signatures
-
-#### `crypto.ed25519GenerateKeyPair()` → `object`
-
-Generates an Ed25519 key pair. The returned object contains `private`, a
-32-byte private seed, and `public`, a 32-byte public key. Both values use
-unpadded base64url encoding.
-
-```osl
-object keys = crypto.ed25519GenerateKeyPair()
-```
-
-#### `crypto.ed25519Sign(privateKey, data)` → `string`
-
-Signs the string representation of `data`. `privateKey` may be either a
-32-byte Ed25519 seed or a 64-byte private key encoded as unpadded base64url.
-Returns an unpadded base64url signature, or `""` if the key is malformed.
-
-```osl
+auto keys = crypto.ed25519GenerateKeyPair()
 string signature = crypto.ed25519Sign(keys.private, "hello")
+log crypto.ed25519Verify(keys.public, "hello", signature) // true
 ```
 
-#### `crypto.ed25519Verify(publicKey, data, signature)` → `boolean`
+### Random values and encoding
 
-Verifies the signature against the string representation of `data`. The
-public key and signature must use unpadded base64url encoding. Malformed keys
-and signatures return `false`.
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `crypto.randomHex(size: int)` | `string` | `size` secure random bytes as hex, so the text is `2 * size` characters. |
+| `crypto.randomBetween(min: int, max: int)` | `int` | A secure random whole number from `min` to `max`, both included. The bounds may come in either order. |
+| `crypto.randomFloat(min?: number, max?: number)` | `number` | `randomFloat()` is from 0 up to but not including 1, `randomFloat(max)` from 0 up to `max`, and `randomFloat(min, max)` from `min` up to `max`. |
+| `crypto.randomString(length: int, alphabet?: string)` | `string` | `length` secure random letters and digits, or characters of `alphabet`, as in `crypto.randomString(6, "0123456789")`. |
+| `crypto.randomUUID()` | `string` | A random version 4 UUID. |
+| `crypto.toHex(data: byte[])` | `string` | Lowercase hex. |
+| `crypto.fromHex(text: string)` | `result<byte[], error>` | Decodes hex in either case. |
 
-```osl
-boolean genuine = crypto.ed25519Verify(keys.public, "hello", signature)
-```
+## Errors
+
+Failures from outside the program are results:
+
+- `decrypt`, `aes256Decrypt`, and `decryptFile` fail with `ParseError` when the input isn't
+  ciphertext from this package, and `PermissionError` for the wrong password or key, or modified
+  data.
+- `fromHex` fails with `ParseError` for an odd length or a character that isn't a hex digit.
+- The file functions fail with `NotFoundError`, `PermissionError`, or `IOError` when a file can't
+  be read or written. `hashDirectory` fails with `UnsupportedError` when the tree contains a
+  symbolic link, and `secureErase` for anything but a regular file.
+- `hashPassword` fails with `ValueError` when bcrypt is asked to hash a password over its 72-byte
+  limit.
+
+Bad arguments throw:
+
+- `ValueError` for an unknown hash algorithm, a size or length outside 0 to 16777216, an empty
+  alphabet, a bad `hashPassword` or `deriveKey` option, or an Ed25519 private key that isn't a
+  valid seed or private key.
+- `TypeError` for `randomFloat` with more than two arguments or a non-number.
+
+## Deprecated
+
+These still work for one release with their old behaviour and draw an `OSL-DEPRECATED` warning:
+
+| Deprecated | Use instead |
+| --- | --- |
+| `crypto.sha3_256(data)` | `crypto.hash("sha3-256", data)` |
+| `crypto.md5Hash(data)` | `crypto.md5(data)` |
+| `crypto.hmacSha256(key, data)`, `crypto.hmacSha512(key, data)` | `crypto.hmac("sha256", key, data)`, `crypto.hmac("sha512", key, data)` |
+| `crypto.sign(key, data)`, `crypto.verify(key, data, signature)` | `crypto.hmac("sha256", key, data)` checked with `crypto.constantTimeCompare`, or `crypto.ed25519Sign` / `ed25519Verify`. `sign` is `sha256(key + data)`, which anyone who has seen one signature can extend, so it is not a secure signature. |
+| `crypto.randomBytes(size)` | `crypto.randomHex(size)` |
+| `crypto.randomInt(max)`, `crypto.randomInt(min, max)`, `crypto.random(min, max)` (max excluded) | `crypto.randomBetween(min, max)` (both included) |
+| `crypto.uuidv4()` | `crypto.randomUUID()` |
+| `crypto.hexEncode(data)` | `crypto.toHex(data)` or `text.encodeHex()` |
+| `crypto.hexDecode(text)` (`""` for invalid hex) | `crypto.fromHex(text)` or `text.decodeHex()` |
+| `crypto.binEncode(data)`, `crypto.binDecode(text)` | `text.encodeBin()`, `text.decodeBin()` |
+| `crypto.base64Encode(data)`, `crypto.base64Decode(text)` | `btoa(data)`, `atob(text)` |
+| `crypto.generateKeyPair()` (hex keys) | `crypto.ed25519GenerateKeyPair()` (base64url keys; both encodings sign and verify) |
+| `crypto.bcryptHash(password, cost)` (`""` on failure) | `crypto.hashPassword(password, {algorithm: "bcrypt", cost})`, or `crypto.hashPassword(password)` for Argon2id |
+| `crypto.bcryptVerify(password, hash)` | `crypto.verifyPassword(password, hash)` |
+| `crypto.pbkdf2(password, salt, iterations, length, hash)` (`""` on failure) | `crypto.deriveKey(password, salt, {iterations, length, hash})` |
 
 ## Notes
 
 - Prefer `import "std:crypto"`; the older `import "osl/crypto"` spelling remains supported.
-
-## Behavior and limits
-
-AES keys are truncated or zero-padded to 32 bytes; nonce, salt, iteration, file,
-and ciphertext sizes are validated. Invalid authentication data fails closed and
-partial output is removed.
+- `crypto.encrypt` output starts with `osl1:`. `crypto.decrypt` still reads the format earlier
+  versions produced.

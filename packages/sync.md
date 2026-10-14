@@ -6,29 +6,68 @@ Use `sync` for named locks, scoped locking, one-time execution, and wait groups 
 import "std:sync"
 ```
 
+## Example
+
+```osl
+import "std:sync"
+import "std:thread"
+
+*sync.WaitGroup wg = sync.waitGroup()
+int total = 0
+for i 4 (
+  wg.add()
+  thread.new(def(int n) -> (
+    defer wg.done()
+    sync.withLock("total", def() -> ( total += n ))
+  ), i)
+)
+wg.wait()
+log total // 10
+```
+
 ## API reference
 
 ### `sync`
 
+Locks are named and owned: the thread that locks a name holds it until it unlocks it.
+
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `sync.lock(name: string)` | `void` | Acquires the named lock exclusively, waiting while any writer or reader holds it. |
-| `sync.tryLock(name: string)` | `boolean` | Attempts to acquire the named lock exclusively without blocking. Returns `true` if acquired, `false` if a writer or reader holds it. |
-| `sync.unlock(name: string)` | `void` | Releases an exclusive hold on a named lock; names that are not write-locked are ignored. |
-| `sync.withLock(name: string, fn: any)` | `any` | Acquires `name`, executes `fn()`, and guarantees lock release on exit. Returns `fn()`'s result. |
-| `sync.rlock(name: string)` | `void` | Acquires the named lock for reading. Any number of readers share it; a reader waits only while a writer holds or is waiting for `name`. |
-| `sync.runlock(name: string)` | `void` | Releases one read hold on `name`; a name that is not read-locked is ignored. |
-| `sync.withRLock(name: string, fn: any)` | `any` | Read-locks `name`, executes `fn()`, and guarantees release on exit. Returns `fn()`'s result. |
-| `sync.once(name: string, fn: any)` | `any` | Runs `fn()` at most once across all threads for the given `name`. |
-| `sync.waitGroup()` | `*sync.WaitGroup` | Creates a new WaitGroup for coordinating multiple asynchronous tasks. |
+| `sync.lock(name: string)` | `void` | Takes the exclusive lock `name`, waiting while another thread holds it or a read lock on it. Release it with `sync.unlock(name)`, often with `defer`. |
+| `sync.tryLock(name: string)` | `boolean` | Takes the exclusive lock if it is free and reports whether it did. It never waits, so it reports `false` for a lock this thread already holds. |
+| `sync.unlock(name: string)` | `void` | Releases the exclusive lock `name`. |
+| `sync.withLock(name: string, fn: function)` | `any` | Takes the exclusive lock, calls `fn`, releases the lock even if `fn` throws, and returns what `fn` returned. |
+| `sync.rlock(name: string)` | `void` | Takes a shared read lock on `name`. Other threads' read locks can share it; `sync.lock(name)` waits for it. |
+| `sync.runlock(name: string)` | `void` | Releases this thread's read lock on `name`. |
+| `sync.withRLock(name: string, fn: function)` | `any` | Takes a read lock, calls `fn`, releases the lock even if `fn` throws, and returns what `fn` returned. |
+| `sync.once(name: string, fn: function)` | `any` | Calls `fn` the first time it is called with `name` and returns its value. Every later call with `name` returns `null` without calling its `fn`. Callers wait until the first call has finished. If the first call throws, every call with `name` throws that error. |
+| `sync.waitGroup()` | `*sync.WaitGroup` | A new wait group with a count of 0. |
 
 ### `*sync.WaitGroup`
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `waitGroup.add(delta?: number)` | `void` | Adds `delta` (default 1) to the wait group counter. |
-| `waitGroup.done()` | `void` | Decrements the wait group counter by 1. |
-| `waitGroup.wait()` | `void` | Blocks until the wait group counter reaches 0. |
+| `wg.add(delta?: int)` | `void` | Raises the count by `delta` (default 1). A negative `delta` lowers it. |
+| `wg.done()` | `void` | Lowers the count by 1, waking threads in `wait` when it reaches 0. |
+| `wg.wait()` | `void` | Blocks until the count is 0. |
+| `wg.count()` | `int` | The current count. |
+
+Give thread worker parameters an explicit handle type, such as `def worker(*sync.WaitGroup wg)`.
+
+## Errors
+
+Misusing a lock is a bug in the calling code, so it throws. `sync` adds two kinds to the standard
+list:
+
+- `DeadlockError`: `lock`, `rlock`, `withLock`, or `withRLock` on a name this thread already
+  holds, either way. It is thrown instead of waiting forever. A read lock can't be upgraded or
+  taken twice; call `sync.runlock` first.
+- `LockError`: `unlock` or `runlock` of a name that isn't locked, or that another thread holds.
+  Only the thread that locked a name can unlock it.
+- `TypeError`: `withLock`, `withRLock`, or `once` with something that isn't a function, or
+  `wg.add` with a delta that isn't a whole number.
+- `ValueError`: `wg.add` that would drop the count below 0.
+- `StateError`: `wg.done()` when the count is already 0.
 
 ## Readers and writers
 
@@ -54,10 +93,7 @@ def setTheme(string value) (
 ```
 
 A waiting writer goes ahead of readers that arrive after it, so writers are not starved.
-For the same reason a thread must not read-lock a name it already holds for reading: if a
-writer queues between the two calls, the second `sync.rlock` waits for that writer, which
-waits for the first hold. Waiting threads are served in order, and a lock that nobody holds
-or waits for uses no memory.
+Waiting threads are served in order, and a lock that nobody holds or waits for uses no memory.
 
 ## Notes
 

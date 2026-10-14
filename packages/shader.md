@@ -1,57 +1,88 @@
 # shader
 
-`osl/shader` allows writing fragment and vertex shaders in OSL syntax or standard GLSL, compiling
-them into valid GLSL code, and rendering procedural graphics directly to images or raylib windows.
+Use `shader` to write fragment and vertex shaders in OSL style and turn them into GLSL 330 for
+[raylib](raylib.md). Shaders run on the GPU only; draw them with `raylib.compileShader`.
 
 ```osl
 import "std:shader"
-import "std:img"
-
-string plasma = `def mainImage(fragCoord) (
-    vec2 uv = fragCoord / iResolution.xy
-    number t = iTime * 1.5
-    number v = sin(uv.x * 10.0 + t) + sin(uv.y * 10.0 + t)
-    vec3 col = 0.5 + 0.5 * cos(v + vec3(0.0, 2.0, 4.0))
-    return vec4(col, 1.0)
-)`
-
-// Render directly to an image without opening a window
-auto image = shader.renderImage(plasma, 400, 300, {time: 1.0})
-img.savePNG(image, "plasma.png")
 ```
 
-## Functions
+## Example
 
-### `shader.toGLSL(code, [type])`
+```osl
+import "std:shader"
+import "std:raylib"
 
-Transpiles OSL-style shader syntax into complete, valid GLSL shader source code.
-Accepts `"frag"` (default) or `"vert"`.
+string glow = `vec2 p = uv - 0.5
+number d = length(p)
+return vec4(vec3(1.0 - d * 2.0) * vec3(0.5, 0.8, 1.0), 1.0)`
 
-OSL syntax features supported:
-- Block delimiters `(` ... `)` mapped to `{` ... `}`
-- Functions: `def mainImage(fragCoord) ( ... )` and `def name(args) returnType ( ... )`
-- Type keywords: `number` mapped to `float`, `vec2`, `vec3`, `vec4`, `mat2`, `mat3`, `mat4`
-- Automatic semicolon insertion for line endings
-- Standard uniform injection (`iResolution`, `iTime`, `iTimeDelta`, `iFrame`, `iMouse`, `iDate`, `iChannel0..3`, `texture0`, `colDiffuse`)
-- Automatic `main()` entrypoint generation
+log shader.transpile(glow)
 
-### `shader.renderImage(code, width, height, [uniforms])`
+raylib.initWindow(400, 400, "Glow")
+auto fx = raylib.compileShader(glow)
+fx.setUniform("iResolution", {x: 400, y: 400})
+while !raylib.windowShouldClose() (
+  fx.setUniform("iTime", raylib.elapsed() / 1000)
+  raylib.draw(def() -> (
+    fx.drawFullscreen()
+  ))
+)
+fx.close()
+raylib.closeWindow()
+```
 
-Evaluates the shader across a `width` by `height` pixel grid and returns an `*img.Image` object.
-`uniforms` is an optional object supporting `time` (`iTime`) and `mouse` coordinates.
+`raylib.compileShader` accepts OSL-style code directly, so calling `shader.transpile` yourself is
+only needed to inspect or save the GLSL.
 
-### `shader.vertexDefault()`
+## API reference
 
-Returns the standard Raylib-compatible 2D vertex shader source code.
+### `shader`
 
-### `shader.plasma()`
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `shader.transpile(code: string, options?)` | `string` | Turns OSL-style shader code into GLSL 330. GLSL that already has `#version` and `main` comes back unchanged. Option: `stage`, `"fragment"` (default) or `"vertex"`. |
+| `shader.vertexDefault()` | `string` | raylib's standard vertex shader as GLSL 330. It passes `fragTexCoord` and `fragColor` to the fragment shader. |
+| `shader.plasma()` | `string` | An example fragment shader in OSL style: animated plasma bands driven by `iTime`. |
+| `shader.gradient()` | `string` | An example fragment shader in OSL style: a color gradient that cycles with `iTime`. |
 
-Returns a built-in OSL-style plasma fragment shader source string.
+An unknown `stage` throws `ValueError`.
 
-### `shader.gradient()`
+## OSL-style shader code
 
-Returns a built-in cosine gradient fragment shader source string.
+A fragment shader is either a Shadertoy-style `def mainImage(fragCoord) ( ... )` that sets
+`fragColor` or returns a `vec4`, or a plain list of statements. Statements run with `fragCoord`
+(pixels), `uv` (0 to 1), and `fragColor` (preset to white) in scope and may return a `vec4`.
 
-### `shader.eval(expr, [context])`
+In both forms:
 
-Evaluates a mathematical shader expression with the provided uniform context.
+- `def name(type param, ...) type ( ... )` declares a function.
+- `number` becomes `float`. `vec2` to `vec4` and `mat2` to `mat4` are as in GLSL.
+- `if`/`else`, `for`, and `while` blocks use OSL parentheses. `for i n (` counts from 0 to n - 1.
+- Line endings end statements; no semicolons are needed.
+- The uniforms `iResolution`, `iTime`, `iTimeDelta`, `iFrame`, `iMouse`, `iDate`, `iChannel0`,
+  `iChannel1`, `texture0`, and `colDiffuse` are declared unless the code declares them. Set them
+  with `shader.setUniform` on the compiled `*raylib.Shader`.
+
+```osl
+import "std:shader"
+
+string rings = `def mainImage(fragCoord) (
+  vec2 uv = fragCoord / iResolution.xy
+  number d = length(uv - 0.5)
+  number band = 0.5 + 0.5 * sin(d * 40.0 - iTime * 4.0)
+  fragColor = vec4(vec3(band), 1.0)
+)`
+
+log shader.transpile(rings)
+```
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `shader.toGLSL(code, "vert")` | `shader.transpile(code, {stage: "vertex"})` |
+| `shader.renderImage(code, width, height, uniforms?)` | Shaders run only on the GPU. Use `raylib.compileShader(code)` and draw into a `raylib.renderTexture`, then `target.toImage()` for an `*img.Image`. It never ran the shader (it drew one of three built-in effects picked by words in the code) and now fails with `UnsupportedError`. |
+| `shader.eval(expr, context?)` | Shader expressions can't be evaluated on the CPU. It now fails with `UnsupportedError`. |

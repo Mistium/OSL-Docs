@@ -1,6 +1,6 @@
 # semver
 
-Use `semver` to parse, compare, bump, sort, and test semantic version strings and ranges.
+Use `semver` to parse, compare, bump, sort, and range-match semantic versions such as `"1.4.0-rc.1"`.
 
 ```osl
 import "std:semver"
@@ -11,37 +11,73 @@ import "std:semver"
 ```osl
 import "std:semver"
 
-log semver.compare("1.2.0", "1.1.9")
-log semver.satisfies("1.2.3", ">=1.0.0")
+log semver.compare("1.2.0", "1.1.9")     // 1
+log semver.satisfies("1.2.3", "^1.0.0")  // true
+if semver.gt("2.0.0", "1.9.9") (
+  log "newer"
+)
+
+auto v = semver.parse("v1.4.0-rc.1+build.5")
+log v.major                               // 1
+string pre = v.prerelease ?? ""
+log pre                                   // rc.1
+log semver.inc("1.4.0-rc.1", "minor")     // 1.5.0
 ```
+
+Every function except `isValid` returns a `result` and fails with `ParseError` when a version isn't a semantic version. Used as a plain value, as above, the result unwraps itself and throws on failure. Use `semver.isValid` to check text from outside the program first, or `catch`, `try(...)`, or `auto` to handle the error.
 
 ## API reference
 
 ### `semver`
 
-| Method | Returns | Notes |
+| Function | Returns | Notes |
 | --- | --- | --- |
-| `semver.parse(v: any)` | `object` | Parses input data. |
-| `semver.isValid(v: any)` | `boolean` |  |
-| `semver.compare(a: any, b: any)` | `number` |  |
-| `semver.gt(a: any, b: any)` | `boolean` |  |
-| `semver.lt(a: any, b: any)` | `boolean` |  |
-| `semver.gte(a: any, b: any)` | `boolean` |  |
-| `semver.lte(a: any, b: any)` | `boolean` |  |
-| `semver.eq(a: any, b: any)` | `boolean` |  |
-| `semver.neq(a: any, b: any)` | `boolean` |  |
-| `semver.satisfies(v: any, constraint: any)` | `boolean` |  |
-| `semver.inc(v: any, part: any)` | `string` |  |
-| `semver.sort(arr: any)` | `array` | Returns a semantically sorted copy of the input. |
-| `semver.max(arr: any)` | `string` | Returns the greatest version, or an empty string for an empty input. |
-| `semver.min(arr: any)` | `string` | Returns the least version, or an empty string for an empty input. |
+| `semver.parse(text: string)` | `result<semver.Version, error>` | Reads a version such as `"1.4.0-rc.1+build.5"`. A leading `v` is allowed. |
+| `semver.isValid(text: string)` | `boolean` | Whether `parse` accepts the text. |
+| `semver.compare(a: string, b: string)` | `result<int, error>` | `-1`, `0`, or `1` as `a` is lower than, equal to, or higher than `b`. |
+| `semver.gt(a, b)`, `semver.lt(a, b)` | `result<boolean, error>` | Whether `a` is higher or lower than `b`. |
+| `semver.gte(a, b)`, `semver.lte(a, b)` | `result<boolean, error>` | Whether `a` is higher or lower than, or equal to, `b`. |
+| `semver.eq(a, b)`, `semver.neq(a, b)` | `result<boolean, error>` | Whether `a` and `b` have equal or different precedence. |
+| `semver.satisfies(version: string, constraint: string)` | `result<boolean, error>` | Whether the version is in an npm-style range. Also fails with `ParseError` for a malformed range. |
+| `semver.inc(version: string, part: string)` | `result<string, error>` | Increases `part` (`"major"`, `"minor"`, or `"patch"`) and clears the lower parts, prerelease, and build. Throws `ValueError` for any other part. |
+| `semver.sort(versions: string[])` | `result<string[], error>` | A new array in ascending precedence. Equal versions keep their order. |
+| `semver.max(versions: string[])` | `result<string, error>` | The highest version, as written. Fails with `ValueError` for an empty array. |
+| `semver.min(versions: string[])` | `result<string, error>` | The lowest version, as written. Fails with `ValueError` for an empty array. |
 
-## Notes
+`sort`, `max`, and `min` throw `TypeError` when `versions` is not an array of strings.
 
-- Prefer `import "std:semver"`; the older `import "osl/semver"` spelling remains supported.
+### Version records
+
+`semver.parse` returns a `semver.Version` record:
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `major`, `minor`, `patch` | `int` | The numeric parts. |
+| `prerelease` | `string?` | The text after `-`, such as `"rc.1"`, or `null`. |
+| `build` | `string?` | The text after `+`, such as `"build.5"`, or `null`. |
+
+### Ranges
+
+`satisfies` understands:
+
+- comparators: `">=1.2.0 <2"`
+- caret and tilde ranges: `"^1.2"`, `"~1.2.3"`
+- x-ranges: `"1.x"`
+- hyphen ranges: `"1.2 - 1.5"`
+- alternatives joined by `||`: `"^1.2 || 3.x"`
+
+A prerelease version only matches comparators on the same `major.minor.patch`.
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning.
+
+| Deprecated | Use instead |
+| --- | --- |
+| The `valid` key of `semver.parse` (always `true` now) | `semver.isValid(text)`. An invalid version fails `parse` with `ParseError`. |
 
 ## Behavior and limits
 
-Parsing follows SemVer rules for prerelease identifiers, build metadata, leading zeros, and ASCII
-identifier characters. Malformed versions and ranges return failure values. Range boundaries use
-the same comparison rules as direct version comparisons.
+- Parsing follows the SemVer rules for prerelease identifiers, build metadata, leading zeros, and ASCII identifier characters, so `"01.2.3"` and `"1.2"` are not versions.
+- Comparisons ignore build metadata.
+- The older `import "osl/semver"` spelling still works with a migration warning.

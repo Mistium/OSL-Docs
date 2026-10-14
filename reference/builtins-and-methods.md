@@ -25,6 +25,9 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `keys(object)`, `values(object)`, `entries(object)` | Reads object contents. |
 | `btoa(value)`, `atob(value)` | Base64 encode and decode. `atob` returns the decoded bytes as a string, or `""` for invalid input. |
 | `symbol(name)` | Creates a symbol value. |
+| `error(message)`, `error(kind, message)` | Creates an `error` value with `.kind` and `.message`. Without a kind it is a `RuntimeError`. See [Errors and results](../guide/errors.md). |
+| `try(expr)` | Runs `expr` and returns `result<T, error>` instead of throwing. The error keeps its kind. |
+| `some(value)`, `none()` | Creates an [`option`](../packages/option.md). |
 | `sleep(seconds)` | Blocks for a duration in seconds. |
 
 ## Methods on every value
@@ -69,6 +72,11 @@ hashMD5      hashSHA1      hashSHA256    hashSHA512
 ```
 
 String positions are 1-based. Indexing, iteration, `trimText`, and `toMixed` use Unicode code points. `match(pattern)` always returns an array of matches, which is empty when nothing matches. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
+
+`decodeHex()` and `decodeBin()` return `result<string, error>` and fail with `ParseError` for
+input that isn't valid hex or binary, so `string text = data.decodeHex()` throws on bad input and
+`data.decodeHex().unwrapOr("")` gives a fallback. `encodeBin()` writes each byte in binary,
+separated by spaces.
 
 There is no `repeat` method. Use multiplication, as in `"a" * 3`.
 

@@ -1,6 +1,6 @@
 # jwt
 
-Use `jwt` for signing, verifying, decoding, and inspecting JSON Web Tokens.
+Use `jwt` to create and check HMAC-signed JSON Web Tokens (HS256, HS384, HS512).
 
 ```osl
 import "std:jwt"
@@ -11,9 +11,17 @@ import "std:jwt"
 ```osl
 import "std:jwt"
 
-string token = jwt.sign({user: "ada"}, "secret")
-log jwt.verify(token, "secret")
+string token = jwt.create({sub: "ada", role: "admin"}, "secret", {expiresIn: 3600000})
+
+object claims = jwt.check(token, "secret") catch (err) (
+  log "rejected: " ++ err.message
+  return
+)
+log claims.sub
 ```
+
+`jwt.check` returns a result. Used as a value it unwraps itself and throws on failure, so
+`object claims = jwt.check(token, secret)` is enough when a bad token should stop the program.
 
 ## API reference
 
@@ -21,24 +29,55 @@ log jwt.verify(token, "secret")
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `jwt.encode(header: any, payload: any, secret: any)` | `string` | Builds a signed three-part token from raw header and payload text. |
-| `jwt.sign(claims: object, secret: any, expiresIn?: number)` | `string` | JSON-encodes claims and uses the same token construction as `encode`. A positive `expiresIn` (seconds) adds `exp` and `iat` claims, like `signWithExpiry`. |
-| `jwt.signWithExpiry(claims: object, secret: any, expiresIn: any)` | `string` | Signs with expiry. |
-| `jwt.verify(token: any, secret: any)` | `object` | Verifies the signature, JSON structure, and expiry. Signature comparison is constant-time. |
-| `jwt.getClaim(token: any, claim: any)` | `any` | Returns claim. |
-| `jwt.isExpired(token: any)` | `boolean` |  |
-| `jwt.refresh(token: any, secret: any, expiresIn: any)` | `string` |  |
-| `jwt.decode(token: any)` | `object` | Decodes the header and claims without verifying the signature. |
+| `jwt.create(claims: object, secret: string, options?)` | `string` | Signs a copy of `claims`. Adds `iat` (unix seconds) unless `claims` has one. Options: `expiresIn` (token lifetime in milliseconds, sets `exp`), `algorithm` (`"HS256"` default, `"HS384"`, `"HS512"`). |
+| `jwt.check(token: string, secret: string, options?)` | `result<object, error>` | Verifies the signature and time claims and returns the claims. Option: `leeway`, allowed clock difference in milliseconds (default 0). |
+| `jwt.renew(token: string, secret: string, options?)` | `result<string, error>` | Checks `token` like `jwt.check` and signs its claims again with a fresh `iat`. Options: `expiresIn` (ms; without it the old `iat`-to-`exp` lifetime carries over), `algorithm` (defaults to the old token's). |
+| `jwt.decode(token: string)` | `result<{header, payload}, error>` | Reads the header and claims without checking the signature. Never trust the result; use `jwt.check` for that. |
+| `jwt.isExpired(token: string)` | `boolean` | Whether `exp` has passed, without checking the signature. A token without `exp` never expires; a malformed token, or one whose `exp` isn't a number, counts as expired. |
 
-## Notes
+`secret` also accepts a `byte[]`.
 
-- Prefer `import "std:jwt"`; the older `import "osl/jwt"` spelling remains supported.
+### Errors
+
+| Function | Kind | When |
+| --- | --- | --- |
+| `check`, `renew` | `ParseError` | The token is malformed. |
+| `check`, `renew` | `PermissionError` | Wrong signature, an unsigned (`alg: none`) token, or a token whose `nbf` is still in the future. |
+| `check`, `renew` | `TimeoutError` | The token expired. |
+| `check`, `renew` | `UnsupportedError` | The token uses another algorithm (such as RS256). |
+| `decode` | `ParseError` | The token is malformed. |
+| `create`, `check`, `renew` | `ValueError` (thrown) | Empty secret, unknown option or algorithm, a non-positive `expiresIn`, or claims that can't be written as JSON. |
+
+```osl
+import "std:jwt"
+
+string token = jwt.create({sub: "ada"}, "secret")
+auto claims, err = jwt.check(token, "wrong")
+if err != null (
+  log err.kind // PermissionError
+)
+```
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `jwt.encode(header, payload, secret)` | `jwt.create(claims, secret, options)`, which writes a header that matches the signature |
+| `jwt.sign(claims, secret, expiresIn?)` | `jwt.create(claims, secret, {expiresIn: ms})`; `expiresIn` there is milliseconds, not seconds |
+| `jwt.signWithExpiry(claims, secret, expiresIn)` | `jwt.create(claims, secret, {expiresIn: ms})` |
+| `jwt.verify(token, secret)` (returned `{valid, error, header, payload}`) | `jwt.check(token, secret)`, which returns the claims and fails with a typed error |
+| `jwt.refresh(token, secret, expiresIn)` (returned `""` on failure) | `jwt.renew(token, secret, {expiresIn: ms})` |
+| `jwt.getClaim(token, claim)` | `jwt.check(token, secret)[claim]`, or `jwt.decode(token).payload[claim]` for an unverified read |
+| `error` key of `jwt.decode` | Always `null`; a malformed token fails with `ParseError` instead |
 
 ## Behavior and limits
 
-Tokens are standard HS256 JWTs: each part is unpadded base64url and the signature is HMAC-SHA256 over
-`header.payload`, so tokens interoperate with other JWT libraries. Tokens signed by releases that used
-the earlier hash construction no longer verify and must be reissued.
+Tokens are standard JWTs: each part is unpadded base64url and the signature is HMAC over
+`header.payload`, so tokens interoperate with other JWT libraries. Signature comparison is
+constant-time.
 
-Verification rejects malformed tokens, unexpected algorithms, invalid signatures, and invalid or
-expired time claims. Both verified and unverified decoding limit the token to three bounded parts.
+`jwt.check` rejects unsigned tokens and unknown algorithms, and enforces both `exp` and `nbf`.
+`expiresIn` is rounded up to a whole second, so even a short lifetime gives a token that is valid
+now.

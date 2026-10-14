@@ -144,6 +144,44 @@ def greet(string name, string? prefix) string (
 log greet("Ada")
 ```
 
+### Nullable values from packages
+
+A package function whose answer may be "nothing there" returns `T?`, such as `cache.get(key)`,
+`regex.findFirst(text)`, or a `*cache.Cache`'s `ttl(key)`, which is `int?`. Narrow it with `??`, a
+null check, or an assertion with a fallback before using it as a `T`:
+
+```osl
+import "std:cache"
+
+*cache.Cache c = cache.new()
+int? left = c.ttl("token")
+int ms = left ?? 0
+if left != null ( log left > 1000 )
+log ms
+```
+
+Assigning a `T?` to a non-nullable `T` is a compile error. So are three comparisons that would
+silently go wrong, because `null` equals none of `""`, `0`, and `false` and has no order:
+
+| Code, with `c.ttl(key)` returning `int?` | Compile error |
+| --- | --- |
+| `c.ttl("token") == 0` (also `!=`, and `""` or `false` for `string?` or `boolean?`) | `c.ttl("token") is int? and may be null, which never equals 0. Compare it with null to test for a missing value, or write (c.ttl("token") ?? 0) == 0 to treat null as 0.` |
+| `c.ttl("token") > 5` (any of `<`, `<=`, `>`, `>=`) | `c.ttl("token") is int? and may be null, which has no order. Check it against null first, or give it a fallback with ?? before comparing.` |
+| `"left: " ++ c.ttl("token")` or `` `left: ${c.ttl("token")}` `` | `c.ttl("token") is int? and may be null, which ++ writes as "null"; use ?? "" (or check for null).` |
+
+Compare with `null` to test for a missing value, or give a fallback first:
+`(c.ttl("token") ?? 0) == 0`, `"left: " ++ (c.ttl("token") ?? 0)`. After `if x != null`, the
+value is narrowed and these forms compile.
+
+`log`, `say`, `warn`, and `error` may still print a `T?` as it is, so `log "left: " ++ c.ttl("x")`
+prints `left: null`.
+
+These rules mean a function that changes from returning a sentinel such as `""` or `0` to returning
+`T?` breaks old checks like `if c.query("id") == ""` at compile time instead of quietly changing
+what they mean.
+
+A `result` can hold a nullable value too: `result<string?, error>` unwraps to a `string?`.
+
 ## Typed arrays and maps
 
 `T[]` is a growable typed array:
@@ -202,7 +240,35 @@ Package handle types use the package name. Pointer handles start with `*`:
 ```osl
 import "std:serve"
 
-*serve.Router app = serve.New()
+*serve.Router app = serve.new()
+```
+
+## Records from packages
+
+Many package functions return a record: an object with a fixed set of keys, every one always
+present. The compiler knows the keys and their types, so reading any other key is a compile error,
+and hover and completion list the fields:
+
+```osl
+import "std:cache"
+
+*cache.Cache c = cache.new({capacity: 10})
+auto info = c.info()
+log info.capacity // 10
+// log info.capcity
+// TypeError: Property 'capcity' does not exist on {capacity: int, size: int, ttl: number}
+```
+
+A field that may be absent has a nullable type, such as the `int?` `nextRun` of a
+[`cron`](../packages/cron.md) job, and follows the nullable rules above. A function that may find
+no record returns a nullable record, written `{name: string, ...}?` in diagnostics. A record
+converts to an ordinary `object` when you assign or pass it as one.
+
+A record key that has been replaced stays readable for one release with a deprecation warning that
+names the replacement:
+
+```text
+DeprecationWarning: the record key 'valid' is deprecated: it is always true now that semver.parse fails with ParseError for an invalid version; use semver.isValid(text) to check one
 ```
 
 ## Assertions
@@ -336,6 +402,22 @@ log raw.toNum() // not raw.toStr().toNum()
 Repeated idempotent calls such as `.trim().trim()` or `.toLower().toLower()` warn in the same way; the second call has no additional effect.
 
 Comparing a known `boolean` to `true` or `false` also warns; use the value or its negation directly. Comparing a dynamic value such as `any` or `boolean?` to `true` is a boolean coercion and does not warn, so keep the `== true` form there.
+
+### Arguments to package functions
+
+A call to a package function or a handle method converts each argument to the parameter's type,
+the same way for every package:
+
+- A `byte[]` parameter accepts a `byte[]`, an array of whole numbers from 0 to 255, or a string,
+  which is used as its UTF-8 bytes.
+- Typed array and object parameters accept any OSL array or object, converted item by item.
+- A whole-number parameter rejects fractions: `random.between(1.5, 3)` is a compile error, and a
+  fractional variable throws `ValueError` when the call runs. A number too large for the parameter
+  also throws `ValueError`.
+- A value of the wrong type throws `TypeError`. The message names the call and the parameter.
+- An options object is checked too: an unknown or misspelled key throws `ValueError` with a
+  suggestion and the accepted keys, such as
+  `retry.call: unknown option "max_delay" (did you mean "maxDelay"?)`.
 
 ## Null values and type checks
 

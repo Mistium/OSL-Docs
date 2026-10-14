@@ -1,7 +1,7 @@
 # serve
 
-`serve` is OSL's web framework. It gives you a router, request/response **contexts**, middleware, route
-groups, static-file serving, WebSockets and TLS.
+`serve` runs HTTP servers with routes, middleware, templates, static files and WebSocket
+endpoints.
 
 ```osl
 import "std:serve"
@@ -15,23 +15,24 @@ import "std:serve"
 *serve.Router app = serve.new()
 
 app.get("/", def(*serve.Context c) -> (
-  c.string(200, "Hello, World!")
+  c.text(200, "Hello, World!")
 ))
 
 app.get("/ping", def(*serve.Context c) -> (
-  c.json(200, { message: "pong" })
+  c.json(200, {message: "pong"})
 ))
 
 log "Listening on http://localhost:8080"
-app.serve(":8080")
+app.run(":8080")
 ```
 
-A **handler** is a function that takes a `*serve.Context` and writes a response. Create the router
-with `serve.new()`, register routes, then call `serve(addr)` to start listening (this blocks).
+A handler takes a `*serve.Context` and writes a response. Create the router with `serve.new()`,
+register routes, then call `app.run(address)`, which blocks until `app.stop()`. Run it in a
+[thread](thread.md) to keep going.
 
 ## Routing
 
-Register a handler for each HTTP method:
+Register handlers for each HTTP method:
 
 ```osl
 app.get("/users", listUsers)
@@ -39,423 +40,332 @@ app.post("/users", createUser)
 app.put("/users/:id", replaceUser)
 app.patch("/users/:id", updateUser)
 app.delete("/users/:id", deleteUser)
-app.any("/health", healthCheck)     // any method
+app.any("/health", healthCheck)
 ```
 
-### Route parameters
-
-Use `:name` in a pattern and read it with `c.param(...)`:
+`:name` matches one path segment; read it with `c.param("name")`. A final `{name...}` matches the
+rest of the path. Registering the same method and pattern again replaces its handlers.
 
 ```osl
 app.get("/users/:id", def(*serve.Context c) -> (
-  string id = c.param("id")
-  c.json(200, { id: id })
+  int id = c.paramInt("id", 0)
+  c.json(200, {id: id})
+))
+
+app.get("/files/{path...}", def(*serve.Context c) -> (
+  c.text(200, c.param("path"))
 ))
 ```
 
-## The Context
+A route takes several handlers, which run in order; each one calls `c.next()` to continue.
 
-The `*serve.Context` (named `c` by convention) is how you read the request and write the response.
+## Reading the request
 
-### Reading the request
+Lookups that may be absent return `T?`, so use `??` or a null check:
 
 ```osl
-c.method()                 // "GET", "POST", …
-c.path()                   // "/users/42"
-c.param("id")              // a route parameter
-c.query("q")               // ?q=...   (queryDefault, queryInt, queryBool also exist)
-c.header("X-Token")        // a request header
-c.bearer()                 // the Bearer token from Authorization
-c.body()                   // raw body as a string
-c.bodyJSON()               // body parsed as an object
-c.cookie("session")        // a cookie value
-c.formValue("email")       // a form field
+app.get("/search", def(*serve.Context c) -> (
+  string q = c.query("q") ?? ""
+  int page = c.queryInt("page", 1)
+  string agent = c.userAgent() ?? "unknown"
+  c.json(200, {q: q, page: page, agent: agent})
+))
+
+app.post("/users", def(*serve.Context c) -> (
+  object input = c.bodyJSON()
+  c.json(201, {created: input.name})
+))
 ```
 
-### Writing the response
+When `queryInt`, `queryBool`, `paramInt` or `bodyJSON` fails and the handler doesn't catch it, the
+client gets `400` instead of `500`. A body larger than the router's `bodyLimit` answers `413`.
+
+## Writing the response
 
 ```osl
-c.string(200, "plain text")
-c.json(200, { ok: true })
+c.text(200, "plain text")
+c.json(200, {ok: true})
 c.html(200, "<h1>Hi</h1>")
-c.data(200, "image/png", bytes)
+c.send(200, "image/png", bytes)
 c.redirect(302, "/login")
-c.noContent()                          // 204
-c.file("./public/report.pdf")          // send a file
-c.attachment("./r.pdf", "report.pdf")  // force download
+c.noContent()
+c.file("./public/report.pdf")
+c.attachment("./r.pdf", "report.pdf")
 
-// Convenience helpers
-c.ok({ data: 1 })                      // 200
-c.created({ id: 5 })                   // 201
-c.badRequest("missing field")          // 400
-c.unauthorized("login required")       // 401
-c.notFound("no such user")             // 404
-c.internalError("oops")                // 500
+c.badRequest("missing field")    // 400 {"error": "missing field"}
+c.unauthorized("login required") // 401
+c.forbidden("no access")         // 403
+c.notFound("no such user")       // 404
+c.internalError("oops")          // 500
 
-// Cookies and headers
 c.setHeader("X-App", "osl")
-c.setCookie("session", token, 3600, "/", "", true, true)
-```
-
-### Per-request values
-
-Middleware and handlers can stash values on the context:
-
-```osl
-c.set("userId", 42)
-int id = c.getInt("userId")
+c.setCookie("session", token, {maxAge: 3600000, httpOnly: true, secure: true})
 ```
 
 ## Middleware
 
-Middleware are handlers that run before your route handler. Register them with `use(...)`; call
-`c.next()` to continue or one of the response helpers to stop. The framework ships ready-made
-middleware:
+Middleware are handlers that run before the route's handlers. Add them with `app.use(...)`; they
+apply to routes registered after them. Call `c.next()` to continue, or write a response to stop.
 
 ```osl
 app.use(serve.logger())
-app.use(serve.cors("*", "GET,POST", "Content-Type"))
-app.use(serve.recover())               // recover from panics → 500
-app.use(serve.rateLimit(100, 60))      // 100 requests per 60s
-app.use(serve.requireBearer("secret")) // require a Bearer token
+app.use(serve.cors("https://example.com", "GET,POST", "Content-Type"))
+app.use(serve.limitRequests(100, {window: 60000}))
 app.use(serve.secureHeaders())
 app.use(serve.requestID())
 ```
 
-Other built-in middleware: `corsOpen()`, `requireHeader(key, value)`, `maxBodySize(bytes)`,
-`timeout(seconds)`, `basicAuth(user, pass)`, `noCache()`, `setKey(key, value)`.
-
-### Body size limits
-
-Every router caps request bodies at 32 MiB. Change the cap with `app.bodyLimit(bytes)`, or pass
-`0` to remove it. `serve.maxBodySize(bytes)` sets a tighter cap for the routes it wraps:
+Your own middleware is a handler:
 
 ```osl
-app.bodyLimit(1024 * 1024)
-app.post("/avatar", serve.maxBodySize(64 * 1024), def(*serve.Context c) -> ( ... ))
-```
-
-A request whose declared `Content-Length` exceeds the cap is answered with
-`413 {"error": "request body exceeds <bytes> bytes"}` before any handler after the limit runs.
-A chunked body with no declared length is cut off while it is read: the first of `body()`,
-`bodyBytes()`, `bodyJSON()`, `bodyJSONArray()`, `bindJSON()`, or `formFile()` to exceed the cap
-aborts the context with the same `413` response. The helper still returns its empty or error value,
-and anything the handler writes afterwards is discarded, so the client sees only the `413`.
-
-`timeout` buffers downstream output until the handler completes and cancels the request context at
-the deadline. Do not place streaming, flushing, or WebSocket handlers behind it.
-
-Even without `serve.recover()`, a handler that throws never crashes the server: the error is
-printed to stderr as a formatted OSL runtime error (with the source line that caused it) and the
-client gets a plain `500 Internal Server Error`. Use `serve.recover()` when you want the error
-text in the response body instead.
-
-Writing your own is just a handler:
-
-```osl
-def auth(*serve.Context c) -> (
-  if c.bearer() == "" (
+def auth(*serve.Context c) (
+  string? token = c.bearer()
+  if token == null (
     c.unauthorized("no token")
-  ) else (
-    c.next()
+    return
   )
+  c.set("user", token)
+  c.next()
 )
 
 app.use(auth)
 ```
 
-## Route groups
+A handler that throws never crashes the server: the error is printed with its source line and the
+client gets `500` (or `400` for an uncaught `ValueError`/`ParseError` from a request accessor).
 
-Group related routes under a shared prefix (and shared middleware):
+## Route groups
 
 ```osl
 *serve.Router api = app.group("/api")
 api.use(serve.requireBearer("secret"))
 api.get("/users", listUsers)
-api.get("/posts", listPosts)
+
+app.group("/admin", def(*serve.Router admin) -> (
+  admin.use(serve.basicAuth("admin", "hunter2"))
+  admin.get("/", def(*serve.Context c) -> (
+    c.text(200, "hello " ++ c.credentials().username)
+  ))
+))
 ```
+
+A group shares its parent's middleware; middleware added to the group stays in the group. It
+renders with the parent's views, layout and locals unless it sets its own.
 
 ## Static files
 
 ```osl
-app.static("/assets", "./public")           // serve a directory
-app.staticFile("/favicon.ico", "./fav.ico") // serve a single file
+app.static("/assets", "./public")
+app.staticFile("/favicon.ico", "./fav.ico")
 ```
 
-## HTML templates
+Paths that escape the directory, including through symlinks, answer `404`.
 
-Load Go `html/template` files with `loadHTMLGlob`, then render one by name with
-`c.html(code, name, data)`. Register custom template functions with `setFuncMap`.
-call it **before** `loadHTMLGlob` so the parsed templates can see them:
+## Views
 
-```osl
-def upper(string s) string (
-  return s.toUpper()
-)
-
-*serve.Router app = serve.new()
-app.setFuncMap({"upper": upper})
-app.loadHTMLGlob("templates/**/*.html")
-
-app.get("/", def(*serve.Context c) -> (
-  c.html(200, "home.html", { name: "world" })
-))
-```
-
-Templates are named by their base filename, plus any `{{define "name"}}` blocks.
-
-## OSL-native pages (`render` + layouts)
-
-For OSL apps, prefer [`osl/template`](template.md) over Go's `html/template`. Point the
-router at a views directory with `views(dir)`, optionally set a wrapping `layout(name)`,
-then respond with `c.render(name, data)`. Views are `<dir>/<name>.html` and render through
-`template.renderHTML`. Values are HTML-escaped by default. Use `{{& field}}` for
-trusted raw HTML (e.g. Markdown you rendered with [`md`](md.md)).
-
-The layout receives the rendered page as `body`; emit it raw with `{{& body}}`.
+`c.render(name, data)` renders `<views>/<name>.html` with [template](template.md) syntax,
+HTML-escaping values. Use `{{& key}}` for trusted raw HTML. The router's `locals` are merged into
+the data, and with a `layout` the page is wrapped in that view, which receives it as `body`.
 
 ```osl
 import "std:serve"
 import "std:md"
 
-// views/layout.html →  <!doctype html><title>{{ title }}</title><main>{{& body}}</main>
-// views/post.html   →  <h1>{{ title }}</h1><article>{{& html}}</article>
+// views/layout.html: <!doctype html><title>{{title}}</title><main>{{& body}}</main>
+// views/post.html:   <h1>{{title}}</h1><article>{{& html}}</article>
 
 *serve.Router app = serve.new()
-app.views("views")
-app.layout("layout")
+app.views("views").layout("layout").locals({site: "My blog"})
 
 app.get("/", def(*serve.Context c) -> (
-  c.render("post", {
-    title: "Hello",
-    html:  md.toHTML("**bold** and _italic_")   // composed, not reimplemented
-  })
+  c.render("post", {title: "Hello", html: md.toHTML("**bold** and _italic_")})
+))
+
+app.get("/missing", def(*serve.Context c) -> (
+  c.render("post", {title: "Not found", html: ""}, {status: 404})
 ))
 ```
 
-`render` always responds `200`. Set other statuses with `c.html`/`c.string`, or render the
-body yourself and pass it to `c.send(code, "text/html", body)`.
-
-## CORS preflight
-
-An `OPTIONS` request to a route with no explicit `OPTIONS` handler runs the router's
-middleware chain (so `serve.cors(...)` / `serve.corsOpen()` can answer the preflight) and
-responds `204` with an `Allow` header if no middleware wrote a response.
-
 ## WebSockets
 
-Attach a [`ws`](ws.md) server to a route with `app.ws`. HTTP and websockets can share a
-path. Upgrade requests go to the socket, while other requests reach the HTTP handlers. You can
-also upgrade from inside a handler with `c.isWebsocket()` / `c.upgrade(socket)`.
+Mount a [ws](ws.md) server with `app.ws`. HTTP and WebSocket routes can share a path: upgrade
+requests go to the socket after the middleware, other requests reach the HTTP handlers.
 
 ```osl
 import "std:serve"
 import "std:ws"
 
 *serve.Router app = serve.new()
-auto socket = ws.new()   // no listen address; serve owns the port
-
-socket.onMessage(def(*ws.Connection conn, string msg) -> (
+*ws.Server socket = ws.new()
+socket.on("message", def(*ws.Connection conn, string msg) -> (
   conn.send("echo: " ++ msg)
 ))
 
-// Dedicated path
-app.ws("/chat", socket)
-
-// HTTP and WebSocket routes can share a path:
 app.get("/", def(*serve.Context c) -> (
-  c.string(200, "open a websocket on /")
+  c.text(200, "open a websocket on /")
 ))
 app.ws("/", socket)
-
-app.serve(":8080")
+app.run(":8080")
 ```
 
-## HTTPS / TLS
+Inside a handler, `c.isWebSocket()` and `c.upgrade(socket)` do the same by hand.
+
+## HTTPS
 
 ```osl
-app.serveTLS(":443", "cert.pem", "key.pem")
+app.runTLS(":443", "cert.pem", "key.pem")
 ```
 
-## Method reference
-
-### Router (`serve.new()` → `*serve.Router`)
-
-- `app.get(pattern, ...handlers)` · `post` · `put` · `patch` · `delete` · `options` · `head` · `any`
-- `app.ws(pattern, wsServer)`
-- `app.use(...handlers)` → `*serve.Router`
-- `app.bodyLimit(bytes)` → `*serve.Router` - cap request bodies (default 32 MiB, `0` for none)
-- `app.group(prefix, fn?)` → `*serve.Router`
-- `app.static(prefix, dir)` · `app.staticFile(pattern, filepath)`
-- `app.setFuncMap(funcs)` - register template functions (call before `loadHTMLGlob`)
-- `app.loadHTMLGlob(pattern)` - parse HTML templates for `c.html(code, name, data)`
-- `app.views(dir)` - set the directory for `c.render` views (`<dir>/<name>.html`)
-- `app.layout(name)` - wrap `c.render` output in `views/<name>.html` via `{{& body}}`
-- `app.serve(addr)` - start the server (blocks)
-- `app.serveTLS(addr, certFile, keyFile)`
-- `app.handler()` → the underlying HTTP handler
-
-### Middleware factories (on `serve`)
-
-`logger()`, `cors(allowOrigin, allowMethods, allowHeaders)`, `corsOpen()`, `rateLimit(max, windowSeconds)`,
-`requireBearer(token)`, `requireHeader(key, value)`, `maxBodySize(bytes)`, `recover()`, `timeout(seconds)`,
-`setKey(key, value)`, `basicAuth(user, pass)`, `requestID()`, `secureHeaders()`, `noCache()`.
-
-### Context (`*serve.Context`)
-
-**Read:** `method()`, `path()`, `host()`, `ip()`, `param(k)`, `query(k)`, `queryDefault(k, d)`,
-`queryInt(k, d)`, `queryBool(k, d)`, `queryArray(k)`, `header(k)`, `headers()`, `bearer()`, `body()`,
-`bodyBytes()`, `bodyJSON()`, `bodyJSONArray()`, `formValue(k)`, `formFile(k)`, `cookie(k)`, `cookies()`,
-`userAgent()`, `referer()`, `isJSON()`, `isForm()`, `isWebSocket()` / `isWebsocket()`, `isAjax()`,
-`contentType()`, `fullURL()`.
-
-**Write:** `status(code)`, `string(code, text)`, `json(code, obj)`, `html(code, body)`, `text(code, body)`,
-`data(code, contentType, bytes)`, `redirect(code, url)`, `noContent()`, `ok(obj)`, `created(obj)`,
-`badRequest(msg)`, `unauthorized(msg)`, `forbidden(msg)`, `notFound(msg)`, `internalError(msg)`,
-`file(path)`, `attachment(path, name)`, `setHeader(k, v)`, `addHeader(k, v)`, `setCookie(...)`,
-`clearCookie(name)`, `upgrade(wsServer)` / `Upgrade(wsServer)`.
-
-**Flow & state:** `next()`, `abort(...)`, `isAborted()`, `set(k, v)`, `get(k)`, `getString(k)`,
-`getInt(k)`, `getBool(k)`, `getFloat(k)`.
-
-## Complete API reference
+## API reference
 
 ### `serve`
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `serve.new()` | `*serve.Router` |  |
-| `serve.logger()` | `serve.Handler` |  |
-| `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | `serve.Handler` |  |
-| `serve.corsOpen()` | `serve.Handler` |  |
-| `serve.rateLimit(maxRequests: number, windowSeconds: number)` | `serve.Handler` | Limits requests per client without a background worker; nonpositive windows use one second. |
-| `serve.requireBearer(token: string)` | `serve.Handler` |  |
-| `serve.requireHeader(key: string, value: string)` | `serve.Handler` |  |
-| `serve.maxBodySize(maxBytes: number)` | `serve.Handler` | Answers `413` when the body exceeds `maxBytes`. |
-| `serve.recover()` | `serve.Handler` |  |
-| `serve.timeout(seconds: number)` | `serve.Handler` | Cancels the downstream request context at the deadline and returns a buffered 503 response without allowing late handler writes to reach the client. |
-| `serve.setKey(key: string, value: any)` | `serve.Handler` | Sets key. |
-| `serve.basicAuth(username: string, password: string)` | `serve.Handler` |  |
-| `serve.requestID()` | `serve.Handler` |  |
-| `serve.secureHeaders()` | `serve.Handler` |  |
-| `serve.noCache()` | `serve.Handler` |  |
+| `serve.new()` | `*serve.Router` | A new router. |
 
-### `*serve.Context` values
+Middleware factories, each returning a `serve.Handler`:
 
-| Method | Returns | Notes |
-| --- | --- | --- |
-| `value.status(code: number)` | `void` |  |
-| `value.string(code: number, format: string, ...values: any)` | `void` |  |
-| `value.json(code: number, obj: any)` | `void` |  |
-| `value.html(code: number, body: string, ...data: any)` | `void` |  |
-| `value.render(name: string, data: object)` | `void` | Renders `views/<name>.html` via `osl/template` (escaped; `{{& x}}` for raw), wraps in the layout if set, responds `200`. |
-| `value.data(code: number, contentType: string, body: byte[])` | `void` | Sends a byte body with the given content type. |
-| `value.redirect(code: number, url: string)` | `void` |  |
-| `value.noContent()` | `void` |  |
-| `value.ok(obj: any)` | `void` |  |
-| `value.created(obj: any)` | `void` |  |
-| `value.next()` | `void` |  |
-| `value.abort(...values: any)` | `void` |  |
-| `value.isAborted()` | `boolean` |  |
-| `value.badRequest(message: string)` | `void` |  |
-| `value.unauthorized(message: string)` | `void` |  |
-| `value.forbidden(message: string)` | `void` |  |
-| `value.notFound(message: string)` | `void` |  |
-| `value.internalError(message: string)` | `void` |  |
-| `value.flush()` | `void` |  |
-| `value.method()` | `string` |  |
-| `value.path()` | `string` |  |
-| `value.host()` | `string` |  |
-| `value.remoteAddr()` | `string` |  |
-| `value.ip()` | `string` |  |
-| `value.isWebSocket()` | `boolean` | `true` when the request is a WebSocket upgrade. |
-| `value.isWebsocket()` | `boolean` | Same as `isWebSocket()` with the more natural OSL casing. |
-| `value.upgrade(server: *ws.Server)` | `boolean` | Hijacks this request into the given websocket server. Returns `false` if already written, not an upgrade, or server is nil. |
-| `value.contentType()` | `string` |  |
-| `value.isJSON()` | `boolean` |  |
-| `value.isForm()` | `boolean` |  |
-| `value.query(key: string)` | `string` |  |
-| `value.queryDefault(key: string, def: string)` | `string` |  |
-| `value.queryInt(key: string, def: number)` | `number` | Parses an integer query value, returning the default when absent or invalid. |
-| `value.queryBool(key: string, def: boolean)` | `boolean` |  |
-| `value.queryAll()` | `object` |  |
-| `value.param(key: string)` | `string` |  |
-| `value.paramInt(key: string, def: number)` | `number` | Parses an integer route parameter, returning the default when absent or invalid. |
-| `value.header(key: string)` | `string` |  |
-| `value.headers()` | `object` | Every request header as an object (single values are strings; multi-value headers become arrays). |
-| `value.hasHeader(key: string, value: string)` | `boolean` |  |
-| `value.setHeader(key: string, value: string)` | `void` | Sets header. |
-| `value.addHeader(key: string, value: string)` | `void` | Adds header. |
-| `value.bearer()` | `string` |  |
-| `value.body()` | `string` |  |
-| `value.bodyBytes()` | `byte[]` | Returns the request body bytes. |
-| `value.bodyJSON()` | `object` |  |
-| `value.bodyJSONArray()` | `array` |  |
-| `value.bindJSON(out: any)` | `error` |  |
-| `value.formValue(key: string)` | `string` |  |
-| `value.formValueDefault(key: string, def: string)` | `string` |  |
-| `value.formFile(key: string)` | `result` |  |
-| `value.cookie(name: string)` | `string` |  |
-| `value.setCookie(name: string, value: string, maxAge: number, path: string, domain: string, secure: boolean, httpOnly: boolean)` | `void` | Sets cookie. |
-| `value.clearCookie(name: string)` | `void` |  |
-| `value.set(key: string, value: any)` | `void` | Sets a value. |
-| `value.get(key: string)` | `any` | Returns a value. |
-| `value.getString(key: string)` | `string` | Returns string. |
-| `value.getBool(key: string)` | `boolean` | Returns bool. |
-| `value.getInt(key: string)` | `number` | Returns int. |
-| `value.written()` | `boolean` |  |
-| `value.text(code: number, body: string)` | `void` |  |
-| `value.file(filepath: string)` | `void` |  |
-| `value.attachment(filepath: string, filename: string)` | `void` |  |
-| `value.queryArray(key: string)` | `array` |  |
-| `value.cookies()` | `object` |  |
-| `value.userAgent()` | `string` |  |
-| `value.referer()` | `string` |  |
-| `value.isAjax()` | `boolean` |  |
-| `value.scheme()` | `string` |  |
-| `value.fullURL()` | `string` |  |
-| `value.accepts(mimeType: string)` | `boolean` |  |
-| `value.getFloat(key: string)` | `number` | Returns float. |
-| `value.redirectPermanent(url: string)` | `void` |  |
-| `value.basicAuth()` | `object` |  |
+| Method | Notes |
+| --- | --- |
+| `serve.logger()` | Prints one line per request: time, method, path, status, response bytes and duration. |
+| `serve.cors(allowOrigin: string, allowMethods: string, allowHeaders: string)` | Sets CORS headers (comma-separated lists), with credentials unless the origin is `"*"`, and answers preflight `OPTIONS` with `204`. |
+| `serve.corsOpen()` | `cors` allowing any origin, every common method and any header. |
+| `serve.limitRequests(maxRequests: int, options?)` | At most `maxRequests` per client IP per window, then `429`. Option: `window` (ms, default 60000). Throws `ValueError` when `maxRequests` is below 1. |
+| `serve.timeLimit(timeout: int)` | Answers `503` when the rest of the chain takes longer than `timeout` ms; a late response is discarded. Output is buffered, so don't put streaming or WebSocket handlers behind it. |
+| `serve.requireBearer(token: string)` | `401` unless the request has `Authorization: Bearer <token>`. |
+| `serve.basicAuth(username: string, password: string)` | `401` with a Basic challenge unless the request carries these credentials. |
+| `serve.requireHeader(name: string, value: string)` | `400` unless header `name` equals `value`, ignoring case. |
+| `serve.maxBodySize(maxBytes: int)` | Limits the request body of the routes it guards; larger bodies answer `413`. |
+| `serve.requestID()` | Gives every request an id (reusing the client's `X-Request-ID`), sets it as the `X-Request-ID` response header and as `c.get("requestID")`. |
+| `serve.secureHeaders()` | Sets common security headers (nosniff, frame denial, no referrer). |
+| `serve.noCache()` | Tells clients not to cache responses. |
+| `serve.setKey(key: string, value)` | Stores `value` under `key` on every request. |
 
-### `*serve.Router` values
+### `*serve.Router`
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `value.get(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a GET route handler. |
-| `value.post(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a POST route handler. |
-| `value.put(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a PUT route handler. |
-| `value.patch(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a PATCH route handler. |
-| `value.delete(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a DELETE route handler. |
-| `value.options(pattern: string, ...handlers: serve.Handler)` | `void` | Registers an OPTIONS route handler. |
-| `value.head(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a HEAD route handler. |
-| `value.any(pattern: string, ...handlers: serve.Handler)` | `void` | Registers a handler for any method. |
-| `value.ws(pattern: string, server: *ws.Server)` | `void` | Mounts a WebSocket server on `pattern`. Upgrades reach the socket; other requests continue to the HTTP handlers on the same path. |
-| `value.static(prefix: string, dir: string)` | `void` |  |
-| `value.staticFile(pattern: string, filepath: string)` | `void` |  |
-| `value.loadHTMLGlob(pattern: string)` | `error` | Loads htmlglob. |
-| `value.views(dir: string)` | `*serve.Router` | Sets the views directory for `c.render`. |
-| `value.layout(name: string)` | `*serve.Router` | Sets the layout template wrapping `c.render` output. |
-| `value.use(...handlers: serve.Handler)` | `*serve.Router` |  |
-| `value.bodyLimit(maxBytes: number)` | `*serve.Router` | Caps request bodies; oversized requests get `413`. Defaults to 32 MiB; `0` disables the cap. |
-| `value.group(prefix: string, ...fn?: func(router))` | `*serve.Router` | Creates a route group with optional router callback functions. |
-| `value.run(addr: string)` | `error` |  |
-| `value.runTLS(addr: string, certFile: string, keyFile: string)` | `error` | Runs tls. |
-| `value.serve(addr: string)` | `error` | Starts the active HTTP server and blocks until it stops. |
-| `value.serveTLS(addr: string, certFile: string, keyFile: string)` | `error` | Starts the active HTTPS server and blocks until it stops. |
-| `value.handler()` | `http.Handler` |  |
-| `value.stop()` | `boolean` | Blocks new WebSocket registrations, closes the HTTP listener, and drains mounted WebSockets; repeated calls are safe. |
+| `app.get(pattern: string, ...handlers)` | `void` | Routes GET requests. Throws `ValueError` without handlers and `TypeError` for a non-function. |
+| `app.post`, `app.put`, `app.patch`, `app.delete`, `app.head` | `void` | Same, for that method. |
+| `app.options(pattern, ...handlers)` | `void` | Without one, an `OPTIONS` request runs the middleware and answers `204` with an `Allow` header. |
+| `app.any(pattern, ...handlers)` | `void` | GET, POST, PUT, PATCH, DELETE, OPTIONS and HEAD. |
+| `app.ws(pattern: string, server: *ws.Server)` | `void` | Mounts a WebSocket server. |
+| `app.use(...handlers)` | `*serve.Router` | Adds middleware for routes registered after it. |
+| `app.group(prefix: string, setup?)` | `*serve.Router` | A router whose routes start with `prefix`. `setup`, if given, is called with the group. |
+| `app.static(prefix: string, dir: string)` | `void` | Serves files under `dir` at `prefix`. |
+| `app.staticFile(pattern: string, path: string)` | `void` | Serves one file. |
+| `app.views(dir: string)` | `*serve.Router` | Directory `c.render` reads `<name>.html` views from. |
+| `app.layout(name: string)` | `*serve.Router` | View every `c.render` wraps its page in, as `{{& body}}`. |
+| `app.locals(values: object)` | `*serve.Router` | Values every render merges into its data. |
+| `app.bodyLimit(maxBytes: int)` | `*serve.Router` | Largest request body a handler can read (default 32 MiB, 0 for none); larger bodies answer `413`. |
+| `app.run(address: string)` | `result<unit, error>` | Serves on `address`, such as `":8080"`, until `stop()`. Fails with `NetworkError` when the address can't be bound; throws `StateError` when already running. |
+| `app.runTLS(address: string, certFile: string, keyFile: string)` | `result<unit, error>` | `run` over HTTPS. Fails with `NotFoundError` or `IOError` when the PEM files can't be read. |
+| `app.stop()` | `result<unit, error>` | Closes the server and mounted WebSocket connections; `run()` returns. Does nothing when not running. |
 
-## Notes
+### `*serve.Context`: request
 
-- Prefer `import "std:serve"`; the older `import "osl/serve"` spelling remains supported.
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `c.method()` | `string` | Such as `"GET"`. |
+| `c.path()` | `string` | Such as `"/users/42"`. |
+| `c.host()` | `string` | The Host the request was sent to. |
+| `c.remoteAddr()` | `string` | Client `host:port`. |
+| `c.ip()` | `string` | Client IP, preferring `X-Forwarded-For` and `X-Real-IP`. |
+| `c.scheme()` | `string` | `"https"` or `"http"`, honouring `X-Forwarded-Proto`. |
+| `c.fullURL()` | `string` | Absolute URL of the request. |
+| `c.param(key: string)` | `string` | A path parameter. Throws `ValueError` when the route has no such parameter. |
+| `c.paramInt(key: string, def: int)` | `result<int, error>` | A path parameter as an integer, or `def` when empty. Fails with `ValueError`. |
+| `c.query(key: string)` | `string?` | First value of a query parameter. |
+| `c.queryInt(key: string, def: int)` | `result<int, error>` | `def` when absent or empty. Fails with `ValueError`. |
+| `c.queryBool(key: string, def: boolean)` | `result<boolean, error>` | Accepts `"true"`, `"false"`, `"1"`, `"0"` and similar. Fails with `ValueError`. |
+| `c.queryAll()` | `string[string]` | Every query parameter with its first value. |
+| `c.queryArray(key: string)` | `string[]` | Every value of a repeated parameter; empty when absent. |
+| `c.header(name: string)` | `string?` | A request header (case-insensitive), first value. |
+| `c.headers()` | `string[string]` | Request headers by canonical name; repeats joined with `", "`. |
+| `c.hasHeader(name: string, value: string)` | `boolean` | Whether the header equals `value`, ignoring case. |
+| `c.bearer()` | `string?` | Token of an `Authorization: Bearer` header. |
+| `c.credentials()` | `{username, password}?` | HTTP Basic credentials, or `null`. |
+| `c.userAgent()`, `c.referer()` | `string?` | Those headers. |
+| `c.contentType()` | `string` | Request media type without parameters, or `""`. |
+| `c.isJSON()`, `c.isForm()`, `c.isAjax()`, `c.isWebSocket()` | `boolean` | Request kind checks. |
+| `c.accepts(mediaType: string)` | `boolean` | Whether `Accept` allows `mediaType`; true when missing or `*/*`. |
+| `c.body()` | `string` | The body; can be read any number of times. Throws `IOError` (after answering `413` or `400`) when too large or unreadable, which ends the handler without a `500`. |
+| `c.bodyBytes()` | `byte[]` | The body as bytes. |
+| `c.bodyJSON()` | `result<object, error>` | Fails with `ParseError` when the body isn't a JSON object. |
+| `c.bodyJSONArray()` | `result<array, error>` | Fails with `ParseError` when the body isn't a JSON array. |
+| `c.bindJSON(out)` | `result<unit, error>` | Decodes the body into an object or class instance. Fails with `ParseError`. |
+| `c.formValue(key: string)` | `string?` | A form field (URL-encoded, multipart or query). |
+| `c.formFile(key: string)` | `result<{filename, size, contentType, data}, error>` | An uploaded file; `data` is `byte[]`. Fails with `NotFoundError` when missing and `IOError` when too large (`413`) or malformed. |
+| `c.cookie(name: string)` | `string?` | A request cookie. |
+| `c.cookies()` | `string[string]` | Every request cookie. |
+
+### `*serve.Context`: response
+
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `c.status(code: int)` | `void` | Sets the status without a body. |
+| `c.text(status: int, body: string)` | `void` | `text/plain`. |
+| `c.json(status: int, value)` | `void` | JSON. Throws `TypeError` when `value` can't be encoded. |
+| `c.html(status: int, html: string)` | `void` | `text/html`. |
+| `c.render(name: string, data: object, options?)` | `void` | Renders a view (see [Views](#views)). Option: `status` (default 200). Throws `NotFoundError` for a missing view and `ParseError` for a malformed one. |
+| `c.send(status: int, contentType: string, body: string \| byte[])` | `void` | Any content type. |
+| `c.redirect(status: int, url: string)` | `void` | 301, 302, 303, 307 or 308. |
+| `c.noContent()` | `void` | Empty `204`. |
+| `c.file(path: string)` | `void` | Sends a file with its Content-Type, range and caching support; a missing file answers `404`. |
+| `c.attachment(path: string, filename: string)` | `void` | Sends a file as a download. |
+| `c.badRequest(message)`, `c.unauthorized(message)`, `c.forbidden(message)`, `c.notFound(message)`, `c.internalError(message)` | `void` | Abort with 400, 401, 403, 404 or 500 and `{"error": message}`. |
+| `c.setHeader(name: string, value: string)` | `void` | Replaces earlier values. |
+| `c.addHeader(name: string, value: string)` | `void` | Keeps earlier values. |
+| `c.setCookie(name: string, value: string, options?)` | `void` | Options: `maxAge` (ms, rounded down to seconds; 0 makes a session cookie), `path` (default `"/"`), `domain`, `secure`, `httpOnly` (both default `false`), `sameSite` (`"lax"` default, `"strict"`, `"none"`). |
+| `c.clearCookie(name: string)` | `void` | Deletes a cookie set with path `"/"`. |
+| `c.flush()` | `void` | Sends what has been written so far, for streaming. |
+| `c.upgrade(server: *ws.Server)` | `result<unit, error>` | Hands the request to a ws server. Fails with `ValueError` (after answering `400`) when it isn't an upgrade; throws `StateError` when a response was already written. |
+| `c.isWritten()` | `boolean` | Whether a response status has been sent. |
+| `c.statusCode()` | `int` | Status sent so far, or 200. |
+| `c.responseSize()` | `int` | Body bytes written so far. |
+
+### `*serve.Context`: flow and state
+
+| Method | Returns | Notes |
+| --- | --- | --- |
+| `c.next()` | `void` | Runs the rest of the chain; middleware can act after it returns. |
+| `c.abort(status?, message?)` | `void` | Stops the chain after this handler. With a status, sends an empty response; with a message too, sends `{"error": message}`. Nothing is sent if a response was already written. |
+| `c.isAborted()` | `boolean` | Whether `abort` was called. |
+| `c.set(key: string, value)` | `void` | Stores a value for later handlers. |
+| `c.get(key: string)` | `any` | A stored value, or `null`. |
+
+## Deprecated
+
+These still work for one release and draw an `OSL-DEPRECATED` warning.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `c.string(status, format, ...values)` | `c.text(status, body)` with a string template |
+| `c.data(status, contentType, bytes)` | `c.send(status, contentType, body)` |
+| `c.ok(value)` | `c.json(200, value)` |
+| `c.created(value)` | `c.json(201, value)` |
+| `c.redirectPermanent(url)` | `c.redirect(301, url)` |
+| `c.queryDefault(key, def)` | `c.query(key) ?? def` |
+| `c.formValueDefault(key, def)` | `c.formValue(key) ?? def` |
+| `c.getString(key)`, `c.getInt(key)`, `c.getBool(key)`, `c.getFloat(key)` | `c.get(key)` with a typed declaration |
+| `c.written()` | `c.isWritten()` |
+| `c.basicAuth()` (returned `{ok, username, password}`) | `c.credentials()`, which returns `null` when there are none |
+| `c.setCookie(name, value, maxAge, path, domain, secure, httpOnly)` (`maxAge` in seconds) | `c.setCookie(name, value, {maxAge: ms, path, domain, secure, httpOnly})` |
+| `c.html(status, name, data)` with Go templates | `app.views(dir)` and `c.render(name, data)` |
+| `app.serve(address)` | `app.run(address)` |
+| `app.serveTLS(address, certFile, keyFile)` | `app.runTLS(address, certFile, keyFile)` |
+| `app.loadHTMLGlob(pattern)`, `app.setFuncMap(funcs)` | `app.views(dir)` and `c.render(name, data)`, which use std:template syntax |
+| `serve.rateLimit(maxRequests, windowSeconds)` | `serve.limitRequests(maxRequests, {window: ms})` |
+| `serve.timeout(seconds)` | `serve.timeLimit(ms)` |
+| `serve.recover()` | Drop it; handlers that throw already answer `500` and print their error |
 
 ## Behavior and limits
 
-Body helpers cache the request bytes, so reading JSON, forms, or a bound value does not consume the
-body for later helpers. Static routes reject path traversal through symbolic links. Client IP
-parsing accepts IPv6. Panic recovery and shutdown have time limits.
+`c.query`, `c.header`, `c.cookie`, `c.bearer` and `c.formValue` return `null` for a missing value,
+not `""`. Comparing one with `""` or joining it into a string with `++` is a compile error, so
+write `?? ""` or check for `null` first.
 
-Shutdown rejects new WebSocket upgrades before closing the listener. When `stop` returns, no
-upgrade that started during shutdown can leave a connection running.
+Body helpers cache the request bytes, so reading JSON, a form or a bound value doesn't consume the
+body for later helpers. `c.html` answers `500` instead of writing template error text into a `200`
+response.

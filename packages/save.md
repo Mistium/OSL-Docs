@@ -1,6 +1,7 @@
 # save
 
-Use `save` for simple persistent key-value data without designing a database schema.
+Use `save` to keep small named pieces of text between runs, without designing a database schema.
+Each app gets its own directory under `~/.osl/apps`.
 
 ```osl
 import "std:save"
@@ -11,31 +12,59 @@ import "std:save"
 ```osl
 import "std:save"
 
-store = save.create()
-store.init("my-app")
-store.setItem("theme", "dark")
-log store.getItem("theme").data
+auto store = save.open("my-app")
+
+store.set("theme", "dark")
+log store.get("theme")
+
+string sound = store.get("sound").unwrapOr("on")
+log sound
 ```
 
 ## API reference
 
 ### `save`
 
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `save.open(appName)` | `result<*save.Store, error>` | The store for an app, creating `~/.osl/apps/<appName>` if needed. Throws `ValueError` when `appName` isn't a plain file name. Fails with `NotFoundError` when the home directory isn't known, `PermissionError` or `IOError`. |
+
+### `*save.Store` methods
+
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `save.init(appName: string)` | `boolean` |  |
-| `save.OSL_path(filename: string)` | `string` |  |
-| `save.setItem(filename: string, value: any)` | `string` | Writes an item and returns its path, or an empty string on failure. |
-| `save.getItem(filename: string)` | `object` | Returns item. |
-| `save.exists(filename: string)` | `boolean` | Reports whether the validated item path exists; false before initialization. |
-| `save.all()` | `array` |  |
-| `save.create()` | `*save` | Creates an isolated save value; call `init` before reading or writing. |
+| `store.set(name, text)` | `result<unit, error>` | Stores text under `name`, replacing any earlier value atomically. Fails with `PermissionError` or `IOError`. |
+| `store.get(name)` | `result<string, error>` | The text stored under `name`. Fails with `NotFoundError` when there is no such item. |
+| `store.has(name)` | `boolean` | Whether an item is stored under `name`. An invalid name has no item. |
+| `store.remove(name)` | `result<unit, error>` | Deletes an item. Fails with `NotFoundError` when there is no such item. |
+| `store.keys()` | `result<string[], error>` | The stored items' file names, such as `"theme.txt"`, sorted. Fails with `NotFoundError` when the store's directory has been deleted. |
+| `store.path(name)` | `string` | The file an item is stored in. |
+| `store.dir()` | `string` | The store's directory. |
 
-## Notes
+Each item is one file in the store's directory. A name without an extension is stored as
+`name.txt`, so `"theme"` and `"theme.txt"` are the same item. Names must be plain file names:
+`set`, `get`, `remove` and `path` throw `ValueError` for a name with slashes or a trailing `.`.
 
-- Prefer `import "std:save"`; the older `import "osl/save"` spelling remains supported.
+To store structured data, convert it to text first, for example with
+`json.stringify(value)` and `json.parse(text)` from [`json`](json.md).
+
+## Deprecated
+
+These still work for one release, with an `OSL-DEPRECATED` warning at each call. The old API used a
+shared or separately created store that had to be initialised with `init` before use, and reported
+failure with `""`, `false` or a `{app, filename, exists, data, size}` object.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `save.init(appName)`, `save.create()` and `store.init(appName)` | `save.open(appName)` |
+| `save.setItem(name, value)`, `store.setItem(name, value)` | `store.set(name, text)` |
+| `save.getItem(name)`, `store.getItem(name)` | `store.get(name)` and `store.has(name)` |
+| `save.exists(name)`, `store.exists(name)` | `store.has(name)` |
+| `save.all()`, `store.all()` | `store.keys()` |
 
 ## Behavior and limits
 
-Call `init` before any read or write. Earlier operations return failure values. `init` resolves the
-current user's home directory each time and creates missing parent directories.
+The older `import "osl/save"` spelling still works, with a migration warning.
+
+Stores opened for different apps are independent. `set` writes like `fs.writeFile`, so a reader
+sees either the old or the new text, never a mix.
