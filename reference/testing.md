@@ -25,7 +25,7 @@ test (
 )
 ```
 
-Each bare expression in a test body must be boolean and is checked automatically. A false result fails the block. Comparisons report both operand values and evaluate each operand once, using the same equality and comparison rules as ordinary OSL. No assertion package is needed.
+Each bare expression in a test body is a check: it must be boolean, and a false result fails the block. A call that returns nothing has nothing to check, so it runs as an ordinary statement. Any other value is a compile error that names its type; compare it with the value you expect, or put `void` before it to run it without checking. Comparisons report both operand values and evaluate each operand once, using the same equality and comparison rules as ordinary OSL. No assertion package is needed.
 
 Use ordinary declarations and control flow to keep cases compact:
 
@@ -37,7 +37,7 @@ test (
 )
 ```
 
-Bare boolean expressions are also checked inside the block's loops and conditional branches. Function and lambda bodies keep their ordinary semantics. Use `void` for a call whose result should be ignored, and use `defer` for cleanup. A thrown error fails the current block, runs its deferred cleanup, and lets later blocks run.
+Bare boolean expressions are also checked inside the block's loops and conditional branches. Function and lambda bodies keep their ordinary semantics. Use `void` for a call whose result should be ignored, such as setup that returns `true` on success, and use `defer` for cleanup. A thrown error fails the current block, runs its deferred cleanup, and lets later blocks run.
 
 Test blocks must be at the top level. Each block has its own local scope; blocks in the same file share globals and execute in source order. Each discovered file runs in a separate process. Wait explicitly for any threads whose results the block needs.
 
