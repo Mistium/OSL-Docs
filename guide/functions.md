@@ -99,6 +99,8 @@ auto validate = def(object record) result -> (
 
 Both forms take package handle types, such as `(*ws.Connection conn, object fields) object[] -> [fields]`.
 
+When a lambda without a return type has a single call that returns nothing as its body, it runs that call and returns nothing. This works for your own functions and for package methods that return nothing, including methods on a handle parameter, as in `def(*serve.Context c) -> c.json(200, {ok: true})`.
+
 Lambdas capture variables from their surrounding scope.
 
 ## Optional and rest parameters
