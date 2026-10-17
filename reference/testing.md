@@ -43,7 +43,7 @@ Test blocks must be at the top level. Each block has its own local scope; blocks
 
 In test mode, the compiler retains definitions, imports, and global initialization assignments while skipping top-level startup statements and the automatic `main()` call. Imported source files follow the same rule, and their test blocks are not run merely by importing them. **Global initializers still execute**, including calls made by those initializers. Put application startup in `main()` or a standalone call when it must be skipped during checks.
 
-Imports inside a test block are available to its checks and are omitted with the block during normal compilation. `osl run`, `osl compile`, and `osl transpile` omit inline blocks and their test-only dependencies. Production and test artifacts have separate compiler cache keys.
+Imports inside a test block are available to its checks and are omitted with the block during normal compilation. A block that imports the program's entry file, as in `import "../main.osl"`, can use every package that program imports, so it does not need to repeat them. `osl run`, `osl compile`, and `osl transpile` omit inline blocks and their test-only dependencies. Production and test artifacts have separate compiler cache keys.
 
 ## Standalone test files
 
