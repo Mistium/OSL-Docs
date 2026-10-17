@@ -64,8 +64,8 @@ Path helpers such as `fs.base` only read the string and never fail.
 | --- | --- | --- |
 | `fs.readFile(path)` | `result<string, error>` | Reads the whole file as text. |
 | `fs.readFileBytes(path)` | `result<byte[], error>` | Reads the whole file as bytes. |
-| `fs.writeFile(path, text)` | `result<unit, error>` | Replaces the file's contents atomically, creating it if needed. |
-| `fs.writeFileBytes(path, data)` | `result<unit, error>` | Like `writeFile`, for a `byte[]`, a string (its UTF-8 bytes), or an array of whole numbers from 0 to 255. Throws `ValueError` for a number outside that range. |
+| `fs.writeFile(path, text, options?)` | `result<unit, error>` | Replaces the file's contents atomically, creating it if needed. Option `durable` (default `true`) waits until the new contents are on stable storage; see [Flushing to disk](#flushing-to-disk). |
+| `fs.writeFileBytes(path, data, options?)` | `result<unit, error>` | Like `writeFile`, with the same options, for a `byte[]`, a string (its UTF-8 bytes), or an array of whole numbers from 0 to 255. Throws `ValueError` for a number outside that range. |
 | `fs.appendFile(path, text)` | `result<unit, error>` | Adds text to the end of the file, creating it if needed. |
 | `fs.appendFileBytes(path, data)` | `result<unit, error>` | Adds bytes to the end of the file. `data` is read like `writeFileBytes` data. |
 | `fs.lines(path)` | `result<iter<string>, error>` | Iterates over the file's lines without line endings, reading as it goes. The file closes when the loop finishes. |
@@ -103,12 +103,24 @@ Use `syncFile` after `appendFile` when the data must survive a crash. Use `syncL
 parent directory afterwards, so a new or replaced directory entry is not guaranteed to survive power
 loss.
 
+Pass `{durable: false}` for files you can rebuild, such as caches and indexes. The write stays
+atomic, so a crash leaves the old or the new contents and never a torn file, but the call may return
+before the new contents reach stable storage, so a crash right after it can bring back the old ones.
+On macOS this replaces the full flush with a write barrier (`F_BARRIERFSYNC`), which orders the data
+ahead of the rename without waiting for the drive, and is much faster. Elsewhere, and if the barrier
+is not supported, it flushes as a durable write does.
+
+```osl
+string index = "{\"pages\": 12}"
+fs.writeFile("cache/index.json", index, {durable: false})
+```
+
 ### Shared flushes on macOS
 
-On macOS, a full flush (`F_FULLFSYNC`) is slow, so concurrent `writeFile`, `writeFileBytes` and
-`syncFile` calls on the same filesystem share one. The runtime groups pending flushes by device, up
-to 64 at a time: it calls ordinary `fsync` on every file, then one full flush, and only then lets the
-atomic writers rename their files. A single pending write uses a full flush directly. If the shared
+On macOS, a full flush (`F_FULLFSYNC`) is slow, so concurrent durable `writeFile`, `writeFileBytes`
+and `syncFile` calls on the same filesystem share one. The runtime groups pending flushes by device,
+up to 64 at a time: it calls ordinary `fsync` on every file, then one full flush, and only then lets
+the atomic writers rename their files. A single pending write uses a full flush directly. If the shared
 flush fails, each file falls back to its own full flush, so an error stays with the file it belongs
 to. No write returns before its flush completes. Other operating systems flush each file on its
 own.
@@ -123,15 +135,17 @@ you care about (not a memory-backed `/tmp`):
 ./osl compile examples/other/fs_write_bench.osl -o ./fs-write-bench
 ./fs-write-bench ./bench-data text 100 1
 ./fs-write-bench ./bench-data text 100 16
+./fs-write-bench ./bench-data cache 100 16
 ./fs-write-bench ./bench-data bytes 100 16
 ./fs-write-bench ./bench-data append 100 16
 ```
 
-The arguments are the directory, the mode (`text`, `bytes`, or `append`, which calls `appendFile`
-then `syncFile`), writes per worker, and workers. Each worker writes 1 KiB to its own file, and the
-output reports throughput and mean, p50, p95 and p99 latency in milliseconds. To count flushes, trace
+The arguments are the directory, the mode (`text`, `cache`, which passes `{durable: false}`,
+`bytes`, or `append`, which calls `appendFile` then `syncFile`), writes per worker, and workers.
+Each worker writes 1 KiB to its own file, and the output reports throughput and mean, p50, p95 and
+p99 latency in milliseconds. To count flushes, trace
 the executable: `strace -f -c -e trace=fsync,fdatasync,rename,renameat,renameat2` on Linux, or
-`sudo dtruss -f` on macOS, where a full flush is `fcntl` command `51`.
+`sudo dtruss -f` on macOS, where a full flush is `fcntl` command `51` and a barrier is command `85`.
 
 ## File handles
 
