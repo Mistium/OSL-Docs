@@ -11,6 +11,8 @@ for update in [
 )
 ```
 
+A `(` that ends a line always opens a block, never a parenthesized expression. An operator can't take a block as its operand, so `x == 1 and !(` followed by a new line is reported; keep the parenthesized part on one line or move it into a variable.
+
 Moving the opener onto its own line, as in `if ready` followed by `(` on the next line, is a compile error.
 
 ## Conditions

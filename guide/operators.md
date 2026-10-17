@@ -82,7 +82,7 @@ boolean valid = ready and !failed
 string selected = primary ?? fallback
 ```
 
-`and` and `or` return according to OSL truthiness and short-circuit. `??` only falls back for `null`. `??=` assigns only when the current value is `null`.
+`and` and `or` return according to OSL truthiness and short-circuit. `??` only falls back for `null`. `??=` assigns only when the current value is `null`. `=??` is the reverse: `target =?? value` assigns only when `value` is not `null`, so `stored.content =?? edit.content` keeps the stored text when the edit has none. Both work on variables, object keys, fields, and array items.
 
 `!` is the only negation operator; OSL has no `not` keyword. A double negation such as `!!flag` warns; use the value directly or `.toBool()` to coerce it.
 

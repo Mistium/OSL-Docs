@@ -97,6 +97,8 @@ auto validate = def(object record) result -> (
 )
 ```
 
+Both forms take package handle types, such as `(*ws.Connection conn, object fields) object[] -> [fields]`.
+
 Lambdas capture variables from their surrounding scope.
 
 ## Optional and rest parameters
