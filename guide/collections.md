@@ -108,6 +108,8 @@ object copy = {...base, role: "owner"}
 log max(...all)
 ```
 
+A member of an untyped object, such as `{...message.poll, id}`, spreads as an object, and a value that isn't one throws `Cannot cast <type> to object` at run time. An `any` value must be narrowed first, for example with `.assertElse(object, {})`.
+
 ## Destructuring
 
 ```osl

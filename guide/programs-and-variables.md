@@ -70,7 +70,7 @@ attempts++
 username ++= " Lovelace"
 ```
 
-OSL supports `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `++=`, and `??=`. Postfix `++` and `--` are statements. In an expression, `++` means concatenation.
+OSL supports `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `++=`, `??=`, and `=??`. Postfix `++` and `--` are statements. In an expression, `++` means concatenation.
 
 ```osl
 string label = "attempts: " ++ attempts
