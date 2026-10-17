@@ -12,10 +12,10 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 
 `run` builds a temporary executable and runs it with the source directory as its working directory. It forwards the program's exit status. When the program is killed by a signal, `run` exits with 128 plus the signal number, as shells do.
 
-`compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
+`compile` writes a native executable. Without `-o`, it uses the entry filename without `.osl`. A relative output path, with or without `-o`, is resolved against the entry file's directory rather than the current directory, so `osl compile src/main.osl -o ../app` writes `app` beside `src`. The `Built` line shows the full path written. `--no-write` runs the compiler frontend but does not create a generated workspace or binary.
 
 `transpile` stops after Go generation. It prints formatted Go to standard output unless `-o`
-selects a file. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
+selects a file. Unlike `compile`, a relative `transpile -o` path is resolved against the current directory. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
 basename remain distinct.
 
 For packages with platform-specific Go companions, `transpile -o` automatically writes those
