@@ -16,6 +16,14 @@ Directory imports are sorted by filename and are not recursive. Import each chil
 The compiler emits runtime initialization only for imported files that contain top-level executable
 statements. A file containing declarations alone adds no runtime initializer.
 
+A `std:` import is visible to every file in the program, so modules reached from `main.osl` use the
+packages it imports without repeating them. Using a package that nothing in the program imports is a
+compile error that names the import to add:
+
+```text
+ReferenceError: 'regex' is not defined; add import "std:regex"
+```
+
 ## A practical layout
 
 Use one top-level entry file and group the rest by responsibility:
