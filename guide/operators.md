@@ -120,6 +120,11 @@ appends `"!"` to the `else` value. Wrap the whole `if` in parentheses to combine
 operators. When one branch is `null`, the result has the nullable type of the other branch, so
 `if on then result.ok(3) else null` is a `result?`.
 
+The result has a type both branches fit. A literal branch takes the type of the other branch, so
+`if empty then [] else names` is a `string[]` when `names` is, and `if missing then {found: false} else
+lookup()` is a plain `object` whose fields are only known at run time. Two different object
+literals give an `object` too.
+
 The older `condition ? a b` form still compiles but warns (`OSL-LEGACY-TERNARY`), and `osl fix`
 rewrites it to `if … then … else`.
 
