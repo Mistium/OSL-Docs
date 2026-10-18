@@ -12,8 +12,8 @@ import "std:ws"
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `ws.connect(url: string, ...protocols: string)` | `*ws.Connection` | Opens a WebSocket client connection. |
-| `ws.new(...args: string)` | `*ws.Server` | Builds a server meant to be mounted on `serve` (`app.ws`, `c.upgrade`). No listen address. Optional: `new(path)` or `new(addr, path)`. Path defaults to `"/"`. |
+| `ws.connect(url: string, options?: object)` | `*ws.Connection` | Opens a WebSocket client connection. See [Options](#options). |
+| `ws.new(options?: object)` | `*ws.Server` | Builds a server to mount on `serve` (`app.ws`, `c.upgrade`) or to run standalone. See [Options](#options). The old `new(path)` and `new(addr, path)` forms still work. |
 | `ws.newServer(addr: string, path: string)` | `*ws.Server` | Builds a standalone server that can `start`/`startTLS` on `addr+path`, or still be mounted on serve like `new()`. |
 
 ### `*ws.Connection` values
@@ -48,6 +48,36 @@ import "std:ws"
 | `value.startTLS(certFile: string, keyFile: string)` | `error` | Starts the standalone HTTPS WebSocket server and blocks. |
 | `value.handleWebSocket()` | `http.HandlerFunc` |  |
 | `value.stop()` | `error` |  |
+
+## Options
+
+`ws.new` accepts:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `address` | `":8080"` | Listen address for a standalone `run()`. |
+| `path` | `"/"` | Upgrade path for a standalone `run()`. |
+| `maxMessageBytes` | `1048576` (1 MiB) | Largest message accepted from a client. A larger one closes that connection with close code 1009. |
+| `compression` | `false` | Accept `permessage-deflate` when a client offers it. Messages are compressed both ways for that connection. |
+
+`ws.connect` accepts:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `protocols` | none | Subprotocol names to offer. |
+| `headers` | none | Extra handshake headers. |
+| `timeout` | `10000` | Handshake timeout in milliseconds. |
+| `maxMessageBytes` | `1048576` (1 MiB) | Largest message accepted from the server. A larger one closes the connection with close code 1009. |
+| `compression` | `false` | Offer `permessage-deflate` to the server. |
+
+`maxMessageBytes` counts the message after it is inflated, so a small
+compressed frame cannot expand past the limit. Reconnects keep every option.
+
+```osl
+import "std:ws"
+
+auto socket = ws.new({maxMessageBytes: 50 * 1024 * 1024, compression: true})
+```
 
 ## Mounting on serve
 
