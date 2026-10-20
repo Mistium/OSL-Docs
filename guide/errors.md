@@ -15,8 +15,8 @@ A thrown value stops the current operation unless a catch expression handles it.
 ## Catch expressions
 
 ```osl
-object data = schema.safeParse(input) catch (
-  log _.unwrapErr().message
+object data = try(shape.parse(input)) catch (
+  log _.message
   return {}
 )
 ```
@@ -52,6 +52,21 @@ number value = calculated.unwrap()
 ```
 
 `unwrap()` and `unwrapErr()` fail when called on the wrong variant. Use `unwrapAs(type)` when a dynamic success value needs an assertion.
+
+## Guards make failure impossible
+
+The compiler follows the conditions around a call. When a guard establishes the condition that makes a package method safe, an implicit result unwrap does not warn:
+
+```osl
+import "std:fs"
+
+def shardFiles(string root) string[] (
+  if !fs.isDir(root) return []
+  return fs.readDir(root)
+)
+```
+
+After the early return, `fs.isDir(root)` is known to be true, so `fs.readDir(root)` cannot fail there. The same works inside an `if` branch, after an `and` condition, and through a chain of early returns. Assigning to a variable clears the guards that mention it. Package methods declare these conditions in their doc comments with `osl:safeWhen` and `osl:implies`; see the package API standard in `docs/packages.md`.
 
 ## Assertions are runtime checks
 
