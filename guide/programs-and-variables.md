@@ -7,7 +7,7 @@ log "first"
 log "second"
 ```
 
-Commands use whitespace to separate the command name from its arguments. `log (10 + 10)` prints `20`. Function calls keep the opening parenthesis next to the name, as in `abs(-20)`; `abs (-20)` is invalid.
+Commands use whitespace to separate the command name from its arguments. `log (10 + 10)` prints `20`. Multiple values passed to `log`, `warn` or `error` print on one line, separated by spaces. Function calls keep the opening parenthesis next to the name, as in `abs(-20)`; `abs (-20)` is invalid.
 
 Function, class, struct, and enum declarations are available before their source position. Other statements run where they appear.
 
