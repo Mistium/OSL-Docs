@@ -28,7 +28,7 @@ log t.wait()
 | `thread.age()` | `number` | Returns the age of the thread in milliseconds. |
 | `thread.waitAll(threads: array)` | `array` | Waits for every thread and preserves `null` positions for non-thread entries. If tasks fail, waits for the rest before rethrowing the first error with additional failures attached. |
 | `thread.race(threads: array)` | `any` | Waits for the first thread in the array to complete and returns its result. If the winning task failed, rethrows its error. |
-| `thread.parallel(items: array, fn: any, limit?: number)` | `array` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. |
+| `thread.parallel(items: array, fn: any, limit?: number)` | `array<T>` | Runs `fn(item, index)` across `items` in parallel with an optional worker concurrency `limit`, returning results in input index order. `T` is the callback's return type when it is known. |
 | `thread.channel(capacity?: number)` | `*thread.Channel` | Creates a thread-safe message channel with optional buffer capacity. |
 
 ### `*thread.Channel`
