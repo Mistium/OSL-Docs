@@ -181,7 +181,7 @@ Interface values share their underlying record or class. Calls through `const<Re
 
 ## Structs
 
-A struct is a compact typed value. Fields have defaults, and assignment copies the struct.
+A struct is a compact typed value. Fields have defaults, and assignment copies the struct. A field may be nullable.
 
 ```osl
 struct Point (
@@ -189,9 +189,23 @@ struct Point (
   int y = 0
 )
 
+struct Profile (
+  string name = ""
+  string? bio = null
+)
+
 Point origin = Point()
 Point cursor = Point(10, 20)
 cursor.x = 12
+```
+
+Structs also parse from JSON. Missing keys take the field's default; `T?` fields accept `null`; a wrong type is a `ParseError` naming the struct and field; unknown keys are rejected.
+
+```osl
+import "std:json"
+
+Profile profile = json.parse<Profile>("{\"name\":\"Ada\"}").unwrap()
+log profile.bio == null
 ```
 
 Field access on structs and closed object shapes is verified at compile time. Accessing an unknown property or typo (such as `cursor.z`) is caught as a compile-time `TypeError`.

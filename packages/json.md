@@ -33,6 +33,26 @@ if parsed.isOk() (
 | `json.isArray(data: any)` | `boolean` |  |
 | `json.open(path: any, maxBytes?: number)` | `*json.Stream` | Opens one JSON document for incremental token reading. |
 
+## Parsing into structs
+
+`json.parse<T>(text)` checks the parsed value against `T`. For a struct, it applies field defaults to absent keys, accepts `null` for nullable fields, and reports a `ParseError` that names the struct and field when a value has the wrong type. Unknown keys are rejected.
+
+```osl
+import "std:json"
+
+struct User (
+  string name = ""
+  string? bio = null
+  int age = 0
+)
+
+User user = json.parse<User>("{\"name\":\"Ada\",\"age\":3}").unwrap()
+log user.name
+log user.bio == null
+```
+
+A missing key uses the default, so `user.age` is `3` and `user.bio` is `null` above. A value such as `"age": "old"` fails with a `ParseError` naming `"age"`; an extra key such as `"admin": true` fails with an unknown-field `ParseError`.
+
 ## Streaming large files
 
 `json.open(path, maxBytes?)` returns a `*json.Stream`. The optional byte limit rejects an oversized file before it is read. Opening and parsing errors are reported by `stream.ok()` and `stream.error()`.

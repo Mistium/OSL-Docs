@@ -6,7 +6,7 @@ Working notes for OSL syntax and type changes discussed while cleaning up
 ## Status
 
 - **Done:** lock values in `std:sync`.
-- **Next:** nullable struct fields and struct-aware JSON parsing.
+- **Done:** nullable struct fields and struct-aware JSON parsing.
 - **Next:** postfix `!` for result propagation.
 - **Open:** automatic transactions over shared state.
 - **Rejected:** `guard`, structural `match`, package-defined block syntax,
@@ -51,7 +51,10 @@ access.with(def() -> (
 
 ## 2. Nullable struct fields and JSON defaults
 
-This is a bug, not a feature request. Today this is rejected:
+Implemented: `T?` struct fields, defaults for missing JSON keys, field-named
+`ParseError`s, and rejection of unknown keys.
+
+This was a bug, not a feature request. Before the fix this was rejected:
 
 ```osl
 struct AccessData (
