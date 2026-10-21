@@ -53,6 +53,24 @@ number value = calculated.unwrap()
 
 `unwrap()` and `unwrapErr()` fail when called on the wrong variant. Use `unwrapAs(type)` when a dynamic success value needs an assertion.
 
+## Propagating results
+
+Append `!` to a result to propagate its failure to the enclosing function. The enclosing function must return a compatible `result<U, E>`:
+
+```osl
+import "std:fs"
+import "std:json"
+
+def readConfig<T>(string path) result<T, error> (
+  string text = fs.readFile(path)!
+  return json.parse<T>(text)!
+)
+```
+
+On success, `!` keeps the result, so the normal typed declaration unwraps `fs.readFile(path)!` to a string. A failure returns from the enclosing function immediately. It does not throw, and `try(...)` does not catch it. The error types must match; `result<T, string>` cannot propagate into `result<T, error>`.
+
+`!` is only valid inside a function that returns a result. Its operand must be a result-typed expression, such as a call or a variable.
+
 ## Guards make failure impossible
 
 The compiler follows the conditions around a call. When a guard establishes the condition that makes a package method safe, an implicit result unwrap does not warn:

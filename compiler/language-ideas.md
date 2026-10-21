@@ -7,7 +7,8 @@ Working notes for OSL syntax and type changes discussed while cleaning up
 
 - **Done:** lock values in `std:sync`.
 - **Done:** nullable struct fields and struct-aware JSON parsing.
-- **Next:** postfix `!` for result propagation.
+- **Done:** postfix `!` for result propagation.
+- **Next:** decide on automatic transactions after the originchats migration.
 - **Open:** automatic transactions over shared state.
 - **Rejected:** `guard`, structural `match`, package-defined block syntax,
   language-level `fail`/`ok`, and `sync.Cell`.
@@ -96,13 +97,12 @@ assignments where the update is pure.
 
 ## 3. Postfix `!` for result propagation
 
-Use `!` instead of `?`, because `?` is tied to the legacy ternary and `!`
-reads as a failure marker.
+Implemented.
 
 ```osl
-def dbRead<T>(string file) result<T, string> (
+def dbRead<T>(string file) result<T, error> (
   string path = dbGetPath(file)
-  if !fs.isFile(path) return result.err("Missing required database file: " ++ path)
+  if !fs.isFile(path) return result.err(error("Missing required database file: " ++ path))
   string text = fs.readFile(path)!
   return json.parse<T>(text)!
 )
@@ -118,12 +118,12 @@ Semantics:
 - It does not apply to handlers returning `{error: ...}`; those need a typed
   result protocol or an explicit `catch`.
 
-Open questions:
+Decisions:
 
-- Exact error types only, or allow conversion with `!` plus an error type?
-- Does `!` work on a result held in a variable, or only on a call expression?
-  It should work on any result-typed expression.
-- How does it interact with `try(...) catch (...)`? `!` is for propagation;
+- Exact error types only. `result<T, string>` does not propagate into
+  `result<T, error>`; write a conversion at the boundary if that is needed.
+- It works on any result-typed expression, including a variable.
+- `try(...)` does not catch explicit propagation. `!` is for propagation;
   `try` is for recovery.
 
 ## 4. Automatic transactions over shared state
