@@ -131,6 +131,8 @@ rewrites it to `if … then … else`.
 log 10 |> double |> format
 ```
 
+The result of a pipe takes the return type of the function on its right.
+
 Bitwise operators are `&`, `|`, `^^`, `<<`, and `>>`. Shift counts cannot be negative. The compiler
 rejects a negative count when it can prove the value, including a known variable. Dynamic counts
 remain checked by Go at runtime.

@@ -33,8 +33,9 @@ Cache handles can be declared as `*cache.Cache`, including function parameters a
 | --- | --- | --- |
 | `value.set(key: any, value: any)` | `boolean` | Sets a value. |
 | `value.get(key: any)` | `any` | Returns a value. |
+| `value.fetch(key: string, loader: any)` | `T` | Returns the cached value, or calls `loader()` once and stores its result. `T` is the loader's return type. |
 | `value.getOrSet(key: any, value: any)` | `any` | Returns the existing value, or stores and returns `value`. |
-| `value.getOrSetFunc(key: any, fn: any)` | `any` | Returns the existing value, or calls `fn` once and stores its result. |
+| `value.getOrSetFunc(key: any, fn: any)` | `T` | Returns the existing value, or calls `fn` once and stores its result. |
 | `value.delete(key: any)` | `boolean` | Deletes a value. |
 | `value.clear()` | `boolean` | Clears all stored values. |
 | `value.has(key: any)` | `boolean` |  |
@@ -50,8 +51,8 @@ Cache handles can be declared as `*cache.Cache`, including function parameters a
 | `value.getMany(keys: array)` | `object` | Returns the present values for the requested keys. |
 | `value.deleteMany(keys: array)` | `boolean` | Deletes each requested key. |
 | `value.filter(fn: any)` | `object` | Returns entries for which `fn` is true. |
-| `value.mapValues(fn: any)` | `object` | Applies `fn` to each value and returns the results. |
-| `value.reduce(initial: any, fn: any)` | `any` | Reduces values with a callback. |
+| `value.mapValues(fn: any)` | `string[T]` | Applies `fn` to each value and returns the results. `T` is the callback's return type. |
+| `value.reduce(initial: any, fn: any)` | `T` | Reduces values with a callback. `T` is the callback's return type. |
 | `value.foreach(fn: any)` | `boolean` | Runs a callback for each value. |
 | `value.toArray()` | `array` | Converts the value to an array. |
 

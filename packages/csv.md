@@ -36,11 +36,11 @@ log rows[1]["name"]
 | `csv.getColumn(data: array, column: any)` | `array` | Returns column. |
 | `csv.filter(data: array, fn: any)` | `array` | Returns values accepted by a callback. |
 | `csv.mapRows(data: array, fn: any)` | `array` |  |
-| `csv.reduce(data: array, initial: any, fn: any)` | `any` | Reduces values with a callback. |
+| `csv.reduce(data: array, initial: any, fn: any)` | `T` | Reduces values with a callback. `T` is the callback's return type. |
 | `csv.groupBy(data: array, key: any)` | `string[array]` | Groups rows by the selected field. |
 | `csv.sortBy(data: array, key: any)` | `array` |  |
 | `csv.sortByNum(data: array, key: any)` | `array` |  |
-| `csv.aggregate(data: array, key: any, value: any, fn: any)` | `object` |  |
+| `csv.aggregate(data: array, key: any, value: any, fn: any)` | `string[T]` | Groups rows and maps each group's values with the callback. `T` is the callback's return type. |
 | `csv.count(data: array, key: any)` | `object` |  |
 | `csv.unique(data: array, key: any)` | `array` |  |
 | `csv.join(data1: array, data2: array, key: any)` | `array` |  |

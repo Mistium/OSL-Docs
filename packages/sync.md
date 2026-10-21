@@ -37,8 +37,8 @@ A lock is unnamed by default. Use `sync.newNamedLock("access")` when you want it
 | `lock.rlock()` | `void` | Takes a shared read lock. Throws `DeadlockError` when this thread already holds the lock. |
 | `lock.runlock()` | `void` | Releases this thread's read hold. |
 | `lock.tryLock()` | `boolean` | Takes the lock if it is free, without waiting. |
-| `lock.with(fn: any)` | `any` | Takes the lock, calls `fn()`, and releases it even when `fn` throws. |
-| `lock.withRLock(fn: any)` | `any` | Read-locks, calls `fn()`, and releases it even when `fn` throws. |
+| `lock.with(fn: any)` | `T` | Takes the lock, calls `fn()`, and releases it even when `fn` throws. `T` is the callback's return type. |
+| `lock.withRLock(fn: any)` | `T` | Read-locks, calls `fn()`, and releases it even when `fn` throws. |
 
 ## Named locks
 
@@ -49,16 +49,16 @@ The older string API still works and shares one process-wide lock per name. Pref
 | `sync.lock(name: string)` | `void` | Acquires the named lock exclusively. |
 | `sync.tryLock(name: string)` | `boolean` | Attempts to acquire the named lock without blocking. |
 | `sync.unlock(name: string)` | `void` | Releases an exclusive hold; throws `LockError` when it isn't held by this thread. |
-| `sync.withLock(name: string, fn: any)` | `any` | Acquires `name`, calls `fn()`, and releases the lock on exit. |
+| `sync.withLock(name: string, fn: any)` | `T` | Acquires `name`, calls `fn()`, and releases the lock on exit. `T` is the callback's return type. |
 | `sync.rlock(name: string)` | `void` | Acquires the named lock for reading. |
 | `sync.runlock(name: string)` | `void` | Releases one read hold; throws `LockError` when the thread holds none. |
-| `sync.withRLock(name: string, fn: any)` | `any` | Read-locks `name`, calls `fn()`, and releases it on exit. |
+| `sync.withRLock(name: string, fn: any)` | `T` | Read-locks `name`, calls `fn()`, and releases it on exit. `T` is the callback's return type. |
 
 ## Once and wait groups
 
 | Method | Returns | Notes |
 | --- | --- | --- |
-| `sync.once(name: string, fn: any)` | `any` | Runs `fn()` at most once across all threads for `name`. |
+| `sync.once(name: string, fn: any)` | `T?` | Runs `fn()` at most once across all threads for `name`, returning its value on the first call and `null` on later calls. |
 | `sync.waitGroup()` | `*sync.WaitGroup` | Creates a wait group. |
 
 ### `*sync.WaitGroup`

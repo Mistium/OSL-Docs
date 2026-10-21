@@ -18,12 +18,16 @@ if outcome.success ( log outcome.value )
 
 | Method | Returns | Notes |
 | --- | --- | --- |
+| `retry.call(callback: function, options?: object)` | `result<T, error>` | Calls the callback until it returns a regular value or `result.ok`, or the attempt limit is reached. `T` is the callback's value type. |
 | `retry.run(callback: function, options?: object)` | `object` | Calls the callback until it returns a regular value or `result.ok`, or the attempt limit is reached. Panics and `result.err` values are retried. |
 | `retry.backoff(attempt: number, options?: object)` | `number` | Returns the bounded delay in seconds for an attempt. |
 
 Options are `attempts` (default 3, maximum 100), `delay` in seconds (default 0), `factor`
 (default 2), `max_delay` in seconds (default 30, maximum 300), and `jitter` from 0 to 1.
 The callback may accept the one-based attempt number; zero-argument callbacks also work.
+
+`call` is the current API and throws the final failure as an `error`. `run` keeps the older
+object shape described below.
 
 `run` returns `{success, value, error, attempts, elapsed}`. Attempts stop immediately on an
 ordinary return value or `result.ok`. The final panic text or `result.err` value is preserved in
