@@ -43,8 +43,11 @@ Readability warnings flag expressions with a simpler equivalent. Each one carrie
 | `OSL-LEGACY-TERNARY` | `ready ? "go" "wait"` | `if ready then "go" else "wait"` |
 | `OSL-POINTER-EQUALITY` | `conn == except` | `conn === except` |
 | `OSL-REDUNDANT-PARENS` | `(name).toStr()`, `(a) + (b)`, `((a + b)) * c` | `name.toStr()`, `a + b`, `(a + b) * c` |
+| `OSL-TUPLE-UNION` | `([string] \| [int64])[]` | `[string \| int64][]` |
 
 `OSL-NULLABLE-UNION` reports a union that writes `null` as a member, such as `(string | int64 | null)`, and suggests the nullable suffix form, `(string | int64)?`. It has no automatic fix.
+
+`OSL-TUPLE-UNION` reports a union of one-element tuples followed by an array, such as `([string] | [int64])[]`, and suggests writing the union inside the tuple instead: `[string | int64][]`. The pair carries the same values with less nesting.
 
 `OSL-REDUNDANT-PARENS` only flags parentheses that can never help a reader: a pair around a single value (a name, string, call, or member chain) and a second pair wrapped directly around another. Parentheses that group an expression, such as `(a + b) * c` or `if (ready and open)`, are left alone. A number receiver such as `(1.5).round()` keeps its parentheses. `OSL-REDUNDANT-TERNARY` only fires when the condition is already boolean; a loose condition keeps its truthiness conversion. `OSL-OPERATOR-ASSIGNMENT` also folds chains such as `text = text ++ a ++ b` into `text ++= a ++ b` for the associative operators `+`, `++`, and `*`. `OSL-POINTER-EQUALITY` matters because `==` compares the contents of two handles, so two distinct connections in the same state compare equal; `===` and `!==` compare identity. `OSL-PREFIX-STRIP` flags `if s.startsWith(p) ( s = s.replace(p, "") )` and suggests `s.stripStart(p)` (or `stripEnd` for a suffix) without a fix, because `replace` also touches later occurrences. `key = key ?? null` is reported without a fix too: it only makes a missing object key present as `null`, which a `contains()` check says more clearly.
 
