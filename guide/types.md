@@ -120,7 +120,7 @@ can contain braces, quotes, and nested backtick strings. Write `\${` for a liter
 
 ## Nullable values
 
-A union with `null` may also be written in parentheses. `(T | null)` is the same type as `T?`, and an assignment accepts either `T` or `null`. The compiler warns and suggests `T?`; prefer the suffix form.
+A union with `null` may also be written in parentheses. `(T | null)` is the same type as `T?`, and an assignment accepts either `T` or `null`. The compiler warns and suggests `T?`; prefer the suffix form. A non-null value also flows into a nullable type, including array elements and map values, so `string[]` can be passed where `string?[]` is expected.
 
 A parenthesized nullable union also works as a return type, in block and concise functions:
 
@@ -174,6 +174,22 @@ literal and at runtime for a value.
 int[3] scores = [10]
 scores[2] = 20
 ```
+
+`[T, U]` is a tuple: a fixed group of values with a type at each position. Index a tuple from 1,
+assign through a literal position, and destructure it like an array.
+
+```osl
+[string, int64] entry = ["Ada", 42]
+log entry[1]
+entry[2] = 43
+[string name, int64 age] = entry
+log name
+log age
+```
+
+A one-element tuple such as `[string]` is a distinct type. A union of one-element tuples is the
+same value shape as a tuple with a union element, so write `[string | int64][]` rather than
+`([string] | [int64])[]`; the compiler warns about the longer form.
 
 `key[value]` describes a typed map:
 
