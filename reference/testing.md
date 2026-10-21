@@ -41,7 +41,7 @@ Bare boolean expressions are also checked inside the block's loops and condition
 
 Test blocks must be at the top level. Each block has its own local scope; blocks in the same file share globals and execute in source order. Each discovered file runs in a separate process. Wait explicitly for any threads whose results the block needs.
 
-In test mode, the compiler retains definitions, imports, and global initialization assignments while skipping top-level startup statements and the automatic `main()` call. Imported source files follow the same rule, and their test blocks are not run merely by importing them. **Global initializers still execute**, including calls made by those initializers. Put application startup in `main()` or a standalone call when it must be skipped during checks.
+In test mode, the compiler retains definitions, imports, and global initialization assignments while skipping top-level startup statements and the automatic `main()` call. Imported source files follow the same rule. A file's test blocks run only when `osl test` discovered that file, so importing a module never runs its tests during another file's checks. **Global initializers still execute**, including calls made by those initializers. Put application startup in `main()` or a standalone call when it must be skipped during checks.
 
 Imports inside a test block are available to its checks and are omitted with the block during normal compilation. `osl run`, `osl compile`, and `osl transpile` omit inline blocks and their test-only dependencies. Production and test artifacts have separate compiler cache keys.
 
@@ -83,7 +83,9 @@ This style keeps the failure message next to the rule being tested.
 
 ## Discovery and output
 
-The runner sorts discovered paths and compiles each file separately. Inline blocks print `PASS` or `FAIL` with their source file and opening line; failures also show the failing expression's source location and values. Standalone files print `PASS` or `FAIL` for the file. The final totals count files, and status `1` means at least one file failed.
+The runner sorts discovered paths. Inline test files from the same project are compiled and linked once, then each file runs in its own process; this keeps a large project from paying for one whole-project build per test file. Standalone `.test.osl` programs are built and run individually. Inline files run concurrently while standalone programs run one at a time, so files that coordinate through outside state keep their order. Set `OSL_TEST_JOBS` to cap the number of concurrent inline test processes; it defaults to the smaller of the CPU count and 8.
+
+Inline blocks print `PASS` or `FAIL` with their source file and opening line; failures also show the failing expression's source location and values. Standalone files print `PASS` or `FAIL` for the file. The final totals count files, and status `1` means at least one file failed.
 
 ## Compiler repository checks
 

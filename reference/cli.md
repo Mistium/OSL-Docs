@@ -54,7 +54,7 @@ osl test [path ...]
 osl bench <file.osl> [--time 1s] [--runs N] [--top N] [--profile cpu.pprof] [-- program args]
 ```
 
-`test` discovers `.test.osl` files. See [Testing](testing.md).
+`test` discovers inline `test (...)` blocks and `.test.osl` files. See [Testing](testing.md).
 
 `bench` repeats a program and reports where it spends time and allocates:
 
