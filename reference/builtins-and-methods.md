@@ -20,7 +20,7 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. |
 | `sqrt(value)`, `pow(base, exponent)` | Roots and powers. |
 | `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions of an angle in degrees, matching the number methods. |
-| `random(low, high)` | Returns a random number in the requested range. |
+| `random(low, high)` | Returns a random whole number from `low` to `high` inclusive, or a decimal from `low` up to but not including `high`. |
 | `range(start, end)` | Creates an inclusive range. The `to` operator is usually clearer. |
 | `keys(object)`, `values(object)`, `entries(object)` | Reads object contents. |
 | `btoa(value)`, `atob(value)` | Base64 encode and decode. `atob` returns the decoded bytes as a string, or `""` for invalid input. |
