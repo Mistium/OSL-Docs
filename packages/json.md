@@ -33,6 +33,8 @@ if parsed.isOk() (
 | `json.isArray(data: any)` | `boolean` |  |
 | `json.open(path: any, maxBytes?: number)` | `*json.Stream` | Opens one JSON document for incremental token reading. |
 
+Malformed input fails with a `ParseError` that names the line and column of the problem. Streaming reads report the same position for the file.
+
 ## Parsing into structs
 
 `json.parse<T>(text)` checks the parsed value against `T`. For a struct, it applies field defaults to absent keys, accepts `null` for nullable fields, and reports a `ParseError` that names the struct and field when a value has the wrong type. Unknown keys are rejected.
