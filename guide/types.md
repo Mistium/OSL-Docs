@@ -283,6 +283,23 @@ def display(Identifier id) string (
 )
 ```
 
+A union of classes or records can call a method when every member provides it. The call dispatches on the value's runtime type:
+
+```osl
+class Left (
+  def label() string -> "left"
+)
+
+class Right (
+  def label() string -> "right"
+)
+
+(Left | Right) picked = Right()
+log picked.label()
+```
+
+A method missing from any member is still a compile error.
+
 ## Checked conversion
 
 `.tryAs<T>` returns `result<T, error>` instead of silently producing zero or wrapping
