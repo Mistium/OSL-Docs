@@ -122,6 +122,15 @@ can contain braces, quotes, and nested backtick strings. Write `\${` for a liter
 
 A union with `null` may also be written in parentheses. `(T | null)` is the same type as `T?`, and an assignment accepts either `T` or `null`. The compiler warns and suggests `T?`; prefer the suffix form.
 
+A parenthesized nullable union also works as a return type, in block and concise functions:
+
+```osl
+def pick(boolean flag) (string | int)? (
+  if flag return "text"
+  return null
+)
+```
+
 Append `?` when a value may be `null`:
 
 ```osl
