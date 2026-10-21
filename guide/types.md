@@ -189,7 +189,9 @@ log age
 
 A one-element tuple such as `[string]` is a distinct type. A union of one-element tuples is the
 same value shape as a tuple with a union element, so write `[string | int64][]` rather than
-`([string] | [int64])[]`; the compiler warns about the longer form.
+`([string] | [int64])[]`; the compiler warns about the longer form. A one-element tuple with a
+concrete element is stored as a typed Go slice in transpiled code, such as `[]string{"Ada"}`; a
+tuple with a union element or several differently typed elements stays boxed.
 
 `key[value]` describes a typed map:
 
