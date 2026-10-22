@@ -144,13 +144,15 @@ lookup without reading captured globals during thread creation. Other functions 
 that lookup. Dynamic callbacks use the safe fallback.
 
 The compiler leaves constant expressions outside statement locks. It can also omit collection
-locks for fresh local arrays of scalar values when their aliases do not escape. Parameters,
-globals, callback captures, and arrays passed to unknown functions retain locking. Raw Go in a
+locks for fresh local arrays of scalar values and fresh local objects when their aliases do not
+escape; writing a key of such an object becomes a plain map assignment. Parameters, globals,
+callback captures, and collections passed to unknown functions retain locking. Raw Go in a
 function disables this local ownership optimization. Statements that only touch thread-local
 state take no statement lock. That covers assigning a literal or another local to a local
 variable, and storing a locally computed value under one key of an object or array held in a
-local variable, where the collection lock alone makes the store atomic. Scalar package globals
-are stored atomically, so a plain assignment to one or a read of one takes no lock.
+local variable, where the collection lock alone makes the store atomic. Scalar globals of type
+`int`, `number`, `boolean` or `string` are stored atomically, so a plain assignment to one or a
+read of one takes no lock, and a compound update such as `count += 1` stays one atomic step.
 
 The locks live in fixed tables indexed by each value's address, so they take the same memory
 however many values a program creates. Two unrelated values can share a lock now and then;
