@@ -8,6 +8,7 @@ Run `osl` without arguments for the command summary.
 osl run <file.osl> [--no-cache] [-v|--verbose] [-- program args]
 osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [--optimise] [-v|--verbose] [-- program args]
 osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
+osl asm <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 ```
 
 `run` builds a temporary executable and runs it with the source directory as its working directory. It forwards the program's exit status. When the program is killed by a signal, `run` exits with 128 plus the signal number, as shells do.
@@ -19,6 +20,12 @@ osl transpile <file.osl> [--no-cache] [-v|--verbose] [-o <file>]
 `transpile` stops after Go generation. It prints formatted Go to standard output unless `-o`
 selects a file. Compile errors go to standard error with exit status 1, as with `run`. Runtime panic metadata keeps path-qualified OSL locations so files with the same
 basename remain distinct.
+
+`asm` prints the Go assembly the Go compiler emits for the generated program. Each instruction
+names the OSL line it came from when the generated code has one, so the listing shows how an OSL
+statement lowered instead of how the generated Go reads. Runtime helpers that carry no OSL line
+name their template, such as `packages/schema.gotpl:677`, or `main.go` for generated code without
+one. Output is large, so `-o` and a pager or a search are usually easier than reading it in full.
 
 Imported package sources and runtime helpers are trimmed to the functions and methods the program
 reaches, and to the Go imports those declarations use, so a program that calls one method does not
