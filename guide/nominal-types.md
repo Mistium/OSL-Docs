@@ -210,6 +210,37 @@ object data = cursor.toObject()
 
 The compiler does not implicitly assign a struct to `object`.
 
+### Inline structs
+
+A struct doesn't need a name. Write its fields inline, separated by commas, where a type goes:
+
+```osl
+struct(int x, int y = 0) origin = struct(x = 3)
+
+def area(struct(int w, int h) size) int (
+  return size.w * size.h
+)
+
+def bounds() struct(int w, int h) (
+  return struct(w = 640, h = 480)
+)
+
+log area(bounds())
+```
+
+`struct(x = 3)` is an inline struct value. When it is assigned, returned or passed where an inline struct type is expected, it builds that type: missing fields take their defaults and values convert to the field types. Anywhere else, the field types come from the values:
+
+```osl
+auto score = struct(name = "ada", points = 3)
+log score.points + 1
+```
+
+A field written without a default takes its type's zero value: `0`, `""`, `false`, `[]`, `{}`, `null` for a nullable type, or the struct's own defaults for a struct.
+
+Inline structs with the same fields, in the same order, are the same type wherever they're written, so values move freely between them. Field order is part of the type: `struct(int x, int y)` and `struct(int y, int x)` are different. Because the same fields mean the same type, they can't be declared again with different defaults.
+
+Inline structs behave like named structs: field access is checked at compile time, assignment copies, `==` compares fields, and they nest, form typed arrays (`struct(string name, int score)[]`) and can be nullable (`struct(int x)?`). Errors print them as written, such as `struct(int x, int y)`.
+
 ## Enums
 
 An enum variant may carry typed data:
