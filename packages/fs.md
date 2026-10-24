@@ -11,7 +11,7 @@ import "std:fs"
 Functions that touch the disk return a [`result`](result.md) instead of a placeholder such as `""`,
 `[]` or `false`. Writes and other operations with nothing to hand back return `result<unit, error>`;
 reads return the value they read, such as `result<string, error>`. A failed call carries an `error`
-whose `.kind` is one of:
+whose `.kind` is almost always one of:
 
 | Kind | When |
 | --- | --- |
@@ -19,6 +19,9 @@ whose `.kind` is one of:
 | `PermissionError` | The operating system refuses access. |
 | `IOError` | Anything else: a directory where a file was expected, a destination that already exists, the end of a file in `file.readLine()`, or a disk error. |
 | `ParseError` | A malformed glob pattern or an invalid regular expression. |
+
+A few rare failures fall outside these, such as `RuntimeError` from `fs.evalSymlinks` on a symlink
+loop.
 
 The error's `.message` names the call and the path, for example
 `fs.readFile: open notes.txt: no such file or directory`.
@@ -55,12 +58,15 @@ log loadNotes()
 ```
 
 In a condition, or assigned to a `boolean`, a result is `true` on success and `false` on failure.
-Prefix a call with `void` to ignore its failure on purpose. See [errors and results](../guide/errors.md)
-for `catch` and `try(...)`.
+Prefix a call with `void` to ignore its failure on purpose. `call() catch (err) (...)` handles a
+failure with the error named `err` (the [catch expression](../guide/errors.md) names it `_` when you
+don't), and `try(expr)` turns anything `expr` throws into a failed result.
 
 The compiler doesn't warn about an unwrap it can see is guarded: `fs.readFile(path)` inside
 `if fs.isFile(path) (...)`, `fs.readDir(path)` inside `if fs.isDir(path) (...)` and `fs.stat(path)`
-inside `if fs.exists(path) (...)` unwrap without a `ThrowWarning`.
+inside `if fs.exists(path) (...)` unwrap without a `ThrowWarning`. The same goes for `readFileBytes`,
+`size`, `syncFile` and `lines` under `fs.isFile`, `entries` under `fs.isDir`, and `modTime` and
+`evalSymlinks` under `fs.exists`. `fs.isFile` and `fs.isDir` also count as `fs.exists`.
 
 Some mistakes throw straight away instead of returning a failed result, because they are bugs in
 the calling code rather than conditions on disk: an unknown option name (`ValueError`, with a
@@ -102,13 +108,14 @@ through a symlink replaces the file the link points to. An existing file keeps i
 new one gets `0644`.
 
 Fails with `NotFoundError` when the parent directory doesn't exist, `PermissionError`, or `IOError`
-(for example when `path` is a directory). The error names `path`, not the temporary file.
+(for example when `path` is a directory). An error from creating the temporary file names `path`;
+one from writing, flushing or renaming it can name the temporary file.
 
 Options:
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `durable` | `true` | Return only once the new contents are on stable storage. `false` keeps the write atomic but lets it return before the data reaches the drive, so a power cut right after can leave the old contents. |
+| `durable` | `true` | Flush the new contents to the drive before the rename and return only after that. `false` keeps the write atomic but lets it return before the data reaches the drive. Neither setting syncs the parent directory, so with either one a power cut right after can leave the old contents (see below). |
 
 On macOS, `durable: false` replaces the full disk flush with a much cheaper write barrier (see
 [batching](#automatic-durable-write-batching-on-macos)). On other operating systems both settings
@@ -145,16 +152,19 @@ Adds bytes to the end of the file. `data` is read like `fs.writeFileBytes` data.
 
 #### `fs.syncFile(path)` → `result<unit, error>`
 Flushes an existing file's written data to the drive and returns once that has finished. Fails with
-`NotFoundError` when the file doesn't exist; it never creates one. Use it after `fs.appendFile` when
+`NotFoundError` when the file doesn't exist; it never creates one. It opens the file for writing, so
+a read-only file fails with `PermissionError`, and a directory fails with `IOError`. Use it after `fs.appendFile` when
 a commit has to be durable before you carry on.
 
 #### `fs.syncLater(path)` → `result<unit, error>`
 Queues a durability flush of the file at `path` and returns immediately, without waiting for the
-drive. Data written before the call is already in the operating system's cache, so a process crash
+drive. Data written before the call with `fs.writeFile` or `fs.appendFile` is already in the
+operating system's cache (a `file` handle's buffer must be flushed first), so a process crash
 loses nothing; only a power cut before the flush finishes can lose it. An empty path throws
 `ValueError`. Otherwise the call only fails when `path` can't be made absolute because the working
-directory can't be read. A flush that fails later is reported by `fs.syncPending`, not by
-this call.
+directory can't be read, usually with `NotFoundError` because it was deleted. A flush that fails
+later is reported by `fs.syncPending` only if it is still queued or running when that is called
+(see below); this call never reports it.
 
 The flush opens the file by path when it runs, so it covers everything written before the call.
 Relative paths resolve against the working directory at the time of the call. A file removed or
@@ -233,11 +243,12 @@ files are rebuildable caches or change those locks. No write is made non-durable
 
 ### Measuring the generated executable
 
-Build the benchmark in the OSL repository and run the executable on the application's filesystem:
+Build the benchmark in the OSL repository and run the executable on the application's filesystem.
+`-o` is resolved against the source file's directory, so give it an absolute path:
 
 ```sh
 go build -o osl .
-./osl compile examples/other/fs_write_bench.osl -o ./fs-write-bench
+./osl compile examples/other/fs_write_bench.osl -o "$PWD/fs-write-bench"
 ./fs-write-bench ./bench-data text 100 1
 ./fs-write-bench ./bench-data text 100 16
 ./fs-write-bench ./bench-data cache 100 16
@@ -402,7 +413,8 @@ log errors.len
 
 #### `file.write(data)` → `result<unit, error>`
 Buffers `data` at the current position: a string, a `byte[]`, or an array of whole numbers from 0
-to 255; other values are written as their string form. Data reaches the file when the buffer fills,
+to 255; numbers and other plain values are written as their string form, and `null` throws
+`TypeError`. Data reaches the file when the buffer fills,
 on `flush()`, and on `close()`, so a write error can surface on a later call. A number outside 0 to
 255 throws `ValueError`.
 
@@ -463,7 +475,10 @@ if !fs.mkdir("out/logs", {recursive: true}) (
 
 #### `fs.copy(from, to, {overwrite}?)` → `result<unit, error>`
 Copies a file, or a directory and everything in it, to `to`, streaming so large files aren't
-loaded into memory and keeping permissions. Copying a directory onto an existing directory merges
+loaded into memory. Copied files keep their permissions; directories are created with their source
+permissions plus owner access, subject to the umask. Symlinks are followed, so a link is copied as
+the contents it points to, a broken link stops the copy with `NotFoundError`, and a link back up the
+tree recurses until it fails. Copying a directory onto an existing directory merges
 into it. Fails with `NotFoundError` when `from` doesn't exist, and with `IOError` when a destination
 file already exists. Copying a directory into itself throws `ValueError`. A copy that fails part way
 through leaves what it already copied.
@@ -514,8 +529,9 @@ Visits everything below a directory, depth first in lexical order, yielding
 [entry records](#entry-records). The root itself is not included. It does not follow symlinks: a
 symlink to a directory is yielded with `isSymlink` and `isDir` both `true`, but its contents are not
 visited. A missing or unreadable root or subdirectory throws `NotFoundError`, `PermissionError` or
-`IOError` from the loop that is iterating, so wrap the loop in `try(...)` or guard the root with
-`fs.isDir`. Like any iterator it can be chained, for example
+`IOError` from the loop that is iterating. Guard the root with `fs.isDir`, or collect it as a
+result with `try(fs.walkTree(path).toArray())`. A root that is a file, or a symlink to a directory,
+yields nothing; `fs.isDir` follows symlinks, so it doesn't catch the second case. Like any iterator it can be chained, for example
 `fs.walkTree("src").filter(e -> e.ext == ".osl").toArray()`.
 
 ```osl
@@ -580,8 +596,8 @@ Joins path segments with the OS separator and cleans the result:
 `fs.joinPath("a", "b", "c.txt")` → `"a/b/c.txt"`.
 
 #### `fs.absPath(path)` → `result<string, error>`
-Returns `path` as an absolute, cleaned path, resolved against the working directory. Fails with
-`IOError` when the working directory can't be read.
+Returns `path` as an absolute, cleaned path, resolved against the working directory. Fails when the
+working directory can't be read, usually with `NotFoundError` because it was deleted.
 
 #### `fs.base(path)` → `string`
 The last element of a path: `"/a/b/c.txt"` → `"c.txt"`.
