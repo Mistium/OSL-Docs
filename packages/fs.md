@@ -118,8 +118,10 @@ Options:
 | `durable` | `true` | Flush the new contents to the drive before the rename and return only after that. `false` keeps the write atomic but lets it return before the data reaches the drive. Neither setting syncs the parent directory, so with either one a power cut right after can leave the old contents (see below). |
 
 On macOS, `durable: false` replaces the full disk flush with a much cheaper write barrier (see
-[batching](#automatic-durable-write-batching-on-macos)). On other operating systems both settings
-currently perform the same `File.Sync`.
+[batching](#automatic-durable-write-batching-on-macos)). On Linux with ext4, XFS or btrfs it waits
+for the data to reach the disk without flushing the disk's cache, which those filesystems do before
+committing the rename. On other filesystems, on Windows and on the BSDs it flushes in full and costs
+the same as a durable write.
 
 ```osl
 if !fs.writeFile("out.txt", "hello world") (
@@ -163,13 +165,12 @@ operating system's cache (a `file` handle's buffer must be flushed first), so a 
 loses nothing; only a power cut before the flush finishes can lose it. An empty path throws
 `ValueError`. Otherwise the call only fails when `path` can't be made absolute because the working
 directory can't be read, usually with `NotFoundError` because it was deleted. A flush that fails
-later is reported by `fs.syncPending` only if it is still queued or running when that is called
-(see below); this call never reports it.
+later is reported by the next `fs.syncPending`, not by this call.
 
 The flush opens the file by path when it runs, so it covers everything written before the call.
 Relative paths resolve against the working directory at the time of the call. A file removed or
-renamed before its flush is skipped. The flush opens the file for reading, so a file the program
-can't read fails with `PermissionError`.
+renamed before its flush is skipped. It works on any file the program can read or write, including
+one that is writable but not readable.
 
 ```osl
 string line = "joined"
@@ -185,9 +186,10 @@ disk flush (see [batching](#automatic-durable-write-batching-on-macos)).
 
 #### `fs.syncPending()` → `result<unit, error>`
 Blocks until every flush queued by `fs.syncLater` before the call has completed. Fails with the
-first error among those flushes, usually an `IOError` or `PermissionError`. Only flushes that are
-still queued or running when `fs.syncPending()` is called are reported: a flush that already
-finished and failed is not reported anywhere.
+first error among those flushes, usually an `IOError` or `PermissionError`, including one from a
+flush that finished before the call. Every call waiting on a failed flush reports it, and a failure
+no call was waiting on is reported once, by the next call. Files queued after the call starts are
+not waited for.
 
 The runtime does not drain pending flushes when the program ends, whether by finishing, `exit`,
 `process.exit`, a panic, or a signal. Call `fs.syncPending()` before a planned shutdown when the
