@@ -9,6 +9,8 @@ log "second"
 
 Commands use whitespace to separate the command name from its arguments. `log (10 + 10)` prints `20`. Multiple values passed to `log`, `warn` or `error` print on one line, separated by spaces. Function calls keep the opening parenthesis next to the name, as in `abs(-20)`; `abs (-20)` is invalid.
 
+In a terminal, each `log` line appears immediately. When output goes to a file or pipe, lines are written in batches for speed: a batch is written within 50 milliseconds, and always before the program exits, reads input, writes a `warn` or `error` line, or stops on an error. Output written directly through a `go:` package such as `go:fmt` is not part of these batches.
+
 Function, class, struct, and enum declarations are available before their source position. Other statements run where they appear.
 
 ## Declarations
