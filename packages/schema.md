@@ -12,11 +12,9 @@ import "std:schema"
   roles: schema.array(schema.enum(["admin", "member"]))
 })
 
-auto checked = createUser.safeParse(payload)
-if checked.isErr() (
-  return err(checked.unwrapErr().message)
+object user = try(createUser.parse(payload)) catch (
+  return err(_.message)
 )
-object user = checked.unwrap()
 ```
 
 ## Creating schemas
@@ -198,21 +196,6 @@ additional fields.
 
 ## Validating values
 
-#### `value.safeParse(input)` → `result`
-
-Validates `input` without throwing. Returns `ok(normalizedValue)` on success. On failure it returns
-`err(error)`, where `error` contains `message`, `path`, and `issues`. The current implementation
-stops at the first issue.
-
-```osl
-auto checked = profile.safeParse(input)
-if checked.isErr() (
-  object problem = checked.unwrapErr()
-  log problem.message // settings.dark: Expected boolean, received string
-  log problem.path    // ["settings", "dark"]
-)
-```
-
 #### `value.parse(input)` → `any`
 
 Returns the normalized value or throws a path-based validation message.
@@ -221,9 +204,33 @@ Returns the normalized value or throws a path-based validation message.
 object user = profile.parse(input)
 ```
 
+`try` turns the failure into a result when the caller wants to inspect it instead of catching:
+
+```osl
+auto checked = try(profile.parse(input))
+if checked.isErr() (
+  log checked.unwrapErr().message // settings.dark: Expected boolean, received string
+)
+```
+
+#### `value.issues(input)` → `array`
+
+Returns every problem as a record `{path, message}`. `path` holds the object keys and 1-based array
+indexes leading to the bad value, and `[]` means the value is valid.
+
+```osl
+array problems = profile.issues(input)
+```
+
 #### `value.isValid(input)` → `boolean`
 
 Returns whether `input` passes the schema without returning the normalized value or throwing.
 This uses a validation-only fast path: it does not copy arrays or objects, construct normalized
 values, or allocate successful error paths. Define reusable schemas once rather than rebuilding
 them inside a frequently called function.
+
+#### `value.safeParse(input)` → `result` (deprecated)
+
+Deprecated: use `try(value.parse(input))` for a result, or `value.issues(input)` to list every
+problem. Validates `input` without throwing and returns `ok(normalizedValue)` on success. On
+failure it returns `err(error)`, where `error` contains `message`, `path`, and `issues`.
