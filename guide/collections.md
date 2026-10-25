@@ -77,35 +77,29 @@ object second = first.clone()
 
 Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
 
-A function or method receives the caller's array, so appending, removing, or replacing items in a typed array parameter changes the caller's array. Assigning a new array to the parameter only changes what the parameter refers to:
+Arrays work like JavaScript arrays. Every name, parameter, object field, or array item that holds an array holds the same array, so appending, removing, or replacing items through any of them changes what all of them see. Assigning a new array to one name only changes what that name refers to:
 
 ```osl
-def track(int[] seen, int value) (
+def track(array seen, int value) (
   seen.append(value)
   seen = []
 )
 
-int[] seen = []
-track(seen, 4)
-log seen // [4]
+object store = {list: [1]}
+array list = store.list
+store.list.append(2)
+track(list, 3)
+log list // [1, 2, 3]
+
+array grid = [[1], [2]]
+array row = grid[1]
+row.append(9)
+log grid // [[1, 9], [2]]
 ```
 
-Typed array variables share the same way, inside functions and at the top level. After `int[] b = a`, appending through either name changes the array both see, and assigning a new array to one name leaves the other unchanged:
+Arrays decoded from JSON behave the same way once read. The compiler keeps arrays that never leave one function as plain storage, so sharing costs nothing in loops.
 
-```osl
-def demo() (
-  int[] a = [1]
-  int[] b = a
-  b.append(2)
-  a = [9]
-  log b // [1, 2]
-)
-demo()
-```
-
-A typed array variable read from a class instance's field, as in `int[] items = box.items`, shares the field's array the same way. Struct fields are values, so reading one copies it, and arrays stored in records and objects are copied when read into a typed array variable.
-
-In lambdas and rest parameters, appending to or removing from the parameter does not change the caller's array.
+Converting between an untyped `array` and a typed array such as `int[]` makes a copy, because the items change type. Arrays nested in typed collections such as `int[][]` or typed dictionaries, record fields, struct fields, and lambda and rest parameters still hold their own copy when read into another name. Struct fields are values by design.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
 
