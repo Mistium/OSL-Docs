@@ -77,7 +77,7 @@ object second = first.clone()
 
 Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
 
-A function receives the caller's array, so appending, removing, or replacing items in a typed array parameter changes the caller's array. Assigning a new array to the parameter only changes what the parameter refers to:
+A function or method receives the caller's array, so appending, removing, or replacing items in a typed array parameter changes the caller's array. Assigning a new array to the parameter only changes what the parameter refers to:
 
 ```osl
 def track(int[] seen, int value) (
@@ -103,7 +103,7 @@ def demo() (
 demo()
 ```
 
-In lambdas, class methods, and rest parameters, appending to or removing from an alias does not change the other name's array.
+In lambdas and rest parameters, appending to or removing from the parameter does not change the caller's array.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
 
