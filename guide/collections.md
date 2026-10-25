@@ -103,6 +103,8 @@ def demo() (
 demo()
 ```
 
+A typed array variable read from a class instance's field, as in `int[] items = box.items`, shares the field's array the same way. Struct fields are values, so reading one copies it, and arrays stored in records and objects are copied when read into a typed array variable.
+
 In lambdas and rest parameters, appending to or removing from the parameter does not change the caller's array.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
