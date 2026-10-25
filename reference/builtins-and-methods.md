@@ -68,7 +68,7 @@ encodeHex    decodeHex     encodeBin     decodeBin
 hashMD5      hashSHA1      hashSHA256    hashSHA512
 ```
 
-String positions are 1-based. Indexing, iteration, `trimText`, and `toMixed` use Unicode code points. `match(pattern)` always returns an array of matches, which is empty when nothing matches. `.len` counts UTF-8 bytes, so it may be larger than the number of characters.
+String positions are 1-based. Indexing, iteration, `trimText`, and `toMixed` use Unicode code points. `match(pattern)` always returns an array of matches, which is empty when nothing matches. `.len` counts characters (Unicode code points); use `.toBytes().len` for the UTF-8 byte size.
 
 There is no `repeat` method. Use multiplication, as in `"a" * 3`.
 
