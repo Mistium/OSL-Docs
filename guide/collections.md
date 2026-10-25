@@ -90,7 +90,20 @@ track(seen, 4)
 log seen // [4]
 ```
 
-In lambdas, class methods, and rest parameters, appending to or removing from the parameter does not change the caller's array.
+Typed array variables share the same way, inside functions and at the top level. After `int[] b = a`, appending through either name changes the array both see, and assigning a new array to one name leaves the other unchanged:
+
+```osl
+def demo() (
+  int[] a = [1]
+  int[] b = a
+  b.append(2)
+  a = [9]
+  log b // [1, 2]
+)
+demo()
+```
+
+In lambdas, class methods, and rest parameters, appending to or removing from an alias does not change the other name's array.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
 
