@@ -175,6 +175,12 @@ int[3] scores = [10]
 scores[2] = 20
 ```
 
+`make(T[size])` creates a zero-filled fixed-size array from its type. It takes no length because the type already has one.
+
+```osl
+int[3] scores = make(int[3])
+```
+
 `[T, U]` is a tuple: a fixed group of values with a type at each position. Index a tuple from 1,
 assign through a literal position, and destructure it like an array.
 
