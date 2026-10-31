@@ -18,7 +18,7 @@ number wrong = 10 + 2 * 3
 number right = 10 + (2 * 3)
 ```
 
-The first expression is `(10 + 2) * 3`. The compiler warns about unparenthesized mixed arithmetic. Parenthesize the intended grouping, especially for time, sizes, and persisted values.
+The first expression is `(10 + 2) * 3`. The compiler warns about unparenthesized mixed arithmetic. Parenthesize the intended grouping, especially for time, sizes, and persisted values. Parentheses never warn and cost nothing at run time, so add them wherever they make the meaning clearer.
 
 For `int`, the compiler rejects overflow when both operands are known at compile time. Arithmetic
 whose values are only available at runtime uses native integer arithmetic and wraps on overflow. A
@@ -58,6 +58,10 @@ counts[1] += 1
 
 Integer operands keep an integer result, and a computed index such as `items[next()] += 1` is
 evaluated once.
+
+`x = x ++ y` and the other forms that assign a variable its own value combined with another
+compile exactly like their compound form, so `out = out ++ [item]` appends in place just as
+`out ++= [item]` does. Write whichever reads better.
 
 ## Comparison
 

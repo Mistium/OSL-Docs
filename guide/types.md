@@ -376,19 +376,22 @@ int c = n.toInt() // fine
 
 Strings convert to bytes with `.toBytes()`, which returns the string's raw bytes. Bytes convert back with `.toStr()`.
 
-The compiler warns about conversions it can prove redundant. A conversion on a value that already has the target type can be removed, a repeated conversion such as `.toNum().toNum()` names the duplication, and a `.toStr().toNum()` or `.toNum().toStr()` roundtrip collapses to the final conversion:
+A conversion the compiler can prove changes nothing compiles to nothing, with no warning. A conversion to the type the value already has, such as `name.toStr()` on a `string` or `count.toInt()` on an `int`, compiles to the value itself, and so does the second conversion in `.toNum().toNum()`. A round trip through a string, `.toStr().toNum()`, compiles to the value when it is a `number` or `int`, and `.toStr().toInt()` does so on an `int`:
 
 ```osl
-string name = "Ada"
-log name // not name.toStr()
+number total = 12.5
+log total.toStr().toNum() // compiles to total
 
-any raw = "12"
-log raw.toNum() // not raw.toStr().toNum()
+any raw = true
+log raw.toStr().toNum() // 0: the string "true" isn't a number
+log raw.toNum()         // 1
 ```
 
-Repeated idempotent calls such as `.trim().trim()` or `.toLower().toLower()` warn in the same way; the second call has no additional effect.
+On a dynamic value both conversions run, because the round trip can give a different answer than the last conversion alone, as `raw` shows. `"abc".toNum().toStr()` is `"0"` for the same reason.
 
-Comparing a known `boolean` to `true` or `false` also warns; use the value or its negation directly. Comparing a dynamic value such as `any` or `boolean?` to `true` is a boolean coercion and does not warn, so keep the `== true` form there.
+Repeated idempotent calls such as `.trim().trim()` or `.toLower().toLower()` compile to a single call.
+
+Comparing a known `boolean` to `true` or `false` compiles to the value or its negation, so `done == true` is `done` and `done == false` is `!done`. Comparing a dynamic value such as `any` or `boolean?` to `true` is a boolean check: it is true only when the value is the boolean `true`, and it stays a comparison.
 
 ## Null values and type checks
 
