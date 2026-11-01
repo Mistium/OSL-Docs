@@ -50,6 +50,52 @@ opal run test ./tests/packages
 
 Running `opal run` without a name lists the available scripts.
 
+## Lint settings
+
+The compiler's warnings can be tuned per project with a `lint` section in `opal.json`. `osl lsp check`, `osl compile`, `osl run`, `osl test` and the editor all read it. Without the section, nothing changes. The editor rechecks open files as soon as `opal.json` is saved.
+
+```json
+{
+  "name": "example",
+  "lint": {
+    "rules": {
+      "OSL-LOOSE-PARAM": "error",
+      "OSL-COMMENT": "error",
+      "OSL-LONG-FUNCTION": ["warning", {"max": 80}]
+    },
+    "overrides": [
+      {"files": "src/legacy/", "rules": {"OSL-LONG-FUNCTION": "off"}}
+    ]
+  }
+}
+```
+
+Each rule takes a severity, or an array of a severity and options:
+
+| Severity | Effect |
+| --- | --- |
+| `off` | The warning is not reported. |
+| `pedantic` | Reported only with `--all-warnings`. The editor shows it as a hint. |
+| `warning` | Reported, but the program still compiles. |
+| `error` | Reported as an error. `check`, `compile`, `run` and `test` exit with a failure. |
+
+Only warnings can be configured. Compile errors such as type errors always stay errors. An unknown code, a bad severity or an invalid option is reported at its place in `opal.json`.
+
+`overrides` apply rules to the files matching `files`, a glob or a list of globs relative to the project root. `*` matches within one folder, `**` matches any depth, and a glob naming a folder (with or without a trailing `/`) matches everything inside it. Use `/` as the separator on every platform. Overrides apply in order, and later matches win. An override that only sets a severity keeps the options set before it. Packages installed in `.opal/` always use the default severities.
+
+An `osl-disable` comment still silences a warning that the project has made an error.
+
+### Opt-in rules
+
+These rules are off unless a project turns them on.
+
+| Code | Flags | Options |
+| --- | --- | --- |
+| `OSL-COMMENT` | Comments, apart from `osl-disable` directives and the safety comment `OSL-RAW-WITHOUT-COMMENT` asks for above `raw()`. A run of comment lines counts once. | |
+| `OSL-LONG-FUNCTION` | Functions longer than `max` lines. | `max`, default 60 |
+| `OSL-UNTYPED-GLOBAL` | Top-level `auto`, `any` or untyped declarations. | |
+| `OSL-OBJECT-PARAM` | Parameters of any function, method or lambda declared as plain `object` or `array`, or as a collection of them (`object[]`, `array<object>`), where a record type or typed collection would say what is expected. | |
+
 ## Dependencies
 
 ```bash
