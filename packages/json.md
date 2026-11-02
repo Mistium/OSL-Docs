@@ -45,6 +45,8 @@ A string's `parse<T>()` method does the same as `json.parse<T>(text)`, without i
 User user = text.parse<User>() catch return
 ```
 
+Without a type argument, `text.parse()` is `json.parse(text)`: a `result<any, error>` holding the JSON value unchecked.
+
 ```osl
 import "std:json"
 

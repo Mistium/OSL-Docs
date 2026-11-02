@@ -20,6 +20,7 @@ log res.status
 `response.parse<T>()` parses the body as JSON and checks it against `T`, the same way
 `json.parse<T>(response.body)` does, and gives `result<T, error>`. Keys `T` doesn't declare are
 ignored. You don't need to import `std:json` for it, and a string has the same `parse<T>()`.
+Without a type argument, `response.parse()` gives the JSON value unchecked, as `result<any, error>`.
 
 ```osl
 import "std:requests"
