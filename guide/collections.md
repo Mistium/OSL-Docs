@@ -16,6 +16,8 @@ Negative positions count from the end. Position `0` is invalid and produces a co
 
 Common array methods include `append`, `prepend`, `pop`, `shift`, `insert`, `delete`, `contains`, `index`, `map`, `filter`, `some`, `every`, `sort`, `sortBy`, `reverse`, `join`, `clone`, `resize`, `min`, `max`, and `sum`. Read the length with the `len` property, written without parentheses: `values.len`.
 
+`append` and `prepend` take any number of values, and `insert` takes an index followed by any number of values. Each can also spread arrays among them: `items.append(...more)`, `items.prepend(0, ...front)`, `items.insert(2, ...middle)`. The values keep their order.
+
 ```osl
 int[] values = [3, 1, 4]
 int[] doubled = values.map((int value) int -> value * 2)

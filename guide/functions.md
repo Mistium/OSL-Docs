@@ -168,7 +168,11 @@ Spread an array at a call site:
 
 ```osl
 log max(...scores)
+log collect("item ", ...names, "last")
 ```
+
+A spread fills the variadic parameter of a def, a class or record method, or a package function, mixed
+with single values in any order. The parameters before it take one argument each.
 
 ## Function types
 
