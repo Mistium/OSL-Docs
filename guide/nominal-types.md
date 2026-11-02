@@ -447,7 +447,7 @@ Generic types and functions hold subclasses the same way: a `Box<Shape>` can hol
 
 A class's fields and methods are reached directly when nothing extends it, or when a value is known to be exactly that class. Calls through a parent-class value cost one dynamic dispatch.
 
-`json.parse<T>` builds an instance the way the class's constructor does: absent keys keep their defaults, `init` doesn't run, and unknown keys are a `ParseError`. JSON doesn't say which class an object is, so an object decoded into a `Shape` field, item, or result is exactly a `Shape`.
+`json.parse<T>` builds an instance the way the class's constructor does: absent keys keep their defaults, `init` doesn't run, and unknown keys are a `ParseError`. `.assert(T)` and `.<T>` on a dynamic value do the same for an object. They return a value that is already an instance of the class, or of one of its subclasses, unchanged. JSON doesn't say which class an object is, so an object decoded into a `Shape` slot is exactly a `Shape`. That holds wherever the slot is: a field, an array item, a map value, a nested array or map such as `Shape[][]`, a record or struct field, or a generic class such as `Box<Shape>`.
 
 ## Nested structs
 
