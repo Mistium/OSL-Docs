@@ -56,7 +56,7 @@ modified. See [const types](../guide/types.md#const-types) for binding and alias
 Common string methods include:
 
 ```text
-append       prepend       insert        delete
+append       prepend       insert
 contains     containsAny   startsWith    endsWith
 index        lastIndex     count         match
 replace      replaceFirst  split         left          right
