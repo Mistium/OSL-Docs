@@ -443,7 +443,7 @@ A nullable parent type such as `Shape?` accepts `null`, a child, or a nullable c
 
 An array of a child class is not an array of its parent. `Square[]` can't be used as `Shape[]`, because a `Shape[]` could be given a `Circle`. Declare the array with the parent type when it may hold several subclasses. The same rule applies to typed objects.
 
-Generic types and functions hold subclasses the same way: a `Box<Shape>` can hold a `Square`, and a generic method called through a `Shape` runs the instance's override.
+Generic types and functions hold subclasses the same way: a `Box<Shape>` can hold a `Square`, and a generic method called through a `Shape` runs the instance's override. That includes a child that gives a generic parent other type arguments, such as `class IntBox extends Box<int>`, `class Swap<A, B> extends Pair<B, A>`, or `class Wrap<T> extends Box<T[]>`. One case can't dispatch: a generic method called through the parent inside a generic function, with that function's own type parameters as its type arguments, when some child has type parameters that the parent's type arguments don't give. The compiler reports that call; call the method with concrete type arguments instead.
 
 A class's fields and methods are reached directly when nothing extends it, or when a value is known to be exactly that class. Calls through a parent-class value cost one dynamic dispatch.
 
