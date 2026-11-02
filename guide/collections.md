@@ -75,7 +75,7 @@ This logs `1`. Call `.clone()` for an independent deep copy:
 object second = first.clone()
 ```
 
-Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it.
+Record types share their instance on assignment and support `.clone()` for a deep copy. Structs are fixed-size values, so assigning a struct copies it, arrays included: a struct's copy gets its own arrays, and so does a struct passed to a function, returned, stored in a field or collection, or bound as a `for` loop variable. See [structs](nominal-types.md#structs).
 
 Arrays work like JavaScript arrays. Every name, parameter, object field, or array item that holds an array holds the same array, so appending, removing, or replacing items through any of them changes what all of them see. Assigning a new array to one name only changes what that name refers to:
 
@@ -99,7 +99,7 @@ log grid // [[1, 9], [2]]
 
 Arrays decoded from JSON behave the same way once read. The compiler keeps arrays that never leave one function as plain storage, so sharing costs nothing in loops.
 
-Converting between an untyped `array` and a typed array such as `int[]` makes a copy, because the items change type. Arrays nested in typed collections such as `int[][]` or typed dictionaries, record fields, struct fields, and lambda and rest parameters still hold their own copy when read into another name. Struct fields are values by design.
+Converting between an untyped `array` and a typed array such as `int[]` makes a copy, because the items change type. Arrays nested in typed collections such as `int[][]` or typed dictionaries, and lambda and rest parameters, still hold their own copy when read into another name. Record and class array fields share their array like a variable does. Struct fields are values by design: a struct field given an array stores a copy of it, and copying the struct copies its arrays.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
 

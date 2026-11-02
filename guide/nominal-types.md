@@ -98,6 +98,8 @@ Use `.assert(User)` to validate a dynamic object at a boundary, or `json.parse<U
 
 Array-field mutations preserve the stored slice, including bracket access and chained mutations. In concurrent programs, the runtime locks the complete record-array update once. Mutation arguments are evaluated before acquiring that lock.
 
+An array field shares its array, as a record is shared. `string[] roles = user.roles`, `user.roles = list`, `User("ada", list)`, `other.roles = user.roles` and passing `user.roles` to an array parameter all name the same array, so an append, insert, delete or item write through any of them is seen through the others. Giving the field a new array, as in `user.roles = []`, only changes the field. `.clone()` gives the copy its own arrays.
+
 Records serialize as JSON objects, including extension fields. `.toObject()` creates a dynamic object with the record's keys; `.clone()` preserves the record type. The object methods `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, and `omit` are available. `pick` and `omit` return dynamic objects because their results may omit declared fields.
 
 ## Generic records and classes
@@ -182,6 +184,28 @@ Interface values share their underlying record or class. Calls through `const<Re
 ## Structs
 
 A struct is a compact typed value. Fields have defaults, and assignment copies the struct. A field may be nullable.
+
+A copy includes the struct's arrays. Assigning a struct, passing it to a function, returning it, storing it in a field, an array or a map, and binding it as a `for` loop variable each give the new place its own arrays. Changing one copy's arrays leaves the others alone:
+
+```osl
+struct Path (
+  string name = ""
+  int[] steps = []
+)
+
+Path first = Path("a", [1, 2])
+Path second = first
+second.steps.append(3)
+log first.steps // [1, 2]
+```
+
+- A plain `T[]` field copies its array with the struct.
+- A nullable `T[]?` field copies its array when it holds one and stays `null` when it is `null`.
+- Nested struct values are copied the same way, and so are struct values held in an array field.
+- What the copied arrays hold by reference stays shared: an array of pointers such as `*int[]` copies the pointers, not what they point at, and an array of arrays copies the outer array only.
+- Giving a struct field an existing array, as in `Path("a", steps)` or `path.steps = steps`, stores a copy, so the struct and `steps` don't change each other.
+- Arrays of structs built from another array, such as `[...paths]`, `paths ++ more`, `paths.filter(...)`, `paths.concat(...)` and `paths.map(...)`, hold copies of the structs.
+- Changing an array inside a struct where it is stored, as in `paths[1].steps.append(4)` or `box.path.steps.append(4)`, changes that stored struct.
 
 ```osl
 struct Point (
