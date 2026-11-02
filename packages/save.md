@@ -11,7 +11,7 @@ import "std:save"
 ```osl
 import "std:save"
 
-store = save.create()
+auto store = save.create()
 store.init("my-app")
 store.setItem("theme", "dark")
 log store.getItem("theme").data

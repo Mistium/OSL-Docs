@@ -98,11 +98,13 @@ Array pointers created with `@arrayVariable` support `.delete(position)` and `.l
 
 `sort` orders numbers numerically and other values by their string form. `sortBy("field")` places elements missing the field last. `join` renders nested arrays and objects as JSON, like `.toStr()`.
 
-`left`, `right`, `trim`, and `delete` return arrays that do not share storage with the source, so appending to the result never changes the original. `trim(start, end)` is inclusive and accepts negative positions counted from the end, so `"hello".trim(-3, -1)` is `"llo"`; reversed bounds are swapped.
+`left`, `right`, and `trim` return arrays that do not share storage with the source, so appending to the result never changes the original. `append`, `prepend`, `insert`, `delete`, `resize`, `fill` and `swap` change the array in place and return that same array, so they chain and work as expressions: `items.append(1).append(2)`, `for item in items.append(3) (...)`, `if items.delete(1).len > 2 (...)`, and on temporaries such as `items.clone().insert(1, 0).delete(2)`. `pop` and `shift` return the removed item. `delete` with an index out of range leaves the array unchanged. Use `items.clone().delete(1)` for a changed copy; the compiler warns (OSL-DELETE-IN-PLACE) when such a method's result on a named array is bound to a different variable or field, as in `b = a.delete(1)`, because both names then refer to `a`'s array. `trim(start, end)` is inclusive and accepts negative positions counted from the end, so `"hello".trim(-3, -1)` is `"llo"`; reversed bounds are swapped.
 
 ## Objects
 
-Common object methods include `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, `clone`, `toStr`, `jsonParse`, and `getProto`.
+Common object methods include `getKeys`, `getValues`, `getEntries`, `contains`, `insert`, `delete`, `pick`, `omit`, `clone`, `toStr`, `jsonParse`, and `getProto`.
+
+On objects and typed maps, `delete` takes one or more keys, removes each of them from the object itself and returns that same object, like the in-place array methods: `scores.delete("ada", "bo")` leaves `scores` without either key, keys that aren't there are ignored, and `scores.delete("ada").len` counts what is left. `omit` takes the same keys and returns a new object without them, leaving the original as it was. The compiler warns (OSL-DELETE-IN-PLACE) when `delete`'s result on a named object is bound to a different variable or field, as in `b = a.delete("x")`, because both names then refer to `a`; use `a.omit("x")` for a changed copy. Arrays keep `delete(index)` with a single index.
 
 Cloning a null value returns null.
 

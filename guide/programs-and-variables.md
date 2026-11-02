@@ -39,11 +39,17 @@ any payload = json.parse(raw)
 payload = "invalid"
 ```
 
-An untyped assignment also creates dynamic storage:
+Every declaration names its type or uses `auto`. An assignment to a name that is not declared
+yet is a compile error, so a misspelled name cannot silently create a new variable:
 
 ```osl
-payload = {ok: true}
+int count = 1
+cuont = count + 1   // SyntaxError: 'cuont' is not declared. Declare it as `int cuont = count + 1` or `auto cuont = count + 1`
 ```
+
+`osl fix` adds `auto` to such assignments, which infers the same type the old untyped
+assignment did. Assigning to a declared variable, including a global from inside a function or a
+local captured by a lambda, needs no type, and `_ = value` discards a value.
 
 The first assignment fixes the variable's type. Assigning a value of an incompatible type later,
 such as `x = 1` followed by `x = "s"`, is a compile error; declare the variable as `any` when it must

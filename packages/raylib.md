@@ -7,7 +7,7 @@ use [`raygui`](raygui.md).
 ```osl
 import "std:raylib"
 
-player = {x: 20}
+auto player = {x: 20}
 raylib.run({width: 800, height: 450, title: "OSL raylib", fps: 60}, def(dt) -> (
   if raylib.keyDown("right") ( player.x += 200 * dt )
 ), def() -> (

@@ -5,11 +5,11 @@
 ```osl
 import "std:box2d"
 
-world = box2d.newWorld({x: 0, y: 10})
-ground = world.createBody({type: "static", x: 0, y: 10})
+auto world = box2d.newWorld({x: 0, y: 10})
+auto ground = world.createBody({type: "static", x: 0, y: 10})
 void ground.addBox(20, 1, {friction: 0.4})
 
-player = world.createBody({type: "dynamic", x: 0, y: 0})
+auto player = world.createBody({type: "dynamic", x: 0, y: 0})
 void player.addBox(1, 1, {density: 1, friction: 0.4})
 
 loop 120 (

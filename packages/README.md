@@ -8,15 +8,18 @@ import "std:fs"
 log fs.readFile("notes.txt")
 ```
 
-An import adds a package value with the same name. For example, `std:fs` adds `fs`. Use the `std:`
-prefix in new code. The older `osl/` spelling still works, but the compiler reports a migration
-warning.
+An import adds a package value with the same name. For example, `std:fs` adds `fs`. Some packages
+sit in a family of related packages and are imported by their full path; the value is named after
+the last part, so `import "std:encodings/utf16"` adds `utf16`. A family itself, such as
+`std:encodings`, is not a package. Use the `std:` prefix in new code. The older `osl/` spelling
+still works, but the compiler reports a migration warning.
 
 ## How imports work
 
 | Form | Meaning |
 | --- | --- |
 | `import "std:fs"` | A standard-library package listed below |
+| `import "std:encodings/utf16"` | A standard-library package inside a family |
 | `import "./helpers.osl"` | A local OSL file, relative to the importing file |
 | `import "utils"` or `import "./utils"` | Every `.osl` file directly inside a local directory |
 | `import "git.rotur.dev/me/tools"` | A Git dependency installed by Opal |
@@ -212,6 +215,8 @@ Each package page lists handle methods in a separate section.
 To read a package's source directly from the CLI:
 
 ```bash
-osl package fs       # print the fs package source
-osl package          # list every available package
+osl package fs                # print the fs package source
+osl package encodings/utf16   # print a package inside a family
+osl package encodings         # list the packages in a family
+osl package                   # list every available package
 ```
