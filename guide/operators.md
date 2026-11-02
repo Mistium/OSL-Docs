@@ -32,6 +32,51 @@ continue after overflow, but its result is no longer the exact mathematical Fibo
 
 String repetition rejects a count that the compiler knows is negative.
 
+## Evaluation order
+
+OSL evaluates the operands of an expression strictly from left to right, as JavaScript does. That
+holds for the two sides of an operator, the items of array and object literals, the parts of a
+string template, the arguments of a call, and a method's receiver, which is read before its
+arguments run. A read keeps its place even when a later call in the same expression changes what it
+read:
+
+```osl
+class Counter (
+  int n = 0
+  def bump() int (
+    self.n += 1
+    return self.n
+  )
+)
+Counter c = Counter()
+log [c.n, c.bump(), c.n]
+log c.n + c.bump()
+```
+
+This logs `[0,1,1]` and then `3`.
+
+- `and` and `or` evaluate their left side first and their right side only when it decides the
+  result, for any operand type. `??` evaluates its fallback only when the left side is `null`, and a
+  conditional value evaluates only the branch it takes. A `catch` expression on the side or branch
+  that is skipped doesn't run.
+- An assignment finds where it stores before it evaluates the value: in `items[k] = next()` the
+  object `items` and the key `k` are read first, so `next()` changing `k` or reassigning `items`
+  doesn't move the store. In `x.id = replaceX()`, the value is stored in the instance `x` held
+  before the call.
+- A compound assignment such as `count += next()` reads the current value before it evaluates the
+  right side, so `c.n += c.bump()` stores `0 + 1`.
+- Operands before a `catch` expression in the same statement run before it.
+- An assignment is a statement, not a value, so `[x, x += 1]` or `f(x = 2)` is a compile error.
+
+Arrays, objects and class instances are shared references, so an operand that is an array refers to
+the array itself. In `[list, grow(list)]` the first item is `list`, including whatever `grow` appends
+to it, while `[list.len, grow(list)]` reads the length before `grow` runs.
+
+The compiler keeps this order without slowing down ordinary code: it only pins an operand in place
+when a later call in the same expression may change what the operand reads. Constants, locals that
+no closure assigns, calls of pure built-ins, and calls of defs and methods that don't write what the
+operand reads leave the generated code unchanged.
+
 ## Concatenation and merge
 
 `++` converts operands to strings when used with scalar values. It merges arrays or objects when both sides are collections.
