@@ -99,7 +99,20 @@ log grid // [[1, 9], [2]]
 
 Arrays decoded from JSON behave the same way once read. The compiler keeps arrays that never leave one function as plain storage, so sharing costs nothing in loops.
 
-Converting between an untyped `array` and a typed array such as `int[]` makes a copy, because the items change type. Arrays nested in typed collections such as `int[][]` or typed dictionaries, and lambda and rest parameters, still hold their own copy when read into another name. Record and class array fields share their array like a variable does. Struct fields are values by design: a struct field given an array stores a copy of it, and copying the struct copies its arrays.
+Converting between an untyped `array` and a typed array such as `int[]` makes a copy, because the items change type. Rest parameters, and lambdas called through a function value, hold their own copy. Record and class array fields share their array like a variable does. Struct fields are values by design: a struct field given an array stores a copy of it, and copying the struct copies its arrays.
+
+Typed collections hold their arrays the same way. An item of an `int[][]` and a value of a typed dictionary such as `string[int[]]` is the array itself, not a copy:
+
+```osl
+int[][] grid = [[1], [2]]
+int[] row = grid[1]
+row.append(9)
+grid[2] = row
+grid[1].append(3)
+log grid // [[1, 9, 3], [1, 9, 3]]
+```
+
+Reading an item into a variable, storing a variable as an item, appending it, and changing an item in place all reach the same array. So do the loop variable of `for row in grid`, the parameter of a callback such as `grid.map(row -> row.len)` or `grid.filter(...)`, and the items of `[...grid]`, `grid ++ more`, `grid.filter(...)` and `grid.concat(...)`, which are new outer arrays holding the same inner arrays. `.clone()` copies the inner arrays too. A Go package that takes or returns a `[][]T` gets and gives plain copies of the rows.
 
 An explicit `@arrayVariable` pointer retains the variable's storage, including its current array length after reassignment. Calling `.delete(position)` through it updates the original array:
 
