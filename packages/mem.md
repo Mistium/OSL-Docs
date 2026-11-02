@@ -82,6 +82,34 @@ profile resolution but add overhead, `1` records every allocation, and `0` disab
 number oldRate = mem.setProfileRate(65536)
 ```
 
+#### `mem.setGCPercent(percent)` -> `int`
+
+Sets how far the heap may grow past the live data left by the last garbage collection before the
+next one starts, as a percentage, and returns the previous setting. This is Go's `GOGC`: the
+default is `100`, or the `GOGC` environment variable. A program with a small live heap that
+allocates heavily collects very often at the default; a larger value such as `400` collects less
+often in exchange for more memory. A negative value turns garbage collection off, although a
+memory limit set with `mem.setMemoryLimit` still triggers it. OSL never changes the setting
+itself.
+
+```osl
+int previous = mem.setGCPercent(400)
+```
+
+#### `mem.setMemoryLimit(bytes)` -> `int`
+
+Sets a soft limit, in bytes, on the memory the Go runtime uses, and returns the previous limit. This
+is Go's `GOMEMLIMIT`: as the runtime nears the limit it collects more often, whatever
+`mem.setGCPercent` says. Pass `0` for no limit, the default. A returned `0` likewise means there
+was no limit, so the result can be passed back to restore the earlier setting. Throws
+`ValueError` for a negative limit.
+
+```osl
+// Collect rarely, but stay under 512 MiB.
+mem.setGCPercent(-1)
+int previous = mem.setMemoryLimit(512 * 1024 * 1024)
+```
+
 #### `mem.serve(address)` -> `boolean`
 
 Starts the standard Go pprof HTTP endpoints on `address` and returns whether listening started.
