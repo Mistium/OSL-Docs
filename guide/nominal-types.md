@@ -379,7 +379,75 @@ class AdminCounter extends Counter (
 
 Calls between methods retain their declared return types, including typed arrays. [Generic methods](functions.md#generic-methods) retain their constraints and return types through inheritance and calls through `self`. Child classes inherit fields, methods, and constructors. A child method with the same name replaces the inherited method.
 
+A child that declares an inherited field again gives it a new default. It is still the parent's field, so the instance has one value for it. The declaration must keep the field's type.
+
 Class assignment shares the instance. Use `.clone()` for an independent copy.
+
+### Subclasses
+
+A child class can be used anywhere one of its ancestors is expected: variables, parameters, fields, return types, array items, map values, and type arguments. A method called through such a value runs the instance's own override:
+
+```osl
+class Shape (
+  def area() number -> 0
+  def describe() string -> "area " ++ self.area()
+)
+
+class Square extends Shape (
+  number side = 1
+  def area() number -> self.side * self.side
+)
+
+class Circle extends Shape (
+  number r = 1
+  def area() number -> 3.14 * self.r * self.r
+)
+
+def largest(Shape[] shapes) Shape (
+  Shape best = shapes[1]
+  for shape in shapes (
+    if shape.area() > best.area() (
+      best = shape
+    )
+  )
+  return best
+)
+
+Shape[] shapes = [Square(), Circle(), Shape()]
+log largest(shapes).describe()
+```
+
+Inherited methods dispatch too. `describe` calls `self.area()`, and on a `Square` that runs `Square.area`. An override must take the same parameter types and return the same type as the method it replaces, because a call through the parent class can run it.
+
+Fields read and written through a parent-class value are the instance's own fields. Only the parent's fields and methods are visible through it. To reach the rest, narrow the value back to the child with `.<Child>`, or with `.<Child>(fallback)` to substitute a value when the instance is another class:
+
+```osl
+Shape shape = Square()
+Square square = shape.<Square>
+log square.side
+
+Circle circle = shape.<Circle>(Circle())
+log circle.r
+```
+
+`.<Child>` reports `TypeError: Cannot assert Square as Circle` when the instance is a different subclass. A parent value can't be used as a child without one of these, and a class can't be used as a sibling class.
+
+The rest of the language sees the instance's own class:
+
+- `typeof(shape)` is `"Square"`.
+- `toStr`, `log`, and `json.stringify` include the subclass's fields.
+- `.clone()` copies the instance as its own class.
+- `===` compares instances, whichever class each value is declared with.
+
+A nullable parent type such as `Shape?` accepts `null`, a child, or a nullable child; a null child stays `null`.
+
+An array of a child class is not an array of its parent. `Square[]` can't be used as `Shape[]`, because a `Shape[]` could be given a `Circle`. Declare the array with the parent type when it may hold several subclasses. The same rule applies to typed objects.
+
+Generic types and functions hold subclasses the same way: a `Box<Shape>` can hold a `Square`, and a generic method called through a `Shape` runs the instance's override.
+
+A class's fields and methods are reached directly when nothing extends it, or when a value is known to be exactly that class. Calls through a parent-class value cost one dynamic dispatch.
+
+`json.parse<T>` builds an instance the way the class's constructor does: absent keys keep their defaults, `init` doesn't run, and unknown keys are a `ParseError`. JSON doesn't say which class an object is, so an object decoded into a `Shape` field, item, or result is exactly a `Shape`.
 
 ## Nested structs
 
