@@ -37,7 +37,13 @@ Malformed input fails with a `ParseError` that names the line and column of the 
 
 ## Parsing into structs
 
-`json.parse<T>(text)` checks the parsed value against `T`. For a struct, it applies field defaults to absent keys, accepts `null` for nullable fields, and reports a `ParseError` that names the struct and field when a value has the wrong type. Unknown keys are rejected.
+`json.parse<T>(text)` checks the parsed value against `T`. For a struct, it applies field defaults to absent keys, accepts `null` for nullable fields, and reports a `ParseError` that names the struct and field when a value has the wrong type. Keys the struct doesn't declare are ignored, so a type can take just the fields it needs from a larger document. The same goes for records and classes; a record with an index type, such as `type Bag string[any] (...)`, keeps the extra keys as properties instead.
+
+A string's `parse<T>()` method does the same as `json.parse<T>(text)`, without importing `std:json`:
+
+```osl
+User user = text.parse<User>() catch return
+```
 
 ```osl
 import "std:json"
@@ -53,7 +59,7 @@ log user.name
 log user.bio == null
 ```
 
-A missing key uses the default, so `user.age` is `3` and `user.bio` is `null` above. A value such as `"age": "old"` fails with a `ParseError` naming `"age"`; an extra key such as `"admin": true` fails with an unknown-field `ParseError`.
+A missing key uses the default, so `user.age` is `3` and `user.bio` is `null` above. A value such as `"age": "old"` fails with a `ParseError` naming `"age"`; an extra key such as `"admin": true` is ignored.
 
 ## Streaming large files
 

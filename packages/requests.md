@@ -18,8 +18,8 @@ log res.status
 ## Parsing JSON bodies
 
 `response.parse<T>()` parses the body as JSON and checks it against `T`, the same way
-`json.parse<T>(response.body)` does, and gives `result<T, error>`. You don't need to import
-`std:json` for it.
+`json.parse<T>(response.body)` does, and gives `result<T, error>`. Keys `T` doesn't declare are
+ignored. You don't need to import `std:json` for it, and a string has the same `parse<T>()`.
 
 ```osl
 import "std:requests"
