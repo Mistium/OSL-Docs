@@ -14,11 +14,11 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `boolean(value)` | Converts a value using OSL truthiness. Prefer `.toBool()`. |
 | `array(value)` | Converts a supported value to an array. |
 | `object(value)` | Converts a supported value to an object. |
-| `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. The smallest of ints is an `int`. |
-| `max(...values)` | Returns the largest numeric value, or NaN when any value is NaN. The largest of ints is an `int`. |
-| `clamp(value, low, high)` | Restricts a number to a range. |
+| `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. The smallest of ints is an `int`. Given one array, `min(values)` returns its smallest item, as `values.min()` does. |
+| `max(...values)` | Returns the largest numeric value, or NaN when any value is NaN. The largest of ints is an `int`. Given one array, `max(values)` returns its largest item, as `values.max()` does. An empty array has no smallest or largest item, so `min` and `max` of one raise `ValueError`. |
+| `clamp(value, low, high)` | Restricts a number to a range, as `value.clamp(low, high)` does. The bounds may come in either order. Of ints, it returns an `int`. |
 | `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. Of an `int`, each returns an `int`: `round`, `floor` and `ceil` return the value itself, and `abs` its size. The minimum `int` has no `int` size, so `abs` of it raises `OverflowError`. |
-| `sqrt(value)`, `pow(base, exponent)` | Roots and powers. |
+| `sqrt(value)`, `pow(base, exponent)` | Roots and powers. `pow(base, exponent)` is `base ^ exponent`, a `number` even for ints, since a power can be fractional or too large for an `int`. |
 | `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions of an angle in degrees, matching the number methods. |
 | `random(low, high)` | Returns a random whole number from `low` to `high` inclusive, or a decimal from `low` up to but not including `high`. |
 | `range(start, end)` | Creates an inclusive range. The `to` operator is usually clearer. |
