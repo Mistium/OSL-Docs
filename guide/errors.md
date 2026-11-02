@@ -23,6 +23,18 @@ object data = try(shape.parse(input)) catch (
 
 Inside the catch block, `_` is the failed result supplied by the expression. A `return` exits the enclosing function. A `continue` or `break` applies to the enclosing loop. If the block reaches its end, OSL rethrows the original error.
 
+When the handler is a single `return`, `continue`, `break` or `throw`, it can follow `catch` directly,
+with or without a binding:
+
+```osl
+auto response = requests.get(url) catch return []
+auto parsed = json.parse<int[]>(text) catch (err) return "bad: " ++ err.message
+for text in texts (
+  auto values = json.parse<int[]>(text) catch continue
+  log values.sum()
+)
+```
+
 A catch expression preserves the success type of `result<T, E>`. For example, `json.parse<string[int]>(text) catch (...)` produces `string[int]` on success. The source expression runs once.
 
 ## Result values
