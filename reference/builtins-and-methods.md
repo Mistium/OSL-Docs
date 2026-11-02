@@ -14,10 +14,10 @@ This page covers language-level APIs that do not require an import. Standard-lib
 | `boolean(value)` | Converts a value using OSL truthiness. Prefer `.toBool()`. |
 | `array(value)` | Converts a supported value to an array. |
 | `object(value)` | Converts a supported value to an object. |
-| `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. |
-| `max(...values)` | Returns the largest numeric value, or NaN when any value is NaN. |
+| `min(...values)` | Returns the smallest numeric value, or NaN when any value is NaN. The smallest of ints is an `int`. |
+| `max(...values)` | Returns the largest numeric value, or NaN when any value is NaN. The largest of ints is an `int`. |
 | `clamp(value, low, high)` | Restricts a number to a range. |
-| `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. |
+| `round(value)`, `floor(value)`, `ceil(value)`, `abs(value)` | Basic numeric operations. `round` rounds halves up, so `round(-2.5)` is `-2`, and returns `0` for NaN or values outside the integer range. Of an `int`, each returns an `int`: `round`, `floor` and `ceil` return the value itself, and `abs` its size. The minimum `int` has no `int` size, so `abs` of it raises `OverflowError`. |
 | `sqrt(value)`, `pow(base, exponent)` | Roots and powers. |
 | `sin(value)`, `cos(value)`, `tan(value)` | Trigonometric functions of an angle in degrees, matching the number methods. |
 | `random(low, high)` | Returns a random whole number from `low` to `high` inclusive, or a decimal from `low` up to but not including `high`. |
@@ -124,6 +124,8 @@ Object shorthand resolves variable names even when they match a command name. Fo
 ## Numbers and booleans
 
 Numbers provide methods such as `round`, `floor`, `ceiling`, `abs`, `sqrt`, `clamp`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `log`, `ln`, `sign`, `isPrime`, and `chr`.
+
+On an `int`, `round`, `floor`, `ceiling` and `abs` return an `int`, as their functions do, and `clamp` with `int` bounds returns an `int`. Results that can be fractional, such as `sqrt` or `clamp` with a decimal bound, are numbers.
 
 `sqrt`, `asin`, and `acos` return `number?`: `null` when the input is outside their domain. Use a
 fallback such as `x.sqrt() ?? 0.0` where a number is required.
