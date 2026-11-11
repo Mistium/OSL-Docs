@@ -32,6 +32,7 @@
 * [Web and networking](packages/categories/web.md)
   * [serve](packages/serve.md)
   * [ws](packages/ws.md)
+  * [ui](packages/ui.md)
   * [originchats](packages/originchats.md)
   * [requests](packages/requests.md)
   * [net](packages/net.md)
