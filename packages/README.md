@@ -103,6 +103,7 @@ Each package page lists handle methods in a separate section.
 | --- | --- |
 | [serve](serve.md) | HTTP server / web framework (routing, middleware, contexts). |
 | [ws](ws.md) | WebSocket client and server. |
+| [ui](ui.md) | Interfaces from OSL tags: components, state, actions, layout, themes. |
 | [originchats](originchats.md) | Bot framework for OriginChats servers. |
 | [requests](requests.md) | HTTP client methods including `get`, `post`, and `put`. |
 | [net](net.md) | Low-level TCP/UDP sockets and DNS lookups. |
