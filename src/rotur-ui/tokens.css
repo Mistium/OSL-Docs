@@ -1,0 +1,110 @@
+/* Rotur UI tokens. Custom properties only, so this file is safe to load anywhere.
+ * The look comes from notes.rotur.dev: pure black, soft panels, hairline borders,
+ * one accent used sparingly (lilac unless the app sets its own), Poppins for the UI and Cal Sans for display. */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --r-bg: #000000;
+  --r-surface: #101010;          /* panels, cards, modals */
+  --r-surface-hover: #191919;    /* hover on panels, cards and buttons */
+  --r-surface-hover-quiet: #121212; /* hover on rows, nav items and menu items over black */
+  --r-surface-selected: color-mix(in srgb, var(--r-accent-base) 8%, #121212); /* the current nav item or row: a hint of the accent */
+  --r-surface-raised: #141414;   /* menus and popovers that float over panels */
+  --r-scrim: rgb(0 0 0 / 0.84);  /* behind modals; heavy enough that the page reads as texture */
+
+  /* Lines */
+  --r-line: #222222;
+  --r-line-soft: #161616;
+  --r-line-strong: #2e2e2e;      /* hovered inputs, floating surfaces */
+
+  /* Text. All three pass WCAG AA (4.5:1) on --r-bg, --r-surface and --r-surface-hover. */
+  --r-text: #eeeeef;
+  --r-text-muted: #a6a6af;
+  --r-text-faint: #85858e;
+
+  /* The one accent. Apps set --r-accent-base (one hex) and every other accent
+   * token follows it; colour.js also sets --r-on-accent to whatever reads on it.
+   * Override a derived token after this file only when a colour needs a hand. */
+  --r-accent-base: #c299cf;
+  --r-accent: var(--r-accent-base);
+  --r-accent-strong: color-mix(in srgb, var(--r-accent-base) 80%, #ffffff); /* primary button hover */
+  --r-accent-text: color-mix(in srgb, var(--r-accent-base) 68%, #ffffff);   /* accent text and links, readable on black */
+  --r-accent-soft: color-mix(in srgb, var(--r-accent-base) 7%, transparent); /* tinted backgrounds */
+  --r-accent-line: color-mix(in srgb, var(--r-accent-base) 25%, transparent); /* tinted borders */
+  --r-on-accent: #1b1120;        /* text on an accent fill */
+
+  /* Status */
+  --r-danger: #f87171;
+  --r-danger-text: #f6b0a8;
+  --r-danger-soft: #251717;
+  --r-danger-line: #472525;
+  --r-success: #4ade80;
+  --r-success-soft: #0f2116;
+  --r-success-line: #1d4029;
+
+  /* Focus: visible, but quiet enough not to double up inside framed controls */
+  --r-focus: color-mix(in srgb, var(--r-accent-base) 72%, transparent);
+  --r-focus-width: 2px;
+  --r-focus-offset: 2px;
+
+  /* Type */
+  --r-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --r-font-display: 'Cal Sans', 'Poppins', sans-serif;
+  --r-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; /* code only */
+
+  --r-text-2xs: 11px;  /* the floor: kbd hints and badges */
+  --r-text-xs: 12px;   /* metadata, dates, hints */
+  --r-text-sm: 13px;   /* rows, menus, secondary copy */
+  --r-text-md: 14px;   /* buttons, inputs */
+  --r-text-base: 15px; /* body */
+  --r-text-lg: 17px;   /* long-form writing */
+  --r-leading: 1.5;
+
+  --r-display-xs: 24px;
+  --r-display-sm: 30px;
+  --r-display-md: 40px;
+  --r-display-lg: 48px;
+  --r-display-xl: clamp(42px, 5vw, 64px);
+  --r-tracking-display: -0.025em;
+  --r-tracking-tight: -0.035em;
+
+  /* Space */
+  --r-space-1: 4px;
+  --r-space-2: 8px;
+  --r-space-3: 12px;
+  --r-space-4: 16px;
+  --r-space-5: 20px;
+  --r-space-6: 24px;
+  --r-space-8: 32px;
+  --r-space-10: 40px;
+  --r-space-12: 48px;
+  --r-space-16: 64px;
+
+  /* Shape */
+  --r-radius-xs: 4px;
+  --r-radius-sm: 6px;
+  --r-radius-md: 8px;
+  --r-radius-lg: 12px;
+  --r-radius-xl: 18px;
+  --r-radius-full: 999px;
+
+  /* Control heights */
+  --r-control-sm: 32px;
+  --r-control-md: 40px;
+  --r-control-lg: 48px;
+
+  /* Depth: only floating things get a shadow */
+  --r-shadow-pop: 0 14px 40px rgb(0 0 0 / 0.6);
+  --r-shadow-overlay: 0 24px 70px rgb(0 0 0 / 0.7);
+
+  /* Motion */
+  --r-ease: cubic-bezier(0.2, 0, 0, 1);
+  --r-duration: 150ms;
+
+  /* Layout */
+  --r-sidenav-width: 280px;
+  --r-topbar-height: 64px;
+  --r-content-width: 780px;
+}

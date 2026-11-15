@@ -1,0 +1,124 @@
+{
+ "0cc9ad8d899fd": {
+  "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 1 | int count = \"three\"\n   |             ^^^^^^^\nin: main.osl:1",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check",
+    "file": "main.osl",
+    "line": 1,
+    "column": 12,
+    "length": 0,
+    "rendered": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 1 | int count = \"three\"\n   |             ^^^^^^^\nin: main.osl:1"
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'count' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 1,
+    "column": 4,
+    "length": 5
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "0d6eb652925fe": {
+  "output": "Ada is 36\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "1a30bbf61cd12": {
+  "output": "Hello, Ada!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4925f953aad4f": {
+  "output": "Hello, world\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4b0fdddf24ae9": {
+  "output": "Mercury\nEarth\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "56abe30d58c2b": {
+  "output": "[1,4,9,16]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "8de8b9e6b740e": {
+  "output": "Ada is 36\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a7ddd0025c4b2": {
+  "output": "5\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "b2b3e8370a52d": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c2df6a0dee03f": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c4c1721f0a311": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "cb532ddfdda4f": {
+  "output": "1. Hello, Ada!\n2. Hello, Grace!\n3. Hello, Linus!\nONE BINARY, NO RUNTIME!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ce6944493c911": {
+  "output": "the  ####\ncat  ##\nsaw  ##\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "df632f005d8ae": {
+  "output": "Hello, Grace!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e6199d12badd2": {
+  "output": "nananananananana batman\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ed01aad1e9e57": {
+  "output": "1. Hello, Ada!\n2. Hello, Grace!\n3. Hello, Linus!\nONE BINARY, NO RUNTIME!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ff2897aba991b": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ }
+}

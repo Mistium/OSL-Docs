@@ -1,0 +1,168 @@
+// The docs' run server: POST /run compiles and runs a small OSL program and
+// returns what it printed. The site calls it when someone runs code they
+// edited (unedited examples play back recorded output and never get here).
+//
+// Every job compiles inside a bubblewrap sandbox with no network, then runs
+// in a tighter one: no network, no home directory, a read-only view of the
+// system, its own /tmp, limits on time, memory, processes and output.
+//
+//   osl run runner/main.osl
+//
+// Settings come from the environment:
+//   PORT           port to listen on (8095)
+//   OSL_BIN        the osl compiler (osl)
+//   RUNNER_DIR     where jobs are built (/tmp/osl-runner)
+//   RUNNER_JOBS    jobs at once (4)
+//   RUNNER_ORIGIN  the site allowed to call it (*)
+
+import "std:serve"
+import "std:process"
+import "std:fs"
+import "std:env"
+import "std:sync"
+import "std:crypto"
+import "std:regex"
+
+string port = env.get("PORT", "8095")
+string oslBin = env.get("OSL_BIN", "osl")
+string workRoot = env.get("RUNNER_DIR", "/tmp/osl-runner")
+int maxJobs = env.get("RUNNER_JOBS", "4").toInt()
+string origin = env.get("RUNNER_ORIGIN", "*")
+string home = env.get("HOME", "/root")
+
+int maxSource = 64 * 1024
+int maxOutput = 64 * 1024
+int compileMs = 60000
+int runMs = 10000
+
+*sync.Lock jobsLock = sync.newLock()
+int running = 0
+
+fs.mkdir(workRoot, {recursive: true}).unwrap()
+
+// Only plain file names, so nothing escapes the job's folder.
+*regex.Pattern fileName = regex.compile("^[A-Za-z0-9_-]{1,40}\\.osl$").unwrap()
+
+def claim() boolean (
+  jobsLock.lock()
+  defer jobsLock.unlock()
+  if running >= maxJobs return false
+  running += 1
+  return true
+)
+
+def release() (
+  jobsLock.lock()
+  defer jobsLock.unlock()
+  running -= 1
+)
+
+// The compiler reads the system, the Go toolchain and its caches, and
+// writes only the job's folder and the build caches.
+def compileSandbox(string dir) string[] (
+  return [
+    "--ro-bind", "/", "/",
+    "--dev", "/dev",
+    "--proc", "/proc",
+    "--tmpfs", "/tmp",
+    "--bind", dir, dir,
+    "--bind", home ++ "/.cache", home ++ "/.cache",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--chdir", dir,
+    "--setenv", "GOPROXY", "off",
+    "--setenv", "GOFLAGS", "-mod=mod",
+    "--setenv", "CGO_ENABLED", "0"
+  ]
+)
+
+// The program sees the system's libraries and its own folder, read-only.
+def runSandbox(string dir) string[] (
+  return [
+    "--ro-bind", "/usr", "/usr",
+    "--symlink", "usr/lib", "/lib",
+    "--symlink", "usr/lib", "/lib64",
+    "--symlink", "usr/bin", "/bin",
+    "--ro-bind", dir, "/job",
+    "--dev", "/dev",
+    "--proc", "/proc",
+    "--tmpfs", "/tmp",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--clearenv",
+    "--setenv", "PATH", "/usr/bin",
+    "--setenv", "HOME", "/tmp",
+    "--chdir", "/job"
+  ]
+)
+
+def clip(string text) string (
+  if text.len <= maxOutput return text
+  return text.left(maxOutput)
+)
+
+def runJob(object files, string entry, string stdin) object (
+  string dir = workRoot ++ "/" ++ crypto.randomHex(12)
+  fs.mkdir(dir, {recursive: true}).unwrap()
+  defer void fs.remove(dir, {force: true})
+
+  for name of files (
+    fs.writeFile(dir ++ "/" ++ name, files[name].toStr()).unwrap()
+  )
+
+  auto built = process.run("bwrap", [...compileSandbox(dir), oslBin, "compile", entry, "-o", "app"], {timeout: compileMs, maxOutput: maxOutput}) catch (e) (
+    return {output: "", exit: -1, error: "The compiler didn't finish: " ++ e.message}
+  )
+  if !built.ok (
+    return {output: clip(built.stderr ++ built.stdout), exit: built.code, compileFailed: true}
+  )
+
+  string[] command = ["prlimit", "--as=2147483648", "--fsize=10485760", "--", "bwrap", ...runSandbox(dir), "/bin/sh", "-c", "exec ./app 2>&1"]
+  auto ran = process.run(command[1], command.right(command.len - 1), {timeout: runMs, maxOutput: maxOutput, input: stdin}) catch (e) (
+    if e.kind == "TimeoutError" return {output: "", exit: -1, timedOut: true}
+    return {output: "", exit: -1, error: e.message}
+  )
+  return {output: clip(ran.stdout), exit: ran.code, truncated: ran.truncated}
+)
+
+*serve.Router app = serve.new()
+app.use(serve.cors(origin, "GET, POST, OPTIONS", "Content-Type"))
+app.use(serve.maxBodySize(maxSource * 2))
+app.use(serve.rateLimit({requests: 30, window: 60000}))
+
+app.get("/", def(*serve.Context c) -> (
+  c.json(200, {ok: true, running: running, slots: maxJobs})
+))
+
+app.post("/run", def(*serve.Context c) -> (
+  object body = c.bodyJSON() catch (
+    c.json(400, {error: "Send JSON: {files, entry, stdin}."})
+    return
+  )
+  object files = body.files.<object>({})
+  string entry = body.entry.<string>("main.osl")
+  string stdin = body.stdin.<string>("")
+  int size = 0
+  for name of files (
+    if !fileName.match(name) (
+      c.json(400, {error: "File names must look like main.osl."})
+      return
+    )
+    size += files[name].toStr().len
+  )
+  if files.getKeys().len == 0 or files[entry] == null or size > maxSource (
+    c.json(400, {error: "Send up to 64 KB of OSL in files, including the entry file."})
+    return
+  )
+  if !claim() (
+    c.json(429, {error: "busy"})
+    return
+  )
+  defer release()
+  c.json(200, runJob(files, entry, stdin))
+))
+
+log "run server on :" ++ port ++ " using " ++ oslBin
+app.run(":" ++ port).unwrap()

@@ -1,0 +1,845 @@
+/* Rotur UI motifs: one small animated drawing per app, in CSS and SVG only.
+ * Needs tokens.css. The markup each one expects is in motifs.js.
+ *
+ *   <div class="r-motif r-motif--mail" style="--c: #8aa2ff" aria-hidden="true">…</div>
+ *
+ * A motif fills its box and scales its drawing to fit, so give the box a size.
+ * --c sets its colour (the app's accent when unset). It loops by default;
+ * r-motif--once plays one round and holds, r-motif--paused freezes it.
+ * Reduced motion shows the finished frame. */
+
+.r-motif {
+  --r-motif-c: var(--c, var(--r-accent));
+  --r-motif-mid: color-mix(in srgb, var(--r-motif-c) 45%, #000);
+  --r-motif-soft: color-mix(in srgb, var(--r-motif-c) 16%, #000);
+  --r-motif-ink: color-mix(in srgb, var(--r-motif-c) 12%, #0b0b0b);
+  --r-motif-line: color-mix(in srgb, var(--r-motif-c) 26%, transparent);
+  --r-motif-off: #3a3a3a;
+  /* The drawing's design size in em. Each motif draws in that box. */
+  --r-motif-w: 24;
+  --r-motif-h: 16;
+  container-type: size;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.r-motif > * { font-size: min(calc(100cqw / var(--r-motif-w)), calc(100cqh / var(--r-motif-h))); }
+.r-motif i, .r-motif b { display: block; }
+.r-motif svg { display: block; overflow: visible; }
+
+/* Each part names its keyframes; the round, easing and repeat are shared.
+ * The resting styles are the finished frame, which reduced motion and the end
+ * of a single round both show. Keyframes fade out through --r-motif-out, which
+ * r-motif--once sets to 1 so the last frame holds instead of emptying. */
+.r-motif *, .r-motif *::before, .r-motif *::after {
+  animation-duration: var(--r-motif-round, 4s);
+  animation-timing-function: var(--r-ease);
+  animation-iteration-count: var(--r-motif-runs, infinite);
+  animation-fill-mode: both;
+}
+.r-motif--once { --r-motif-runs: 1; --r-motif-out: 1; }
+.r-motif--paused *, .r-motif--paused *::before, .r-motif--paused *::after { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .r-motif *, .r-motif *::before, .r-motif *::after { animation-name: none !important; }
+}
+
+@keyframes r-motif-pop {
+  0% { opacity: 0; transform: scale(0.4) rotate(6deg); }
+  12%, 80% { opacity: 1; transform: none; }
+  92%, 100% { opacity: var(--r-motif-out, 0); transform: scale(calc(0.96 + 0.04 * var(--r-motif-out, 0))); }
+}
+@keyframes r-motif-rise {
+  0% { opacity: 0; transform: translateY(1em) scale(0.94); }
+  12%, 85% { opacity: 1; transform: none; }
+  100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+
+/* ---------- notes: a sticky note writing itself ---------- */
+
+.r-motif--notes > i {
+  display: grid;
+  align-content: start;
+  gap: 1.2em;
+  width: 14em;
+  height: 12em;
+  padding: 1.8em;
+  border-radius: 1.4em;
+  background: var(--r-motif-c);
+  box-shadow: 1.4em 1em 0 var(--r-motif-soft);
+  transform: rotate(-4deg);
+}
+.r-motif--notes b {
+  width: var(--w);
+  height: 0.8em;
+  border-radius: 0.4em;
+  background: var(--r-motif-ink);
+  animation-name: r-motif-write;
+  animation-delay: var(--d, 0s);
+}
+.r-motif--notes b:nth-child(1) { --w: 70%; height: 1.4em; }
+.r-motif--notes b:nth-child(2) { --w: 90%; --d: 0.5s; }
+.r-motif--notes b:nth-child(3) { --w: 60%; --d: 1s; }
+@keyframes r-motif-write {
+  0% { width: 0; }
+  30%, 85% { width: var(--w); }
+  100% { width: calc(var(--w) * var(--r-motif-out, 0)); }
+}
+
+/* ---------- mail: envelopes stacking ---------- */
+
+.r-motif--mail { --r-motif-round: 4.5s; }
+.r-motif--mail > i { display: grid; }
+.r-motif--mail b {
+  --flap: var(--r-motif-c);
+  position: relative;
+  grid-area: 1 / 1;
+  width: 12em;
+  height: 7.8em;
+  overflow: hidden;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 1em;
+  background: var(--r-motif-ink);
+  transform: translateY(var(--y));
+  animation-name: r-motif-slide;
+  animation-delay: var(--d, 0s);
+}
+.r-motif--mail b::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8.5em;
+  height: 8.5em;
+  border: 0.2em solid var(--flap);
+  transform: translate(-50%, -50%) scaleY(0.7) rotate(45deg);
+}
+.r-motif--mail b:nth-child(1) { --y: 2.6em; }
+.r-motif--mail b:nth-child(2) { --y: 0em; --d: 0.35s; }
+.r-motif--mail b:nth-child(3) { --y: -2.6em; --d: 0.7s; --flap: var(--r-motif-ink); background: var(--r-motif-c); }
+@keyframes r-motif-slide {
+  0% { opacity: 0; transform: translate(-16em, var(--y)) rotate(-10deg); }
+  18%, 80% { opacity: 1; transform: translateY(var(--y)); }
+  100% { opacity: var(--r-motif-out, 0); transform: translateY(var(--y)); }
+}
+
+/* ---------- photos: tiles popping into a justified grid ---------- */
+
+/* Each tile keeps a photo's shape (--g is width over height) and the rows fill,
+ * as the library does. */
+.r-motif--photos { --r-motif-round: 6s; }
+.r-motif--photos > i {
+  --t1: color-mix(in srgb, var(--r-motif-c) 55%, #000);
+  --t2: color-mix(in srgb, var(--r-motif-c) 78%, #000);
+  --t3: color-mix(in srgb, var(--r-motif-c) 32%, #000);
+  display: grid;
+  gap: 0.5em;
+  width: 22em;
+}
+.r-motif--photos > i > i { display: flex; gap: 0.5em; height: 4.2em; }
+.r-motif--photos b {
+  flex: var(--g) 1 0;
+  border-radius: 0.6em;
+  background: var(--t, var(--r-motif-c));
+  animation-name: r-motif-pop;
+  animation-delay: calc(var(--i) * 140ms);
+}
+.r-motif--photos > i > i:nth-child(1) > b:nth-child(1) { --g: 1.5; --i: 0; }
+.r-motif--photos > i > i:nth-child(1) > b:nth-child(2) { --g: 0.75; --i: 1; --t: var(--t1); }
+.r-motif--photos > i > i:nth-child(1) > b:nth-child(3) { --g: 1.33; --i: 2; --t: var(--t2); }
+.r-motif--photos > i > i:nth-child(2) > b:nth-child(1) { --g: 1; --i: 3; --t: var(--t3); }
+.r-motif--photos > i > i:nth-child(2) > b:nth-child(2) { --g: 1.78; --i: 4; }
+.r-motif--photos > i > i:nth-child(2) > b:nth-child(3) { --g: 0.8; --i: 5; --t: var(--t1); }
+.r-motif--photos > i > i:nth-child(3) > b:nth-child(1) { --g: 1.33; --i: 6; --t: var(--t2); }
+.r-motif--photos > i > i:nth-child(3) > b:nth-child(2) { --g: 1.2; --i: 7; --t: var(--t3); }
+.r-motif--photos > i > i:nth-child(3) > b:nth-child(3) { --g: 0.66; --i: 8; }
+.r-motif--photos > i > i:nth-child(3) > b:nth-child(4) { --g: 1; --i: 9; --t: var(--t1); }
+
+/* ---------- gifs: a flipbook ---------- */
+
+.r-motif--gifs { --r-motif-round: 3.6s; }
+.r-motif--gifs > i {
+  position: relative;
+  width: 11em;
+  height: 11em;
+  margin: 2em 2em 0 0;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 1.6em;
+  background: var(--r-motif-soft);
+}
+/* The pages behind, offset up and right */
+.r-motif--gifs > i::before, .r-motif--gifs > i::after {
+  content: '';
+  position: absolute;
+  inset: -0.2em;
+  z-index: -1;
+  border: 0.2em solid color-mix(in srgb, var(--r-motif-c) 40%, transparent);
+  border-radius: 1.6em;
+  transform: translate(1em, -1em);
+}
+.r-motif--gifs > i::after { opacity: 0.5; transform: translate(2em, -2em); }
+.r-motif--gifs b {
+  position: absolute;
+  top: 1em;
+  left: 3.7em;
+  width: 3.2em;
+  height: 3.2em;
+  border-radius: 50%;
+  background: var(--r-motif-c);
+  animation-name: r-motif-bounce;
+  animation-timing-function: steps(6);
+}
+@keyframes r-motif-bounce {
+  0%, 50%, 100% { top: 1em; border-radius: 50%; }
+  25%, 75% { top: 6.6em; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; }
+}
+
+/* ---------- beam: a packet hopping between a phone, an originOS window, a laptop and a tablet ---------- */
+
+.r-motif--beam { --r-motif-round: 7.8s; }
+.r-motif--beam svg { width: 24em; }
+.r-motif--beam svg > g:first-of-type path { fill: none; stroke: var(--r-line-strong); stroke-width: 1.5; stroke-dasharray: 3 7; stroke-linecap: round; }
+.r-motif--beam svg > g + g { color: var(--r-motif-off); animation-timing-function: linear; }
+.r-motif--beam svg > g + g rect { fill: color-mix(in srgb, currentColor 16%, transparent); }
+.r-motif--beam svg > g + g rect, .r-motif--beam svg > g + g path { stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+.r-motif--beam svg > g + g circle { fill: currentColor; }
+.r-motif--beam svg > g:nth-of-type(2) { animation-name: r-motif-beam-phone; }
+.r-motif--beam svg > g:nth-of-type(3) { color: var(--r-motif-c); animation-name: r-motif-beam-window; }
+.r-motif--beam svg > g:nth-of-type(4) { animation-name: r-motif-beam-laptop; }
+.r-motif--beam svg > g:nth-of-type(5) { animation-name: r-motif-beam-tablet; }
+.r-motif--beam svg > rect {
+  fill: var(--r-motif-c);
+  transform: translate(218px, 200px);
+  animation-name: r-motif-beam-hop;
+  animation-timing-function: linear;
+}
+@keyframes r-motif-beam-phone {
+  0%, 6.4%, 100% { color: var(--r-motif-c); }
+  7.4%, 99% { color: var(--r-motif-off); }
+}
+@keyframes r-motif-beam-window {
+  0%, 15.8%, 24.1%, 82.4%, 90.7%, 100% { color: var(--r-motif-off); }
+  16.8%, 23.1%, 83.4%, 89.7% { color: var(--r-motif-c); }
+}
+@keyframes r-motif-beam-laptop {
+  0%, 32.4%, 40.7%, 65.8%, 74.1%, 100% { color: var(--r-motif-off); }
+  33.4%, 39.7%, 66.8%, 73.1% { color: var(--r-motif-c); }
+}
+@keyframes r-motif-beam-tablet {
+  0%, 49.1%, 57.4%, 100% { color: var(--r-motif-off); }
+  50.1%, 56.4% { color: var(--r-motif-c); }
+}
+/* Rests at each device, then hops along the arc to the next, there and back */
+@keyframes r-motif-beam-hop {
+  0%, 6.4% { transform: translate(54px, 258px); }
+  8.1% { transform: translate(63px, 240px); }
+  9.8% { transform: translate(90px, 197px); }
+  11.5% { transform: translate(136px, 160px); }
+  13.2% { transform: translate(182px, 165px); }
+  15% { transform: translate(209px, 189px); }
+  16.7%, 23.1% { transform: translate(218px, 200px); }
+  24.8% { transform: translate(228px, 189px); }
+  26.5% { transform: translate(258px, 165px); }
+  28.2% { transform: translate(309px, 159px); }
+  29.9% { transform: translate(360px, 196px); }
+  31.6% { transform: translate(390px, 238px); }
+  33.3%, 39.7% { transform: translate(400px, 256px); }
+  41.5% { transform: translate(408px, 241px); }
+  43.2% { transform: translate(433px, 205px); }
+  44.9% { transform: translate(474px, 176px); }
+  46.6% { transform: translate(515px, 186px); }
+  48.3% { transform: translate(540px, 211px); }
+  50%, 56.4% { transform: translate(548px, 222px); }
+  58.1% { transform: translate(540px, 211px); }
+  59.8% { transform: translate(515px, 186px); }
+  61.5% { transform: translate(474px, 176px); }
+  63.2% { transform: translate(433px, 205px); }
+  65% { transform: translate(408px, 241px); }
+  66.7%, 73.1% { transform: translate(400px, 256px); }
+  74.8% { transform: translate(390px, 238px); }
+  76.5% { transform: translate(360px, 196px); }
+  78.2% { transform: translate(309px, 159px); }
+  79.9% { transform: translate(258px, 165px); }
+  81.6% { transform: translate(228px, 189px); }
+  83.3%, 89.7% { transform: translate(218px, 200px); }
+  91.5% { transform: translate(209px, 189px); }
+  93.2% { transform: translate(182px, 165px); }
+  94.9% { transform: translate(136px, 160px); }
+  96.6% { transform: translate(90px, 197px); }
+  98.3% { transform: translate(63px, 240px); }
+  100% { transform: translate(54px, 258px); }
+}
+
+/* ---------- connect: devices linked by flowing lines ---------- */
+
+.r-motif--connect svg { width: 22em; }
+.r-motif--connect rect { fill: var(--r-motif-ink); stroke: var(--r-motif-c); stroke-width: 2; }
+.r-motif--connect path {
+  fill: none;
+  stroke: var(--r-motif-c);
+  stroke-width: 2;
+  stroke-dasharray: 5 7;
+  animation-name: r-motif-flow;
+  animation-timing-function: linear;
+}
+@keyframes r-motif-flow { to { stroke-dashoffset: -96; } }
+
+/* ---------- appsie: app icons dropping onto a shelf, a row at a time ---------- */
+
+.r-motif--appsie { --r-motif-round: 6s; }
+.r-motif--appsie > i { display: grid; gap: 1.1em; }
+.r-motif--appsie > i > i {
+  display: grid;
+  grid-template-columns: repeat(4, 3em);
+  gap: 0.8em;
+  padding-bottom: 0.6em;
+  border-bottom: 0.15em solid var(--r-line);
+}
+.r-motif--appsie b {
+  height: 3em;
+  border-radius: 0.84em;
+  background: var(--r-motif-c);
+  animation-name: r-motif-drop;
+  animation-delay: calc(var(--row, 0s) + var(--col, 0s));
+}
+.r-motif--appsie b:nth-child(even), .r-motif--appsie > i > i:nth-child(2) > b:nth-child(odd) { background: var(--r-motif-mid); }
+.r-motif--appsie > i > i:nth-child(2) > b:nth-child(even) { background: var(--r-motif-c); }
+.r-motif--appsie > i > i:nth-child(2) { --row: 0.7s; }
+.r-motif--appsie > i > i:nth-child(3) { --row: 1.4s; }
+.r-motif--appsie b:nth-child(2) { --col: 0.12s; }
+.r-motif--appsie b:nth-child(3) { --col: 0.24s; }
+.r-motif--appsie b:nth-child(4) { --col: 0.36s; }
+@keyframes r-motif-drop {
+  0% { opacity: 0; transform: translateY(-5em); }
+  12%, 84% { opacity: 1; transform: none; }
+  100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+
+/* ---------- gate: a long link shrinking inside the outline of its old length ---------- */
+
+.r-motif--gate > i {
+  position: relative;
+  width: 22em;
+  height: 4.4em;
+  border-radius: 99em;
+  outline: 0.15em dashed var(--r-motif-line);
+  outline-offset: -0.15em;
+}
+.r-motif--gate b {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  width: 38%;
+  padding: 0 1.25em;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 99em;
+  /* Covers the outline, so it matches whatever the motif sits on */
+  background: var(--r-motif-bg, var(--r-bg));
+  animation-name: r-motif-shorten;
+  animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+}
+.r-motif--gate b::before { content: ''; flex: 0 0 1.9em; height: 1.9em; border-radius: 50%; background: var(--r-motif-c); }
+.r-motif--gate b::after { content: ''; flex: 1; min-width: 0; height: 0.63em; border-radius: 0.32em; background: var(--r-motif-mid); }
+@keyframes r-motif-shorten {
+  0%, 25% { width: 100%; }
+  55%, 90% { width: 38%; }
+  100% { width: calc(100% - 62% * var(--r-motif-out, 0)); }
+}
+
+/* ---------- authenticator: a countdown ring and its code ---------- */
+
+.r-motif--authenticator { --r-motif-round: 6s; }
+.r-motif--authenticator > i { display: flex; align-items: center; gap: 1.4em; }
+.r-motif--authenticator svg { width: 5.6em; height: 5.6em; }
+.r-motif--authenticator circle { fill: none; stroke-width: 6; }
+.r-motif--authenticator circle:first-child { stroke: var(--r-line); }
+.r-motif--authenticator circle + circle {
+  stroke: var(--r-motif-c);
+  stroke-dasharray: 157;
+  stroke-dashoffset: 52;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: r-motif-count;
+  animation-timing-function: linear;
+}
+.r-motif--authenticator i i { display: grid; grid-template-columns: repeat(6, 2.2em); gap: 0.5em; }
+.r-motif--authenticator b {
+  display: grid;
+  place-items: center;
+  height: 3.4em;
+  border: 0.15em solid color-mix(in srgb, var(--r-motif-c) 50%, transparent);
+  border-radius: 0.7em;
+  background: var(--r-motif-ink);
+}
+.r-motif--authenticator b::after {
+  content: '';
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  background: var(--r-motif-c);
+  animation-name: r-motif-code;
+  animation-delay: calc(var(--n, 0) * 40ms);
+}
+.r-motif--authenticator b:nth-child(2) { --n: 1; }
+.r-motif--authenticator b:nth-child(3) { --n: 2; }
+.r-motif--authenticator b:nth-child(4) { --n: 3; }
+.r-motif--authenticator b:nth-child(5) { --n: 4; }
+.r-motif--authenticator b:nth-child(6) { --n: 5; }
+/* Drains, then a new code arrives with a full ring */
+@keyframes r-motif-count {
+  0% { stroke-dashoffset: 0; }
+  94% { stroke-dashoffset: 157; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes r-motif-code {
+  0%, 94% { transform: none; }
+  97% { transform: scale(0); }
+  100% { transform: none; }
+}
+
+/* ---------- reel: three screens playing in sync ---------- */
+
+.r-motif--reel > i { display: flex; gap: 1em; padding-bottom: 1.4em; }
+.r-motif--reel b {
+  position: relative;
+  width: 7em;
+  height: 5.2em;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 0.9em;
+}
+.r-motif--reel b::before {
+  content: '';
+  position: absolute;
+  top: 1.4em;
+  left: 2.6em;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  border-left: 1.6em solid var(--r-motif-c);
+}
+/* The progress bar: the inset shadow is the played part */
+.r-motif--reel b::after {
+  content: '';
+  position: absolute;
+  right: 0.6em;
+  bottom: -1.4em;
+  left: 0.6em;
+  height: 0.3em;
+  border-radius: 0.15em;
+  background: var(--r-line);
+  box-shadow: inset 3.6em 0 var(--r-motif-c);
+  animation-name: r-motif-play;
+  animation-timing-function: linear;
+}
+@keyframes r-motif-play {
+  from { box-shadow: inset 0 0 var(--r-motif-c); }
+  to { box-shadow: inset 5.4em 0 var(--r-motif-c); }
+}
+
+/* ---------- embed: a card snapping into a page ---------- */
+
+.r-motif--embed { --r-motif-round: 3.5s; }
+.r-motif--embed > i {
+  display: grid;
+  align-content: start;
+  gap: 0.8em;
+  width: 20em;
+  height: 14em;
+  padding: 1.4em;
+  border: 0.15em solid var(--r-line-strong);
+  border-radius: 1.2em;
+}
+.r-motif--embed b { height: 0.8em; border-radius: 0.4em; background: var(--r-line); }
+.r-motif--embed b:nth-child(2) { width: 70%; }
+.r-motif--embed b:nth-child(3) {
+  position: relative;
+  height: 4.6em;
+  border: 0.15em dashed var(--r-line-strong);
+  border-radius: 0.9em;
+  background: none;
+}
+.r-motif--embed b:nth-child(3)::after {
+  content: '';
+  position: absolute;
+  inset: -0.15em;
+  border-radius: 0.9em;
+  background: var(--r-motif-c);
+  animation-name: r-motif-snap;
+  animation-timing-function: cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes r-motif-snap {
+  0% { opacity: 0; transform: translate(11em, -7em) rotate(12deg); }
+  30%, 85% { opacity: 1; transform: none; }
+  100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+
+/* ---------- place: a pixel canvas filling in ---------- */
+
+.r-motif--place { --r-motif-round: 5s; }
+.r-motif--place > i { display: grid; grid-template-columns: repeat(10, 1.8em); gap: 0.3em; }
+.r-motif--place b { height: 1.8em; border-radius: 0.3em; background: color-mix(in srgb, var(--r-motif-c) 6%, #141414); }
+/* A fixed scatter of painted pixels in the Rotur app colours */
+.r-motif--place b:nth-child(3n+1)::after, .r-motif--place b:nth-child(7n+2)::after {
+  content: '';
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--p, var(--r-motif-c));
+  animation-name: r-motif-paint;
+  animation-delay: var(--d, 0s);
+}
+.r-motif--place b:nth-child(5n+1) { --p: #ffc35a; }
+.r-motif--place b:nth-child(5n+2) { --p: #8aa2ff; }
+.r-motif--place b:nth-child(5n+3) { --p: #74d48f; }
+.r-motif--place b:nth-child(5n+4) { --p: #56c6e8; }
+.r-motif--place b:nth-child(4n+1) { --d: 0.4s; }
+.r-motif--place b:nth-child(4n+2) { --d: 1.1s; }
+.r-motif--place b:nth-child(4n+3) { --d: 0.7s; }
+.r-motif--place b:nth-child(6n) { --d: 1.6s; }
+@keyframes r-motif-paint {
+  0%, 20% { opacity: 0; }
+  30%, 90% { opacity: 1; }
+  100% { opacity: var(--r-motif-out, 0); }
+}
+
+/* ---------- devfund: a jar filling to its goal ---------- */
+
+.r-motif--devfund > i {
+  position: relative;
+  width: 9em;
+  height: 14em;
+  overflow: hidden;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 2.2em;
+}
+.r-motif--devfund > i::before {
+  content: '';
+  position: absolute;
+  top: 3em;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  border-top: 0.2em dashed color-mix(in srgb, var(--r-motif-c) 60%, transparent);
+}
+.r-motif--devfund > i::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 80%;
+  background: var(--r-motif-c);
+  animation-name: r-motif-fill;
+  animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
+}
+@keyframes r-motif-fill {
+  0% { height: 10%; }
+  70%, 90% { height: 80%; }
+  100% { height: calc(10% + 70% * var(--r-motif-out, 0)); }
+}
+
+/* ---------- git: commits on a branch merging back ---------- */
+
+.r-motif--git svg { width: 22em; }
+.r-motif--git path { fill: none; stroke: var(--r-motif-mid); stroke-width: 3; stroke-linecap: round; }
+.r-motif--git circle {
+  fill: var(--r-motif-ink);
+  stroke: var(--r-motif-c);
+  stroke-width: 3;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: r-motif-commit;
+  animation-delay: calc(var(--n, 0) * 0.3s);
+}
+.r-motif--git circle:nth-of-type(n+3):nth-of-type(-n+4) { fill: var(--r-motif-c); }
+.r-motif--git circle:nth-of-type(2) { --n: 1; }
+.r-motif--git circle:nth-of-type(3) { --n: 2; }
+.r-motif--git circle:nth-of-type(4) { --n: 3; }
+.r-motif--git circle:nth-of-type(5) { --n: 4; }
+.r-motif--git circle:nth-of-type(6) { --n: 5; }
+@keyframes r-motif-commit {
+  0% { opacity: 0; transform: scale(0); }
+  10%, 85% { opacity: 1; transform: none; }
+  100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+
+/* ---------- pounce: a post getting a like ---------- */
+
+.r-motif--pounce > i {
+  --like: #f0a3c4;
+  display: grid;
+  grid-template-columns: 3.2em 1fr;
+  gap: 0.9em 1.2em;
+  width: 20em;
+  padding: 1.6em;
+  border: 0.15em solid var(--r-motif-line);
+  border-radius: 1.4em;
+  background: var(--r-motif-ink);
+  animation-name: r-motif-rise;
+}
+.r-motif--pounce b { grid-column: 2; height: 0.7em; border-radius: 0.35em; background: var(--r-motif-mid); }
+.r-motif--pounce b:first-child { grid-column: 1; grid-row: 1 / span 3; height: 3.2em; border-radius: 50%; background: var(--r-motif-c); }
+.r-motif--pounce b:nth-child(2) { width: 45%; height: 0.9em; background: var(--r-motif-c); }
+.r-motif--pounce b:nth-child(4) { width: 70%; }
+.r-motif--pounce svg { grid-column: 2; width: 2.2em; animation-name: r-motif-heart; }
+.r-motif--pounce path { fill: var(--like); stroke: var(--like); stroke-width: 2; stroke-linejoin: round; animation-name: r-motif-like; }
+@keyframes r-motif-like {
+  0%, 40% { fill: transparent; stroke: var(--r-motif-mid); }
+  44%, 100% { fill: var(--like); stroke: var(--like); }
+}
+@keyframes r-motif-heart {
+  0%, 40% { transform: none; }
+  45% { transform: scale(1.35); }
+  52%, 100% { transform: none; }
+}
+
+/* ---------- sable: you ask, she types, the reply lands, then the steps tick off ---------- */
+
+.r-motif--sable {
+  --r-motif-round: 12s;
+  --r-motif-w: 46;
+  --r-motif-h: 38;
+  --strong: color-mix(in srgb, var(--r-motif-c) 55%, #000);
+  --done: color-mix(in srgb, var(--r-motif-c) 80%, #000);
+}
+.r-motif--sable > i { display: grid; gap: 1.4em; width: 44em; }
+.r-motif--sable > i > i:nth-child(1) {
+  display: grid;
+  justify-self: end;
+  gap: 1em;
+  width: 56%;
+  padding: 1.8em 2em;
+  border-radius: 2em 2em 0.6em 2em;
+  background: var(--r-motif-c);
+  animation-name: r-motif-sable-you;
+}
+.r-motif--sable > i > i:nth-child(1) b { height: 0.8em; border-radius: 0.4em; background: var(--r-motif-ink); opacity: 0.55; }
+.r-motif--sable > i > i:nth-child(1) b:last-child { width: 62%; }
+/* The reply starts as a typing pill in its corner, then opens */
+.r-motif--sable > i > i:nth-child(2) {
+  position: relative;
+  display: grid;
+  gap: 1.2em;
+  padding: 2em 2.2em;
+  border-radius: 2em 2em 2em 0.6em;
+  background: var(--r-motif-soft);
+  animation-name: r-motif-sable-reply;
+}
+.r-motif--sable > i > i:nth-child(2) > b {
+  height: 0.8em;
+  border-radius: 0.4em;
+  background: var(--strong);
+  transform-origin: left;
+  animation-name: r-motif-sable-line;
+  animation-delay: calc(var(--n, 0) * 0.25s);
+}
+.r-motif--sable > i > i:nth-child(2) > b:nth-of-type(1) { width: 92%; }
+.r-motif--sable > i > i:nth-child(2) > b:nth-of-type(2) { --n: 1; }
+.r-motif--sable > i > i:nth-child(2) > b:nth-of-type(3) { --n: 2; width: 58%; }
+.r-motif--sable > i > i:nth-child(2) > i {
+  position: absolute;
+  top: 1.8em;
+  left: 2.2em;
+  display: flex;
+  gap: 0.6em;
+  opacity: 0;
+  animation-name: r-motif-sable-dots;
+  animation-timing-function: linear;
+}
+.r-motif--sable > i > i:nth-child(2) > i b {
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  background: var(--r-motif-c);
+  animation-name: r-motif-sable-bob;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.r-motif--sable > i > i:nth-child(2) > i b:nth-child(2) { animation-delay: 0.15s; }
+.r-motif--sable > i > i:nth-child(2) > i b:nth-child(3) { animation-delay: 0.3s; }
+.r-motif--sable > i > i:nth-child(3) {
+  display: grid;
+  gap: 1.4em;
+  width: 78%;
+  padding: 1.8em 2em;
+  border: 0.15em solid var(--r-motif-line);
+  border-radius: 1.8em;
+  animation-name: r-motif-sable-steps;
+}
+.r-motif--sable > i > i:nth-child(3) > i { display: flex; align-items: center; gap: 1.2em; }
+/* A step: its tick, then its text */
+.r-motif--sable > i > i:nth-child(3) > i::after {
+  content: '';
+  width: var(--w, 70%);
+  height: 0.8em;
+  border-radius: 0.4em;
+  background: var(--done);
+  animation-name: r-motif-sable-done;
+  animation-delay: calc(var(--n, 0) * 0.6s);
+}
+.r-motif--sable > i > i:nth-child(3) > i:nth-child(2) { --n: 1; --w: 52%; }
+.r-motif--sable > i > i:nth-child(3) > i:nth-child(3) { --n: 2; --w: 62%; }
+.r-motif--sable > i > i:nth-child(3) > i b {
+  position: relative;
+  flex: 0 0 auto;
+  width: 2em;
+  height: 2em;
+  border: 0.2em solid var(--r-motif-c);
+  border-radius: 50%;
+  background: var(--r-motif-c);
+  animation-name: r-motif-sable-tick;
+  animation-delay: calc(var(--n, 0) * 0.6s);
+}
+.r-motif--sable > i > i:nth-child(3) > i b::after {
+  content: '';
+  position: absolute;
+  top: 0.1em;
+  left: 0.5em;
+  width: 0.4em;
+  height: 0.9em;
+  border: solid var(--r-motif-ink);
+  border-width: 0 0.2em 0.2em 0;
+  transform: rotate(45deg);
+  animation-name: r-motif-sable-check;
+  animation-delay: inherit;
+}
+/* The confirmation, pressed before anything happens */
+.r-motif--sable > i > i:nth-child(3) > b {
+  justify-self: end;
+  width: 6.4em;
+  height: 2.4em;
+  border: 0.15em solid var(--r-motif-c);
+  border-radius: 1.2em;
+  background: var(--r-motif-c);
+  animation-name: r-motif-sable-ok;
+}
+@keyframes r-motif-sable-you {
+  0% { opacity: 0; transform: translateY(1em); }
+  4%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+@keyframes r-motif-sable-reply {
+  0%, 7% { opacity: 0; transform: translateY(1em); clip-path: inset(0 calc(100% - 8.4em) calc(100% - 4.4em) 0 round 2em 2em 2em 0.6em); }
+  10%, 25% { opacity: 1; transform: none; clip-path: inset(0 calc(100% - 8.4em) calc(100% - 4.4em) 0 round 2em 2em 2em 0.6em); }
+  31%, 88% { opacity: 1; transform: none; clip-path: inset(0 round 2em 2em 2em 0.6em); }
+  94%, 100% { opacity: var(--r-motif-out, 0); transform: none; clip-path: inset(0 round 2em 2em 2em 0.6em); }
+}
+@keyframes r-motif-sable-dots {
+  0%, 10% { opacity: 0; }
+  12%, 24% { opacity: 1; }
+  27%, 100% { opacity: 0; }
+}
+@keyframes r-motif-sable-bob {
+  0%, 60%, 100% { opacity: 0.45; transform: none; }
+  30% { opacity: 1; transform: translateY(-0.4em); }
+}
+@keyframes r-motif-sable-line {
+  0%, 28% { transform: scaleX(0); }
+  35%, 100% { transform: none; }
+}
+@keyframes r-motif-sable-steps {
+  0%, 42% { opacity: 0; transform: translateY(1em); }
+  47%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: var(--r-motif-out, 0); transform: none; }
+}
+@keyframes r-motif-sable-ok {
+  0%, 52% { background: transparent; transform: none; }
+  54% { background: transparent; transform: scale(0.9); }
+  56%, 100% { background: var(--r-motif-c); transform: none; }
+}
+@keyframes r-motif-sable-tick {
+  0%, 59% { background: transparent; border-color: var(--strong); }
+  62%, 100% { background: var(--r-motif-c); border-color: var(--r-motif-c); }
+}
+@keyframes r-motif-sable-check {
+  0%, 60% { transform: rotate(45deg) scale(0); }
+  64%, 100% { transform: rotate(45deg); }
+}
+@keyframes r-motif-sable-done {
+  0%, 59% { background: var(--strong); }
+  62%, 100% { background: var(--done); }
+}
+
+/* ---------- originChats: messages arriving beside a server rail ---------- */
+
+.r-motif--originchats { --r-motif-round: 5s; }
+.r-motif--originchats > i { display: flex; gap: 1.4em; width: 22em; height: 14em; }
+.r-motif--originchats > i > i:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  padding: 0.8em;
+  border-radius: 1.6em;
+  background: var(--r-motif-ink);
+}
+.r-motif--originchats > i > i:first-child b { width: 2.8em; height: 2.8em; border-radius: 50%; background: color-mix(in srgb, var(--r-motif-c) 28%, #000); }
+.r-motif--originchats > i > i:first-child b:first-child { border-radius: 0.9em; background: var(--r-motif-c); }
+.r-motif--originchats > i > i:last-child { display: flex; flex: 1; flex-direction: column; justify-content: flex-end; gap: 0.8em; }
+.r-motif--originchats > i > i:last-child b {
+  width: var(--w, 80%);
+  height: 2.6em;
+  border-radius: 1.3em 1.3em 1.3em 0.3em;
+  background: var(--r-motif-soft);
+  transform-origin: bottom left;
+  animation-name: r-motif-rise;
+  animation-delay: var(--d, 0s);
+}
+.r-motif--originchats > i > i:last-child b:nth-child(2) { --w: 55%; --d: 0.6s; }
+.r-motif--originchats > i > i:last-child b:nth-child(3) {
+  --w: 68%;
+  --d: 1.2s;
+  align-self: flex-end;
+  border-radius: 1.3em 1.3em 0.3em 1.3em;
+  background: var(--r-motif-c);
+  transform-origin: bottom right;
+}
+
+/* ---------- rotur: one account plugging into many apps ---------- */
+
+.r-motif--rotur { --r-motif-round: 7s; --r-motif-w: 48; --r-motif-h: 30; }
+.r-motif--rotur svg { width: 48em; }
+.r-motif--rotur path {
+  fill: none;
+  stroke: var(--r-line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  animation-name: r-motif-plug;
+  animation-delay: calc(var(--n, 0) * 0.25s);
+}
+.r-motif--rotur circle { fill: var(--r-motif-c); }
+.r-motif--rotur rect {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation-name: r-motif-land;
+  animation-delay: calc(var(--n, 0) * 0.25s);
+}
+.r-motif--rotur g > :nth-child(2) { --n: 1; }
+.r-motif--rotur g > :nth-child(3) { --n: 2; }
+.r-motif--rotur g > :nth-child(4) { --n: 3; }
+.r-motif--rotur g > :nth-child(5) { --n: 4; }
+.r-motif--rotur g > :nth-child(6) { --n: 5; }
+.r-motif--rotur g > :nth-child(7) { --n: 6; }
+.r-motif--rotur g > :nth-child(8) { --n: 7; }
+.r-motif--rotur rect:nth-of-type(1) { fill: #c299cf; }
+.r-motif--rotur rect:nth-of-type(2) { fill: #8aa2ff; }
+.r-motif--rotur rect:nth-of-type(3) { fill: #f7a46b; }
+.r-motif--rotur rect:nth-of-type(4) { fill: #ffc35a; }
+.r-motif--rotur rect:nth-of-type(5) { fill: #56c6e8; }
+.r-motif--rotur rect:nth-of-type(6) { fill: #a093ff; }
+.r-motif--rotur rect:nth-of-type(7) { fill: #b7d96b; }
+.r-motif--rotur rect:nth-of-type(8) { fill: #59d4b4; }
+@keyframes r-motif-plug {
+  0% { opacity: 1; stroke-dashoffset: 1; }
+  12%, 88% { opacity: 1; stroke-dashoffset: 0; }
+  100% { opacity: var(--r-motif-out, 0); stroke-dashoffset: 0; }
+}
+@keyframes r-motif-land {
+  0%, 10% { opacity: 1; transform: scale(0); }
+  16%, 88% { opacity: 1; transform: none; }
+  100% { opacity: var(--r-motif-out, 0); transform: none; }
+}

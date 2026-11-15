@@ -1,1 +1,8 @@
+node_modules
+dist
+dist-ssr
+.osl
+public/osl/osl.wasm
+public/osl/wasm_exec.js
 .DS_Store
+*.tsbuildinfo

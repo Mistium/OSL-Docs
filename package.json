@@ -1,0 +1,29 @@
+{
+  "name": "osl-docs",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The OSL documentation site: an interactive course, tutorials and a reference for every package.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && bun scripts/prerender.ts",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "bun test",
+    "examples": "bun scripts/examples.ts",
+    "examples:check": "bun scripts/examples.ts --check",
+    "osl:assets": "bun scripts/osl-assets.ts"
+  },
+  "dependencies": {
+    "highlight.js": "11.12.0",
+    "lucide-preact": "1.16.0",
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "2.10.6",
+    "@types/bun": "1.3.5",
+    "preact-render-to-string": "6.6.3",
+    "typescript": "~6.0.2",
+    "vite": "8.3.4"
+  }
+}
