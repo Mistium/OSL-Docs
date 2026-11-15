@@ -71,6 +71,21 @@ Nobody can run an action they weren't shown: the server only runs a handler from
 viewer got. A `<link>`, `<input>` or `<checkbox>` can't sit inside an element that runs a handler,
 since a click on it would run that handler too; the compiler says so and asks you to move it beside.
 
+A screen draws again by itself after a handler runs and after a function sets a global, so a
+thread that fetches something shows it as soon as it assigns it:
+
+```osl
+string status = "loading"
+
+thread.new(def() (
+  status = loadStatus()
+))
+```
+
+A change the compiler can't see, such as an item added to a list a global holds, calls
+`ui.refresh()` to redraw every screen. Calls within one frame draw once. Don't call it from inside a
+view, which would draw forever.
+
 ## Layout
 
 Every axis of every element follows three rules: **hug** (the default, as big as its content),
@@ -92,19 +107,42 @@ on top of each other) and `<grid>` with `columns=3` or `columns=auto` and `minCo
 takes up the space left between siblings, which is how you push something to one end. A row or column
 turns with `direction=column` / `direction=row`.
 
+### Absolute positioning
+
+`<absolute>` takes its children out of the layout. It doesn't move its siblings or count toward its
+parent's size, and it draws on top of them. Its `pad` props are its distance from the parent's
+edges, not space inside it:
+
+```osl
+<column>
+  <text>in the layout</text>
+  <absolute pad.top=12 pad.right=12>
+    <button on:click=self.close>×</button>
+  </absolute>
+</column>
+```
+
+It sits from the top and left, unless only `pad.bottom` or only `pad.right` is given, which sit it
+from that edge. `width=fill` or `height=fill` stretches it between both edges. The edges are inside
+the parent's border, a percentage is of the parent's size, and inside a `<scroll>` it scrolls with
+the content. Absolutes draw in the order they're written, above everything else in the parent.
+
+Inside, its children lay out as a column does, and `direction`, `gap` and `align` work as on one.
+State prefixes don't apply to its position or size: `hover:pad.top` does nothing.
+
 ## Styles
 
-Props can be gathered into a named style and spread with `..name`, which keeps a view readable:
+Props can be gathered into a named style and spread with `...name`, which keeps a view readable:
 
 ```osl
 style card = (pad: 20, radius: 14, bg: theme.card, border: 1, borderColor: theme.line)
 
-return <column ..card gap=12> <text>hello</text> </column>
+return <column ...card gap=12> <text>hello</text> </column>
 ```
 
 A style spans as many lines as you like, and one written inside a `view()` works too, so it can sit
 next to the tag it belongs to. Props on the tag itself win over the spread, and a spread has to be a
-style's name: `..(pad: 12)` is a syntax error.
+style's name: `...(pad: 12)` is a syntax error.
 
 Every prop also takes a state prefix, for how the element looks under that state: `hover:bg="#f0f3f6"`,
 `focus:borderColor=theme.accent`, `pressed:opacity=0.8`, `disabled:opacity=0.5`, and `narrow:` for a
@@ -134,6 +172,7 @@ Tags:
 | `<column>`, `<row>`, `<box>` | Lay children out; the direction names the axis. |
 | `<scroll>` | A column that scrolls its content. |
 | `<stack>` | Children drawn on top of each other. |
+| `<absolute pad.top=... pad.left=...>` | Sits outside its parent's layout, at its `pad` values from the parent's edges. |
 | `<grid columns=3 minColumn=200>` | Cells in rows; `columns=auto` fits as many as the minimum allows. |
 | `<spacer/>` | Takes the space left over between siblings. |
 | `<text>` | Text; `${value}` inside interpolates. |
@@ -174,6 +213,7 @@ Functions:
 | `ui.part(name, factory, props)` | `ui.node` | Mounts a component where a container's child comes from code. |
 | `ui.handler(fn, ...args)` | `ui.handler` | An action with its arguments fixed now, for a handler that needs one. |
 | `ui.bind(target, field)` | `ui.binding` | The binding an input takes, outside a tag. |
+| `ui.refresh()` | `void` | Redraws every screen after a change the UI can't see, such as a list a global holds growing. |
 
 ## Showing a UI
 
