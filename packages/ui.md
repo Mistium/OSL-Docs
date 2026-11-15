@@ -79,7 +79,7 @@ reads; calls within one frame draw once:
 string status = "loading"
 
 thread.new(def() (
-  status = requests.get(url)!.body
+  status = loadStatus()
   ui.refresh()
 ))
 ```
