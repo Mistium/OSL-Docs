@@ -203,7 +203,9 @@ switch login (
 ```
 
 A case that names a value takes a clause of its own, since the name means nothing in the other
-cases. A switch on a nullable enum, such as `Login?`, may have a `case null`.
+cases. A switch on a nullable enum, such as `Login?`, may have a `case null`. A switch whose cases
+cover every variant (and `null`, for a nullable enum) counts as returning when every case returns,
+as a `match` that covers every variant does.
 
 A switch on a `result` takes `ok` and `err` cases the same way:
 
