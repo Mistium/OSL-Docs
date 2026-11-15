@@ -56,7 +56,9 @@ string text = qr.read(img.open("photo.jpg")!)!
 
 `qr.read(picture)` gives the text of the first QR code or barcode it finds in the image. It reads
 QR codes, Code 128, Code 39, Code 93, EAN-13, EAN-8, UPC-A, UPC-E, ITF and Codabar. A UPC-A
-barcode reads as its 12 digits. Fails with `NotFoundError` when the image has no code it can read.
+barcode reads as its 12 digits, and so does an EAN-13 that starts with `0`, which is the same barcode:
+`qr.read` gives it back without the `0`. Fails with `NotFoundError` when the image has no code it can
+read, and `StateError` when the image is closed.
 
 ## API reference
 
