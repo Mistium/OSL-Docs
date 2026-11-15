@@ -71,18 +71,20 @@ Nobody can run an action they weren't shown: the server only runs a handler from
 viewer got. A `<link>`, `<input>` or `<checkbox>` can't sit inside an element that runs a handler,
 since a click on it would run that handler too; the compiler says so and asks you to move it beside.
 
-A handler's changes redraw the screen by themselves. A change made anywhere else, such as a
-thread setting what it fetched, calls `ui.refresh()` to redraw every screen from the state it
-reads; calls within one frame draw once:
+A screen draws again by itself after a handler runs and after a function sets a global, so a
+thread that fetches something shows it as soon as it assigns it:
 
 ```osl
 string status = "loading"
 
 thread.new(def() (
   status = loadStatus()
-  ui.refresh()
 ))
 ```
+
+A change the compiler can't see, such as an item added to a list a global holds, calls
+`ui.refresh()` to redraw every screen. Calls within one frame draw once. Don't call it from inside a
+view, which would draw forever.
 
 ## Layout
 
@@ -187,7 +189,7 @@ Functions:
 | `ui.part(name, factory, props)` | `ui.node` | Mounts a component where a container's child comes from code. |
 | `ui.handler(fn, ...args)` | `ui.handler` | An action with its arguments fixed now, for a handler that needs one. |
 | `ui.bind(target, field)` | `ui.binding` | The binding an input takes, outside a tag. |
-| `ui.refresh()` | `void` | Redraws every screen after a change made outside a handler. |
+| `ui.refresh()` | `void` | Redraws every screen after a change the UI can't see, such as a list a global holds growing. |
 
 ## Showing a UI
 
