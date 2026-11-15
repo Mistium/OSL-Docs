@@ -217,7 +217,7 @@ export function Playground() {
                 {canRun && (
                   <details class="playground__stdin">
                     <summary>Standard input</summary>
-                    <textarea value={stdin} onInput={(e) => setStdin((e.currentTarget as HTMLTextAreaElement).value)} placeholder="Text the program reads with input()" />
+                    <textarea value={stdin} onInput={(e) => setStdin((e.currentTarget as HTMLTextAreaElement).value)} placeholder="Text the program reads with ask()" />
                   </details>
                 )}
               </>

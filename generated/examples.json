@@ -1,4 +1,27 @@
 {
+ "07b46beb3402d": {
+  "output": "37\nHello, world\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "0a81bf25734f9": {
+  "output": "TypeError: Cannot reassign const variable 'maxPlayers'\n   |\n 2 | maxPlayers = 5\n   | ^^^^^^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot reassign const variable 'maxPlayers'",
+    "file": "main.osl",
+    "line": 2,
+    "column": 0,
+    "length": 0,
+    "rendered": "TypeError: Cannot reassign const variable 'maxPlayers'\n   |\n 2 | maxPlayers = 5\n   | ^^^^^^^^^^\nin: main.osl:2"
+   }
+  ],
+  "osl": "9.1.0"
+ },
  "0cc9ad8d899fd": {
   "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 1 | int count = \"three\"\n   |             ^^^^^^^\nin: main.osl:1",
   "exit": 1,
@@ -37,6 +60,59 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "1d38ca3869ecc": {
+  "output": "text: HI\na whole number\na number\na array\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "201b9964278d0": {
+  "output": "Lisbon has 545000 people\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "229e9df5f02b9": {
+  "output": "Hello\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "33d8023918253": {
+  "output": "false\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "3b3d75d45a45a": {
+  "output": "2.4499999999999997\n3.5\n3\n1\n1024\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "43d593cf78825": {
+  "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 | score = \"ten\"\n   |         ^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check",
+    "file": "main.osl",
+    "line": 2,
+    "column": 8,
+    "length": 0,
+    "rendered": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 | score = \"ten\"\n   |         ^^^^^\nin: main.osl:2"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "48c817e05c74e": {
+  "output": "728590\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "4925f953aad4f": {
   "output": "Hello, world\n",
   "exit": 0,
@@ -49,8 +125,96 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "4cadafe3e26fb": {
+  "output": "Ada 36 1.65 true\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4e6d184c926e8": {
+  "output": "Hello, world\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "56abe30d58c2b": {
   "output": "[1,4,9,16]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "594392e9f4acd": {
+  "output": "one\ntwo three\n42\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "612d29d50d0db": {
+  "output": "HI\n(nothing)\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6a2e2e18cd148": {
+  "output": "Hello from OSL\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6c5a9f1572ccb": {
+  "output": "Hello, friend\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6e59797b40d53": {
+  "output": "43\n84!\n7\ntrue false\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "711ca9217b711": {
+  "output": "4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "718d72e2beec4": {
+  "output": "0\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'apples' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 1,
+    "column": 4,
+    "length": 6
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'applePrice' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 2,
+    "column": 4,
+    "length": 10
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'loaf' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 3,
+    "column": 4,
+    "length": 4
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "83ad4c342e1b6": {
+  "output": "193\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -61,14 +225,105 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "90f66ccc42f2a": {
+  "output": "Space Race for up to 4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "93f410cac67cc": {
+  "output": "Unclosed string literal - missing closing \"\n   |\n 1 | log \"Hello, world\n   |     ^\nin: main.osl:1",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-SYNTAX",
+    "message": "SyntaxError: Unexpected '\"Hello, world'",
+    "file": "main.osl",
+    "line": 1,
+    "column": 4,
+    "length": 0,
+    "rendered": "SyntaxError: Unexpected '\"Hello, world'\n   |\n 1 | log \"Hello, world\n   |     ^^^^^^^^^^^^^\nin: main.osl:1"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "94c84968a062c": {
+  "output": "2.5\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "986d8cafec417": {
+  "output": "82\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "998bf4371fc37": {
+  "output": "SyntaxError: 'cuont' is not declared. Declare it as `int cuont = count + 1` or `auto cuont = count + 1`\n   |\n 2 | cuont = count + 1\n   | ^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-SYNTAX",
+    "message": "SyntaxError: 'cuont' is not declared. Declare it as `int cuont = count + 1` or `auto cuont = count + 1`",
+    "file": "main.osl",
+    "line": 2,
+    "column": 0,
+    "length": 0,
+    "rendered": "SyntaxError: 'cuont' is not declared. Declare it as `int cuont = count + 1` or `auto cuont = count + 1`\n   |\n 2 | cuont = count + 1\n   | ^^^^^\nin: main.osl:2"
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'cuont' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 2,
+    "column": 0,
+    "length": 5
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "9dcbf0ea37a86": {
+  "output": "null\nAce\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a5f8af0c8f47e": {
+  "output": "setting up\nrunning\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "a7ddd0025c4b2": {
   "output": "5\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "b26f19398aa9f": {
+  "output": "2\n2\n2 3 4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "b2b3e8370a52d": {
   "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "b307ca72c46d2": {
+  "output": "#7\n#a1\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c05211e7045b3": {
+  "output": "Hello\nI am learning OSL\n6\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -111,6 +366,12 @@
  },
  "ed01aad1e9e57": {
   "output": "1. Hello, Ada!\n2. Hello, Grace!\n3. Hello, Linus!\nONE BINARY, NO RUNTIME!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f622735e43778": {
+  "output": "270\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"

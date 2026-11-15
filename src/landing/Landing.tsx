@@ -4,7 +4,7 @@
 
 import { useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
-import { ArrowRight, BookOpen, Boxes, Gamepad2, Globe, Hammer, LayoutPanelLeft, MessagesSquare, Cpu, ShieldCheck, Feather, TerminalSquare, Zap, Library } from "lucide-preact";
+import { ArrowRight } from "lucide-preact";
 import index from "virtual:docs-index";
 import { CodeExample, CopyButton } from "../components/CodeExample";
 import { highlightCode } from "../lib/highlight";
@@ -34,23 +34,23 @@ function Install() {
 
 const PILLARS = [
   {
-    icon: <Feather aria-hidden="true" />,
-    title: "Readable",
+    tag: "readable",
+    title: "Read it aloud",
     text: "A file runs from top to bottom. Types come first, blocks are parentheses, and counting starts at one. You can read an OSL program aloud.",
   },
   {
-    icon: <Zap aria-hidden="true" />,
-    title: "Fast",
+    tag: "fast",
+    title: "Native, with nothing to install",
     text: "OSL compiles to Go, and Go builds a native executable. No virtual machine and no runtime to install: one file you copy to a server and run.",
   },
   {
-    icon: <ShieldCheck aria-hidden="true" />,
-    title: "Dependable",
+    tag: "dependable",
+    title: "Checked before it runs",
     text: "Declare types where they matter and let the rest be inferred. Failure is a value in the signature, and the compiler follows your guards.",
   },
   {
-    icon: <Library aria-hidden="true" />,
-    title: "Complete",
+    tag: "complete",
+    title: "The whole toolkit in the box",
     text: "Web servers, databases, desktop apps, games, threads and crypto ship with the compiler. Anything else is one Go import away.",
   },
 ];
@@ -121,12 +121,12 @@ const BELIEFS: Belief[] = [
 ];
 
 const SHOWCASE = [
-  { key: "server", label: "Web servers", icon: <Globe aria-hidden="true" />, text: "Routes, JSON, middleware, WebSockets and TLS from std:serve and std:ws. One binary serves the API and the site.", href: "/build/web-api", cta: "Build a web API" },
-  { key: "ui", label: "Desktop apps", icon: <LayoutPanelLeft aria-hidden="true" />, text: "Write a component once with std:ui's markup, and show it in a native window or as a live web page.", href: "/build/desktop-app", cta: "Build a desktop app" },
-  { key: "game", label: "Games", icon: <Gamepad2 aria-hidden="true" />, text: "Windows, input, sprites, sound, 3D and physics, through raylib, raygui and box2d.", href: "/build/game", cta: "Build a game" },
-  { key: "cli", label: "Command-line tools", icon: <TerminalSquare aria-hidden="true" />, text: "Read files and arguments, talk to processes and the terminal, and compile to a binary that starts instantly.", href: "/build/cli-tool", cta: "Build a CLI tool" },
-  { key: "threads", label: "Concurrent programs", icon: <Cpu aria-hidden="true" />, text: "Threads, channels, locks and parallel maps, with collections that stay safe when threads share them.", href: "/learn/concurrency", cta: "Learn concurrency" },
-  { key: "bot", label: "Chat bots", icon: <MessagesSquare aria-hidden="true" />, text: "Commands, slash commands, embeds and polls on originChats, with reconnection built in.", href: "/build/chat-bot", cta: "Build a chat bot" },
+  { key: "server", label: "Web servers", text: "Routes, JSON, middleware, WebSockets and TLS from std:serve and std:ws. One binary serves the API and the site.", href: "/build/web-api", cta: "Build a web API" },
+  { key: "ui", label: "Desktop apps", text: "Write a component once with std:ui's markup, and show it in a native window or as a live web page.", href: "/build/desktop-app", cta: "Build a desktop app" },
+  { key: "game", label: "Games", text: "Windows, input, sprites, sound, 3D and physics, through raylib, raygui and box2d.", href: "/build/game", cta: "Build a game" },
+  { key: "cli", label: "Command-line tools", text: "Read files and arguments, talk to processes and the terminal, and compile to a binary that starts instantly.", href: "/build/cli-tool", cta: "Build a CLI tool" },
+  { key: "threads", label: "Concurrent programs", text: "Threads, channels, locks and parallel maps, with collections that stay safe when threads share them.", href: "/learn/concurrency", cta: "Learn concurrency" },
+  { key: "bot", label: "Chat bots", text: "Commands, slash commands, embeds and polls on originChats, with reconnection built in.", href: "/build/chat-bot", cta: "Build a chat bot" },
 ];
 
 const TOOLS = [
@@ -143,16 +143,15 @@ function Showcase() {
   const [active, setActive] = useState(SHOWCASE[0].key);
   const current = SHOWCASE.find((s) => s.key === active)!;
   return (
-    <div class="showcase">
-      <div class="showcase__tabs" role="tablist" aria-label="Things to build">
+    <>
+      <div class="segmented" role="tablist" aria-label="Things to build">
         {SHOWCASE.map((s) => (
-          <button key={s.key} type="button" role="tab" aria-selected={s.key === active} class="showcase__tab" onClick={() => setActive(s.key)}>
-            {s.icon}
-            <span>{s.label}</span>
+          <button key={s.key} type="button" role="tab" aria-selected={s.key === active} class="segmented__item" onClick={() => setActive(s.key)}>
+            {s.label}
           </button>
         ))}
       </div>
-      <div class="showcase__panel" role="tabpanel">
+      <div class="showcase" role="tabpanel" aria-label={current.label}>
         <div class="showcase__copy">
           <h3>{current.label}</h3>
           <p>{current.text}</p>
@@ -164,6 +163,17 @@ function Showcase() {
           <Live key={current.key} name={current.key} compact />
         </div>
       </div>
+    </>
+  );
+}
+
+function Head({ id, title, children }: { id: string; title: string; children?: ComponentChildren }) {
+  return (
+    <div class="home-section__head">
+      <h2 id={id} class="home-title">
+        {title}
+      </h2>
+      {children && <p class="home-lede">{children}</p>}
     </div>
   );
 }
@@ -171,65 +181,67 @@ function Showcase() {
 export function Landing() {
   const total = PACKAGE_GROUPS.reduce((n, g) => n + g.packages.length, 0);
   return (
-    <div class="landing">
-      <section class="hero">
-        <div class="hero__stars" aria-hidden="true" />
-        <div class="hero__inner">
-          <div class="hero__copy">
-            <a class="hero__version" href="/install">
-              OSL {index.version} <ArrowRight aria-hidden="true" />
+    <div class="home">
+      <section class="home-hero">
+        <div class="home-hero__copy">
+          <h1 class="home-hero__title">
+            Write less.
+            <br />
+            Mean more.
+          </h1>
+          <p class="home-hero__lede">
+            OSL is a readable, typed language that compiles to native code. Write it top to bottom like a script, check it like a compiled language, and ship
+            it as one executable.
+          </p>
+          <div class="home-actions">
+            <a class="btn btn--primary btn--lg" href="/learn">
+              Get started
             </a>
-            <h1 class="hero__title">
-              Write less.
-              <br />
-              <span class="hero__accent">Mean more.</span>
-            </h1>
-            <p class="hero__lede">
-              OSL is a readable, typed language that compiles to native code. Write it top to bottom like a script, check it like a compiled language, and
-              ship it as one executable.
-            </p>
-            <div class="hero__actions">
-              <a class="btn btn--primary btn--lg" href="/learn">
-                Get started
-              </a>
-              <a class="btn btn--secondary btn--lg" href="/playground">
-                Try it in your browser
-              </a>
-            </div>
+            <a class="btn btn--secondary btn--lg" href="/playground">
+              Try it in your browser
+            </a>
+          </div>
+          <div class="home-install">
             <Install />
+            <p class="home-meta">
+              OSL {index.version} · MIT licence ·{" "}
+              <a href={SOURCE} target="_blank" rel="noopener">
+                Source
+              </a>{" "}
+              · <a href="/install">Other ways to install</a>
+            </p>
           </div>
-          <div class="hero__code">
-            <Live name="hero" />
-            <p class="hero__note">This is the real compiler, running in your browser. Click the code to change it.</p>
-          </div>
+        </div>
+        <div class="home-hero__code">
+          <Live name="hero" />
+          <p class="home-note">This is the real compiler, running in your browser. Click the code to change it.</p>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="why">
-        <h2 id="why" class="section__title">
-          Why OSL?
-        </h2>
-        <div class="pillars">
+      <section class="home-section" aria-labelledby="why">
+        <Head id="why" title="Why OSL" />
+        <div class="spec">
           {PILLARS.map((p) => (
-            <article key={p.title} class="pillar">
-              <span class="pillar__icon">{p.icon}</span>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
-            </article>
+            <div key={p.tag} class="spec__row">
+              <span class="spec__tag">{p.tag}</span>
+              <div class="spec__body">
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      <section class="section" aria-labelledby="beliefs">
-        <h2 id="beliefs" class="section__title">
-          What OSL believes
-        </h2>
-        <p class="section__lede">Six ideas shape the language. Each example below is live: run it, change it, break it.</p>
+      <section class="home-section" aria-labelledby="beliefs">
+        <Head id="beliefs" title="What OSL believes">
+          Six ideas shape the language. Each example is live: run it, change it, break it.
+        </Head>
         <div class="beliefs">
           {BELIEFS.map((b, n) => (
-            <article key={b.title} class={`belief${n % 2 ? " belief--flip" : ""}`}>
+            <article key={b.title} class="belief">
               <div class="belief__copy">
-                <span class="belief__number">{String(n + 1).padStart(2, "0")}</span>
+                <span class="spec__tag">{String(n + 1).padStart(2, "0")}</span>
                 <h3>{b.title}</h3>
                 <p>{b.text}</p>
               </div>
@@ -241,52 +253,42 @@ export function Landing() {
         </div>
       </section>
 
-      <section class="section" aria-labelledby="build">
-        <h2 id="build" class="section__title">
-          Build it in OSL
-        </h2>
-        <p class="section__lede">One language from the server to the window. Every project here has a step-by-step tutorial.</p>
+      <section class="home-section" aria-labelledby="build">
+        <Head id="build" title="Build it in OSL">
+          One language from the server to the window. Every project here has a step-by-step tutorial.
+        </Head>
         <Showcase />
       </section>
 
-      <section class="section section--split" aria-labelledby="tools">
+      <section class="home-section split" aria-labelledby="tools">
         <div>
-          <h2 id="tools" class="section__title">
-            One command for the whole loop
-          </h2>
-          <p class="section__lede">
+          <Head id="tools" title="One command for the whole loop">
             The compiler is also the formatter, the test runner, the fixer and the language server. Opal, the package manager, ships with it.
-          </p>
+          </Head>
           <a class="arrow-link" href="/reference/cli">
             The command line <ArrowRight aria-hidden="true" />
           </a>
         </div>
-        <div class="terminal" role="img" aria-label="OSL commands">
-          <div class="terminal__bar">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div class="terminal__body">
+        <div class="commands" role="img" aria-label="OSL commands">
+          <div class="commands__body">
             {TOOLS.map(([cmd, what]) => (
-              <div key={cmd} class="terminal__line">
-                <code class="hljs" dangerouslySetInnerHTML={{ __html: `<span class="terminal__prompt">$</span> ${highlightCode(cmd, "bash") ?? cmd}` }} />
-                <span class="terminal__what"># {what}</span>
+              <div key={cmd} class="commands__line">
+                <code class="hljs" dangerouslySetInnerHTML={{ __html: `<span class="commands__prompt">$</span> ${highlightCode(cmd, "bash") ?? cmd}` }} />
+                <span class="commands__what"># {what}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="stdlib">
-        <h2 id="stdlib" class="section__title">
-          Everything in the box
-        </h2>
-        <p class="section__lede">{total} packages ship with the compiler. Each one has a tutorial and a complete reference generated from its source.</p>
-        <div class="stdlib">
+      <section class="home-section" aria-labelledby="stdlib">
+        <Head id="stdlib" title="Everything in the box">
+          {total} packages ship with the compiler. Each one has a tutorial and a complete reference generated from its source.
+        </Head>
+        <div class="spec">
           {PACKAGE_GROUPS.map((g) => (
-            <div key={g.slug} class="stdlib__group">
-              <h3>{g.title}</h3>
+            <div key={g.slug} class="spec__row">
+              <span class="spec__tag">{g.title}</span>
               <div class="stdlib__names">
                 {g.packages.map((p) => (
                   <a key={p} href={`/${packageSlug(p)}`}>
@@ -299,13 +301,10 @@ export function Landing() {
         </div>
       </section>
 
-      <section class="section" aria-labelledby="start">
-        <h2 id="start" class="section__title">
-          Get started
-        </h2>
+      <section class="home-section" aria-labelledby="start">
+        <Head id="start" title="Get started" />
         <div class="starts">
           <a class="start" href="/learn">
-            <BookOpen aria-hidden="true" />
             <h3>Take the course</h3>
             <p>{LESSONS.length} short lessons, from your first line to generics and threads, with quizzes and exercises along the way.</p>
             <span class="arrow-link">
@@ -313,7 +312,6 @@ export function Landing() {
             </span>
           </a>
           <a class="start" href="/build">
-            <Hammer aria-hidden="true" />
             <h3>Build a project</h3>
             <p>Make a CLI tool, a web API, a chat server, a desktop app, a game or a bot, one step at a time.</p>
             <span class="arrow-link">
@@ -321,7 +319,6 @@ export function Landing() {
             </span>
           </a>
           <a class="start" href="/packages">
-            <Boxes aria-hidden="true" />
             <h3>Explore the packages</h3>
             <p>Every package in the standard library, with a walkthrough and every function it offers.</p>
             <span class="arrow-link">
@@ -329,13 +326,6 @@ export function Landing() {
             </span>
           </a>
         </div>
-        <p class="starts__source">
-          OSL is open source under the MIT licence. The compiler lives at{" "}
-          <a href={SOURCE} target="_blank" rel="noopener">
-            git.rotur.dev/osl
-          </a>
-          .
-        </p>
       </section>
     </div>
   );
