@@ -8,6 +8,7 @@ import { FileCode2, Link2, Play, Plus, AlignLeft, X, Check, TerminalSquare, Aler
 import { check, compilerState, format, onCompilerState, transpile, warmCompiler, type CompilerState, type FileMap } from "../lib/compiler";
 import { canRun, run } from "../lib/runner";
 import { decodeFiles, encodeFiles } from "../lib/share";
+import { normalize } from "../lib/router";
 import { highlightHTML } from "../lib/highlight";
 import type { Diagnostic } from "../lib/types";
 import { Editor } from "./Editor";
@@ -54,7 +55,7 @@ export function Playground() {
       } catch {
         /* The compiler failed to load; the status line says so. */
       }
-      if (alive && location.pathname === "/playground") {
+      if (alive && normalize(location.pathname) === "/playground") {
         history.replaceState(history.state, "", `#${encodeFiles(files)}`);
       }
     }, 300);

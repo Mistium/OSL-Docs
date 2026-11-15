@@ -95,7 +95,8 @@ export function Editor({ value, onChange, diagnostics = [], onRun, onFormat, lab
       leaving.current = false;
       return;
     }
-    leaving.current = event.key === "Escape";
+    // Shift on its way to Shift+Tab doesn't cancel the Escape.
+    if (!["Shift", "Control", "Alt", "Meta"].includes(event.key)) leaving.current = event.key === "Escape";
     if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
       event.preventDefault();
       onRun?.();
@@ -179,6 +180,7 @@ export function Editor({ value, onChange, diagnostics = [], onRun, onFormat, lab
           wrap="off"
           onInput={(e) => onChange((e.currentTarget as HTMLTextAreaElement).value)}
           onKeyDown={onKeyDown}
+          onBlur={() => (leaving.current = false)}
         />
       </div>
     </div>

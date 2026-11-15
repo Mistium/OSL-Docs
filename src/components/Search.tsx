@@ -56,7 +56,9 @@ export function Search({ onClose }: { onClose: () => void }) {
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.classList.remove("is-locked");
-      if (before?.isConnected) before.focus({ preventScroll: true });
+      // Unless a result already moved focus (a heading on this page).
+      const lost = document.activeElement === document.body || !document.activeElement;
+      if (lost && before?.isConnected) before.focus({ preventScroll: true });
     };
   }, []);
 

@@ -107,6 +107,8 @@ export function trackScroll() {
 /* Puts the page where this history entry left it, or at its #hash, or at
    the top. */
 export function restoreScroll(moveFocus = false) {
+  targeted?.classList.remove("is-target");
+  targeted = null;
   const saved = restoreTo;
   restoreTo = undefined;
   if (location.hash && typeof saved !== "number") return scrollToHash(location.hash);

@@ -5,6 +5,11 @@ import { App, SPECIAL } from "./app";
 import { hasPage, loadPage, primePage } from "./pages";
 import { interceptLinks, normalize, prefetchLinks, slugFromPath, trackScroll } from "./lib/router";
 
+// Firefox fails imports still in flight when the page is left; that isn't
+// worth reporting.
+let leaving = false;
+addEventListener("pagehide", () => (leaving = true));
+
 async function start() {
   const path = normalize(location.pathname);
   const slug = slugFromPath(path);
@@ -13,7 +18,7 @@ async function start() {
     page = !(slug in SPECIAL) && hasPage(slug) ? await loadPage(slug) : null;
   } catch (error) {
     // The prerendered page stays readable; it just won't be interactive.
-    console.error("couldn't load this page's code", error);
+    if (!leaving) console.error("couldn't load this page's code", error);
     return;
   }
   if (page) primePage(slug, page);

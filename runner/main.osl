@@ -72,9 +72,15 @@ if !scoped (
   log "run server: systemd-run --user doesn't work here, so runs get per-process limits only"
 )
 
-// Start clean: a crash can leave job folders behind.
-fs.remove(workRoot, {force: true}).unwrap()
+// Start clean: a crash can leave job folders behind. Only folders named like
+// a job go, so a RUNNER_DIR pointed somewhere shared loses nothing else.
+*regex.Pattern jobName = regex.compile("^[0-9a-f]{24}$").unwrap()
 fs.mkdir(workRoot, {recursive: true}).unwrap()
+for name in fs.readDir(workRoot).unwrap() (
+  if jobName.match(name) (
+    fs.remove(workRoot ++ "/" ++ name, {force: true}).unwrap()
+  )
+)
 
 *sync.Lock jobsLock = sync.newLock()
 int running = 0
@@ -101,9 +107,11 @@ def release() (
 def baseSandbox(string tmpSize) string[] (
   return [
     "--ro-bind", "/usr", "/usr",
-    "--symlink", "usr/lib", "/lib",
-    "--symlink", "usr/lib", "/lib64",
-    "--symlink", "usr/bin", "/bin",
+    // /lib, /lib64 and /bin are links into /usr on some systems and folders
+    // on others; binding them works for both, and skips the missing ones.
+    "--ro-bind-try", "/lib", "/lib",
+    "--ro-bind-try", "/lib64", "/lib64",
+    "--ro-bind-try", "/bin", "/bin",
     "--dev", "/dev",
     "--proc", "/proc",
     "--size", tmpSize, "--tmpfs", "/tmp",

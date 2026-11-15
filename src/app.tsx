@@ -49,9 +49,11 @@ export function App({ path: initialPath, page: initialPage }: { path: string; pa
         setPage(next);
       },
       // A chunk that won't load (usually a tab left open across a deploy)
-      // gets the page from the server instead.
+      // gets the page from the server instead. reload(), not assign(): the
+      // address is already the new one, and assigning it with a #hash would
+      // only scroll.
       () => {
-        if (!cancelled) location.assign(location.href);
+        if (!cancelled) location.reload();
       },
     );
     return () => {

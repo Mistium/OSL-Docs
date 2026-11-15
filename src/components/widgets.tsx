@@ -167,7 +167,9 @@ const Packages: FunctionComponent<WidgetProps> = () => {
             {g.packages.map((name) => (
               <a key={name} class="pkg" href={`/${packageSlug(name)}`}>
                 <code class="pkg__name">{name}</code>
-                <span class="pkg__desc">{describe(name)}</span>
+                <span class="pkg__desc">
+                  <Text text={describe(name)} />
+                </span>
               </a>
             ))}
           </div>
@@ -210,7 +212,11 @@ const Lessons: FunctionComponent<WidgetProps> = () => {
                       </span>
                       <span class="lesson__text">
                         <span class="lesson__title">{plain(page?.title ?? slug)}</span>
-                        {page?.description && <span class="lesson__desc">{page.description}</span>}
+                        {page?.description && (
+                          <span class="lesson__desc">
+                            <Text text={page.description} />
+                          </span>
+                        )}
                       </span>
                     </a>
                   </li>
@@ -245,7 +251,9 @@ const AreaPages: FunctionComponent<WidgetProps> = ({ props }) => {
       {pages.map((slug) => (
         <a key={slug} class="card" href={`/${slug}`}>
           <span class="card__title">{plain(index.pages[slug]?.title ?? slug)}</span>
-          <span class="card__text">{index.pages[slug]?.description}</span>
+          <span class="card__text">
+            <Text text={index.pages[slug]?.description ?? ""} />
+          </span>
         </a>
       ))}
     </div>
