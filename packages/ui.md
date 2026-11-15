@@ -107,6 +107,25 @@ on top of each other) and `<grid>` with `columns=3` or `columns=auto` and `minCo
 takes up the space left between siblings, which is how you push something to one end. A row or column
 turns with `direction=column` / `direction=row`.
 
+### Absolute positioning
+
+`<absolute>` takes its children out of the layout. It doesn't move its siblings or count toward its
+parent's size, and it draws on top of them. Its `pad` props are its distance from the parent's
+edges, not space inside it:
+
+```osl
+<column>
+  <text>in the layout</text>
+  <absolute pad.top=12 pad.right=12>
+    <button on:click=self.close>×</button>
+  </absolute>
+</column>
+```
+
+It sits from the top and left, unless only `pad.bottom` or only `pad.right` is given, which sit it
+from that edge. `width=fill` or `height=fill` stretches it between both edges. Inside, its children
+lay out as a column.
+
 ## Styles
 
 Props can be gathered into a named style and spread with `...name`, which keeps a view readable:
@@ -149,6 +168,7 @@ Tags:
 | `<column>`, `<row>`, `<box>` | Lay children out; the direction names the axis. |
 | `<scroll>` | A column that scrolls its content. |
 | `<stack>` | Children drawn on top of each other. |
+| `<absolute pad.top=... pad.left=...>` | Sits outside its parent's layout, at its `pad` values from the parent's edges. |
 | `<grid columns=3 minColumn=200>` | Cells in rows; `columns=auto` fits as many as the minimum allows. |
 | `<spacer/>` | Takes the space left over between siblings. |
 | `<text>` | Text; `${value}` inside interpolates. |
