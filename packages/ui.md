@@ -71,6 +71,19 @@ Nobody can run an action they weren't shown: the server only runs a handler from
 viewer got. A `<link>`, `<input>` or `<checkbox>` can't sit inside an element that runs a handler,
 since a click on it would run that handler too; the compiler says so and asks you to move it beside.
 
+A handler's changes redraw the screen by themselves. A change made anywhere else, such as a
+thread setting what it fetched, calls `ui.refresh()` to redraw every screen from the state it
+reads; calls within one frame draw once:
+
+```osl
+string status = "loading"
+
+thread.new(def() (
+  status = requests.get(url)!.body
+  ui.refresh()
+))
+```
+
 ## Layout
 
 Every axis of every element follows three rules: **hug** (the default, as big as its content),
@@ -94,17 +107,17 @@ turns with `direction=column` / `direction=row`.
 
 ## Styles
 
-Props can be gathered into a named style and spread with `..name`, which keeps a view readable:
+Props can be gathered into a named style and spread with `...name`, which keeps a view readable:
 
 ```osl
 style card = (pad: 20, radius: 14, bg: theme.card, border: 1, borderColor: theme.line)
 
-return <column ..card gap=12> <text>hello</text> </column>
+return <column ...card gap=12> <text>hello</text> </column>
 ```
 
 A style spans as many lines as you like, and one written inside a `view()` works too, so it can sit
 next to the tag it belongs to. Props on the tag itself win over the spread, and a spread has to be a
-style's name: `..(pad: 12)` is a syntax error.
+style's name: `...(pad: 12)` is a syntax error.
 
 Every prop also takes a state prefix, for how the element looks under that state: `hover:bg="#f0f3f6"`,
 `focus:borderColor=theme.accent`, `pressed:opacity=0.8`, `disabled:opacity=0.5`, and `narrow:` for a
@@ -174,6 +187,7 @@ Functions:
 | `ui.part(name, factory, props)` | `ui.node` | Mounts a component where a container's child comes from code. |
 | `ui.handler(fn, ...args)` | `ui.handler` | An action with its arguments fixed now, for a handler that needs one. |
 | `ui.bind(target, field)` | `ui.binding` | The binding an input takes, outside a tag. |
+| `ui.refresh()` | `void` | Redraws every screen after a change made outside a handler. |
 
 ## Showing a UI
 
