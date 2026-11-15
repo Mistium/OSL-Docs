@@ -162,7 +162,59 @@ string label = match status (
 
 On a dynamic subject, `match` and `switch` treat whole numbers as equal across `int` and `number`, so a JSON value `2` matches `case 2`. A case whose type can never match a typed subject is a compile error.
 
-Use `match` for new code. `switch` also exists for command-style fallthrough cases, but it is easier to get wrong because cases continue until `break`.
+## `switch`
+
+`switch` runs the statements of the first case that matches, and no other. Use it when each
+case does something, and `match` when each case gives a value. Several cases written one after
+another share the clause below them, and `default` runs when no case matches:
+
+```osl
+switch status (
+  case 200
+    log "ok"
+  case 301
+  case 302
+    log "moved"
+  default
+    log "error"
+)
+```
+
+`break` leaves a clause early.
+
+A switch on an enum takes its variants as cases, as a `match` does. A variant that holds a value
+names it, and the name holds that value inside the case's clause:
+
+```osl
+enum Login (
+  Waiting
+  Fetched(string)
+  Failed(error)
+)
+
+switch login (
+  case Waiting
+    log "waiting"
+  case Fetched(code)
+    log "type " ++ code
+  case Login.Failed(err)
+    log err.message
+)
+```
+
+A case that names a value takes a clause of its own, since the name means nothing in the other
+cases. A switch on a nullable enum, such as `Login?`, may have a `case null`.
+
+A switch on a `result` takes `ok` and `err` cases the same way:
+
+```osl
+switch parse(text) (
+  case ok(value)
+    log value
+  case err(e)
+    log "bad input: " ++ e.message
+)
+```
 
 ## Assignments in conditional branches
 
