@@ -3,7 +3,7 @@ description: Choose between many cases with match, which gives a value, and swit
 lesson: 8
 ---
 
-# match and switch
+# Match and switch
 
 A chain of `else if` works, but when you're comparing one value against many possibilities, `match` and `switch` say it more clearly.
 

@@ -145,6 +145,28 @@ true
 false
 ```
 
+## Async lambdas
+
+A lambda can run on its own thread too. Write `async` where `def` would go. Calling it returns a thread handle, and `.wait()` gives the value:
+
+```osl
+auto double = async(int n) int -> n * 2
+auto shout = async(string s) string (
+  thread.sleep(10)
+  return s.toUpper()
+)
+
+log double(4).wait()
+log shout("hi").wait()
+```
+
+```output
+8
+HI
+```
+
+The [concurrency lesson](concurrency.md) shows them passed around and run several at a time.
+
 ## Pipes
 
 `|>` passes the value on its left to the function on its right, so a chain of steps reads in the order it happens:

@@ -206,6 +206,28 @@ log [1, 2, 3].map(double)
 
 `def(int) int` is the type of a function that takes an `int` and returns an `int`. Functions you write on the spot, without a name, are the subject of the [next lesson](lambdas.md).
 
+## Async functions
+
+Write `async` in place of `def` and calling the function runs its body on another thread. The call returns at once with a thread handle, and `.wait()` gives the value:
+
+```osl
+async slowDouble(int n) int (
+  thread.sleep(50)
+  return n * 2
+)
+
+auto job = slowDouble(21)
+log "started"
+log job.wait()
+```
+
+```output
+started
+42
+```
+
+The [concurrency lesson](concurrency.md) covers waiting for several at once, errors and timeouts.
+
 :::quiz
 Which line defines a function that takes a number and returns its double?
 

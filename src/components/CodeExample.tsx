@@ -12,6 +12,10 @@ import type { Diagnostic, Recorded } from "../lib/types";
 import type { Example } from "../lib/markdown";
 import { Editor } from "./Editor";
 import { playgroundHref } from "../lib/share";
+import { changedLines, harnessStart, joinHarness, splitHarness } from "../lib/linediff";
+
+/* The tab that holds a project step's harness: the code after `// try it`. */
+const TRY = "try it";
 
 type Output = { kind: "recorded" | "live" | "note" | "error"; text: string; exit?: number; diagnostics?: Diagnostic[]; note?: string };
 
@@ -25,6 +29,9 @@ export type ExampleProps = {
   runLabel?: string;
   startEditing?: boolean;
   compact?: boolean;
+  /* The program as the step before left it: lines this one adds are
+     highlighted until the reader edits it. */
+  previous?: string;
 };
 
 const filesOf = (example: Example): FileMap => Object.fromEntries(example.files.map((f) => [f.name, f.code]));
@@ -107,9 +114,18 @@ function OutputPanel({ output, onPick }: { output: Output; onPick?: (d: Diagnost
   );
 }
 
-export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, startEditing = false, compact = false }: ExampleProps) {
-  const original = useMemo(() => filesOf(example), [example.id]);
-  const names = example.files.map((f) => f.name);
+export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, startEditing = false, compact = false, previous }: ExampleProps) {
+  // A one-file program whose end tries it out shows that part in a tab of
+  // its own; checks and runs put the two back together.
+  const harness = useMemo(() => (example.files.length === 1 && example.mode !== "fragment" ? splitHarness(example.files[0].code) : null), [example.id]);
+  const original = useMemo(() => (harness ? { [example.files[0].name]: harness.app, [TRY]: harness.harness } : filesOf(example)), [example.id]);
+  const names = harness ? [example.files[0].name, TRY] : example.files.map((f) => f.name);
+  const program = (fs: FileMap): FileMap => (harness ? { [names[0]]: joinHarness(harness, fs[names[0]], fs[TRY]) } : fs);
+  const place = (ds: Diagnostic[], fs: FileMap): Diagnostic[] => {
+    if (!harness) return ds;
+    const start = harnessStart(harness, fs[names[0]]);
+    return ds.map((d) => (d.line >= start ? { ...d, file: TRY, line: d.line - start + 1 } : { ...d, file: names[0] }));
+  };
   const [files, setFiles] = useState<FileMap>(original);
   const [active, setActive] = useState(names[0]);
   const [editing, setEditing] = useState(startEditing);
@@ -125,6 +141,10 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   const fragment = example.mode === "fragment";
   const code = files[active] ?? "";
   const html = useMemo(() => highlightCode(code, "osl"), [code]);
+  const added = useMemo(() => {
+    if (previous === undefined || active !== names[0] || edited) return null;
+    return changedLines(splitHarness(previous)?.app ?? previous, code);
+  }, [previous, active, edited, code]);
 
   // Check as they type, a moment after they stop.
   useEffect(() => {
@@ -133,9 +153,10 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
     timer.current = window.setTimeout(async () => {
       setChecking(true);
       try {
-        const result = await check(files, names[0]);
-        setDiagnostics(result.diagnostics);
-        onCheck?.(result.diagnostics, files);
+        const result = await check(program(files), names[0]);
+        const placed = place(result.diagnostics, files);
+        setDiagnostics(placed);
+        onCheck?.(placed, program(files));
       } catch {
         setDiagnostics(null);
       } finally {
@@ -161,14 +182,15 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
       setBusy(true);
       // A short pause, so a re-run visibly happens.
       await new Promise((r) => setTimeout(r, 180));
-      setOutput({ kind: "recorded", text: recorded.output, exit: recorded.exit, diagnostics: recorded.diagnostics });
+      setOutput({ kind: "recorded", text: recorded.output, exit: recorded.exit, diagnostics: recorded.diagnostics && place(recorded.diagnostics, original) });
       setBusy(false);
-      onOutput?.(recorded.output, false, files);
+      onOutput?.(recorded.output, false, program(files));
       return;
     }
     setBusy(true);
     try {
-      const checked = await check(files, names[0]);
+      const checked = await check(program(files), names[0]);
+      checked.diagnostics = place(checked.diagnostics, files);
       setDiagnostics(checked.diagnostics);
       const errors = checked.diagnostics.filter((d) => d.severity === "error");
       if (errors.length) {
@@ -193,11 +215,11 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         });
         return;
       }
-      const result = await runRemote(files, names[0], example.stdin ?? "");
+      const result = await runRemote(program(files), names[0], example.stdin ?? "");
       if (result.error) setOutput({ kind: "error", text: result.error });
       else {
-        setOutput({ kind: "live", text: result.output, exit: result.exit, diagnostics: result.diagnostics ?? checked.diagnostics, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
-        onOutput?.(result.output, true, files);
+        setOutput({ kind: "live", text: result.output, exit: result.exit, diagnostics: result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
+        onOutput?.(result.output, true, program(files));
       }
     } catch (error) {
       setOutput({ kind: "error", text: String((error as Error).message ?? error) });
@@ -214,7 +236,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
     warmCompiler();
     setGoSource("// Compiling…");
     try {
-      const result = await transpile(files, names[0]);
+      const result = await transpile(program(files), names[0]);
       const errors = result.diagnostics.filter((d) => d.severity === "error");
       setGoSource(errors.length ? `// The program doesn't compile yet:\n${errors.map((e) => `// ${e.line}: ${e.message}`).join("\n")}` : (result.go ?? result.error ?? ""));
     } catch (error) {
@@ -248,7 +270,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         {names.length > 1 ? (
           <div class="tabs" role="tablist" aria-label="Files">
             {names.map((n) => (
-              <button key={n} type="button" role="tab" aria-selected={n === active} class="tab" onClick={() => setActive(n)}>
+              <button key={n} type="button" role="tab" aria-selected={n === active} class={`tab${n === TRY && harness ? " tab--try" : ""}`} onClick={() => setActive(n)} title={n === TRY && harness ? "The code that tries the program out. It runs with it." : undefined}>
                 {n}
               </button>
             ))}
@@ -278,11 +300,11 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
             </button>
           )}
           {!fragment && (
-            <a class="icon-btn" href={playgroundHref(files)} title="Open in the playground" aria-label="Open in the playground">
+            <a class="icon-btn" href={playgroundHref(program(files))} title="Open in the playground" aria-label="Open in the playground">
               <ExternalLink aria-hidden="true" />
             </a>
           )}
-          <CopyButton text={code} />
+          <CopyButton text={harness ? program(files)[names[0]] : code} />
         </div>
       </div>
       {editing ? (
@@ -297,6 +319,13 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
           }}
           title={fragment ? undefined : "Click to edit"}
         >
+          {added && added.size > 0 && (
+            <span class="example__marks" aria-hidden="true">
+              {[...added].map((line) => (
+                <span key={line} class="example__mark" style={{ top: `${line * 1.6}em` }} />
+              ))}
+            </span>
+          )}
           {html === null ? <code>{code}</code> : <code dangerouslySetInnerHTML={{ __html: html }} />}
         </pre>
       )}

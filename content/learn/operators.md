@@ -19,19 +19,23 @@ You've met most operators along the way. This lesson collects them, and spells o
 
 OSL evaluates mixed arithmetic **from left to right**. It doesn't do multiplication before addition:
 
-```osl
+```osl fragment
 log 10 + 2 * 3
-log 10 + (2 * 3)
 ```
 
-That first line also earns a `PrecedenceWarning` from the compiler; click into the example to see it.
+That line prints 36, because it means `(10 + 2) * 3`, and it also earns a `PrecedenceWarning` from the compiler. Write the grouping out and the warning goes away:
+
+```osl
+log (10 + 2) * 3
+log 10 + (2 * 3)
+```
 
 ```output
 36
 16
 ```
 
-The first line is `(10 + 2) * 3`. This is a deliberate choice: one simple rule instead of a precedence table to remember. The compiler warns whenever you mix operators without brackets, so you're never caught out silently. Bracket what you mean.
+The first line of the unbracketed version is `(10 + 2) * 3`. This is a deliberate choice: one simple rule instead of a precedence table to remember. The compiler warns whenever you mix operators without brackets, so you're never caught out silently. Bracket what you mean.
 
 ## Joining
 
@@ -180,14 +184,14 @@ What is `"OSL" == "osl"`?
 :::
 
 :::exercise title="Fix the formula"
-The area of a ring is π times the outer radius squared, minus π times the inner radius squared. This program prints the wrong number because of left-to-right evaluation. Add brackets so it prints the right area, rounded.
+The area of a ring is π times the outer radius squared, minus π times the inner radius squared. This program prints the wrong number because the brackets are in the wrong place. Move them so it prints the right area, rounded.
 
 ```osl
 number pi = 3.14159
 number outer = 5
 number inner = 3
 
-log round(pi * outer ^ 2 - pi * inner ^ 2)
+log round(((pi * outer) ^ 2) - ((pi * inner) ^ 2))
 ```
 
 ```output

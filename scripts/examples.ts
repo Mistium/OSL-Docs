@@ -13,7 +13,7 @@
    or when it prints something other than its ```output block. Warnings are
    listed but don't fail. Needs `bun osl:assets` first. */
 
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { examplesOf, parsePage, type Example } from "../src/lib/markdown.ts";
@@ -29,7 +29,9 @@ const args = process.argv.slice(2);
 const force = args.includes("--force");
 const checkOnly = args.includes("--check");
 const filters = args.filter((a) => !a.startsWith("--"));
-const jobs = Math.max(1, Math.min(8, navigator.hardwareConcurrency ?? 4));
+// EXAMPLE_JOBS limits how many examples build at once, for several checkers
+// sharing one machine.
+const jobs = Number(process.env.EXAMPLE_JOBS) || Math.max(1, Math.min(8, navigator.hardwareConcurrency ?? 4));
 
 type Job = { example: Example; where: string[] };
 
@@ -142,6 +144,7 @@ async function runOne(job: Job): Promise<Outcome> {
 
 const todo = [...found.values()].filter((j) => force || recorded[j.example.id]?.osl !== pin.version);
 console.log(`${found.size} examples, ${todo.length} to record with OSL ${pin.version}, ${jobs} at a time`);
+const fresh: Record<string, Recorded> = {};
 let failed = 0;
 let warned = 0;
 let done = 0;
@@ -157,7 +160,10 @@ try {
         if (!result.ok) {
           failed++;
           console.error(`\n✗ ${where}: ${job.example.files[0].code.split("\n")[0].slice(0, 70)}\n  ${result.message?.replace(/\n/g, "\n  ")}`);
-        } else if (result.record) recorded[job.example.id] = result.record;
+        } else if (result.record) {
+          recorded[job.example.id] = result.record;
+          fresh[job.example.id] = result.record;
+        }
         if (result.ok && result.warnings.length) {
           warned++;
           console.warn(`\n! ${where}: ${result.warnings.map((w) => `${w.line}: ${w.message}`).join("\n  ")}`);
@@ -170,11 +176,29 @@ try {
   rmSync(scratch, { recursive: true, force: true });
 }
 
-// Keep only recordings some example still uses.
-const kept: Record<string, Recorded> = {};
-const live = filters.length ? new Set([...Object.keys(recorded)]) : new Set(found.keys());
-for (const id of Object.keys(recorded).sort()) if (live.has(id)) kept[id] = recorded[id];
+// Several checkers may run at once on different pages, so the recordings
+// are read again under a lock and only this run's are merged in. A run over
+// every page also drops recordings no example uses any more.
+const lock = `${OUT}.lock`;
 mkdirSync(dirname(OUT), { recursive: true });
-writeFileSync(OUT, JSON.stringify(kept, null, 1) + "\n");
+for (let tries = 0; ; tries++) {
+  try {
+    mkdirSync(lock);
+    break;
+  } catch {
+    if (tries > 600) throw new Error(`${lock} has been held for a minute; remove it if no checker is running.`);
+    await Bun.sleep(100);
+  }
+}
+try {
+  const latest: Record<string, Recorded> = existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : {};
+  Object.assign(latest, fresh);
+  const kept: Record<string, Recorded> = {};
+  for (const id of Object.keys(latest).sort()) if (filters.length || found.has(id)) kept[id] = latest[id];
+  writeFileSync(`${OUT}.${process.pid}`, JSON.stringify(kept, null, 1) + "\n");
+  renameSync(`${OUT}.${process.pid}`, OUT);
+} finally {
+  rmSync(lock, { recursive: true, force: true });
+}
 console.log(`\n${todo.length - failed} recorded, ${failed} failed, ${warned} with warnings`);
 process.exit(failed ? 1 : 0);

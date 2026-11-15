@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { areaOf } from "./nav";
 import { cachedPage, hasPage, loadPage } from "./pages";
-import { scrollToHash, slugFromPath, usePath } from "./lib/router";
+import { restoreScroll, slugFromPath, usePath } from "./lib/router";
 import type { PageData } from "./lib/types";
 import { DocPage, NotFound, Shell, titleOf } from "./components/Layout";
 import { Landing } from "./landing/Landing";
@@ -21,50 +21,71 @@ export function documentTitle(slug: string, page: PageData | null) {
 export function App({ path: initialPath, page: initialPage }: { path: string; page: PageData | null }) {
   const path = usePath(initialPath);
   const slug = slugFromPath(path);
+  // The last docs page shown, kept on screen while the next one loads.
   const [page, setPage] = useState<PageData | null>(initialPage);
-  const [loading, setLoading] = useState(false);
+  // Only a slow load shows the progress bar, so a fast one never flickers.
+  const [slow, setSlow] = useState(false);
+
+  // All worked out during render, so the frame for a new address never
+  // shows a stale state for a moment while effects catch up.
+  const special = slug in SPECIAL;
+  const ready = special ? null : page?.slug === slug ? page : (cachedPage(slug) ?? null);
+  const waiting = !special && !ready && hasPage(slug);
+  // What the address settled on: changes once per navigation, when the new
+  // page is on screen.
+  const settled = special ? slug : waiting ? null : (ready?.slug ?? `404:${slug}`);
 
   useEffect(() => {
-    if (slug in SPECIAL) {
-      document.title = documentTitle(slug, null);
-      return;
-    }
-    let cancelled = false;
+    if (special) return setPage(null);
     const hit = cachedPage(slug);
-    if (hit) {
-      setPage(hit);
-      return;
-    }
-    if (!hasPage(slug)) {
-      setPage(null);
-      return;
-    }
-    setLoading(true);
+    if (hit || !hasPage(slug)) return setPage(hit ?? null);
+    let cancelled = false;
+    const timer = setTimeout(() => setSlow(true), 120);
     void loadPage(slug).then((next) => {
+      clearTimeout(timer);
       if (cancelled) return;
+      setSlow(false);
       setPage(next);
-      setLoading(false);
     });
     return () => {
       cancelled = true;
+      clearTimeout(timer);
+      setSlow(false);
     };
   }, [slug]);
 
   // Once the new page has rendered, set its title and scroll position.
   useEffect(() => {
-    if (loading) return;
-    document.title = documentTitle(slug, slug in SPECIAL ? null : page);
-    if (location.hash) requestAnimationFrame(() => scrollToHash(location.hash));
-    else window.scrollTo({ top: 0 });
-  }, [page?.slug, slug, loading]);
+    if (settled === null) return;
+    document.title = documentTitle(slug, ready);
+    restoreScroll();
+  }, [settled]);
 
-  if (slug === "") return <Shell area="home" wide><Landing /></Shell>;
-  if (slug === "playground") return <Shell area="playground" wide><Playground /></Shell>;
+  if (slug === "")
+    return (
+      <Shell area="home" wide>
+        <Landing />
+      </Shell>
+    );
+  if (slug === "playground")
+    return (
+      <Shell area="playground" wide>
+        <Playground />
+      </Shell>
+    );
   const area = areaOf(slug)?.slug ?? (slug === "install" ? "install" : "");
-  const shown = page && page.slug === slug ? page : null;
+  // While the next page loads, the one on screen stays up, its sidebar
+  // already marking the link that was clicked.
+  const shown = ready ?? (waiting ? page : null);
   return (
-    <Shell area={area}>
-      {shown ? <DocPage page={shown} /> : loading ? <div class="docs-loading" aria-busy="true" /> : <NotFound />}
+    <Shell area={area} busy={slow}>
+      {shown ? (
+        <DocPage page={shown} slug={slug} />
+      ) : waiting ? (
+        <div class="docs-loading" aria-busy="true" />
+      ) : (
+        <NotFound />
+      )}
     </Shell>
   );
 }

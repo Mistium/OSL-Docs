@@ -74,7 +74,7 @@ export const PACKAGE_GROUPS: { title: string; slug: string; blurb: string; packa
     packages: ["js", "lua", "testing"],
   },
   {
-    title: "Rotur",
+    title: "Accounts and chat bots",
     slug: "rotur",
     blurb: "Rotur accounts and originChats bots.",
     packages: ["rotur", "originchats"],
@@ -91,7 +91,7 @@ export const AREAS: Area[] = [
     sections: [
       { title: "Start here", pages: ["learn", "install", "learn/first-program"] },
       { title: "The basics", pages: ["learn/variables", "learn/types", "learn/strings", "learn/arrays", "learn/objects", "learn/control-flow", "learn/match"] },
-      { title: "Functions", pages: ["learn/functions", "learn/lambdas"] },
+      { title: "Reusing code", pages: ["learn/functions", "learn/lambdas"] },
       { title: "Your own types", pages: ["learn/structs", "learn/enums", "learn/classes", "learn/interfaces", "learn/generics"] },
       { title: "Beyond the basics", pages: ["learn/errors", "learn/iterators", "learn/operators", "learn/modules", "learn/concurrency", "learn/testing", "learn/go", "learn/next"] },
     ],

@@ -33556,7 +33556,7 @@
       "name": "thread",
       "import": "std:thread",
       "description": "Run functions on threads, wait for their results, and pass values between them over channels.",
-      "about": "When the main program finishes, running threads stop where they are. A\nthread's failure is rethrown with its stack only when wait, waitAll or\nrace waits on it, so keep and wait on the threads you start.\n\nA thread is typed by the return type written on its function:\nthread.new(def() int -> 1) is a *thread.Thread<int>, its wait gives an\nint, and its then's callback takes an int. A function whose return type\nis left to be inferred, as def() -> 1, makes a bare *thread.Thread, whose\nwait gives any, as do waitAll and race. Write the type where a thread is\ndeclared or returned to keep it, as in\ndef load() *thread.Thread<result<string, error>>. A *thread.Thread<T>\nholds a thread whose function returns a T or a type that already is one:\na subclass of T, an int for a number, or a member of a union.\n\nAn async function is written for one that returns a thread:\n\n\tasync load(string url) string ( ... )\n\nis def load(string url) *thread.Thread<string> returning\nthread.new(def() string ( ... )), so load(url) starts the body and\nload(url).wait() waits for its value. A file with an async function has\nstd:thread's names without importing it. There is no await: call .wait().",
+      "about": "When the main program finishes, running threads stop where they are. A\nthread's failure is rethrown with its stack only when wait, waitAll or\nrace waits on it, so keep and wait on the threads you start.\n\nA thread is typed by the return type written on its function:\nthread.new(def() int -> 1) is a *thread.Thread<int>, its wait gives an\nint, and its then's callback takes an int. A function whose return type\nis left to be inferred, as def() -> 1, makes a bare *thread.Thread, whose\nwait gives any, as do waitAll and race. Write the type where a thread is\ndeclared or returned to keep it, as in\ndef load() *thread.Thread<result<string, error>>. A *thread.Thread<T>\nholds a thread whose function returns a T or a type that already is one:\na subclass of T, an int for a number, or a member of a union.\n\nAn async function is written for one that returns a thread:\n\n\tasync load(string url) string ( ... )\n\nis def load(string url) *thread.Thread<string> returning\nthread.new(def() string ( ... )), so load(url) starts the body and\nload(url).wait() waits for its value. An async lambda is the same for a\nlambda, with async in def's place:\n\n\tauto load = async(string url) string -> fetch(url)\n\nis def(string url) *thread.Thread<string> returning\nthread.new(def() string -> fetch(url)). A file with an async function or\nlambda has std:thread's names without importing it. There is no await:\ncall .wait().",
       "functions": [
         {
           "name": "channel",
@@ -37811,5 +37811,5 @@
       "types": []
     }
   ],
-  "version": "9.1.0"
+  "version": "9.2.0"
 }
