@@ -1,8 +1,72 @@
 {
+ "00001f9070dc8": {
+  "output": "5\n80\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "00f867a2e2612": {
+  "output": "=======\n| OSL |\n=======\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "012ca49168307": {
+  "output": "4 b\nnull\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "032c4289479f3": {
+  "output": "true\nfalse\ntrue\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "043cfada6c698": {
+  "output": "[\"red\",\"green\",\"blue\"]\n3\nred / green / blue\n[\"one\",\"two\",\"\",\"three\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "058340974ce59": {
+  "output": "3\n3\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "05dfa4b230220": {
+  "output": "[\"Mercury\",\"Venus\",\"Earth\",\"Mars\"]\n4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "069f0bb2d239e": {
+  "output": "true\nfalse\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "07b46beb3402d": {
   "output": "37\nHello, world\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "092c3971987bb": {
+  "output": "36\n16\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-MIXED-OPERATORS",
+    "message": "PrecedenceWarning: mixed arithmetic operators are evaluated left to right; add parentheses to make the intended order explicit",
+    "file": "main.osl",
+    "line": 1,
+    "column": 4,
+    "length": 10
+   }
+  ],
   "osl": "9.1.0"
  },
  "0a81bf25734f9": {
@@ -48,8 +112,90 @@
   ],
   "osl": "9.1.0"
  },
+ "0d27289e51a62": {
+  "output": "6\nskipping: ParseError\n10\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "0d6eb652925fe": {
   "output": "Ada is 36\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "0e4fb9ae3d89a": {
+  "output": "0\n100\n37\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "0f68c7312f4bd": {
+  "output": "[\"banana\",\"apple\",\"kiwi\",\"fig\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "103d0dabf6603": {
+  "output": "[2]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "108ebf988d480": {
+  "output": "[10,20,30,40]\n[3,4]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "10af9c83bcc6f": {
+  "output": "guest\nkept\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "12f351c13d469": {
+  "output": "0 0\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'entries' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 1,
+    "column": 9,
+    "length": 7
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "13dd5cb7b928f": {
+  "output": "2\nHELLO\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "149f70456b923": {
+  "output": "2020\n2021\n2022\n2023\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "1501f2da93d2c": {
+  "output": "8080\nno port set\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "171e308c18518": {
+  "output": "12.56\n9\n0\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "196475ee1b608": {
+  "output": "0\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -60,8 +206,20 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "1b0ab3e54ff71": {
+  "output": "2\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "1d38ca3869ecc": {
   "output": "text: HI\na whole number\na number\na array\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "1f23d521e3e8f": {
+  "output": "null\nen\ntrue\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -72,8 +230,126 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "220f1a8a4507e": {
+  "output": "true\nfalse\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "223a057bb70f7": {
+  "output": "111\n3\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "229e9df5f02b9": {
   "output": "Hello\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "22d3413c1a6e0": {
+  "output": "Ada scored 252 in total\nAverage: 84\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "236019e92d42d": {
+  "output": "8\n14\n6\n16\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "2469e55641d44": {
+  "output": "move 3\nturn left\nmove 1\nstop\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "25a6a63afd51a": {
+  "output": "0\n1\n1\n2\n3\n5\n8\n13\n21\n34\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "271cea1cad3a0": {
+  "output": "negative\nzero\npositive\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "27c457437b403": {
+  "output": "Ada\nGrace\n[\"Linus\",\"Margaret\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "28285427d2ac5": {
+  "output": "{\"age\":36,\"name\":\"Ada\",\"role\":\"admin\"}\n{\"age\":36,\"name\":\"Ada\"}\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "28ec8590c9ff0": {
+  "output": "[\"fig\",\"banana\",\"kiwi\",\"apple\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "29d8ebf1f3bc5": {
+  "output": "Hello, World\nHELLO, WORLD\nhello, world\nHello, OSL\na+b+c\na+b-c\n007\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "2c987f6abc066": {
+  "output": "Ada\nCountess Lovelace\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "2e04407810690": {
+  "output": "[7,19,42,88]\n[88,42,19,7]\n[\"apple\",\"fig\",\"pear\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "2f2886c6c4b16": {
+  "output": "IndexError: OSL arrays and strings are 1-indexed. Index [0] is invalid; use [1] for the first element or [-1] for the last element.\n   |\n 2 | log planets[0]\n   |             ^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-INDEX",
+    "message": "IndexError: OSL arrays and strings are 1-indexed. Index [0] is invalid; use [1] for the first element or [-1] for the last element.",
+    "file": "main.osl",
+    "line": 2,
+    "column": 12,
+    "length": 0,
+    "rendered": "IndexError: OSL arrays and strings are 1-indexed. Index [0] is invalid; use [1] for the first element or [-1] for the last element.\n   |\n 2 | log planets[0]\n   |             ^\nin: main.osl:2"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "3122fd35bee71": {
+  "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 7 | p.x = \"left\"\n   |       ^^^^^^\nin: main.osl:7",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check",
+    "file": "main.osl",
+    "line": 7,
+    "column": 6,
+    "length": 0,
+    "rendered": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 7 | p.x = \"left\"\n   |       ^^^^^^\nin: main.osl:7"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "32657e914ec69": {
+  "output": "42\n[\"bread\",\"milk\"]\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -84,8 +360,61 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "366ec58765fad": {
+  "output": "[55,91,73,88,62,99]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "383cd971304f7": {
+  "output": "32\n212\n98.6\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "3b3d75d45a45a": {
   "output": "2.4499999999999997\n3.5\n3\n1\n1024\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "3c656c84252e6": {
+  "output": "TypeError: Cannot assign string? to variable of type int?\n   |\n 6 | int? n = lastOf([\"a\", \"b\"])\n   |          ^^^^^^^^^^^^^^^^^^\nin: main.osl:6",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot assign string? to variable of type int?",
+    "file": "main.osl",
+    "line": 6,
+    "column": 9,
+    "length": 0,
+    "rendered": "TypeError: Cannot assign string? to variable of type int?\n   |\n 6 | int? n = lastOf([\"a\", \"b\"])\n   |          ^^^^^^^^^^^^^^^^^^\nin: main.osl:6"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "3ceb06bf8776d": {
+  "output": "9\nO\ns\nOSL\nrocks\nroc\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "3f2e74b280c8a": {
+  "output": "9\n0.5\n42\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4105de8d98597": {
+  "output": "21\n70\n[3,6,9]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "43893e19da3ed": {
+  "output": "3\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -107,14 +436,50 @@
   ],
   "osl": "9.1.0"
  },
+ "440a2393eb837": {
+  "output": "true true\n42\n0\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "469d5b0ac5270": {
+  "output": "[1,2,3,4,5]\n[5,4,3,2,1]\n[2,4,6,8,10]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4840c7fe43a36": {
+  "output": "a\nfalse\nb\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "48c817e05c74e": {
   "output": "728590\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "48ea54bbcdef1": {
+  "output": "0 0\n3 4\n{\"x\":3,\"y\":4}\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "4925f953aad4f": {
   "output": "Hello, world\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "49cf9f0c23738": {
+  "output": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4a6fc608d2f8a": {
+  "output": "Dog\nsit\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -131,8 +496,48 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "4cf4de4f6aff7": {
+  "output": "changed inside\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-CONSTANT-CONDITION",
+    "message": "ConditionWarning: 'if' condition is always true; remove the 'if' or use a variable condition",
+    "file": "main.osl",
+    "line": 2,
+    "column": 3,
+    "length": 4
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "4d2efee28ad0c": {
+  "output": "5\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4d80452cae874": {
+  "output": "11\n11\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "4e6d184c926e8": {
   "output": "Hello, world\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4f983ecd19d61": {
+  "output": "{\"first\":\"age\",\"second\":36}\n[1.5,3,4.5]\n[1,2]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "55d1347775839": {
+  "output": "- write\n- test\n- ship\n1. write\n2. test\n3. ship\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -143,10 +548,74 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "57a66a8ee62d4": {
+  "output": "Grace\nmouse\n3\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "58186aeb86445": {
+  "output": "nothing\nnothing\nnothing\nnothing\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "594392e9f4acd": {
   "output": "one\ntwo three\n42\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "597a029ec0e48": {
+  "output": "307200\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "5a91a417aecbf": {
+  "output": "3\n2\n1\nliftoff\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "5e5615ac880f8": {
+  "output": "1 99\n1 11\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "60e8e798d75f6": {
+  "output": "TypeError: Argument 2 to area expects number, got string: \"four\"\n   |\n 3 | log area(3, \"four\")\n   |             ^^^^^^\nin: main.osl:3",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Argument 2 to area expects number, got string: \"four\"",
+    "file": "main.osl",
+    "line": 3,
+    "column": 12,
+    "length": 0,
+    "rendered": "TypeError: Argument 2 to area expects number, got string: \"four\"\n   |\n 3 | log area(3, \"four\")\n   |             ^^^^^^\nin: main.osl:3"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "611c1313df91b": {
+  "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 |   return count ++ \" items\"\n   |          ^^^^^^^^^^^^^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check",
+    "file": "main.osl",
+    "line": 2,
+    "column": 9,
+    "length": 0,
+    "rendered": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 |   return count ++ \" items\"\n   |          ^^^^^^^^^^^^^^^^^\nin: main.osl:2"
+   }
+  ],
   "osl": "9.1.0"
  },
  "612d29d50d0db": {
@@ -167,14 +636,56 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "6ce6c2a0a4a82": {
+  "output": "99, 91, 88\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6d31505ad7c3c": {
+  "output": "20\n[2,4,6]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6d38276492dc2": {
+  "output": "[24,10,60,16]\n[5,8]\ntrue\ntrue\n55 5 30\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "6d9245ed74229": {
+  "output": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "6e59797b40d53": {
   "output": "43\n84!\n7\ntrue false\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "710402e4cbf42": {
+  "output": "[1,2,8,9]\n[1,2,5,8,9]\n9\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "711ca9217b711": {
   "output": "4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "7126e916f9bc8": {
+  "output": "to ada: Meeting at 10\nto grace: Meeting at 10\n2\n[\"linus\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "712a4038bf934": {
+  "output": "3\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -213,6 +724,58 @@
   ],
   "osl": "9.1.0"
  },
+ "7287105e01c7a": {
+  "output": "usage: greet <name>\n",
+  "exit": 2,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "748337d09a488": {
+  "output": "apples: 12\npears: 0\nplums: 7\n[\"apples\",\"pears\",\"plums\"]\n19\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "777bc2b7f3f15": {
+  "output": "534060\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-MIXED-OPERATORS",
+    "message": "PrecedenceWarning: mixed arithmetic operators are evaluated left to right; add parentheses to make the intended order explicit",
+    "file": "main.osl",
+    "line": 5,
+    "column": 10,
+    "length": 31
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "7bdf22f715efb": {
+  "output": "grace brewster hopper\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "7f4b6c0b2d011": {
+  "output": "0\n0\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "7f6c85e62652c": {
+  "output": "n = 4\n[1,2,3]\n{\"a\":1,\"b\":2}\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "7ff565b78c06b": {
+  "output": "12\nfalse\n48\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "83ad4c342e1b6": {
   "output": "193\n",
   "exit": 0,
@@ -227,6 +790,18 @@
  },
  "90f66ccc42f2a": {
   "output": "Space Race for up to 4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "91fa16f5772c3": {
+  "output": "scissors\nrock\npaper\nnothing\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "925944a65b698": {
+  "output": "{\"and\":1,\"cat\":1,\"hat\":1,\"the\":2}\n2\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -250,6 +825,41 @@
  },
  "94c84968a062c": {
   "output": "2.5\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "95270e21ba9a3": {
+  "output": "50\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "96459ac09ffae": {
+  "output": "{\"apples\":12,\"bread\":0,\"eggs\":30,\"milk\":0}\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "9741282d454a3": {
+  "output": "TypeError: Cannot add T and T\n   |\n 4 |     sum += v\n   |     ^^^^^^^^\nin: main.osl:4",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot add T and T",
+    "file": "main.osl",
+    "line": 4,
+    "column": 4,
+    "length": 0,
+    "rendered": "TypeError: Cannot add T and T\n   |\n 4 |     sum += v\n   |     ^^^^^^^^\nin: main.osl:4"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "977af7d906e87": {
+  "output": "square: 9\ncircle: 3.14\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -286,10 +896,90 @@
   ],
   "osl": "9.1.0"
  },
+ "99cf3868d2618": {
+  "output": "Mercury\nEarth\nMars\n[\"Mercury\",\"Venus\",\"Home\",\"Mars\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "99e6276c5dfe4": {
+  "output": "Grace 85 false\nrejected: ParseError\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "9aa0c0cb5e3a3": {
+  "output": "14.25\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "9dcbf0ea37a86": {
   "output": "null\nAce\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "9df9944368be9": {
+  "output": "3\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "9ef8e129098d3": {
+  "output": "3\n2\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a122cb2f07f51": {
+  "output": "20 2\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a17e895d3a13f": {
+  "output": "loading…\ngot 11 characters\nfailed: timed out\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a1a8eff6db666": {
+  "output": "[1,2,3,4]\n4 1 [2,3]\n[2,99,3]\n[2,3]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a2604585d48b9": {
+  "output": "apples: 12\npears: 0\nplums: 7\n19\n19\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "a263df9f8b4c5": {
+  "output": "TypeError: non-enum match requires an _ arm\n   |\n 2 | string label = match code (\n   |                ^^^^^^^^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: non-enum match requires an _ arm",
+    "file": "main.osl",
+    "line": 2,
+    "column": 15,
+    "length": 0,
+    "rendered": "TypeError: non-enum match requires an _ arm\n   |\n 2 | string label = match code (\n   |                ^^^^^^^^^^^^\nin: main.osl:2"
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'label' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 2,
+    "column": 7,
+    "length": 5
+   }
+  ],
   "osl": "9.1.0"
  },
  "a5f8af0c8f47e": {
@@ -300,6 +990,65 @@
  },
  "a7ddd0025c4b2": {
   "output": "5\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "aa055782cdd96": {
+  "output": "Rex says woof\nTom says meow\nRock says ...\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "aae9db6e77ae8": {
+  "output": "1\n1\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ac67ddeb36f49": {
+  "output": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 | ages[\"ada\"] = \"thirty-six\"\n   |               ^^^^^^^^^^^^\nin: main.osl:2",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check",
+    "file": "main.osl",
+    "line": 2,
+    "column": 14,
+    "length": 0,
+    "rendered": "TypeError: Cannot store a string in int; convert it with .toInt(), which gives 0 for text that isn't a number, or with .tryAs<int>() to get a result you can check\n   |\n 2 | ages[\"ada\"] = \"thirty-six\"\n   |               ^^^^^^^^^^^^\nin: main.osl:2"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "af1dac5b4a12f": {
+  "output": "true\n3\n0\napple plum\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "af3fe3157583b": {
+  "output": "Ada: 100 HP, carrying map, lamp\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "afd28bf9a2689": {
+  "output": "Ada\n2\nLondon\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "b0da43ef96781": {
+  "output": "30\nRuntimeError: age can't be negative\n   |\n 2 | if age < 0 throw \"age can't be negative\"\n   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nin: main.osl:2\nat: main.osl:7\n",
+  "exit": 1,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "b24f0c6cadf74": {
+  "output": "Dune\n1965\n{\"author\":\"Frank Herbert\",\"title\":\"Dune\",\"year\":1965}\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -322,10 +1071,68 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "b8a99ec755731": {
+  "output": "TypeError: Property 'z' does not exist on struct 'Point'\n   |\n 7 | p.z = 5\n   |   ^\nin: main.osl:7",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Property 'z' does not exist on struct 'Point'",
+    "file": "main.osl",
+    "line": 7,
+    "column": 2,
+    "length": 0,
+    "rendered": "TypeError: Property 'z' does not exist on struct 'Point'\n   |\n 7 | p.z = 5\n   |   ^\nin: main.osl:7"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "babdb94f13e39": {
+  "output": "27\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "bae254ed0c3a7": {
+  "output": "[1,9,25,49,81]\n5050\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "bb99c297f74b1": {
+  "output": "[2,3,5,7,11,13,17,19]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "c05211e7045b3": {
   "output": "Hello\nI am learning OSL\n6\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c1483eca722b2": {
+  "output": "offline\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c2aaf7d0167ee": {
+  "output": "TypeError: '_target' is a private field of Thermostat, which only its own methods reach\n   |\n 6 | t._target = 45\n   |   ^^^^^^^\nin: main.osl:6",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: '_target' is a private field of Thermostat, which only its own methods reach",
+    "file": "main.osl",
+    "line": 6,
+    "column": 2,
+    "length": 0,
+    "rendered": "TypeError: '_target' is a private field of Thermostat, which only its own methods reach\n   |\n 6 | t._target = 45\n   |   ^^^^^^^\nin: main.osl:6"
+   }
+  ],
   "osl": "9.1.0"
  },
  "c2df6a0dee03f": {
@@ -334,8 +1141,82 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "c38eb52ecd462": {
+  "output": "Editor 800 600 false\nUntitled 320\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "c4c1721f0a311": {
   "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c52b868e1e708": {
+  "output": "changed inside\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c58f612d6d5fd": {
+  "output": "Felix\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c5fc16cfb4b47": {
+  "output": "ReferenceError: 'message' is declared inside the if block at line 3 and isn't visible here; declare it before the if and assign it inside\n   |\n 5 | log message\n   |     ^^^^^^^\nin: main.osl:5",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'message' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 3,
+    "column": 9,
+    "length": 7
+   },
+   {
+    "severity": "error",
+    "code": "OSL-REFERENCE",
+    "message": "ReferenceError: 'message' is declared inside the if block at line 3 and isn't visible here; declare it before the if and assign it inside",
+    "file": "main.osl",
+    "line": 5,
+    "column": 4,
+    "length": 0,
+    "rendered": "ReferenceError: 'message' is declared inside the if block at line 3 and isn't visible here; declare it before the if and assign it inside\n   |\n 5 | log message\n   |     ^^^^^^^\nin: main.osl:5"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "c6023b2e87508": {
+  "output": "Ada is 36\nab\nababab\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c6a435d87c7b4": {
+  "output": "2 9\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c7b5f83da715b": {
+  "output": "[\"Ada\",\"Linus\",\"Grace\"]\n[\"Ada\",\"Grace\",\"Linus\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c8c77c6d88a49": {
+  "output": "stop\ngo\nwait\nstop\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "c8d6a9283196a": {
+  "output": "0\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -352,8 +1233,172 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "d1456feab2720": {
+  "output": "G.B.H.\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "d1dbac5d5a17b": {
+  "output": "800x600 true\n800x600 false\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "d3572150e3014": {
+  "output": "ReferenceError: 'message' is declared inside the if block at line 2 and isn't visible here; declare it before the if and assign it inside\n   |\n 4 | log message\n   |     ^^^^^^^\nin: main.osl:4",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-CONSTANT-CONDITION",
+    "message": "ConditionWarning: 'if' condition is always true; remove the 'if' or use a variable condition",
+    "file": "main.osl",
+    "line": 1,
+    "column": 3,
+    "length": 4
+   },
+   {
+    "severity": "warning",
+    "code": "OSL-UNUSED-VARIABLE",
+    "message": "UnusedVariableWarning: Variable 'message' is never used. Name it _, or start its name with _, to ignore it.",
+    "file": "main.osl",
+    "line": 2,
+    "column": 9,
+    "length": 7
+   },
+   {
+    "severity": "error",
+    "code": "OSL-REFERENCE",
+    "message": "ReferenceError: 'message' is declared inside the if block at line 2 and isn't visible here; declare it before the if and assign it inside",
+    "file": "main.osl",
+    "line": 4,
+    "column": 4,
+    "length": 0,
+    "rendered": "ReferenceError: 'message' is declared inside the if block at line 2 and isn't visible here; declare it before the if and assign it inside\n   |\n 4 | log message\n   |     ^^^^^^^\nin: main.osl:4"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "d41c6ec63527e": {
+  "output": "It's easy\nShe said \"hi\"\nLine one\nLine two\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "d6ab8e4e94fa8": {
+  "output": "36\n16\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-MIXED-OPERATORS",
+    "message": "PrecedenceWarning: mixed arithmetic operators are evaluated left to right; add parentheses to make the intended order explicit",
+    "file": "main.osl",
+    "line": 1,
+    "column": 4,
+    "length": 10
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "d8552b9c1a0f8": {
+  "output": "hip hip\nhip hip\nhip hip\nhooray\n1\n4\n9\n16\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "db00796e0debc": {
+  "output": "2.5\n-1\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "db01d86fbeb5f": {
+  "output": "Hello, Ada!\nHello, Linus!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "dcc0d8e4bbe76": {
+  "output": "Dear Ada,\n\nThanks for trying OSL.\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "dd9cd6a7b95a5": {
+  "output": "1\n2\n3\n1\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "de2b2ab0b86be": {
+  "output": "5 0 0\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "dec7f1877a54b": {
+  "output": "{\"level\":3,\"name\":\"Ada\"}\n{\"sound\":true,\"speed\":2}\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "df632f005d8ae": {
   "output": "Hello, Grace!\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e00952a7ba33d": {
+  "output": "adult, not a member\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e02aefd83edbc": {
+  "output": "unexpected status 503\nerror\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e085e300a177c": {
+  "output": "1\n3\n5\n7\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e27158c44cba6": {
+  "output": "Dune, a book by Frank Herbert\nAlien, a film from 1979\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e29074e2afc68": {
+  "output": "3 4\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e2a90ed446068": {
+  "output": "TypeError: cannot return any from function returning T; narrow it with .<T>\n   |\n 1 | def double<T>(T value) T -> value + value\n   |                             ^^^^^^^^^^^^^\nin: main.osl:1",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: cannot return any from function returning T; narrow it with .<T>",
+    "file": "main.osl",
+    "line": 1,
+    "column": 28,
+    "length": 0,
+    "rendered": "TypeError: cannot return any from function returning T; narrow it with .<T>\n   |\n 1 | def double<T>(T value) T -> value + value\n   |                             ^^^^^^^^^^^^^\nin: main.osl:1"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "e5c0f1aaf4aba": {
+  "output": "warm\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -364,14 +1409,156 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "e68fa8a2353f6": {
+  "output": "TypeError: non-exhaustive match; missing Light.FlashingAmber\n   |\n 8 | def say(Light l) string -> match l (\n   |                            ^^^^^^^^^\nin: main.osl:8",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: non-exhaustive match; missing Light.FlashingAmber",
+    "file": "main.osl",
+    "line": 8,
+    "column": 27,
+    "length": 0,
+    "rendered": "TypeError: non-exhaustive match; missing Light.FlashingAmber\n   |\n 8 | def say(Light l) string -> match l (\n   |                            ^^^^^^^^^\nin: main.osl:8"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "e7fb3a2efa31c": {
+  "output": "starting\nstopping\nunknown command: dance\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e967691619f7c": {
+  "output": "3\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e996847b8db07": {
+  "output": "true\nfalse\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ea8a9e1a87eda": {
+  "output": "vowel\nconsonant\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "eb10af6528b73": {
+  "output": "66\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "eb7d5414e0e62": {
+  "output": "[1,2,3,4]\n[1,2,3,4]\n[1,2,3,4,5]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "ec74de1936ac5": {
+  "output": "ADA, GRACE, LINUS\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "ed01aad1e9e57": {
   "output": "1. Hello, Ada!\n2. Hello, Grace!\n3. Hello, Linus!\nONE BINARY, NO RUNTIME!\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "ed9bfe49e248f": {
+  "output": "Hello / Bonjour / Konnichiwa\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f0a126bb954ad": {
+  "output": "true\ntrue\nfalse\n11\n2\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f104cbd67e57c": {
+  "output": "TypeError: Cannot implicitly use Label as Shape; validate or convert the value explicitly\n    |\n 11 | log show(Label(\"hi\"))\n    |          ^^^^^^^^^^^\nin: main.osl:11",
+  "exit": 1,
+  "diagnostics": [
+   {
+    "severity": "error",
+    "code": "OSL-TYPE",
+    "message": "TypeError: Cannot implicitly use Label as Shape; validate or convert the value explicitly",
+    "file": "main.osl",
+    "line": 11,
+    "column": 9,
+    "length": 0,
+    "rendered": "TypeError: Cannot implicitly use Label as Shape; validate or convert the value explicitly\n    |\n 11 | log show(Label(\"hi\"))\n    |          ^^^^^^^^^^^\nin: main.osl:11"
+   }
+  ],
+  "osl": "9.1.0"
+ },
+ "f463744d0f41f": {
+  "output": "3\n2\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f4dffcd8475d0": {
+  "output": "Wednesday\nthe weekend\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "f622735e43778": {
   "output": "270\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f6b81da37bb17": {
+  "output": "3 items\nB\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f72e631d3de27": {
+  "output": "Hello, world\nHello, Ada\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f98016e74d69b": {
+  "output": "true\nfalse\n70\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f9a76dfb7d71f": {
+  "output": "age 36\nnot a number: old\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "fd175916874b0": {
+  "output": "2.25\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "fde13cf327115": {
+  "output": "[\"negative\",\"zero\",\"positive\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "fec2e2d7e82bb": {
+  "output": "30\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"

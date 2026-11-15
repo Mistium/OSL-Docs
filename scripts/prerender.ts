@@ -18,7 +18,7 @@ for (const route of routes) {
   const page = template
     .replace(/<!--title-->OSL/g, escape(title))
     .replace(/<!--description-->/g, escape(description))
-    .replace("</head>", `    <link rel="canonical" href="${site}${route === "/" ? "/" : route}" />\n  </head>`)
+    .replace("</head>", `    <link rel="canonical" href="${site}${route === "/" ? "/" : route}" />\n    <link rel="alternate" type="text/markdown" href="${route === "/" ? "/index.md" : `${route}.md`}" />\n  </head>`)
     .replace("<!--app-->", html);
   const file = route === "/" ? join(dist, "index.html") : join(dist, `${route.slice(1)}.html`);
   mkdirSync(dirname(file), { recursive: true });

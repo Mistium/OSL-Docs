@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Menu, Search as SearchIcon, X, Pencil } from "lucide-preact";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Menu, Search as SearchIcon, X, Pencil, FileText } from "lucide-preact";
 import index from "virtual:docs-index";
 import { AREAS, ORDER, areaOf, LESSONS, EDIT_BASE, SOURCE, DOCS_SOURCE } from "../nav";
 import { plain } from "../lib/markdown";
@@ -251,9 +251,14 @@ export function DocPage({ page }: { page: PageData }) {
         <Blocks blocks={page.blocks} ctx={{ page }} />
         {lesson && <Complete slug={page.slug} />}
         <Pager slug={page.slug} />
-        <a class="edit-link" href={`${EDIT_BASE}/${index.pages[page.slug]?.file ?? "index.md"}`} target="_blank" rel="noopener">
-          <Pencil aria-hidden="true" /> Edit this page
-        </a>
+        <div class="page-links">
+          <a class="edit-link" href={`${EDIT_BASE}/${index.pages[page.slug]?.file ?? "index.md"}`} target="_blank" rel="noopener">
+            <Pencil aria-hidden="true" /> Edit this page
+          </a>
+          <a class="edit-link" href={`/${page.slug}.md`} type="text/markdown">
+            <FileText aria-hidden="true" /> View as Markdown
+          </a>
+        </div>
       </article>
       <aside class="docs__toc">
         <Toc page={page} />

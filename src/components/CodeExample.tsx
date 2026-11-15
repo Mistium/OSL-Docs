@@ -4,7 +4,7 @@
    server when the site has one. */
 
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { Check, Copy, FileCode2, Play, RotateCcw, SquarePen, ExternalLink, Wand2 } from "lucide-preact";
+import { Check, Copy, FileCode2, Play, RotateCcw, SquarePen, ExternalLink, AlignLeft } from "lucide-preact";
 import { highlightCode } from "../lib/highlight";
 import { check, format, transpile, warmCompiler, type FileMap } from "../lib/compiler";
 import { canRun, run as runRemote } from "../lib/runner";
@@ -264,7 +264,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
           )}
           {editing && (
             <button type="button" class="icon-btn" title="Format (Ctrl+Shift+F)" aria-label="Format" onClick={tidy}>
-              <Wand2 aria-hidden="true" />
+              <AlignLeft aria-hidden="true" />
             </button>
           )}
           {edited && (

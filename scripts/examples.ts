@@ -18,7 +18,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { examplesOf, parsePage, type Example } from "../src/lib/markdown.ts";
 import type { Diagnostic, Recorded } from "../src/lib/types.ts";
-import { contentFiles } from "../vite/docs.ts";
+import { contentFiles } from "../vite/content.ts";
 import { SAMPLES } from "../src/landing/samples.ts";
 
 const root = resolve(import.meta.dir, "..");
@@ -124,6 +124,13 @@ async function runOne(job: Job): Promise<Outcome> {
     const output = strip(ran.out, dir);
     if (ran.timedOut) return { id: example.id, ok: false, message: "didn't finish within 20 seconds: mark it norun?", warnings };
     if (ran.code !== 0 && !example.fails) return { id: example.id, ok: false, message: `exited with status ${ran.code}:\n${output}`, warnings };
+    /* Run it again: a program whose output changes between runs (map order,
+       timing, randomness) can't have a fixed output block, and a recording of
+       one run would mislead readers. */
+    const again = strip((await exec(["./app"], dir, 20_000, example.stdin ?? "")).out, dir);
+    if (again !== output && !example.varies) {
+      return { id: example.id, ok: false, message: `printed different output on a second run, so its output isn't fixed (map order? randomness?):\n--- first\n${output}\n--- second\n${again}`, warnings };
+    }
     if (example.expect !== undefined && output.trimEnd() !== example.expect.trimEnd()) {
       return { id: example.id, ok: false, message: `printed something other than its output block.\n--- expected\n${example.expect}\n--- got\n${output}`, warnings };
     }

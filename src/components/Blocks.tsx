@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
-import { AlertTriangle, ArrowRight, CheckCircle2, ChevronRight, Info, Lightbulb, Sparkles, XCircle, Trophy, KeyRound } from "lucide-preact";
+import { AlertTriangle, ArrowRight, CheckCircle2, ChevronRight, Info, Lightbulb, CircleHelp, CircleAlert, XCircle, Trophy, KeyRound } from "lucide-preact";
 import { tokens, type Block, type Example } from "../lib/markdown";
 import { highlightCode } from "../lib/highlight";
 import type { PageData } from "../lib/types";
@@ -61,7 +61,7 @@ const TONES: Record<string, { label: string; icon: ComponentChildren }> = {
   note: { label: "Note", icon: <Info aria-hidden="true" /> },
   tip: { label: "Tip", icon: <Lightbulb aria-hidden="true" /> },
   warning: { label: "Watch out", icon: <AlertTriangle aria-hidden="true" /> },
-  important: { label: "Important", icon: <Sparkles aria-hidden="true" /> },
+  important: { label: "Important", icon: <CircleAlert aria-hidden="true" /> },
   hint: { label: "Hint", icon: <KeyRound aria-hidden="true" /> },
   go: { label: "Coming from Go", icon: <Info aria-hidden="true" /> },
   js: { label: "Coming from JavaScript", icon: <Info aria-hidden="true" /> },
@@ -98,7 +98,7 @@ function Quiz({ block, ctx }: { block: Extract<Block, { type: "quiz" }>; ctx: Re
   return (
     <section class={`quiz${solved ? " is-solved" : ""}`} aria-label="Quick check">
       <div class="quiz__label">
-        <Sparkles aria-hidden="true" /> Quick check
+        <CircleHelp aria-hidden="true" /> Quick check
       </div>
       <Blocks blocks={block.question} ctx={ctx} />
       <div class="quiz__options" role="group">

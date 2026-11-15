@@ -14,6 +14,8 @@
                    file= form one project, run from the first one
        stdin="…"   text fed to the program's standard input
        solution    an exercise's model answer (shown on request)
+       varies      its output changes from run to run (random, time);
+                   don't give it an output block
    - ```output: the output the example above must print. The checker fails
      when the program prints anything else.
    - > [!tip] / [!note] / [!warning] / [!important] / [!hint] quotes: callouts.
@@ -36,6 +38,8 @@ export type Example = {
   title?: string;
   /* The program is meant to exit with a failure, such as an uncaught throw. */
   fails?: boolean;
+  /* Its output changes from run to run, so no output block can pin it. */
+  varies?: boolean;
 };
 
 export type Block =
@@ -143,6 +147,7 @@ function exampleFrom(fences: Fence[], expect?: string): Example {
   if (first.solution) example.solution = true;
   if (first.title) example.title = first.title;
   if (first.fails) example.fails = true;
+  if (first.varies) example.varies = true;
   example.id = exampleKey(example);
   return example;
 }

@@ -6,39 +6,20 @@
    - virtual:docs-index is every page's title, description and headings, for
      navigation.
    - /search.json is the full-text search index, fetched when someone opens
-     search. */
+     search.
+   - <page>.md is the page as plain Markdown, for language models and anyone
+     who'd rather read the source, and /llms.txt lists them all. */
 
-import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
-import { join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { relative } from "node:path";
 import type { Plugin, ViteDevServer } from "vite";
 import { examplesOf, parsePage, plain, textOf, type Block } from "../src/lib/markdown.ts";
-import type { PackageAPI, Recorded } from "../src/lib/types.ts";
+import type { Recorded } from "../src/lib/types.ts";
 import { SAMPLES } from "../src/landing/samples.ts";
+import { API, CONTENT, EXAMPLES, contentFiles, loadAPI, readJSON, slugOf } from "./content.ts";
+import { markdownFiles } from "./llm.ts";
 
-const ROOT = join(import.meta.dirname, "..");
-const CONTENT = join(ROOT, "content");
-const EXAMPLES = join(ROOT, "generated/examples.json");
-const API = join(ROOT, "generated/api.json");
-
-export function slugOf(file: string): string {
-  return relative(CONTENT, file).replace(/\\/g, "/").replace(/\.md$/, "").replace(/(^|\/)index$/, "");
-}
-
-export function contentFiles(dir = CONTENT): string[] {
-  const out: string[] = [];
-  for (const name of readdirSync(dir)) {
-    const path = join(dir, name);
-    if (statSync(path).isDirectory()) out.push(...contentFiles(path));
-    else if (name.endsWith(".md")) out.push(path);
-  }
-  return out.sort();
-}
-
-const readJSON = <T>(path: string, fallback: T): T => (existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as T) : fallback);
-
-export function loadAPI(): { version: string; packages: PackageAPI[] } {
-  return readJSON(API, { version: "", packages: [] });
-}
+export { contentFiles, slugOf };
 
 function headings(blocks: Block[]) {
   return blocks.filter((b): b is Extract<Block, { type: "heading" }> => b.type === "heading" && b.level === 2).map((b) => ({ id: b.id, text: plain(b.text) }));
@@ -107,6 +88,14 @@ export function docs(): Plugin {
         res.setHeader("Content-Type", "application/json; charset=utf-8");
         res.end(JSON.stringify(searchIndex()));
       });
+      dev.middlewares.use((req, res, next) => {
+        const path = decodeURIComponent((req.url ?? "").split(/[?#]/)[0]).replace(/^\/+/, "");
+        if (!/\.(md|txt)$/.test(path) || path === "robots.txt") return next();
+        const file = markdownFiles().get(path);
+        if (file === undefined) return next();
+        res.setHeader("Content-Type", `${path.endsWith(".md") ? "text/markdown" : "text/plain"}; charset=utf-8`);
+        res.end(file);
+      });
     },
     resolveId(id) {
       if (id === INDEX) return "\0" + INDEX;
@@ -145,6 +134,7 @@ export function docs(): Plugin {
     generateBundle() {
       if (this.environment?.name === "ssr") return;
       this.emitFile({ type: "asset", fileName: "search.json", source: JSON.stringify(searchIndex()) });
+      for (const [fileName, source] of markdownFiles()) this.emitFile({ type: "asset", fileName, source });
     },
   };
 }

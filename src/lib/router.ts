@@ -58,7 +58,7 @@ export function interceptLinks() {
     if (!href || href.startsWith("mailto:") || /^[a-z]+:/i.test(href) && !href.startsWith(location.origin)) return;
     const url = new URL(href, location.href);
     if (url.origin !== location.origin) return;
-    if (/\.(json|wasm|js|txt|xml|png|svg|osl)$/.test(url.pathname)) return;
+    if (/\.(json|wasm|js|txt|xml|png|svg|osl|md)$/.test(url.pathname)) return;
     event.preventDefault();
     navigate(url.pathname + url.search + url.hash);
   });

@@ -5,7 +5,8 @@ import type { FunctionComponent } from "preact";
 import { Search, CheckCircle2, Circle } from "lucide-preact";
 import index from "virtual:docs-index";
 import { highlightCode } from "../lib/highlight";
-import type { APIMethod, APIParam } from "../lib/types";
+import type { APIMethod } from "../lib/types";
+import { ownerOf, signatureOf } from "../lib/signature";
 import { AREAS, LESSONS, PACKAGE_GROUPS, packageSlug, INSTALL } from "../nav";
 import { useProgress } from "../lib/progress";
 import { CopyButton } from "./CodeExample";
@@ -13,14 +14,6 @@ import { Text, type RenderContext } from "./Blocks";
 import { plain } from "../lib/markdown";
 
 type WidgetProps = { ctx: RenderContext; props: Record<string, string> };
-
-/* A parameter as OSL declares one: type first, ? for an argument that may be
-   left out, ... for a rest parameter. */
-const paramLabel = (p: APIParam) => (p.variadic ? `...${p.type} ${p.name}` : `${p.type}${p.optional && !p.type.endsWith("?") ? "?" : ""} ${p.name}`);
-
-export function signatureOf(owner: string, m: APIMethod) {
-  return `${owner}.${m.name}(${m.params.map(paramLabel).join(", ")})${m.returns ? ` ${m.returns}` : ""}`;
-}
 
 /* A Go doc comment as paragraphs, with tab-indented lines as code. */
 function DocText({ doc }: { doc: string }) {
@@ -137,7 +130,7 @@ const API: FunctionComponent<WidgetProps> = ({ ctx }) => {
         </>
       )}
       {types.map((t) => {
-        const owner = t.name.includes(".") ? t.name.split(".")[1].replace(/^./, (c) => c.toLowerCase()) : t.name;
+        const owner = ownerOf(t.name);
         return (
           <div key={t.name} class="api__type">
             <h3 class="api__group" id={`type-${t.name.replace(/\W/g, "-")}`}>

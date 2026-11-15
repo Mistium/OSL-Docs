@@ -4,7 +4,7 @@
    URL, so a link shares it. */
 
 import { useEffect, useRef, useState } from "preact/hooks";
-import { FileCode2, Link2, Play, Plus, Wand2, X, Check, TerminalSquare, AlertTriangle } from "lucide-preact";
+import { FileCode2, Link2, Play, Plus, AlignLeft, X, Check, TerminalSquare, AlertTriangle } from "lucide-preact";
 import { check, compilerState, format, onCompilerState, transpile, warmCompiler, type CompilerState, type FileMap } from "../lib/compiler";
 import { canRun, run } from "../lib/runner";
 import { decodeFiles, encodeFiles } from "../lib/share";
@@ -155,7 +155,7 @@ export function Playground() {
         </span>
         <div class="playground__actions">
           <button type="button" class="btn btn--ghost" onClick={tidy}>
-            <Wand2 aria-hidden="true" /> Format
+            <AlignLeft aria-hidden="true" /> Format
           </button>
           <button type="button" class="btn btn--ghost" onClick={share}>
             {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />} {copied ? "Link copied" : "Share"}

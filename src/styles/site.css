@@ -1821,6 +1821,11 @@ pre {
   color: var(--r-text);
   font-weight: 500;
 }
+.page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
 .edit-link {
   display: inline-flex;
   align-items: center;
