@@ -53,6 +53,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "080371e3fcdff": {
+  "output": "[111,118,178,261]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "092c3971987bb": {
   "output": "36\n16\n",
   "exit": 0,
@@ -154,6 +160,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "12d9ef49b6945": {
+  "output": "working on something else meanwhile\n144\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "12f351c13d469": {
   "output": "0 0\n",
   "exit": 0,
@@ -168,6 +180,12 @@
     "length": 7
    }
   ],
+  "osl": "9.1.0"
+ },
+ "1317d56d08de1": {
+  "output": "10\n20\n",
+  "exit": 0,
+  "diagnostics": [],
   "osl": "9.1.0"
  },
  "13dd5cb7b928f": {
@@ -230,6 +248,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "2082b76731547": {
+  "output": "true\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "220f1a8a4507e": {
   "output": "true\nfalse\n",
   "exit": 0,
@@ -272,6 +296,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "25b4b6b779f33": {
+  "output": "100\n212\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "271cea1cad3a0": {
   "output": "negative\nzero\npositive\n",
   "exit": 0,
@@ -302,10 +332,32 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "2c15b8f48d172": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "2c987f6abc066": {
   "output": "Ada\nCountess Lovelace\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "2ca8cc72cd0ca": {
+  "output": "100\n212\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-MIXED-OPERATORS",
+    "message": "PrecedenceWarning: mixed arithmetic operators are evaluated left to right; add parentheses to make the intended order explicit",
+    "file": "convert.osl",
+    "line": 1,
+    "column": 32,
+    "length": 16
+   }
+  ],
   "osl": "9.1.0"
  },
  "2e04407810690": {
@@ -329,6 +381,12 @@
     "rendered": "IndexError: OSL arrays and strings are 1-indexed. Index [0] is invalid; use [1] for the first element or [-1] for the last element.\n   |\n 2 | log planets[0]\n   |             ^\nin: main.osl:2"
    }
   ],
+  "osl": "9.1.0"
+ },
+ "30266549420c7": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
   "osl": "9.1.0"
  },
  "3122fd35bee71": {
@@ -356,6 +414,12 @@
  },
  "33d8023918253": {
   "output": "false\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "348de43551f23": {
+  "output": "",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -454,6 +518,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "48b0714882d4e": {
+  "output": "true\ntrue\ntrue\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "48c817e05c74e": {
   "output": "728590\n",
   "exit": 0,
@@ -486,6 +556,12 @@
  },
  "4b0fdddf24ae9": {
   "output": "Mercury\nEarth\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "4b6991cea08ec": {
+  "output": "",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -542,6 +618,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "55f66fe6ff722": {
+  "output": "5 2\n(15,22)\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "56abe30d58c2b": {
   "output": "[1,4,9,16]\n",
   "exit": 0,
@@ -574,6 +656,12 @@
  },
  "5a91a417aecbf": {
   "output": "3\n2\n1\nliftoff\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "5d5b7d79b9655": {
+  "output": "QUIET\n3\n[\"spread\",\"out\",\"words\"]\ntrue\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -620,6 +708,12 @@
  },
  "612d29d50d0db": {
   "output": "HI\n(nothing)\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "67129ac857b40": {
+  "output": "55\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -776,10 +870,38 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "8003e1d262e04": {
+  "output": "",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "83ad4c342e1b6": {
   "output": "193\n",
   "exit": 0,
   "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "8861f0f2ef1d2": {
+  "output": "[\"alpha done\",\"beta done\",\"gamma done\"]\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "8b99ab1d60c25": {
+  "output": "quick\nnull\n",
+  "exit": 0,
+  "diagnostics": [
+   {
+    "severity": "warning",
+    "code": "OSL-DEPRECATED",
+    "message": "DeprecationWarning: thread.Thread.timeout is deprecated: use t.wait({timeout: ms}) instead, which throws TimeoutError rather than returning null, so a thread that returned null can't be mistaken for one that timed out.",
+    "file": "main.osl",
+    "line": 17,
+    "column": 11,
+    "length": 11
+   }
+  ],
   "osl": "9.1.0"
  },
  "8de8b9e6b740e": {
@@ -1106,6 +1228,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "bc5144eca96f4": {
+  "output": "{\"ok\":true,\"values\":[1,2]}\n3.14\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "c05211e7045b3": {
   "output": "Hello\nI am learning OSL\n6\n",
   "exit": 0,
@@ -1332,6 +1460,12 @@
   "diagnostics": [],
   "osl": "9.1.0"
  },
+ "ddf39dbf37dc1": {
+  "output": "ababab\nHello World\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "de2b2ab0b86be": {
   "output": "5 0 0\n",
   "exit": 0,
@@ -1397,6 +1531,12 @@
   ],
   "osl": "9.1.0"
  },
+ "e548b941550ab": {
+  "output": "quick\ntrue\nTimeoutError\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "e5c0f1aaf4aba": {
   "output": "warm\n",
   "exit": 0,
@@ -1426,8 +1566,20 @@
   ],
   "osl": "9.1.0"
  },
+ "e781f874fc678": {
+  "output": "8000\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
  "e7fb3a2efa31c": {
   "output": "starting\nstopping\nunknown command: dance\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "e8f3f98b8af2f": {
+  "output": "",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
@@ -1529,6 +1681,18 @@
  },
  "f72e631d3de27": {
   "output": "Hello, world\nHello, Ada\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f7ac10905375a": {
+  "output": "12.56\n9\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.1.0"
+ },
+ "f8ab2de0676aa": {
+  "output": "a-b-c\n9\n5\n",
   "exit": 0,
   "diagnostics": [],
   "osl": "9.1.0"
