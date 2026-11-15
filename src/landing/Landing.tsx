@@ -7,7 +7,7 @@ import type { ComponentChildren } from "preact";
 import { ArrowRight } from "lucide-preact";
 import index from "virtual:docs-index";
 import { CodeExample, CopyButton } from "../components/CodeExample";
-import { highlightCode } from "../lib/highlight";
+import { highlightHTML } from "../lib/highlight";
 import type { Recorded } from "../lib/types";
 import { INSTALL, LESSONS, PACKAGE_GROUPS, SOURCE, packageSlug } from "../nav";
 import { SAMPLES, type Sample } from "./samples";
@@ -273,7 +273,7 @@ export function Landing() {
           <div class="commands__body">
             {TOOLS.map(([cmd, what]) => (
               <div key={cmd} class="commands__line">
-                <code class="hljs" dangerouslySetInnerHTML={{ __html: `<span class="commands__prompt">$</span> ${highlightCode(cmd, "bash") ?? cmd}` }} />
+                <code class="hljs" dangerouslySetInnerHTML={{ __html: `<span class="commands__prompt">$</span> ${highlightHTML(cmd, "bash")}` }} />
                 <span class="commands__what"># {what}</span>
               </div>
             ))}

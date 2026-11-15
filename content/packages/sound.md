@@ -7,11 +7,11 @@ package: sound
 
 `std:sound` plays audio. Load a sound from a file, bytes or a URL, then `play`, `pause`, `seek` and change its volume, pitch and stereo position while it plays. It works on its own or beside a [raylib](raylib.md) window, and supports WAV, MP3, OGG Vorbis and QOA.
 
-Playing needs an audio device, so the playing examples are marked compile-only. Loading and inspecting a sound doesn't, so those run here. To have a sound to load, the examples make a half-second beep in memory with a small helper in `tone.osl`.
+Playing needs an audio device, so the playing examples are marked compile-only. Loading and inspecting a sound doesn't, so that example runs here. To have a sound to load, it makes a half-second beep in memory with a small helper in `tone.osl`.
 
 ## Load a sound
 
-`sound.decode(bytes)` reads a sound from bytes and `sound.decodeFile(path)` from a file. Both return a result. A sound knows how long it is, in milliseconds:
+`sound.decode(bytes)` reads a sound from bytes and `sound.decodeFile(path)` from a file. Both return a result. A sound knows how long it is, in milliseconds. A new one has volume 1, pitch 1 (normal speed) and pan 0 (centre), and its setters take effect at once, even while it plays:
 
 ```osl file=main.osl
 import "std:sound"
@@ -20,11 +20,25 @@ import "./tone.osl"
 *sound.Sound beep = sound.decode(tone(500)).unwrap()
 log beep.duration()
 log beep.volume() beep.pitch() beep.pan()
+
+beep.setVolume(0.5)
+beep.setPitch(2)
+beep.setPan(-1)
+log beep.volume() beep.pitch() beep.pan()
+
+log beep.isPlaying() beep.isPaused() beep.position()
+beep.seek(250).unwrap()
+log beep.position() beep.progress()
 ```
 
 ```osl file=tone.osl
 // A square-wave beep as a WAV file in memory: 8000 samples a second, 8 bits.
-def le32(int n) byte[] -> [(n % 256).as<byte>, (floor(n / 256) % 256).as<byte>, (floor(n / 65536) % 256).as<byte>, (floor(n / 16777216) % 256).as<byte>]
+def le32(int n) byte[] -> [
+  (n % 256).as<byte>,
+  (floor(n / 256) % 256).as<byte>,
+  (floor(n / 65536) % 256).as<byte>,
+  (floor(n / 16777216) % 256).as<byte>
+]
 
 def tone(int ms) byte[] (
   int count = floor((8000 * ms) / 1000).as<int>
@@ -32,7 +46,10 @@ def tone(int ms) byte[] (
   for i in 0 to count - 1 (
     samples.append((if floor(i / 9) % 2 == 0 then 200 else 56).as<byte>)
   )
-  byte[] header = [0x52, 0x49, 0x46, 0x46] + le32(36 + count) + [0x57, 0x41, 0x56, 0x45, 0x66, 0x6D, 0x74, 0x20] + le32(16) + [1, 0, 1, 0] + le32(8000) + le32(8000) + [1, 0, 8, 0] + [0x64, 0x61, 0x74, 0x61] + le32(count)
+  byte[] header = [0x52, 0x49, 0x46, 0x46] + le32(36 + count)
+  header = header + [0x57, 0x41, 0x56, 0x45, 0x66, 0x6D, 0x74, 0x20]
+  header = header + le32(16) + [1, 0, 1, 0] + le32(8000) + le32(8000)
+  header = header + [1, 0, 8, 0] + [0x64, 0x61, 0x74, 0x61] + le32(count)
   return header + samples
 )
 ```
@@ -40,9 +57,12 @@ def tone(int ms) byte[] (
 ```output
 500
 1 1 0
+0.5 2 -1
+false false 0
+250 0.5
 ```
 
-A new sound has volume 1, pitch 1 (normal speed) and pan 0 (centre). Change `tone(500)` to `tone(1200)` and run it again.
+Change `tone(500)` to `tone(1200)` and run it again.
 
 ## Play it
 
@@ -59,44 +79,6 @@ The program ends when `main` ends, so a short program that plays a sound needs t
 
 ## Volume, pitch and pan
 
-Setters take effect at once, even while the sound plays:
-
-```osl file=main.osl
-import "std:sound"
-import "./tone.osl"
-
-*sound.Sound beep = sound.decode(tone(500)).unwrap()
-
-beep.setVolume(0.5)
-beep.setPitch(2)
-beep.setPan(-1)
-log beep.volume() beep.pitch() beep.pan()
-
-log sound.globalVolume()
-sound.setGlobalVolume(0.8)
-log sound.globalVolume()
-```
-
-```osl file=tone.osl
-def le32(int n) byte[] -> [(n % 256).as<byte>, (floor(n / 256) % 256).as<byte>, (floor(n / 65536) % 256).as<byte>, (floor(n / 16777216) % 256).as<byte>]
-
-def tone(int ms) byte[] (
-  int count = floor((8000 * ms) / 1000).as<int>
-  byte[] samples = []
-  for i in 0 to count - 1 (
-    samples.append((if floor(i / 9) % 2 == 0 then 200 else 56).as<byte>)
-  )
-  byte[] header = [0x52, 0x49, 0x46, 0x46] + le32(36 + count) + [0x57, 0x41, 0x56, 0x45, 0x66, 0x6D, 0x74, 0x20] + le32(16) + [1, 0, 1, 0] + le32(8000) + le32(8000) + [1, 0, 8, 0] + [0x64, 0x61, 0x74, 0x61] + le32(count)
-  return header + samples
-)
-```
-
-```output
-0.5 2 -1
-1
-0.8
-```
-
 Volume is 0 (silent) to 1. Pitch is the playback speed, so 2 is twice as fast and an octave higher, and 0.5 an octave lower. Pan runs from -1 (left) to 1 (right). A value out of range throws a `ValueError`. `sound.setGlobalVolume` scales every sound at once, like a master volume knob.
 
 :::quiz
@@ -111,39 +93,7 @@ Pitch is a speed multiplier. Volume is the loudness control.
 
 ## Pause, stop and seek
 
-A sound has a position in milliseconds. `pause` keeps it, `stop` rewinds to the start, and `seek(ms)` jumps anywhere, playing or not. `progress()` is the position as a fraction from 0 to 1:
-
-```osl file=main.osl
-import "std:sound"
-import "./tone.osl"
-
-*sound.Sound beep = sound.decode(tone(500)).unwrap()
-log beep.isPlaying() beep.isPaused() beep.position()
-
-beep.seek(250).unwrap()
-log beep.position() beep.progress()
-```
-
-```osl file=tone.osl
-def le32(int n) byte[] -> [(n % 256).as<byte>, (floor(n / 256) % 256).as<byte>, (floor(n / 65536) % 256).as<byte>, (floor(n / 16777216) % 256).as<byte>]
-
-def tone(int ms) byte[] (
-  int count = floor((8000 * ms) / 1000).as<int>
-  byte[] samples = []
-  for i in 0 to count - 1 (
-    samples.append((if floor(i / 9) % 2 == 0 then 200 else 56).as<byte>)
-  )
-  byte[] header = [0x52, 0x49, 0x46, 0x46] + le32(36 + count) + [0x57, 0x41, 0x56, 0x45, 0x66, 0x6D, 0x74, 0x20] + le32(16) + [1, 0, 1, 0] + le32(8000) + le32(8000) + [1, 0, 8, 0] + [0x64, 0x61, 0x74, 0x61] + le32(count)
-  return header + samples
-)
-```
-
-```output
-false false 0
-250 0.5
-```
-
-A progress bar for a sound player is `progress()` times the bar's width.
+A sound has a position in milliseconds. `pause` keeps it, `stop` rewinds to the start, and `seek(ms)` jumps anywhere, playing or not. `progress()` is the position as a fraction from 0 to 1, so a progress bar is `progress()` times the bar's width.
 
 ## Sound effects and music
 

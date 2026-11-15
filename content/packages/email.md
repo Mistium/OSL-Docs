@@ -5,7 +5,7 @@ package: email
 
 # email
 
-`std:email` builds an email message and sends it through an SMTP server. Composing needs no network: you can build, check and print a message and see exactly what would go out. Only `send` talks to a server, so those examples are marked `norun` below.
+`std:email` builds an email message and sends it through an SMTP server. Composing needs no network, so you can build, check and print a message to see exactly what would go out. Only `send` talks to a server.
 
 ## Build a message
 
@@ -31,7 +31,7 @@ Hi Bob,
 are you free at noon?
 ```
 
-Change the subject and run it again. `preview()` is a quick look for logs and tests.
+`preview()` is a quick look for logs and tests.
 
 ## More recipients
 
@@ -59,7 +59,7 @@ false
 
 ## Bad addresses
 
-Adding a bad address fails and leaves the message as it was. Try a few: an address with no `@`, or a name with a space:
+Adding a bad address fails and leaves the message as it was:
 
 ```osl
 import "std:email"
@@ -163,7 +163,7 @@ switch outcome (
 )
 ```
 
-Failures come back as an error: `NetworkError` and `TimeoutError` for connection trouble, `PermissionError` for a login that was refused, and `StateError` when the message isn't valid. Read the password from [env](env.md), not from source.
+Failures come back as an error: `NetworkError` and `TimeoutError` for connection trouble, `PermissionError` for a refused login, `UnsupportedError` when the server has no TLS and you gave a password (the password would travel in the clear), `RuntimeError` when the server refuses the sender, recipient or message, and `StateError` when the message isn't valid. Read the password from [env](env.md), not from source.
 
 :::exercise title="A receipt"
 Build a message from `shop@example.com` to a customer with the subject `Your receipt` and a body of `Total: 12.50`. Print its subject, and whether it is valid.
@@ -191,7 +191,11 @@ true
 ```osl solution
 import "std:email"
 
-auto mail = email.new({from: "shop@example.com", to: "ada@example.com", subject: "Your receipt"}).unwrap()
+auto mail = email.new({
+  from: "shop@example.com",
+  to: "ada@example.com",
+  subject: "Your receipt"
+}).unwrap()
 mail.setBody("Total: 12.50")
 
 log mail.subject()

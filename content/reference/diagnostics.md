@@ -25,7 +25,7 @@ main.osl:2:9: osl: TypeError: Cannot store a string in int; convert it with .toI
 
 Errors make `osl run`, `osl compile` and `osl test` fail with status 1 and build nothing. Warnings are printed, and the program still builds. A command prints at most 20 warnings and counts the rest, unless you pass `--all-warnings`. `osl lsp check` prints all of them.
 
-A project can promote a warning to an error in `opal.json`. The warning's kind then changes its ending: an `UnusedVariableWarning` becomes an `UnusedVariableError`, with a note that says the project made it one.
+A project can promote a warning to an error in `opal.json`. The warning's kind then changes its ending: an `UnusedVariableWarning` becomes an `UnusedVariableError`, with a note that says the project made it one. A warning with no kind of its own becomes a `LintError`.
 
 The examples below that show errors are marked as failing on purpose, so the site displays the diagnostic the compiler gave. The warning examples compile, and show their warning.
 

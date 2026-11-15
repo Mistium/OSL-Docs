@@ -32,9 +32,7 @@ for i, t in tasks (
 [x] 2 walk dog
 ```
 
-Notice `if t.done then "[x]" else "[ ]"`, which is an expression that picks one of two values.
-
-**Try changing** a task's text, or flip a `false` to `true`.
+`if t.done then "[x]" else "[ ]"` is an expression that picks one of two values. **Try changing** a task's text, or flip a `false` to `true`.
 
 :::exercise title="Count what's done"
 Write `summary` so it returns text like `1 of 3 done`.
@@ -86,7 +84,7 @@ log summary(tasks)
 
 ## Add tasks with a function
 
-Commands will be functions. `add` appends a task and `list` prints them. The calls moved to the try-it tab, so the program above it reads as the tool itself.
+Commands will be functions: `add` appends a task and `list` prints them. The calls move to the try-it tab, so the program reads as the tool itself.
 
 ```osl
 struct Task (
@@ -175,9 +173,7 @@ list(true)
 
 ## Remember tasks in a file
 
-Right now the list vanishes when the program ends. `json.stringify` turns the array into text and `fs.writeFile` stores it; `load` reads it back with `json.parse<Task[]>`. A missing file just means an empty list. A broken file is a real problem: say why and exit with status 1.
-
-`add` and `list` now go through `load` and `save`.
+Right now the list vanishes when the program ends. `save` turns the array into text with `json.stringify` and writes it with `fs.writeFile`; `load` reads it back with `json.parse<Task[]>`. A missing file just means an empty list. A broken file is a real problem: say why and exit with status 1. `add` and `list` now go through `load` and `save`.
 
 ```osl
 import "std:fs"
@@ -240,7 +236,7 @@ added #2
 [{"text":"buy milk","done":false},{"text":"walk dog","done":false}]
 ```
 
-Look at the `catch` blocks: they end in `process.exit(1)`, which never returns, so the code after `catch` only sees good values. See [errors](../learn/errors.md). The `fs.remove` in the try-it tab only makes this page start clean.
+The `catch` blocks end in `process.exit(1)`, which never returns, so the code after `catch` only sees good values. See [errors](../learn/errors.md). The `fs.remove` in the try-it tab only makes each run start clean.
 
 :::quiz
 Why can the line after `fs.readFile(file) catch (...)` use the text as a plain string?
@@ -254,7 +250,7 @@ Why can the line after `fs.readFile(file) catch (...)` use the text as a plain s
 
 ## Finish a task
 
-`finish` can go wrong three ways: not a number, no such task, or it works. Each gets a message and an exit code: 2 means the command was used wrongly, 1 means something failed while doing the work. `tryAs<int>` returns a result, so `catch` handles "not a number" with an early `return 2`.
+`finish` can go wrong two ways: the argument isn't a number, or there's no such task. Each gets a message and an exit code: 2 means the command was used wrongly, 1 means something failed while doing the work. `tryAs<int>` returns a result, so `catch` handles "not a number" with an early `return 2`.
 
 ```osl
 import "std:fs"
@@ -410,7 +406,7 @@ log finish(tasks, 2)
 
 `run` takes the arguments as an array and returns an exit code: it `switch`es on the first one and hands the rest to the right function. `add` now takes the words and checks it got some. Because `run` takes arguments, the try-it tab can call it with made-up ones.
 
-The real command line goes in at the bottom: `process.args()` is what was typed after the program name, and `process.exit` ends with the code `run` returned. It only runs when there are arguments, so here the try-it code runs instead.
+The real command line goes at the bottom: `process.args()` is what was typed after the program name, and `process.exit` ends with the code `run` returned. That only happens when arguments were given, so on this page the try-it code runs instead.
 
 ```osl
 import "std:fs"
@@ -618,7 +614,7 @@ log run([])
 
 ## Build it and put it on your PATH
 
-Save the program as `todo.osl`. `osl run` compiles every time, and everything after `--` goes to your program:
+Save the program as `todo.osl`. `osl run` builds and runs it, and everything after `--` goes to your program:
 
 ```bash
 osl run todo.osl -- add buy milk

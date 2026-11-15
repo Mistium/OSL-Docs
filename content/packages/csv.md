@@ -5,7 +5,7 @@ package: csv
 
 # csv
 
-`csv` reads and writes comma-separated values: spreadsheets exported from Excel, bank statements, database dumps, logs. It deals with quoting for you (commas and quotes inside cells, newlines in cells), so you never split lines by hand.
+`std:csv` reads and writes comma-separated values: spreadsheet exports, bank statements, database dumps. It handles the quoting (commas, quotes and newlines inside cells), so you never split lines by hand.
 
 ```osl fragment
 import "std:csv"
@@ -13,7 +13,7 @@ import "std:csv"
 
 ## Parse into objects
 
-`csv.parse` treats the first row as column names and returns one object per remaining row. It returns a [result](../learn/errors.md), since the text may be malformed.
+`csv.parse` treats the first row as column names and returns one object per remaining row. It returns a [result](result.md), since the text may be malformed.
 
 ```osl
 import "std:csv"
@@ -94,8 +94,6 @@ for r in rows ( log r.len r )
 2 ["1","2"]
 4 ["3","4","5","6"]
 ```
-
-Use it for files with no header row, for CSV whose columns you want by position, or when you want to rewrite the file in the same order.
 
 ## Other delimiters
 
@@ -188,11 +186,14 @@ Try it: change `columns` to `["age", "name"]`.
 import "std:csv"
 import "std:fs"
 
-fs.writeFile("people.csv", csv.stringify([{name: "Ada", year: 1815}, {name: "Alan", year: 1912}], {columns: ["name", "year"]})).unwrap()
+auto people = [{name: "Ada", year: 1815}, {name: "Alan", year: 1912}]
+string text = csv.stringify(people, {columns: ["name", "year"]})
+fs.writeFile("people.csv", text).unwrap()
 for p in csv.parseFile("people.csv").unwrap() (
   log p.name p.year
 )
 log csv.parseFile("missing.csv").unwrapErr().kind
+fs.remove("people.csv").unwrap()
 ```
 
 ```output
@@ -201,9 +202,9 @@ Alan 1912
 NotFoundError
 ```
 
-## Real-world: group and total
+## Group and total
 
-A typical job: read a sales export, total by category, and write a report.
+Read a sales export, total by category, and write a report:
 
 ```osl
 import "std:csv"

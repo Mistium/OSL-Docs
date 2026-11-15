@@ -273,6 +273,22 @@ true false
 | A fixed set of named fields | a [struct](../learn/structs.md) |
 | Unique values only, no values attached | a [set](set.md) |
 
+:::quiz
+What does this print?
+
+```osl fragment
+map names = map()
+names.set(1, "one")
+log names.get("1")
+```
+
+- [ ] `one`
+- [x] `null`
+- [ ] It stops with a `TypeError`.
+
+The number `1` and the text `"1"` are different keys, so `get("1")` finds nothing and gives `null`.
+:::
+
 :::exercise title="Most common word"
 Count the words in the sentence with a `map()`, then print the word that appears most often and how many times it appeared.
 

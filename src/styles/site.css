@@ -1320,10 +1320,10 @@ pre {
   font-size: var(--r-text-md);
   transition: background var(--r-duration);
 }
-.quiz__option:not(:disabled):hover {
+.quiz__option:not([aria-disabled="true"]):hover {
   background: var(--shade-3);
 }
-.quiz__option:disabled {
+.quiz__option[aria-disabled="true"] {
   cursor: default;
 }
 .quiz__mark {
@@ -1730,7 +1730,8 @@ pre {
   padding: 14px 0;
   scroll-margin-top: calc(var(--topbar) + 16px);
 }
-.api__member:target {
+.api__member:target,
+.api__member.is-target {
   margin: 0 -14px;
   padding-left: 14px;
   padding-right: 14px;
@@ -1936,6 +1937,8 @@ pre {
 }
 .home-install {
   display: grid;
+  /* minmax(0, …): the install command scrolls instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   max-width: 32rem;
   margin-top: 24px;
@@ -2678,4 +2681,10 @@ pre {
   .docs--project {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Headings and targets take focus after navigation so Tab carries on from
+   there; they aren't controls, so they don't get a focus ring. */
+[tabindex="-1"]:focus {
+  outline: none;
 }

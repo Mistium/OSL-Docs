@@ -6,9 +6,7 @@ builtin: true
 
 # canvas
 
-`canvas(width, height, background)` is a built-in in-memory pixel buffer that you could fill, resize and export. It is **deprecated**: [img](img.md) does everything it did, and also draws shapes, paths and text, applies filters, reads and writes files, and reads and sets single pixels. Every canvas method gives a deprecation warning when you use it. Existing code keeps working, and a canvas converts to an image with `toImage()`, so you can move over a piece at a time.
-
-Read this page to understand old code. For new code, use `img.new`.
+`canvas(width, height, background)` is a built-in in-memory pixel buffer that you could fill, resize and export. It is **deprecated**: [img](img.md) does everything it did and also draws shapes and text, applies filters, reads and writes files, and reads and sets single pixels. Every canvas method gives a deprecation warning. Existing code keeps working, and a canvas converts to an image with `toImage()`, so you can move over a piece at a time. For new code, use `img.new`.
 
 ## What a canvas does
 
@@ -23,7 +21,7 @@ c.stretch(8, 4)                       // resize in place, nearest pixel
 log c.toURL()                         // a "data:image/png;base64,..." string
 ```
 
-Unlike img, a canvas has no way to read or set one pixel, and no drawing at all.
+`c.toArray()` returns the pixels as channel values. A canvas can't read or set one pixel, and it can't draw.
 
 ## Moving to img
 
@@ -45,7 +43,7 @@ Everything else maps to a method of the image:
 | `c.clear()` | `pic.fill(background)` |
 | `c.stretch(w, h)` | `pic = pic.resize(w, h, {filter: "nearest"})` (a copy, not in place) |
 | `c.toURL()` | `pic.toDataURL().unwrap()` |
-| `c.toArray()`, `c.toArr()` | `pic.pixels()`, as bytes |
+| `c.toArray()`, `c.toArr()` | `pic.pixels()`, as bytes (a canvas gave 0 to 255 values, four per pixel) |
 
 The same steps with img run without a warning, and the image can be saved too:
 
@@ -72,23 +70,6 @@ log pic.pixels().len
 true
 32
 ```
-
-## Reference
-
-All of these are deprecated.
-
-| Method | Returns | Notes |
-| --- | --- | --- |
-| `canvas(width, height, background)` | `canvas` | Makes the canvas, filled with the background. |
-| `c.width()`, `c.height()` | `int` | The size in pixels. |
-| `c.pixels()` | `int` | The pixel count, width times height. |
-| `c.fill(color)` | none | Sets every pixel to a colour. |
-| `c.clear()` | none | Sets every pixel back to the background it was made with. |
-| `c.stretch(width, height)` | none | Resizes in place, sampling the nearest pixel. |
-| `c.toURL()` | `string` | A PNG data URL. Throws `ValueError` for a canvas with no pixels. |
-| `c.toArray()` | `int[]` | The pixels as 0 to 255 channel values, four per pixel, row by row. |
-| `c.toArr()` | `any[]` | The same as a general array. |
-| `c.toImage()` | `*img.Image` | A copy as an image. Not deprecated. |
 
 > [!note]
 > `canvas` is a type name, so a variable can't be called `canvas`.

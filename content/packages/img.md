@@ -5,9 +5,9 @@ package: img
 
 # img
 
-`std:img` is OSL's image type. You can make one, draw shapes, paths and text on it, filter and transform it, read and write PNG, JPEG, GIF, BMP and TIFF (and decode WebP, AVIF and more), and inspect files without decoding them. It needs no display and no system libraries, so it runs anywhere, in a test or on a server.
+`std:img` is OSL's image type. Make one, draw shapes, paths and text on it, filter and transform it, read and write PNG, JPEG, GIF, BMP and TIFF (and decode WebP, AVIF and more), and inspect files without decoding them. It needs no display and no system libraries, so it runs anywhere, in a test or on a server.
 
-An `*img.Image` is also the common currency of the other graphics packages. [qr](qr.md) and [svg](svg.md) produce one, [window](window.md) and [ui](ui.md) can show one, and [serve](serve.md) can send one. If you write code that takes or returns an image, use this type.
+An `*img.Image` is also the common currency of the other graphics packages: [qr](qr.md) and [svg](svg.md) produce one, [window](window.md) and [ui](ui.md) show one, and [serve](serve.md) sends one.
 
 ```osl fragment
 import "std:img"
@@ -374,35 +374,40 @@ log board.pixel(1, 1) board.pixel(2, 1) board.pixel(1, 2)
 Filters and transforms return a copy. Drawing methods, like `rectangle`, change the image in place.
 :::
 
-:::exercise title="A white square with a red dot"
-Make a 5 by 5 white image, draw a red pixel in the middle with `setPixel`, and print the colours of the middle pixel and the corner.
+:::exercise title="A thumbnail"
+Finish `thumbnail` so it returns a copy of the image that is 50 pixels wide, with the height following the aspect ratio. The original must stay as it is.
 
 ```osl
 import "std:img"
 
-*img.Image pic = img.new(5, 5, {fill: "white"})
+def thumbnail(*img.Image pic) *img.Image -> pic
 
-log pic.pixel(1, 1)
+*img.Image photo = img.new(200, 100, {fill: "navy"})
+auto small = thumbnail(photo)
+log small.width() small.height()
+log photo.width() photo.height()
 ```
 
 ```output
-#ff0000 #ffffff
+50 25
+200 100
 ```
 
 > [!hint]
-> The middle of a 5 by 5 image is pixel 3, 3.
+> `resize` takes a width and a height.
+
+> [!hint]
+> Pass 0 for the side that should follow the aspect ratio: `pic.resize(50, 0)`.
 
 ```osl solution
 import "std:img"
 
-*img.Image pic = img.new(5, 5, {fill: "white"})
-pic.setPixel(3, 3, "red")
+def thumbnail(*img.Image pic) *img.Image -> pic.resize(50, 0)
 
-log pic.pixel(3, 3) pic.pixel(1, 1)
-```
-
-```output
-#ff0000 #ffffff
+*img.Image photo = img.new(200, 100, {fill: "navy"})
+auto small = thumbnail(photo)
+log small.width() small.height()
+log photo.width() photo.height()
 ```
 :::
 

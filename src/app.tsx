@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { areaOf } from "./nav";
 import { cachedPage, hasPage, loadPage } from "./pages";
 import { restoreScroll, slugFromPath, usePath } from "./lib/router";
@@ -41,12 +41,19 @@ export function App({ path: initialPath, page: initialPage }: { path: string; pa
     if (hit || !hasPage(slug)) return setPage(hit ?? null);
     let cancelled = false;
     const timer = setTimeout(() => setSlow(true), 120);
-    void loadPage(slug).then((next) => {
-      clearTimeout(timer);
-      if (cancelled) return;
-      setSlow(false);
-      setPage(next);
-    });
+    loadPage(slug).then(
+      (next) => {
+        clearTimeout(timer);
+        if (cancelled) return;
+        setSlow(false);
+        setPage(next);
+      },
+      // A chunk that won't load (usually a tab left open across a deploy)
+      // gets the page from the server instead.
+      () => {
+        if (!cancelled) location.assign(location.href);
+      },
+    );
     return () => {
       cancelled = true;
       clearTimeout(timer);
@@ -54,11 +61,14 @@ export function App({ path: initialPath, page: initialPage }: { path: string; pa
     };
   }, [slug]);
 
-  // Once the new page has rendered, set its title and scroll position.
+  // Once the new page has rendered, set its title, scroll position and, after
+  // a navigation (not the first load), focus.
+  const firstSettle = useRef(true);
   useEffect(() => {
     if (settled === null) return;
     document.title = documentTitle(slug, ready);
-    restoreScroll();
+    restoreScroll(!firstSettle.current);
+    firstSettle.current = false;
   }, [settled]);
 
   if (slug === "")

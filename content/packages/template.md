@@ -31,7 +31,8 @@ Numbers and booleans are written as OSL prints them, and `null` or a missing key
 ```osl
 import "std:template"
 
-log template.render("[{{n}}] [{{ok}}] [{{nothing}}] [{{absent}}]", {n: 3.5, ok: true, nothing: null}).unwrap()
+string text = "[{{n}}] [{{ok}}] [{{nothing}}] [{{absent}}]"
+log template.render(text, {n: 3.5, ok: true, nothing: null}).unwrap()
 ```
 
 ```output
@@ -62,7 +63,10 @@ Grace lives in Arlington.
 ```osl
 import "std:template"
 
-string text = "{{#if admin}}Welcome back, admin.{{else}}Welcome.{{/if}} {{#unless verified}}Please verify your email.{{/unless}}"
+string text = [
+  "{{#if admin}}Welcome back, admin.{{else}}Welcome.{{/if}}",
+  "{{#unless verified}}Please verify your email.{{/unless}}"
+].join(" ")
 log template.render(text, {admin: true, verified: false}).unwrap()
 log template.render(text, {admin: false, verified: true}).unwrap()
 ```
@@ -116,7 +120,8 @@ For an array of plain values, `{{.}}` is the element itself:
 ```osl
 import "std:template"
 
-log template.render("Tags:{{#each tags}} [{{.}}]{{/each}}", {tags: ["go", "fast", "small"]}).unwrap()
+string text = "Tags:{{#each tags}} [{{.}}]{{/each}}"
+log template.render(text, {tags: ["go", "fast", "small"]}).unwrap()
 log template.render("{{#each tags}}x{{/each}}none", {tags: []}).unwrap()
 ```
 
@@ -222,28 +227,29 @@ ValueError : template.render: line 1, column 7: no value for "nmae" in {{nmae}}
 
 Strict mode is a good default while you develop, and for templates that must not be left half filled.
 
-## Data must be an object
+## Structs as data
 
-The data is an object, such as `{name: "Ada"}`. A struct is not accepted: `template.render(text, myStruct)` throws a `TypeError`, and structs inside an array or object render as empty. Convert them to plain values first by going through [json](json.md):
+The data can be an object or a struct. A struct's fields are read by name, and structs inside arrays and objects work the same way, so you can render your own types without converting them:
 
 ```osl
 import "std:template"
-import "std:json"
 
 struct Item (
   string name = ""
   number price = 0
 )
 
-Item[] items = [Item("pen", 1.5), Item("ink", 12)]
-auto plain = json.parse(json.stringify({items: items})).unwrap()
-log template.render("{{#each items}}{{name}}: {{price}}\n{{/each}}", plain).unwrap()
+struct Order (
+  string id = ""
+  Item[] items = []
+)
+
+auto order = Order("a1", [Item("pen", 1.5), Item("ink", 12)])
+log template.render("Order {{id}}:{{#each items}} {{name}} ({{price}}){{/each}}", order).unwrap()
 ```
 
 ```output
-pen: 1.5
-ink: 12
-
+Order a1: pen (1.5) ink (12)
 ```
 
 ## Templates in files
@@ -255,7 +261,13 @@ import "std:template"
 import "std:fs"
 
 fs.remove("invoice.tpl", {force: true}).unwrap()
-fs.writeFile("invoice.tpl", "Invoice {{id}}\n{{#each lines}}{{desc}}: {{amount}}\n{{/each}}Total: {{total}}\n").unwrap()
+string invoice = [
+  "Invoice {{id}}",
+  "{{#each lines}}{{desc}}: {{amount}}",
+  "{{/each}}Total: {{total}}",
+  ""
+].join("\n")
+fs.writeFile("invoice.tpl", invoice).unwrap()
 
 string tpl = fs.readFile("invoice.tpl").unwrap()
 auto data = {id: 42, lines: [{desc: "Widget", amount: 10}, {desc: "Gadget", amount: 15}], total: 25}
@@ -271,13 +283,30 @@ Total: 25
 
 ```
 
+:::quiz
+What does `{{#if items}}` do when `items` is an empty array?
+
+- [ ] Renders its body, as the key exists.
+- [x] Skips its body, as an empty array is falsy.
+- [ ] Fails with a `ValueError`.
+
+Empty arrays, empty strings, `0`, `false` and `null` are all falsy.
+:::
+
 :::exercise title="A shopping list"
-Render the data as a numbered-free bullet list: a heading line `Shopping for NAME`, then one line `- ITEM` for each item that is not bought, and `All done!` if there are no items left. Use a single template.
+Render the data as a bullet list: a heading line `Shopping for NAME`, then one line `- ITEM` for each item that is not bought, and `All done!` if there are no items left. Use a single template.
 
 ```osl
 import "std:template"
 
-auto data = {name: "Ada", items: [{item: "milk", bought: false}, {item: "eggs", bought: true}, {item: "tea", bought: false}]}
+auto data = {
+  name: "Ada",
+  items: [
+    {item: "milk", bought: false},
+    {item: "eggs", bought: true},
+    {item: "tea", bought: false}
+  ]
+}
 log template.render("{{name}}", data).unwrap()
 ```
 
@@ -296,8 +325,19 @@ Shopping for Ada
 ```osl solution
 import "std:template"
 
-auto data = {name: "Ada", items: [{item: "milk", bought: false}, {item: "eggs", bought: true}, {item: "tea", bought: false}]}
-string tpl = "Shopping for {{name}}\n{{#each items}}{{#unless bought}}- {{item}}\n{{/unless}}{{/each}}"
+auto data = {
+  name: "Ada",
+  items: [
+    {item: "milk", bought: false},
+    {item: "eggs", bought: true},
+    {item: "tea", bought: false}
+  ]
+}
+string tpl = [
+  "Shopping for {{name}}",
+  "{{#each items}}{{#unless bought}}- {{item}}",
+  "{{/unless}}{{/each}}"
+].join("\n")
 log template.render(tpl, data).unwrap().trim()
 ```
 
@@ -306,16 +346,6 @@ Shopping for Ada
 - milk
 - tea
 ```
-:::
-
-:::quiz
-What does `{{#if items}}` do when `items` is an empty array?
-
-- [ ] Renders its body, as the key exists.
-- [x] Skips its body, as an empty array is falsy.
-- [ ] Fails with a `ValueError`.
-
-Empty arrays, empty strings, `0`, `false` and `null` are all falsy.
 :::
 
 :::exercise title="Catch the typo"

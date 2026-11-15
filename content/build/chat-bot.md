@@ -78,7 +78,10 @@ struct Dice (
 def parseDice(string text) result<Dice, error> (
   string[] parts = text.trim().toLower().split("d")
   if parts.len != 2 return result.err(error("use the form 2d6"))
-  int count = if parts[1] == "" then 1 else parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  int count = 1
+  if parts[1] != "" (
+    count = parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  )
   int sides = parts[2].tryAs<int> catch return result.err(error("not a number: " ++ parts[2]))
   if count < 1 or count > 20 return result.err(error("roll between 1 and 20 dice"))
   if sides < 2 or sides > 1000 return result.err(error("dice have between 2 and 1000 sides"))
@@ -161,7 +164,10 @@ struct Dice (
 def parseDice(string text) result<Dice, error> (
   string[] parts = text.trim().toLower().split("d")
   if parts.len != 2 return result.err(error("use the form 2d6"))
-  int count = if parts[1] == "" then 1 else parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  int count = 1
+  if parts[1] != "" (
+    count = parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  )
   int sides = parts[2].tryAs<int> catch return result.err(error("not a number: " ++ parts[2]))
   if count < 1 or count > 20 return result.err(error("roll between 1 and 20 dice"))
   if sides < 2 or sides > 1000 return result.err(error("dice have between 2 and 1000 sides"))
@@ -272,7 +278,10 @@ struct Dice (
 def parseDice(string text) result<Dice, error> (
   string[] parts = text.trim().toLower().split("d")
   if parts.len != 2 return result.err(error("use the form 2d6"))
-  int count = if parts[1] == "" then 1 else parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  int count = 1
+  if parts[1] != "" (
+    count = parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  )
   int sides = parts[2].tryAs<int> catch return result.err(error("not a number: " ++ parts[2]))
   if count < 1 or count > 20 return result.err(error("roll between 1 and 20 dice"))
   if sides < 2 or sides > 1000 return result.err(error("dice have between 2 and 1000 sides"))
@@ -326,6 +335,37 @@ log originchats.newPoll("Pizza tonight?", ["yes", "no"]).build()
 
 **Try changing** the card's title or colour.
 
+:::exercise title="A three-way poll"
+Make `lunchPoll` ask `Lunch?` with the choices `pizza`, `ramen` and `salad`.
+
+```osl
+import "std:originchats"
+
+def lunchPoll() *originchats.Embed (
+  return originchats.newPoll("Lunch?", ["pizza", "ramen"])
+)
+
+log lunchPoll().build()
+```
+
+```output
+{"poll":{"options":[{"text":"pizza"},{"text":"ramen"},{"text":"salad"}],"question":"Lunch?"},"type":"poll"}
+```
+
+> [!hint]
+> The choices are an array of strings.
+
+```osl solution
+import "std:originchats"
+
+def lunchPoll() *originchats.Embed (
+  return originchats.newPoll("Lunch?", ["pizza", "ramen", "salad"])
+)
+
+log lunchPoll().build()
+```
+:::
+
 ## Trivia and scores
 
 Questions are structs. `!trivia` picks one at random and remembers it, `!answer` checks the guess (`==` ignores case), and a map keeps each user's points. Sorting the names keeps the scoreboard in a fixed order. Run the try-it tab to read a whole game.
@@ -343,7 +383,10 @@ struct Dice (
 def parseDice(string text) result<Dice, error> (
   string[] parts = text.trim().toLower().split("d")
   if parts.len != 2 return result.err(error("use the form 2d6"))
-  int count = if parts[1] == "" then 1 else parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  int count = 1
+  if parts[1] != "" (
+    count = parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  )
   int sides = parts[2].tryAs<int> catch return result.err(error("not a number: " ++ parts[2]))
   if count < 1 or count > 20 return result.err(error("roll between 1 and 20 dice"))
   if sides < 2 or sides > 1000 return result.err(error("dice have between 2 and 1000 sides"))
@@ -433,7 +476,11 @@ def handle(string user, string text) string (
 
 // try it
 random.seed(3)
-for line in ["ann|!trivia", "bo|!answer lyon", "ann|!answer 6", "bo|!roll 2d6", "ann|!answer again", "bo|!trivia", "bo|!answer Paris", "ann|!scores"] (
+string[] chat = [
+  "ann|!trivia", "bo|!answer lyon", "ann|!answer 6", "bo|!roll 2d6",
+  "ann|!answer again", "bo|!trivia", "bo|!answer Paris", "ann|!scores"
+]
+for line in chat (
   string[] pair = line.split("|")
   log pair[1] ++ ": " ++ pair[2]
   log "bot: " ++ handle(pair[1], pair[2])
@@ -501,7 +548,7 @@ log pluralPoints(3)
 
 ## Connect it
 
-`originchats.new(url, {token})` makes a client, and nothing happens until `client.run()`. `client.command(prefix, fn)` calls `fn` with a message when a line starts with the prefix, and `msg.content()` is what comes after it. `msg.reply(text)` answers. Each handler just calls `handle`. `/roll` is a slash command, shown in the chat's command picker. The token comes from the environment: don't put it in the source. Next: [originchats](../packages/originchats.md), or a [web API](web-api.md).
+`originchats.new(url, {token})` makes a client, and nothing happens until `client.run()`. `client.command(prefix, fn)` calls `fn` with a message when a line starts with the prefix. `msg.content()` is what comes after the prefix, and `msg.reply(text)` answers. Every handler just calls `handle`, and `/roll` is a slash command shown in the chat's command picker. The token comes from the environment: don't put it in the source.
 
 ```osl norun
 import "std:random"
@@ -517,7 +564,10 @@ struct Dice (
 def parseDice(string text) result<Dice, error> (
   string[] parts = text.trim().toLower().split("d")
   if parts.len != 2 return result.err(error("use the form 2d6"))
-  int count = if parts[1] == "" then 1 else parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  int count = 1
+  if parts[1] != "" (
+    count = parts[1].tryAs<int> catch return result.err(error("not a number: " ++ parts[1]))
+  )
   int sides = parts[2].tryAs<int> catch return result.err(error("not a number: " ++ parts[2]))
   if count < 1 or count > 20 return result.err(error("roll between 1 and 20 dice"))
   if sides < 2 or sides > 1000 return result.err(error("dice have between 2 and 1000 sides"))
@@ -605,7 +655,8 @@ def handle(string user, string text) string (
   )
 )
 
-*originchats.Client client = originchats.new("wss://chats.mistium.com", {token: env.get("ROTUR_TOKEN")})
+string token = env.get("ROTUR_TOKEN")
+*originchats.Client client = originchats.new("wss://chats.mistium.com", {token: token})
 
 client.on("ready", def(*originchats.Client c) (
   log "ready as " ++ (c.username() ?? "?")
@@ -645,3 +696,4 @@ client.slashCommand("/roll")
 client.run().unwrap()
 ```
 
+Run it with `ROTUR_TOKEN=... osl run bot.osl`. Next: [originchats](../packages/originchats.md), or a [web API](web-api.md).

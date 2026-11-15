@@ -113,7 +113,8 @@ fs.mkdir("work").unwrap()
 fs.writeFile("work/note.txt", "inside work").unwrap()
 
 log process.run("cat", ["note.txt"], {cwd: "work"}).unwrap().stdout
-log process.run("sh", ["-c", "echo $GREETING"], {env: {GREETING: "hi there"}}).unwrap().stdout.trim()
+auto reply = process.run("sh", ["-c", "echo $GREETING"], {env: {GREETING: "hi there"}})
+log reply.unwrap().stdout.trim()
 
 auto sorted = process.run("sort", [], {input: "pear\napple\nfig\n"}).unwrap()
 log sorted.stdout.split("\n")
@@ -316,6 +317,16 @@ checking...
 check failed
 ```
 
+:::quiz
+What is the difference between `process.exec` and `process.run`?
+
+- [x] `exec` returns the output and fails on a non-zero exit. `run` returns a record and only fails if the command can't start.
+- [ ] `run` uses a shell and `exec` doesn't.
+- [ ] There is none.
+
+Neither uses a shell. Use `run` when the exit code carries meaning, as with `grep`.
+:::
+
 :::exercise title="Count words with wc"
 Run `sh -c "echo one two three | wc -w"` with `exec` and print the number it reports, converted to an `int`, plus one. If the command fails, print `unavailable`.
 
@@ -349,16 +360,6 @@ switch process.exec("sh", "-c", "echo one two three | wc -w") (
 ```output
 4
 ```
-:::
-
-:::quiz
-What is the difference between `process.exec` and `process.run`?
-
-- [x] `exec` returns the output and fails on a non-zero exit. `run` returns a record and only fails if the command can't start.
-- [ ] `run` uses a shell and `exec` doesn't.
-- [ ] There is none.
-
-Neither uses a shell. Use `run` when the exit code carries meaning, as with `grep`.
 :::
 
 :::exercise title="Report the exit code"

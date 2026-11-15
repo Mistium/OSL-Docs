@@ -4,13 +4,13 @@ description: Every osl command, its usage line and its flags, with an example of
 
 # Command line
 
-`osl` is one program that runs, builds, tests, formats and inspects OSL code. This page lists every command and flag in OSL 9.2.0. Run `osl` with no arguments (or `osl help`) for the short summary, and `osl version` for the installed version.
+`osl` is one program that runs, builds, tests, formats and inspects OSL code. This page lists every command and flag in OSL 9.3.0. Run `osl` with no arguments (or `osl help`) for the short summary, and `osl version` for the installed version.
 
 ```sh
 osl <command> [options]
 ```
 
-There is no per-command `--help`: a command given the wrong arguments prints its usage line, and that is the line shown under each command below.
+Most commands have no `--help`: given the wrong arguments they print their usage line, and that is the line shown under each command below. Only `bench` and `lsp` accept `-h`.
 
 | Command | What it does |
 | --- | --- |
@@ -75,7 +75,8 @@ osl run server.osl -- --port 8080
 Builds a native executable you can copy to another machine of the same operating system and architecture. It needs no OSL installed to run.
 
 ```sh
-osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [--optimise] [-v|--verbose] [-- program args]
+osl compile <file.osl> [-o <output>] [--no-cache] [--no-write] [--optimise]
+            [-v|--verbose] [-- program args]
 ```
 
 | Flag | Effect |
@@ -138,7 +139,7 @@ osl fmt main.osl lib/
 
 ## fix
 
-Applies the fixes the editor offers as quick fixes, and rewrites old syntax the compiler no longer accepts (old type declarations, reserved names used as variables, old lambdas and string escapes). It repeats until nothing more changes, up to 8 rounds, and prints the files it changed.
+Applies the fixes the editor offers as quick fixes, and rewrites old syntax the compiler no longer accepts (old type declarations, reserved names used as variables, old lambdas and string escapes, and the functions that became methods, such as `sqrt(x)` and `keys(o)`). It repeats until nothing more changes, up to 8 rounds, and prints the files it changed.
 
 ```sh
 osl fix <file-or-directory> [...] [-v|--verbose]

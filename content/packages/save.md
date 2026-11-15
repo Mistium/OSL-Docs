@@ -16,7 +16,7 @@ Items are text. To store a number, a list or a record, turn it into text with [j
 ```osl
 import "std:save"
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-basics").unwrap()
 
 // Start clean, because this example runs more than once.
 for key in store.keys().unwrap() (
@@ -29,7 +29,7 @@ log store.get("name").unwrap()
 store.set("name", "Grace").unwrap()
 log store.get("name").unwrap()
 
-log store.dir().endsWith("docs-save-demo")
+log store.dir().endsWith("docs-save-basics")
 ```
 
 ```output
@@ -52,7 +52,7 @@ A name without an extension is stored as `name.txt`, so `"score"` and `"score.tx
 import "std:save"
 import "std:fs"
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-keys").unwrap()
 for key in store.keys().unwrap() (
   store.remove(key).unwrap()
 )
@@ -78,7 +78,7 @@ buy milk
 ```osl
 import "std:save"
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-results").unwrap()
 for key in store.keys().unwrap() (
   store.remove(key).unwrap()
 )
@@ -117,7 +117,7 @@ struct Settings (
   int fontSize = 14
 )
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-json").unwrap()
 for key in store.keys().unwrap() (
   store.remove(key).unwrap()
 )
@@ -163,7 +163,7 @@ Count visits across runs. `visit()` reads `visits` (0 when missing), adds one, s
 ```osl
 import "std:save"
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-files").unwrap()
 for key in store.keys().unwrap() (
   store.remove(key).unwrap()
 )
@@ -188,7 +188,7 @@ log visit() visit() visit()
 ```osl solution
 import "std:save"
 
-auto store = save.open("docs-save-demo").unwrap()
+auto store = save.open("docs-save-more").unwrap()
 for key in store.keys().unwrap() (
   store.remove(key).unwrap()
 )

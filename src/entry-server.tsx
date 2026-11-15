@@ -4,6 +4,7 @@ import { renderToString } from "preact-render-to-string";
 import type { PageData } from "./lib/types";
 import { App, documentTitle, SPECIAL } from "./app";
 import { primePage } from "./pages";
+import { plain } from "./lib/markdown";
 import index from "virtual:docs-index";
 
 const pages = import.meta.glob<PageData>("/content/**/*.md", { query: "?page", import: "default", eager: true });
@@ -17,6 +18,12 @@ export function render(path: string) {
   const page = slug in SPECIAL ? null : (Object.values(pages).find((p) => p.slug === slug) ?? null);
   if (page) primePage(slug, page);
   const html = renderToString(<App path={path} page={page} />);
-  const description = slug === "" ? "OSL is a readable, typed language that compiles to Go and ships as one native binary. Learn it by example, in your browser." : page?.description || index.pages[slug]?.description || "";
+  const summary =
+    slug === ""
+      ? "OSL is a readable, typed language that compiles to Go and ships as one native binary. " +
+        "Learn it by example, in your browser."
+      : page?.description || index.pages[slug]?.description || "";
+  // Descriptions are written in Markdown; the meta tag wants plain text.
+  const description = plain(summary);
   return { html, title: documentTitle(slug, page), description };
 }

@@ -134,6 +134,8 @@ function readFence(lines: string[], i: number): Fence | null {
     if (line.trim().startsWith(marker) && line.trim().replace(/[`~]/g, "") === "") break;
     body.push(indent ? line.replace(new RegExp(`^ {0,${indent}}`), "") : line);
   }
+  // An unclosed fence would quietly swallow the rest of the page.
+  if (j === lines.length) throw new Error(`a ${marker} fence is never closed: ${lines[i].trim()}`);
   return { lang: open[3].toLowerCase(), info: attributes(open[4] ?? ""), code: body.join("\n"), start: i, end: j + 1 };
 }
 
@@ -240,6 +242,7 @@ export function parseBlocks(lines: string[]): Block[] {
         }
         body.push(inner);
       }
+      if (depth > 0) throw new Error(`:::${kind} is never closed by a ::: line`);
       i++;
       blocks.push(containerBlock(kind, props, body));
       continue;

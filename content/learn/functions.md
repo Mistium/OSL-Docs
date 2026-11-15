@@ -135,7 +135,9 @@ Parameters with defaults go last, after the ones every caller has to pass.
 Pass arguments by name when a call would otherwise be a row of mystery values. Named arguments can come in any order:
 
 ```osl
-def resize(int width, int height, boolean keepRatio = true) string -> `${width}x${height} ${keepRatio}`
+def resize(int width, int height, boolean keepRatio = true) string (
+  return `${width}x${height} ${keepRatio}`
+)
 
 log resize(800, 600)
 log resize(height = 600, width = 800, keepRatio = false)

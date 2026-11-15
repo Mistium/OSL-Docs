@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Check, Copy, FileCode2, Play, RotateCcw, SquarePen, ExternalLink, AlignLeft } from "lucide-preact";
-import { highlightCode } from "../lib/highlight";
+import { highlightCode, highlightHTML } from "../lib/highlight";
 import { check, format, transpile, warmCompiler, type FileMap } from "../lib/compiler";
 import { canRun, run as runRemote } from "../lib/runner";
 import type { Diagnostic, Recorded } from "../lib/types";
@@ -176,12 +176,22 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
     setEditing(true);
   };
 
+  // Each run gets a number; a run that a newer run or a reset replaced
+  // drops its result instead of showing it out of order.
+  const runId = useRef(0);
   const run = async () => {
+    if (busy) return;
+    const id = ++runId.current;
+    const stale = () => id !== runId.current;
+    const show = (next: Parameters<typeof setOutput>[0]) => {
+      if (!stale()) setOutput(next);
+    };
     setGoSource(null);
     if (!edited && recorded && example.mode !== "norun") {
       setBusy(true);
       // A short pause, so a re-run visibly happens.
       await new Promise((r) => setTimeout(r, 180));
+      if (stale()) return;
       setOutput({ kind: "recorded", text: recorded.output, exit: recorded.exit, diagnostics: recorded.diagnostics && place(recorded.diagnostics, original) });
       setBusy(false);
       onOutput?.(recorded.output, false, program(files));
@@ -190,15 +200,16 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
     setBusy(true);
     try {
       const checked = await check(program(files), names[0]);
+      if (stale()) return;
       checked.diagnostics = place(checked.diagnostics, files);
       setDiagnostics(checked.diagnostics);
       const errors = checked.diagnostics.filter((d) => d.severity === "error");
       if (errors.length) {
-        setOutput({ kind: "error", text: "", diagnostics: checked.diagnostics });
+        show({ kind: "error", text: "", diagnostics: checked.diagnostics });
         return;
       }
       if (example.mode === "norun") {
-        setOutput({
+        show({
           kind: "note",
           text: "",
           diagnostics: checked.diagnostics,
@@ -207,7 +218,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         return;
       }
       if (!canRun) {
-        setOutput({
+        show({
           kind: "note",
           text: "",
           diagnostics: checked.diagnostics,
@@ -216,15 +227,15 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         return;
       }
       const result = await runRemote(program(files), names[0], example.stdin ?? "");
-      if (result.error) setOutput({ kind: "error", text: result.error });
+      if (result.error) show({ kind: "error", text: result.error });
       else {
-        setOutput({ kind: "live", text: result.output, exit: result.exit, diagnostics: result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
-        onOutput?.(result.output, true, program(files));
+        show({ kind: "live", text: result.output, exit: result.exit, diagnostics: result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
+        if (!stale()) onOutput?.(result.output, true, program(files));
       }
     } catch (error) {
-      setOutput({ kind: "error", text: String((error as Error).message ?? error) });
+      show({ kind: "error", text: String((error as Error).message ?? error) });
     } finally {
-      setBusy(false);
+      if (!stale()) setBusy(false);
     }
   };
 
@@ -250,6 +261,8 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   };
 
   const reset = () => {
+    runId.current++;
+    setBusy(false);
     setFiles(original);
     setOutput(null);
     setDiagnostics(null);
@@ -351,7 +364,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
             Generated Go <span class="output__hint">what osl compiles this to</span>
           </div>
           <pre class="hljs">
-            <code dangerouslySetInnerHTML={{ __html: highlightCode(goSource, "go") ?? goSource }} />
+            <code dangerouslySetInnerHTML={{ __html: highlightHTML(goSource, "go") }} />
           </pre>
         </div>
       )}

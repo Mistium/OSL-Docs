@@ -42,6 +42,11 @@ function start(): Worker {
       setState("ready");
       return;
     }
+    if (data.failed) {
+      // Calls still get their own error replies; this updates the status.
+      setState("failed");
+      return;
+    }
     const waiting = pending.get(data.id);
     if (!waiting) return;
     pending.delete(data.id);

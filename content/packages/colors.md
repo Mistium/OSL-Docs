@@ -5,7 +5,7 @@ package: colors
 
 # colors
 
-Colors arrive in many shapes: `#ff8800`, `rgb(255, 136, 0)`, `tomato`, `hsl(32, 100%, 50%)`. `std:colors` reads any of those, lets you change them in ways that make sense to people (lighter, darker, a blend of two), and writes them back out as hex text.
+`std:colors` reads colors in many shapes (`#ff8800`, `rgb(255, 136, 0)`, `tomato`, `hsl(32, 100%, 50%)`), changes them the way people think about them (lighter, darker, a blend of two) and writes them back out as hex text.
 
 A color here is one of three things, and the functions accept any of them where they take a `color`:
 
@@ -35,7 +35,9 @@ Alpha `a` is opacity: 255 is solid. It reads the common CSS forms:
 ```osl
 import "std:colors"
 
-string[] inputs = ["#f80", "#ff8800", "#ff880080", "rgb(10, 20, 30)", "hsl(120, 100%, 50%)", "red"]
+string[] inputs = [
+  "#f80", "#ff8800", "#ff880080", "rgb(10, 20, 30)", "hsl(120, 100%, 50%)", "red"
+]
 for text in inputs (
   auto c = colors.parse(text).unwrap()
   log text colors.stringify(c)
@@ -155,7 +157,53 @@ log steps
 
 ## Colors in images
 
-`colors` works with the `std:img` package's colors: `img.rgb(255, 0, 0)` can go into `colors.lighten`, and a hex string or the object from `colors.parse` can go into `image.fill`. There are three shapes of color across packages (a string, an object and `img.Color`), and they convert freely, so pick whichever is convenient and let `colors.stringify` normalise to text.
+The three color shapes convert freely, so `img.rgb(255, 0, 0)` can go into `colors.lighten`, and a hex string or the object from `colors.parse` can go into `image.fill`. Use whichever is handy and let `colors.stringify` normalise to text.
+
+:::quiz
+`colors.parse("not a color")` is called. What happens?
+
+- [ ] It throws a `ParseError`.
+- [x] It returns an error result, so `isErr()` is `true`.
+- [ ] It returns black.
+
+`parse` returns a [result](result.md), so bad input is a value to check, not a crash.
+:::
+
+:::exercise title="The opposite color"
+Finish `complement` so it returns the color opposite on the wheel: the same saturation and lightness with the hue turned 180 degrees (wrap past 360 with `% 360`).
+
+```osl
+import "std:colors"
+
+def complement(string color) string -> color
+
+log complement("#ff8800")
+log complement("#ff0000")
+```
+
+```output
+#0077ff
+#00ffff
+```
+
+> [!hint]
+> `colors.toHSL(color)` gives `{h, s, l, a}`.
+
+> [!hint]
+> Build the answer with `colors.fromHSL({h: ..., s: hsl.s, l: hsl.l})`.
+
+```osl solution
+import "std:colors"
+
+def complement(string color) string (
+  auto hsl = colors.toHSL(color)
+  return colors.fromHSL({h: (hsl.h + 180) % 360, s: hsl.s, l: hsl.l})
+)
+
+log complement("#ff8800")
+log complement("#ff0000")
+```
+:::
 
 ## API reference
 

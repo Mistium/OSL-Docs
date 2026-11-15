@@ -214,6 +214,53 @@ true
 5
 ```
 
+:::quiz
+A test needs the same "random" shuffle on every run. What do you do?
+
+- [ ] Call `random.shuffle` twice and keep the second result.
+- [x] Call `random.seed` with a fixed number first.
+- [ ] Use `std:crypto`, which is repeatable.
+
+A seeded generator repeats its sequence. `std:crypto` is the opposite: it is unpredictable on purpose.
+:::
+
+:::exercise title="A fair die"
+Finish `roll` so it returns a random whole number from 1 to `sides`, both ends included. The loop rolls a thousand times and checks every roll was legal.
+
+```osl
+import "std:random"
+
+def roll(int sides) int -> 0
+
+boolean legal = true
+for _ in 1 to 1000 (
+  int r = roll(6)
+  if r < 1 or r > 6 ( legal = false )
+)
+log legal
+```
+
+```output
+true
+```
+
+> [!hint]
+> `random.int(min, max)` includes both ends.
+
+```osl solution
+import "std:random"
+
+def roll(int sides) int -> random.int(1, sides)
+
+boolean legal = true
+for _ in 1 to 1000 (
+  int r = roll(6)
+  if r < 1 or r > 6 ( legal = false )
+)
+log legal
+```
+:::
+
 ## API reference
 
 ::api

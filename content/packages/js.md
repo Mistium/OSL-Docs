@@ -7,7 +7,7 @@ package: js
 
 `std:js` runs JavaScript code inside your program. It uses QuickJS, a small JavaScript engine, in a sandbox: the code can't reach files, the network or your program, it has a time limit and a memory cap, and each call starts with a fresh runtime. The value of the last expression comes back to OSL.
 
-Reach for it to run a user's formula or rule, reuse a small JavaScript library on data you pass in, or evaluate a configuration file written as JavaScript, without trusting the code. For Lua, see [lua](lua.md).
+Use it to run a user's formula or rule, or a small JavaScript library on data you pass in, without trusting the code. For Lua, see [lua](lua.md).
 
 ## Evaluating an expression
 
@@ -80,7 +80,8 @@ import "std:js"
 import "std:json"
 
 string[] names = ["Ada", "Grace", "Linus"]
-string code = "const names = " ++ json.stringify(names) ++ "; names.filter(n => n.length > 3).map(n => n.toUpperCase())"
+string code = "const names = " ++ json.stringify(names) ++ `;
+  names.filter(n => n.length > 3).map(n => n.toUpperCase())`
 log js.evaluate(code).unwrap()
 ```
 
@@ -177,30 +178,36 @@ JavaScript code in `js.evaluate` runs an endless loop. What happens?
 The default timeout is a minute. Pass a shorter `timeout` for code you don't trust.
 :::
 
-:::exercise title="Evaluate a rule"
-Run the JavaScript `[3, 1, 2].sort().join("-")` and print the result.
+:::exercise title="Sum in JavaScript"
+Pass `nums` into JavaScript as JSON and have `reduce` add them up. Print the sum.
 
 ```osl
 import "std:js"
+import "std:json"
+
+number[] nums = [4, 8, 15]
 
 log js.evaluate("1 + 1").unwrap()
 ```
 
 ```output
-1-2-3
+27
 ```
 
 > [!hint]
-> The last expression's value comes back, here a string.
+> Build the code as text: `"const nums = " ++ json.stringify(nums) ++ "; ..."`.
+
+> [!hint]
+> `nums.reduce((a, b) => a + b)` is the last expression, so it is the result.
 
 ```osl solution
 import "std:js"
+import "std:json"
 
-log js.evaluate("[3, 1, 2].sort().join('-')").unwrap()
-```
+number[] nums = [4, 8, 15]
 
-```output
-1-2-3
+string code = "const nums = " ++ json.stringify(nums) ++ "; nums.reduce((a, b) => a + b)"
+log js.evaluate(code).unwrap()
 ```
 :::
 

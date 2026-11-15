@@ -81,7 +81,8 @@ Service[] services = [
 
 string[][] rows = []
 for s in services (
-  rows.append([s.name, s.cpu ++ "%", s.memory ++ "%", if s.up then "up" else "DOWN"])
+  string status = if s.up then "up" else "DOWN"
+  rows.append([s.name, s.cpu ++ "%", s.memory ++ "%", status])
 )
 
 log tui.table(["service", "cpu", "mem", "status"], rows, {
@@ -122,7 +123,8 @@ Service[] services = [
 string[][] rows = []
 string[][] bars = []
 for s in services (
-  rows.append([s.name, s.cpu ++ "%", s.memory ++ "%", if s.up then "up" else "DOWN"])
+  string status = if s.up then "up" else "DOWN"
+  rows.append([s.name, s.cpu ++ "%", s.memory ++ "%", status])
   bars.append([s.name, s.cpu])
 )
 
@@ -191,10 +193,11 @@ Returning text lets you build a whole screen first, check it in a test, and writ
 
 ## Keep the data in a model
 
-A `Dashboard` class holds the services and the selection, and `render(d)` returns the whole screen as a string. `sample()` moves every reading a little and sometimes takes a service down. The generator is seeded, so this page always shows the same numbers. To use real ones, replace `sample()` with readings from `std:sys`, `std:mem` or `std:requests`.
+A `Dashboard` class holds the services and the selection, and `render(d)` returns the whole screen as a string. `sample()` nudges every reading and sometimes takes a service down. The try-it tab seeds `std:random`, so this page always shows the same numbers. For real ones, replace `sample()` with readings from `std:sys` or `std:requests`.
 
 ```osl
 import "std:tui"
+import "std:random"
 
 struct Service (
   string name
@@ -210,23 +213,17 @@ def clampInt(int v, int low, int high) int (
 class Dashboard (
   Service[] services = []
   int selected = 1
-  int seed = 9
 
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
-
-  def add(string name) (
-    self.services.append(Service(name, 0, 0, true))
+  def add(string name, int cpu, int memory) (
+    self.services.append(Service(name, cpu, memory, true))
   )
 
   def sample() (
     Service[] next = []
     for s in self.services (
-      int cpu = clampInt((s.cpu + self.random(31)) - 15, 1, 99)
-      int memory = clampInt((s.memory + self.random(11)) - 5, 5, 95)
-      bool up = self.random(20) != 0
+      int cpu = clampInt(s.cpu + random.int(-15, 15), 1, 99)
+      int memory = clampInt(s.memory + random.int(-5, 5), 5, 95)
+      bool up = random.int(1, 20) != 1
       next.append(Service(s.name, cpu, memory, up))
     )
     self.services = next
@@ -238,22 +235,26 @@ def render(Dashboard d) string (
   string[][] bars = []
   for i, s in d.services (
     string marker = if i == d.selected then ">" else " "
-    rows.append([marker ++ " " ++ s.name, s.cpu ++ "%", s.memory ++ "%", if s.up then "up" else "DOWN"])
+    string status = if s.up then "up" else "DOWN"
+    rows.append([marker ++ " " ++ s.name, s.cpu ++ "%", s.memory ++ "%", status])
     bars.append([s.name, s.cpu])
   )
   Service chosen = d.services[d.selected]
   string table = tui.table(["service", "cpu", "mem", "status"], rows, {
     cellColor: def(any cell) string -> if cell == "DOWN" then "red" else "white"
   })
-  string detail = tui.box(chosen.name, "cpu " ++ tui.progress(chosen.cpu, 100, 20) ++ "\nmem " ++ tui.progress(chosen.memory, 100, 20))
+  string load = "cpu " ++ tui.progress(chosen.cpu, 100, 20)
+  string mem = "mem " ++ tui.progress(chosen.memory, 100, 20)
+  string detail = tui.box(chosen.name, load ++ "\n" ++ mem)
   return table ++ "\n" ++ detail ++ "\n" ++ tui.barChart(bars, 20, true)
 )
 
 // try it
+random.seed(9)
 Dashboard d = Dashboard()
-d.add("api")
-d.add("db")
-d.add("cache")
+d.add("api", 42, 61)
+d.add("db", 87, 74)
+d.add("cache", 8, 30)
 for _ in 1 to 5 (
   d.sample()
 )
@@ -264,21 +265,21 @@ log render(d)
 +---------+-----+-----+--------+
 | service | cpu | mem | status |
 +---------+-----+-----+--------+
-| > api   | 19% | 5%  | DOWN   |
-|   db    | 31% | 13% | up     |
-|   cache | 1%  | 5%  | up     |
+| > api   | 46% | 72% | up     |
+|   db    | 62% | 71% | up     |
+|   cache | 8%  | 28% | up     |
 +---------+-----+-----+--------+
 ┌─ api ──────────────────────────┐
-│ cpu [███░░░░░░░░░░░░░░░░░] 19% │
-│ mem [█░░░░░░░░░░░░░░░░░░░] 5%  │
+│ cpu [█████████░░░░░░░░░░░] 46% │
+│ mem [██████████████░░░░░░] 72% │
 └────────────────────────────────┘
 ████████████████████
-api             ████████████ 19.00
-db              ████████████████████ 31.00
-cache            1.00
+api             ██████████████ 46.00
+db              ████████████████████ 62.00
+cache           ██ 8.00
 ```
 
-**Try changing** `seed`, or the number of samples.
+**Try changing** the seed, or the number of samples.
 
 :::exercise title="Busiest service"
 Write `busiest`: the name of the service with the highest cpu.
@@ -291,7 +292,11 @@ struct Service (
   bool up
 )
 
-Service[] services = [Service("api", 42, 61, true), Service("db", 87, 74, true), Service("cache", 8, 30, false)]
+Service[] services = [
+  Service("api", 42, 61, true),
+  Service("db", 87, 74, true),
+  Service("cache", 8, 30, false),
+]
 
 def busiest(Service[] services) string (
   return ""
@@ -315,7 +320,11 @@ struct Service (
   bool up
 )
 
-Service[] services = [Service("api", 42, 61, true), Service("db", 87, 74, true), Service("cache", 8, 30, false)]
+Service[] services = [
+  Service("api", 42, 61, true),
+  Service("db", 87, 74, true),
+  Service("cache", 8, 30, false),
+]
 
 def busiest(Service[] services) string (
   Service top = services[1]
@@ -338,6 +347,7 @@ log busiest(services)
 
 ```osl
 import "std:tui"
+import "std:random"
 
 struct Service (
   string name
@@ -353,23 +363,17 @@ def clampInt(int v, int low, int high) int (
 class Dashboard (
   Service[] services = []
   int selected = 1
-  int seed = 9
 
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
-
-  def add(string name) (
-    self.services.append(Service(name, 0, 0, true))
+  def add(string name, int cpu, int memory) (
+    self.services.append(Service(name, cpu, memory, true))
   )
 
   def sample() (
     Service[] next = []
     for s in self.services (
-      int cpu = clampInt((s.cpu + self.random(31)) - 15, 1, 99)
-      int memory = clampInt((s.memory + self.random(11)) - 5, 5, 95)
-      bool up = self.random(20) != 0
+      int cpu = clampInt(s.cpu + random.int(-15, 15), 1, 99)
+      int memory = clampInt(s.memory + random.int(-5, 5), 5, 95)
+      bool up = random.int(1, 20) != 1
       next.append(Service(s.name, cpu, memory, up))
     )
     self.services = next
@@ -393,22 +397,26 @@ def render(Dashboard d) string (
   string[][] bars = []
   for i, s in d.services (
     string marker = if i == d.selected then ">" else " "
-    rows.append([marker ++ " " ++ s.name, s.cpu ++ "%", s.memory ++ "%", if s.up then "up" else "DOWN"])
+    string status = if s.up then "up" else "DOWN"
+    rows.append([marker ++ " " ++ s.name, s.cpu ++ "%", s.memory ++ "%", status])
     bars.append([s.name, s.cpu])
   )
   Service chosen = d.services[d.selected]
   string table = tui.table(["service", "cpu", "mem", "status"], rows, {
     cellColor: def(any cell) string -> if cell == "DOWN" then "red" else "white"
   })
-  string detail = tui.box(chosen.name, "cpu " ++ tui.progress(chosen.cpu, 100, 20) ++ "\nmem " ++ tui.progress(chosen.memory, 100, 20))
+  string load = "cpu " ++ tui.progress(chosen.cpu, 100, 20)
+  string mem = "mem " ++ tui.progress(chosen.memory, 100, 20)
+  string detail = tui.box(chosen.name, load ++ "\n" ++ mem)
   return table ++ "\n" ++ detail ++ "\n" ++ tui.barChart(bars, 20, true)
 )
 
 // try it
+random.seed(9)
 Dashboard d = Dashboard()
-d.add("api")
-d.add("db")
-d.add("cache")
+d.add("api", 42, 61)
+d.add("db", 87, 74)
+d.add("cache", 8, 30)
 d.sample()
 for key in ["down", "down", "down", "up", "x", "q", "never reached"] (
   boolean keep = d.handleKey(key)
@@ -429,18 +437,18 @@ q 2 false
 +---------+-----+-----+--------+
 | service | cpu | mem | status |
 +---------+-----+-----+--------+
-|   api   | 6%  | 5%  | up     |
-|   db    | 1%  | 5%  | up     |
-| > cache | 11% | 5%  | up     |
+|   api   | 34% | 61% | up     |
+|   db    | 87% | 79% | DOWN   |
+| > cache | 1%  | 33% | up     |
 +---------+-----+-----+--------+
 ┌─ cache ────────────────────────┐
-│ cpu [██░░░░░░░░░░░░░░░░░░] 11% │
-│ mem [█░░░░░░░░░░░░░░░░░░░] 5%  │
+│ cpu [░░░░░░░░░░░░░░░░░░░░] 1%  │
+│ mem [██████░░░░░░░░░░░░░░] 33% │
 └────────────────────────────────┘
 ████████████████████
-api             ██████████ 6.00
-db              █ 1.00
-cache           ████████████████████ 11.00
+api             ███████ 34.00
+db              ████████████████████ 87.00
+cache            1.00
 ```
 
 :::exercise title="More keys"
@@ -500,81 +508,13 @@ In the live loop, why check `tui.keyPressed()` before `tui.readKey()`?
 
 ## Go live
 
-The loop moves the cursor to the top-left, draws the screen, then waits a second in ten 100 ms slices, checking the keyboard each time so keys feel instant. Then it samples again. `tui.hideCursor()` and `tui.showCursor()` bracket it. For full-screen layouts there's also `tui.newScreen`, a buffer of cells you `set` and `render`. It draws at the terminal's cursor, so it needs a real terminal. Run this one yourself. Next: [tui](../packages/tui.md), [sys](../packages/sys.md), or a [chat bot](chat-bot.md).
+The loop moves the cursor to the top-left, draws the screen, then waits a second in ten 100 ms slices, checking the keyboard each time so keys feel instant. Then it samples again. Add `import "std:thread"` to the top of the program and put this at the bottom, in place of the try-it code:
 
-```osl norun
-import "std:tui"
-import "std:thread"
-
-struct Service (
-  string name
-  int cpu
-  int memory
-  bool up
-)
-
-def clampInt(int v, int low, int high) int (
-  return max(low, min(v, high))
-)
-
-class Dashboard (
-  Service[] services = []
-  int selected = 1
-  int seed = 9
-
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
-
-  def add(string name) (
-    self.services.append(Service(name, 0, 0, true))
-  )
-
-  def sample() (
-    Service[] next = []
-    for s in self.services (
-      int cpu = clampInt((s.cpu + self.random(31)) - 15, 1, 99)
-      int memory = clampInt((s.memory + self.random(11)) - 5, 5, 95)
-      bool up = self.random(20) != 0
-      next.append(Service(s.name, cpu, memory, up))
-    )
-    self.services = next
-  )
-
-  def handleKey(string key) boolean (
-    switch key (
-      case "up"
-        self.selected = clampInt(self.selected - 1, 1, self.services.len)
-      case "down"
-        self.selected = clampInt(self.selected + 1, 1, self.services.len)
-      case "q"
-        return false
-    )
-    return true
-  )
-)
-
-def render(Dashboard d) string (
-  string[][] rows = []
-  string[][] bars = []
-  for i, s in d.services (
-    string marker = if i == d.selected then ">" else " "
-    rows.append([marker ++ " " ++ s.name, s.cpu ++ "%", s.memory ++ "%", if s.up then "up" else "DOWN"])
-    bars.append([s.name, s.cpu])
-  )
-  Service chosen = d.services[d.selected]
-  string table = tui.table(["service", "cpu", "mem", "status"], rows, {
-    cellColor: def(any cell) string -> if cell == "DOWN" then "red" else "white"
-  })
-  string detail = tui.box(chosen.name, "cpu " ++ tui.progress(chosen.cpu, 100, 20) ++ "\nmem " ++ tui.progress(chosen.memory, 100, 20))
-  return table ++ "\n" ++ detail ++ "\n" ++ tui.barChart(bars, 20, true)
-)
-
+```osl fragment
 Dashboard d = Dashboard()
-d.add("api")
-d.add("db")
-d.add("cache")
+d.add("api", 42, 61)
+d.add("db", 87, 74)
+d.add("cache", 8, 30)
 d.sample()
 
 tui.hideCursor()
@@ -597,3 +537,4 @@ tui.showCursor()
 tui.clear()
 ```
 
+`tui.hideCursor()` and `tui.showCursor()` bracket the loop. The live loop needs a real terminal, so run this one yourself with `osl run dashboard.osl`. For full-screen layouts there's also `tui.newScreen`, a buffer of cells you `set` and `render`. Next: [tui](../packages/tui.md), [sys](../packages/sys.md), or a [chat bot](chat-bot.md).

@@ -5,7 +5,7 @@ package: jwt
 
 # jwt
 
-A JSON Web Token (JWT) is a small signed note: "this is user ada, and it is good for an hour". A server hands one out at login, and the client sends it back with each request. The server checks the signature and trusts what is inside, with no session table to look up. `std:jwt` creates and checks tokens signed with a shared secret (HS256, HS384 or HS512).
+A JSON Web Token (JWT) is a small signed note: "this is user ada, and it is good for an hour". A server hands one out at login, the client sends it back with each request, and the server trusts what is inside once the signature checks out, with no session table to look up. `std:jwt` creates and checks tokens signed with a shared secret (HS256, HS384 or HS512).
 
 ## Make and check a token
 
@@ -30,7 +30,7 @@ ada admin
 true
 ```
 
-A token is three dot-separated parts: header, claims, signature. `create` adds `iat`, when it was issued. Change `role` and run again: the claims you put in are the ones you get out.
+A token is three dot-separated parts: header, claims, signature. `create` adds `iat`, when it was issued. 
 
 > [!important]
 > The secret must be at least 32 bytes for HS256 (48 for HS384, 64 for HS512). A shorter one is a `ValueError`. Make one with `crypto.randomHex(32)` and keep it in an environment variable, never in your source.
@@ -150,7 +150,8 @@ ada
 import "std:jwt"
 
 string secret = "a-secret-that-is-at-least-32-bytes!"
-string token = jwt.create({sub: "ada", iss: "auth.example", aud: "billing"}, secret).unwrap()
+auto claims = {sub: "ada", iss: "auth.example", aud: "billing"}
+string token = jwt.create(claims, secret).unwrap()
 
 log jwt.check(token, secret, {issuer: "auth.example", audience: "billing"}).isOk()
 log jwt.check(token, secret, {audience: "search"}).isErr()
@@ -167,7 +168,7 @@ true
 
 Put it together with [serve](serve.md): a middleware reads the bearer token, checks it, and passes the claims on:
 
-```osl
+```osl norun
 import "std:jwt"
 import "std:serve"
 import "std:requests"
@@ -191,17 +192,15 @@ app.get("/me", def(*serve.Context c) (
 app.start("127.0.0.1:8775").unwrap()
 
 string good = jwt.create({sub: "ada"}, secret).unwrap()
-auto ok = requests.get("http://127.0.0.1:8775/me", {headers: {Authorization: "Bearer " ++ good}}).unwrap()
+auto headers = {Authorization: "Bearer " ++ good}
+auto ok = requests.get("http://127.0.0.1:8775/me", {headers: headers}).unwrap()
 log ok.status ok.body
 log requests.get("http://127.0.0.1:8775/me").unwrap().status
 
 app.stop().unwrap()
 ```
 
-```output
-200 hello ada
-401
-```
+The request with the token prints `200 hello ada`, and the one without prints `401`.
 
 :::exercise title="Admin only"
 Write `adminName(token, secret)`. It returns the token's `sub` when the token is valid and its `role` claim is `"admin"`, and `"denied"` otherwise.

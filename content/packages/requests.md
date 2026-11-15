@@ -370,7 +370,7 @@ A sentinel such as `[DONE]` comes through as an ordinary event, so end the loop 
 
 An async function runs on its own thread, so several requests can be in flight together. `waitAll` collects the results in order:
 
-```osl norun
+```osl
 import "std:serve"
 import "std:requests"
 
@@ -401,8 +401,15 @@ item 3
 
 Three sleeping requests finish in about the time of one.
 
-> [!note]
-> This example is not run by the docs checker: calling `requests.get` from several threads at once sometimes fails with `json: unsupported type: func() (io.ReadCloser, error)` in OSL 9.2.0. If you hit it, make the calls one after another until it is fixed.
+:::quiz
+A server answers `404 Not Found`. What does `requests.get(url)` return?
+
+- [ ] A failed result.
+- [x] A successful result whose response has `ok` false and `status` 404.
+- [ ] `null`.
+
+A request fails only when no response arrives at all.
+:::
 
 :::exercise title="Fetch and total"
 The server lists prices at `/prices` as a JSON array of numbers. Fetch it with `parse<number[]>()`, then print how many prices there are and their total. Treat a failed request as zero prices and print a message instead of crashing.
@@ -440,10 +447,10 @@ auto app = serve.new()
 app.get("/prices", def(*serve.Context c) (
   c.json(200, [3.5, 1.25, 10])
 ))
-app.start("127.0.0.1:8788").unwrap()
+app.start("127.0.0.1:8850").unwrap()
 
 number[] prices = []
-switch requests.get("http://127.0.0.1:8788/prices").parse<number[]>() (
+switch requests.get("http://127.0.0.1:8850/prices").parse<number[]>() (
   case ok(list)
     prices = list
   case err(e)
@@ -457,16 +464,6 @@ app.stop().unwrap()
 ```output
 3 prices, total 14.75
 ```
-:::
-
-:::quiz
-A server answers `404 Not Found`. What does `requests.get(url)` return?
-
-- [ ] A failed result.
-- [x] A successful result whose response has `ok` false and `status` 404.
-- [ ] `null`.
-
-A request fails only when no response arrives at all.
 :::
 
 :::exercise title="Add two numbers remotely"
@@ -527,9 +524,9 @@ app.post("/add", def(*serve.Context c) (
   c.bindJSON(p).unwrap()
   c.json(200, {sum: p.a + p.b})
 ))
-app.start("127.0.0.1:8776").unwrap()
+app.start("127.0.0.1:8851").unwrap()
 
-Sum answer = requests.post("http://127.0.0.1:8776/add", {json: {a: 2, b: 3}}).parse<Sum>().unwrap()
+Sum answer = requests.post("http://127.0.0.1:8851/add", {json: {a: 2, b: 3}}).parse<Sum>().unwrap()
 log answer.sum
 
 app.stop().unwrap()

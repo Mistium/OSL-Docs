@@ -5,7 +5,7 @@ package: thread
 
 # thread
 
-`std:thread` runs functions alongside the rest of your program. The normal way to use it is an `async` function: it needs no import and returns a typed thread. The package's functions, such as `thread.sleep`, `thread.parallel` and `thread.channel`, are available in any file that has an async function or lambda. In a file without one, add `import "std:thread"`.
+`std:thread` runs functions alongside the rest of your program. For concurrent work, write an `async` function or an async lambda: it needs no import and returns a typed thread. Reach for `std:thread` itself for the lower-level cases: `thread.new` for a one-off job, channels, `thread.parallel` and `thread.race`. The package's functions, such as `thread.sleep`, `thread.parallel` and `thread.channel`, are available in any file that has an async function or lambda. In a file without one, add `import "std:thread"`.
 
 For a guided introduction, see the [concurrency lesson](../learn/concurrency.md).
 
@@ -115,9 +115,9 @@ def load(string name) *thread.Thread<string> (
 )
 ```
 
-Use `thread.new` directly for a one-off background job that isn't a function of its own.
+Prefer `async` when the work is a function of its own. Use `thread.new` directly for a one-off background job.
 
-## thread.new
+## Lower level: thread.new
 
 `thread.new(fn, args...)` starts `fn` on a new thread, passes it the extra arguments, and returns the thread:
 
@@ -461,6 +461,58 @@ For locks you manage yourself, wait groups and run-once setup, see [`std:sync`](
 ## Sleeping
 
 `thread.sleep(ms)` pauses the current thread. Other threads keep running. A zero or negative time returns at once.
+
+:::quiz
+What does this print?
+
+```osl fragment
+async slow() int (
+  thread.sleep(100)
+  return 7
+)
+
+auto job = slow()
+log "started"
+log job.wait()
+```
+
+- [ ] `7`, then `started`
+- [x] `started`, then `7`
+- [ ] Only `7`
+
+Calling an async function starts it and returns at once, so `started` prints while the body sleeps. `wait()` then blocks for the value.
+:::
+
+:::exercise title="Three cubes at once"
+Make `cube` an async function that returns `n * n * n`, so each call starts a thread. The loop collects the threads and waits for them all.
+
+```osl
+async cube(int n) int -> n
+
+*thread.Thread<int>[] jobs = []
+for n in 1 to 3 (
+  jobs.append(cube(n))
+)
+log thread.waitAll(jobs)
+```
+
+```output
+[1,8,27]
+```
+
+> [!hint]
+> It is already `async`. Fix the body so it cubes `n`.
+
+```osl solution
+async cube(int n) int -> n * n * n
+
+*thread.Thread<int>[] jobs = []
+for n in 1 to 3 (
+  jobs.append(cube(n))
+)
+log thread.waitAll(jobs)
+```
+:::
 
 ## API reference
 

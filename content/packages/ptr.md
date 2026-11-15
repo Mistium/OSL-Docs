@@ -199,6 +199,58 @@ true false
 3
 ```
 
+:::quiz
+What does this print?
+
+```osl fragment
+auto first = ptr.new(1)
+auto second = first
+second.set(2)
+log first.value()
+```
+
+- [ ] `1`
+- [x] `2`
+- [ ] It doesn't compile.
+
+Copying a cell copies the reference, not the value, so `first` and `second` are the same cell.
+:::
+
+:::exercise title="Double in place"
+Finish `double` so it doubles the caller's variable. The call passes `@score`, so the function gets a pointer.
+
+```osl
+import "std:ptr"
+
+def double(*int n) (
+  log "doubling"
+)
+
+int score = 21
+double(@score)
+log score
+```
+
+```output
+42
+```
+
+> [!hint]
+> Read the current value with `ptr.deref(n)` and write the new one with `ptr.set(n, ...)`.
+
+```osl solution
+import "std:ptr"
+
+def double(*int n) (
+  ptr.set(n, ptr.deref(n) * 2)
+)
+
+int score = 21
+double(@score)
+log score
+```
+:::
+
 ## API reference
 
 ::api

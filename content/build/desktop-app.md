@@ -13,9 +13,11 @@ A window can't open on this page, so every step tests the class by calling its m
 
 ## Count down
 
-A timer is a class with a field and two methods. `tick()` takes a second off and `label()` shows `mm:ss`. The try-it tab ticks it 90 times: 25:00 becomes 23:30. Nothing here is about drawing yet, so it's an ordinary program.
+A timer is a class with a field and two methods: `tick()` takes a second off and `label()` shows `mm:ss`. Nothing here is about drawing yet, so it's an ordinary program. The try-it tab ticks it 90 times.
 
 ```osl
+def two(int n) string -> ("" ++ n).padStart("0", 2)
+
 class Timer (
   int remaining = 1500
 
@@ -27,10 +29,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 )
 
@@ -70,13 +69,12 @@ log clock(5)
 ```
 
 > [!hint]
-> Minutes are `floor(seconds / 60).as<int>` and the rest is `seconds % 60`. Pad the seconds to two digits.
+> Minutes are `floor(seconds / 60).as<int>` and the rest is `seconds % 60`. `("" ++ rest).padStart("0", 2)` pads to two digits.
 
 ```osl solution
 def clock(int seconds) string (
   int minutes = floor(seconds / 60).as<int>
-  int rest = seconds % 60
-  string ss = if rest < 10 then "0" ++ rest else "" ++ rest
+  string ss = ("" ++ (seconds % 60)).padStart("0", 2)
   return minutes ++ ":" ++ ss
 )
 
@@ -89,9 +87,11 @@ log clock(5)
 
 ## Start and pause
 
-State is just fields. `running` decides whether `tick` does anything, and `toggle()` flips it. The try-it tab shows five ticks doing nothing, five that count, and a pause.
+State is just fields. `running` decides whether `tick` does anything, and `toggle()` flips it.
 
 ```osl
+def two(int n) string -> ("" ++ n).padStart("0", 2)
+
 class Timer (
   int remaining = 1500
   bool running = false
@@ -109,10 +109,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 )
 
@@ -200,6 +197,8 @@ A component is a class with a `view()` method that returns tags. `<column>` stac
 ```osl
 import "std:ui"
 
+def two(int n) string -> ("" ++ n).padStart("0", 2)
+
 class Timer (
   int remaining = 1500
   bool running = false
@@ -217,10 +216,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 
   def view() ui.node (
@@ -316,6 +312,8 @@ import "std:ui"
 
 style card = (pad: 32, gap: 16, radius: 16, bg: white)
 
+def two(int n) string -> ("" ++ n).padStart("0", 2)
+
 class Timer (
   int remaining = 1500
   bool running = false
@@ -333,10 +331,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 
   def view() ui.node (
@@ -344,7 +339,10 @@ class Timer (
       <column ...card align=center>
         <text size=64 weight=bold color=theme.accent>${self.label()}</text>
         <row gap=8>
-          <button on:click=self.toggle bg=theme.accent>${if self.running then "Pause" else "Start"}</button>
+          <button
+          on:click=self.toggle
+          bg=theme.accent
+        >${if self.running then "Pause" else "Start"}</button>
         </row>
       </column>
     </column>
@@ -369,6 +367,45 @@ true
 
 **Try changing** the accent colour in `newTheme`.
 
+:::exercise title="Use the theme"
+`Greeting` ignores the theme. Colour its text with the theme's accent so the page contains `#d9480f`.
+
+```osl
+import "std:ui"
+
+*ui.Theme theme = ui.newTheme({accent: "#d9480f"})
+
+class Greeting (
+  def view() ui.node (
+    return <text>Hello</text>
+  )
+)
+
+log ui.html(Greeting()).contains("#d9480f")
+```
+
+```output
+true
+```
+
+> [!hint]
+> Give the tag `color=theme.accent`, as the timer does.
+
+```osl solution
+import "std:ui"
+
+*ui.Theme theme = ui.newTheme({accent: "#d9480f"})
+
+class Greeting (
+  def view() ui.node (
+    return <text color=theme.accent>Hello</text>
+  )
+)
+
+log ui.html(Greeting()).contains("#d9480f")
+```
+:::
+
 ## Focus and break
 
 When the time hits zero, `next()` flips between focus and break, resets the time, and counts a session when focus ends. The view shows which mode it's in. In the try-it tab, three ticks run a 3 second focus to the end and start a 5 minute break.
@@ -379,6 +416,8 @@ import "std:ui"
 *ui.Theme theme = ui.newTheme({accent: "#d9480f", surface: "#fff4e6", muted: "#868e96"})
 
 style card = (pad: 32, gap: 16, radius: 16, bg: white)
+
+def two(int n) string -> ("" ++ n).padStart("0", 2)
 
 class Timer (
   int remaining = 1500
@@ -410,10 +449,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 
   def view() ui.node (
@@ -421,7 +457,10 @@ class Timer (
       <column ...card align=center>
         <text color=theme.muted>${if self.onBreak then "Break" else "Focus"}</text>
         <text size=64 weight=bold color=theme.accent>${self.label()}</text>
-        <button on:click=self.toggle bg=theme.accent>${if self.running then "Pause" else "Start"}</button>
+        <button
+          on:click=self.toggle
+          bg=theme.accent
+        >${if self.running then "Pause" else "Start"}</button>
         <text color=theme.muted>${self.sessions} sessions done</text>
       </column>
     </column>
@@ -497,6 +536,8 @@ import "std:requests"
 
 style card = (pad: 32, gap: 16, radius: 16, bg: white)
 
+def two(int n) string -> ("" ++ n).padStart("0", 2)
+
 class Timer (
   int remaining = 1500
   bool running = false
@@ -527,10 +568,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 
   def view() ui.node (
@@ -538,7 +576,10 @@ class Timer (
       <column ...card align=center>
         <text color=theme.muted>${if self.onBreak then "Break" else "Focus"}</text>
         <text size=64 weight=bold color=theme.accent>${self.label()}</text>
-        <button on:click=self.toggle bg=theme.accent>${if self.running then "Pause" else "Start"}</button>
+        <button
+          on:click=self.toggle
+          bg=theme.accent
+        >${if self.running then "Pause" else "Start"}</button>
         <text color=theme.muted>${self.sessions} sessions done</text>
       </column>
     </column>
@@ -578,7 +619,7 @@ An object is shared by everyone it's given to. A factory is called once per visi
 
 ## Open a window
 
-`window.create` opens a window and `main.show(timer)` puts the component in it. The window and the web page share the one `timer`. Something has to tick it: an async function loops, sleeps a second, ticks and calls `ui.refresh()` to redraw the screens. Windows use SDL2, which needs its development files to build. Save it as `pomodoro.osl` and run it. Next: [ui](../packages/ui.md), [window](../packages/window.md), or a [game](game.md).
+`window.create` opens a window and `main.show(timer)` puts the component in it. The window and the web page share the one `timer`. Something has to tick it: an `async` function loops, sleeps a second, ticks and calls `ui.refresh()` to redraw every screen. Windows use SDL2, which needs its development files to build.
 
 ```osl norun
 import "std:ui"
@@ -589,6 +630,8 @@ import "std:thread"
 *ui.Theme theme = ui.newTheme({accent: "#d9480f", surface: "#fff4e6", muted: "#868e96"})
 
 style card = (pad: 32, gap: 16, radius: 16, bg: white)
+
+def two(int n) string -> ("" ++ n).padStart("0", 2)
 
 class Timer (
   int remaining = 1500
@@ -620,10 +663,7 @@ class Timer (
 
   def label() string (
     int minutes = floor(self.remaining / 60).as<int>
-    int seconds = self.remaining % 60
-    string mm = if minutes < 10 then "0" ++ minutes else "" ++ minutes
-    string ss = if seconds < 10 then "0" ++ seconds else "" ++ seconds
-    return mm ++ ":" ++ ss
+    return two(minutes) ++ ":" ++ two(self.remaining % 60)
   )
 
   def view() ui.node (
@@ -631,7 +671,10 @@ class Timer (
       <column ...card align=center>
         <text color=theme.muted>${if self.onBreak then "Break" else "Focus"}</text>
         <text size=64 weight=bold color=theme.accent>${self.label()}</text>
-        <button on:click=self.toggle bg=theme.accent>${if self.running then "Pause" else "Start"}</button>
+        <button
+          on:click=self.toggle
+          bg=theme.accent
+        >${if self.running then "Pause" else "Start"}</button>
         <text color=theme.muted>${self.sessions} sessions done</text>
       </column>
     </column>
@@ -658,3 +701,4 @@ main.show(timer)
 window.run()
 ```
 
+Save it as `pomodoro.osl` and run it with `osl run pomodoro.osl`: the window opens and `http://localhost:8095` shows the same timer. Next: [ui](../packages/ui.md), [window](../packages/window.md), or a [game](game.md).

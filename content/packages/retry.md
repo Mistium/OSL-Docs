@@ -221,6 +221,53 @@ guess denied
 
 Both calls failed once with the network error and were retried. The wrong password came back as `"denied"` on the second attempt, which is a success as far as `retry` is concerned, so it stopped there.
 
+:::quiz
+`fn` throws on every call and you pass no options. How many times does `retry.call(fn)` call it?
+
+- [ ] Once
+- [x] Three times, then it returns an error
+- [ ] Forever, until it works
+
+The default is three attempts. After the last one you get an error result carrying the last failure's kind.
+:::
+
+:::exercise title="One more attempt"
+This call needs four attempts but only gets the default three, so it gives up. Add an option so it prints the success.
+
+```osl
+import "std:retry"
+
+auto outcome = retry.call(def(int attempt) string (
+  if attempt < 4 (
+    throw error("NetError", "busy")
+  )
+  return "ok on " ++ attempt
+))
+
+log outcome.unwrapOr("gave up")
+```
+
+```output
+ok on 4
+```
+
+> [!hint]
+> The second argument to `retry.call` is an object of options. `attempts` says how many calls to make.
+
+```osl solution
+import "std:retry"
+
+auto outcome = retry.call(def(int attempt) string (
+  if attempt < 4 (
+    throw error("NetError", "busy")
+  )
+  return "ok on " ++ attempt
+), {attempts: 4})
+
+log outcome.unwrapOr("gave up")
+```
+:::
+
 ## API reference
 
 ::api

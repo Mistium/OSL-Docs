@@ -577,7 +577,7 @@ A call that returns a `result` is handled with `catch`, `switch`, `!`, `.unwrap(
 
 | Form | Does |
 | --- | --- |
-| `value catch ( ... )` | on an error, runs the block; the block ends with `return`, `continue`, `break` or `throw` |
+| `value catch ( ... )` | on an error, runs the block; the block ends with `return`, `continue`, `break` or `throw`, or with a value that stands in for the result |
 | `value catch (e) ( ... )` | the same, naming the error `e` |
 | `value catch return` | the same, with a single statement and no block |
 | `value!` | on an error, returns it from the current function, which must return a `result` |
@@ -618,6 +618,22 @@ log attempt.isErr() attempt.unwrapErr().kind
 bad: seven
 7 0
 true RangeError
+```
+
+A `catch` block that ends with a value gives that value, so it can stand in for the failed result:
+
+```osl
+def parse(string text) result<int, error> -> text.tryAs<int>
+int n = parse("x") catch (e) (
+  log "bad input:" e.kind
+  -1
+)
+log n
+```
+
+```output
+bad input: ParseError
+-1
 ```
 
 ## defer
@@ -893,5 +909,6 @@ These can't be used as variable, parameter or function names.
 | operators written as words | `and` `or` `xor` `nand` `nor` `xnor` `in` `to` `is` |
 | types | `int` `int8` `int16` `int32` `int64` `uint` `uint8` `uint16` `uint32` `uint64` `byte` `char` `number` `number32` `number64` `string` `boolean` `bool` `object` `array` `any` `auto` `void` `null` `map` `set` `result` `option` `error` `unit` `canvas` `xml` `channel` `thread` `iter` `promise` `regex` |
 | values | `true` `false` |
+| other | `self` `catch` |
 
-Other words have a meaning only where they are used: `match`, `try`, `catch`, `async`, `atomic`, `type`, `test`, `extends`, `static`, `self`, `log`, `say`, `warn`, `wait` and `exit`. They can be used as variable names, but it is clearer not to.
+Other words have a meaning only where they are used: `match`, `try`, `async`, `atomic`, `type`, `test`, `extends`, `static`, `log`, `say`, `warn`, `wait` and `exit`. They can be used as variable names, but it is clearer not to.

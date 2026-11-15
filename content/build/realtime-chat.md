@@ -9,11 +9,11 @@ time: 25 minutes
 
 You'll build a chat room: people connect, pick a nickname, and see everyone's messages as they happen. It uses a WebSocket server mounted on a `std:serve` router, and ends with a web page.
 
-`std:ws` also has a client, so every step runs here: the try-it tab starts the server, connects two clients and prints what each receives.
+`std:ws` also has a client, so every step runs here: the try-it tab starts the server, connects clients and prints what they receive.
 
 ## Decide what messages look like
 
-Both sides speak JSON with a `type`. Clients send `say` and `nick`. The server sends `chat`, `system` and `error`. One struct covers all of them, and `describe` turns a received message into a line of text. A message arrives as a string, so `json.parse<Message>` decodes it, and a broken one becomes a `?` line.
+Both sides speak JSON with a `type`. Clients send `say` and `nick`; the server sends `chat`, `system` and `error`. One struct covers them all. `describe` decodes a message with `json.parse<Message>` and turns it into a line of text, and a broken one becomes a `?` line.
 
 ```osl
 import "std:json"
@@ -118,7 +118,7 @@ log describe(`{"type": "action", "name": "ann", "text": "waves"}`)
 
 `ws.new()` makes a WebSocket server and `app.ws("/chat", room)` mounts it on the router. `room.on("connect", fn)` runs for each new client. `conn.set(key, value)` keeps a value on that connection, which is where the nickname goes, and `conn.send(object)` sends JSON to that one client.
 
-The try-it tab joins two clients. Each handler runs on the connection's own thread, so the test client drops what it receives into a channel, and the main program waits for it with `recv()`. That keeps the output in a fixed order.
+The try-it tab joins two clients. Each handler runs on its connection's own thread, so the test client drops what it receives into a channel and the main program waits for it with `recv()`. That keeps the output in a fixed order.
 
 ```osl
 import "std:serve"
@@ -444,6 +444,16 @@ guest2: hi ann
 guest2: hi ann
 ```
 
+:::quiz
+`bo` joined as `guest2` and never sent a `nick`. What name does the room see on `bo`'s chat lines?
+
+- [ ] None: the name is empty until a `nick` arrives.
+- [x] `guest2`, because `connect` stored it on the connection.
+- [ ] `bo`, because the client's variable is called `bo`.
+
+`conn.set("name", ...)` ran when the socket opened, and each chat line reads the name back from the connection that sent it.
+:::
+
 :::exercise title="A valid nickname"
 Return true only for names of 1 to 12 characters with no spaces.
 
@@ -587,6 +597,37 @@ app.stop().unwrap()
 
 **Try changing** the try-it tab: have `bo` say something first.
 
+:::exercise title="Say who's left"
+Make `leftText` say how many people remain: `bo left, 1 here`, or `ann left, the room is empty` when nobody's left.
+
+```osl
+def leftText(string name, int remaining) string (
+  return name ++ " left"
+)
+
+log leftText("bo", 1)
+log leftText("ann", 0)
+```
+
+```output
+bo left, 1 here
+ann left, the room is empty
+```
+
+> [!hint]
+> Return early when `remaining` is 0.
+
+```osl solution
+def leftText(string name, int remaining) string (
+  if remaining == 0 return name ++ " left, the room is empty"
+  return name ++ " left, " ++ remaining ++ " here"
+)
+
+log leftText("bo", 1)
+log leftText("ann", 0)
+```
+:::
+
 ## Serve a page
 
 The same router serves the browser client at `/`. It opens a socket to `/chat`, shows what arrives and sends what you type as the JSON from step 1. Typing `/nick ann` sends a `nick` message. The try-it tab fetches the page and checks the client is in it.
@@ -626,7 +667,10 @@ string page = `<!doctype html>
 <meta charset="utf-8">
 <title>Chat</title>
 <div id="log"></div>
-<form id="form"><input id="text" autocomplete="off" placeholder="Say something, or /nick name"><button>Send</button></form>
+<form id="form">
+  <input id="text" autocomplete="off" placeholder="Say something, or /nick name">
+  <button>Send</button>
+</form>
 <script>
   var log = document.getElementById("log");
   var scheme = location.protocol === "https:" ? "wss://" : "ws://";
@@ -731,104 +775,11 @@ app.stop().unwrap()
 
 ## Run it for real
 
-This is the finished program, serving forever with `app.run`. Save it as `chat.osl`, run it and open `http://localhost:8080` in two tabs. Next: [ws](../packages/ws.md), [serve](../packages/serve.md), or a [desktop app](desktop-app.md).
+The try-it tab starts and stops the server itself. For the real thing, save the program above without the try-it part and end it with `app.run`, which serves until the program stops:
 
-```osl norun
-import "std:serve"
-import "std:ws"
-import "std:json"
-
-struct Message (
-  string type = ""
-  string name = ""
-  string text = ""
-)
-
-def describe(string raw) string (
-  Message m = json.parse<Message>(raw) catch (e) (
-    return "? " ++ raw
-  )
-  switch m.type (
-    case "chat"
-      return m.name ++ ": " ++ m.text
-    case "system"
-      return "* " ++ m.text
-    default
-      return "! " ++ m.text
-  )
-)
-
-*serve.Router app = serve.new()
-*ws.Server room = ws.new()
-int guests = 0
-
-string page = `<!doctype html>
-<meta charset="utf-8">
-<title>Chat</title>
-<div id="log"></div>
-<form id="form"><input id="text" autocomplete="off" placeholder="Say something, or /nick name"><button>Send</button></form>
-<script>
-  var log = document.getElementById("log");
-  var scheme = location.protocol === "https:" ? "wss://" : "ws://";
-  var socket = new WebSocket(scheme + location.host + "/chat");
-  function add(text) {
-    var line = document.createElement("div");
-    line.textContent = text;
-    log.appendChild(line);
-  }
-  socket.onmessage = function (event) {
-    var m = JSON.parse(event.data);
-    add(m.type === "chat" ? m.name + ": " + m.text : "* " + m.text);
-  };
-  document.getElementById("form").onsubmit = function (event) {
-    event.preventDefault();
-    var box = document.getElementById("text");
-    var text = box.value.trim();
-    if (text.startsWith("/nick ")) {
-      socket.send(JSON.stringify({type: "nick", name: text.slice(6)}));
-    } else if (text) {
-      socket.send(JSON.stringify({type: "say", text: text}));
-    }
-    box.value = "";
-  };
-</script>
-`
-
-app.get("/", def(*serve.Context c) (
-  c.html(200, page)
-))
-
-room.on("connect", def(*ws.Connection conn) (
-  guests += 1
-  conn.set("name", "guest" ++ guests)
-  conn.send({type: "system", text: "welcome, you are " ++ conn.get("name")}).unwrap()
-))
-
-room.on("message", def(*ws.Connection conn, string message) (
-  Message m = json.parse<Message>(message) catch (e) (
-    conn.send({type: "error", text: "send JSON"}).unwrap()
-    return
-  )
-  string name = conn.get("name")
-  switch m.type (
-    case "say"
-      room.broadcast({type: "chat", name: name, text: m.text})
-    case "nick"
-      conn.set("name", m.name)
-      room.broadcast({type: "system", text: name ++ " is now " ++ m.name})
-    default
-      conn.send({type: "error", text: "unknown type " ++ m.type}).unwrap()
-  )
-))
-
-room.on("disconnect", def(*ws.Connection conn) (
-  string name = conn.get("name")
-  room.broadcast({type: "system", text: name ++ " left"})
-))
-
-app.ws("/chat", room)
-
+```osl fragment
 log "chat running at http://localhost:8080"
 app.run(":8080").unwrap()
 ```
 
+Run it with `osl run chat.osl`, open `http://localhost:8080` in two tabs and type `/nick ann` in one. Next: [ws](../packages/ws.md), [serve](../packages/serve.md), or a [desktop app](desktop-app.md).

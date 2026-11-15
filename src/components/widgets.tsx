@@ -4,7 +4,7 @@ import { useMemo, useState } from "preact/hooks";
 import type { FunctionComponent } from "preact";
 import { Search, CheckCircle2, Circle } from "lucide-preact";
 import index from "virtual:docs-index";
-import { highlightCode } from "../lib/highlight";
+import { highlightHTML } from "../lib/highlight";
 import type { APIMethod } from "../lib/types";
 import { ownerOf, signatureOf } from "../lib/signature";
 import { AREAS, LESSONS, PACKAGE_GROUPS, packageSlug, INSTALL } from "../nav";
@@ -37,7 +37,7 @@ function DocText({ doc }: { doc: string }) {
         .map((p, n) =>
           p.code ? (
             <pre key={n} class="hljs api__code">
-              <code dangerouslySetInnerHTML={{ __html: highlightCode(p.text.trimEnd(), "osl") ?? p.text }} />
+              <code dangerouslySetInnerHTML={{ __html: highlightHTML(p.text.trimEnd(), "osl") }} />
             </pre>
           ) : (
             <p key={n}>{docInline(p.text)}</p>
@@ -63,7 +63,7 @@ function Member({ owner, m, id }: { owner: string; m: APIMethod; id: string }) {
         <a class="api__link" href={`#${id}`} aria-label={`Link to ${owner}.${m.name}`}>
           #
         </a>
-        <code class="hljs" dangerouslySetInnerHTML={{ __html: highlightCode(sig, "osl") ?? sig }} />
+        <code class="hljs" dangerouslySetInnerHTML={{ __html: highlightHTML(sig, "osl") }} />
       </div>
       {m.deprecated && (
         <p class="api__deprecated">
@@ -102,7 +102,7 @@ const API: FunctionComponent<WidgetProps> = ({ ctx }) => {
       </div>
       {functions.length > 0 && (
         <>
-          <h3 class="api__group" id="functions">
+          <h3 class="api__group" id="api-functions">
             Functions
           </h3>
           {functions.map((f) => (
@@ -112,13 +112,13 @@ const API: FunctionComponent<WidgetProps> = ({ ctx }) => {
       )}
       {constants.length > 0 && (
         <>
-          <h3 class="api__group" id="constants">
+          <h3 class="api__group" id="api-constants">
             Constants
           </h3>
           {constants.map((c) => (
             <div key={c.name} class="api__member" id={`const-${c.name}`}>
               <div class="api__sig">
-                <code class="hljs" dangerouslySetInnerHTML={{ __html: highlightCode(`${c.type} ${api.name}.${c.name}`, "osl") ?? c.name }} />
+                <code class="hljs" dangerouslySetInnerHTML={{ __html: highlightHTML(`${c.type} ${api.name}.${c.name}`, "osl") }} />
               </div>
               {c.doc && (
                 <div class="api__doc">

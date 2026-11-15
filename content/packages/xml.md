@@ -179,7 +179,14 @@ Print `id title` for every item. The title is the item's own text.
 ```osl
 import "std:xml"
 
-auto doc = xml.parse(`<list><item id="1">Apple</item><item id="2">Pear</item><item id="3">Fig</item></list>`).unwrap()
+string source = [
+  `<list>`,
+  `<item id="1">Apple</item>`,
+  `<item id="2">Pear</item>`,
+  `<item id="3">Fig</item>`,
+  `</list>`
+].join("")
+auto doc = xml.parse(source).unwrap()
 log doc.count("list")
 ```
 
@@ -198,7 +205,14 @@ log doc.count("list")
 ```osl solution
 import "std:xml"
 
-auto doc = xml.parse(`<list><item id="1">Apple</item><item id="2">Pear</item><item id="3">Fig</item></list>`).unwrap()
+string source = [
+  `<list>`,
+  `<item id="1">Apple</item>`,
+  `<item id="2">Pear</item>`,
+  `<item id="3">Fig</item>`,
+  `</list>`
+].join("")
+auto doc = xml.parse(source).unwrap()
 for item in doc.findAll("item") (
   log item.attrs["id"] item.text
 )

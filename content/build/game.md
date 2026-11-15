@@ -1,7 +1,7 @@
 ---
 layout: project
 description: Build Snake with `std:raylib`, keeping the rules in plain code you can run and test as text, and drawing the board in a window at the end.
-uses: raylib
+uses: raylib, random
 time: 25 minutes
 ---
 
@@ -13,7 +13,7 @@ Coordinates start at 1 and `y` grows downwards, like the screen.
 
 ## Draw the board
 
-A point is a struct, the snake is an array of points, and the head is the first one. `render` builds the board row by row: `@` for the head, `o` for the body, `.` for nothing.
+A point is a struct, the snake is an array of points, and the head is the first one. `cellAt` says what's on one square (`@` head, `o` body, `.` nothing) and `render` strings the squares into rows.
 
 ```osl
 struct Point (
@@ -21,20 +21,19 @@ struct Point (
   int y
 )
 
+def cellAt(Point[] snake, Point p) string (
+  if p == snake[1] return "@"
+  if snake.contains(p) return "o"
+  return "."
+)
+
 def render(Point[] snake, int width, int height) string (
   string board = ""
   for y in 1 to height (
-    string row = ""
     for x in 1 to width (
-      string cell = "."
-      for i, p in snake (
-        if p.x == x and p.y == y (
-          cell = if i == 1 then "@" else "o"
-        )
-      )
-      row ++= cell
+      board ++= cellAt(snake, Point(x, y))
     )
-    board ++= row ++ "\n"
+    board ++= "\n"
   )
   return board
 )
@@ -52,39 +51,40 @@ log render(snake, 10, 5)
 ..........
 ```
 
-**Try changing** the snake's points, or the board size.
+Structs compare by value, so `p == snake[1]` is true when the coordinates match. **Try changing** the snake's points or the board size.
 
-:::exercise title="Head or body"
-Make `symbol` return `@` for the first segment and `o` for the rest.
+:::exercise title="Mark the tail"
+Make `symbol` return `@` for the first segment, `x` for the last and `o` for the ones between.
 
 ```osl
-def symbol(int index) string (
+def symbol(int index, int length) string (
   return "o"
 )
 
-log symbol(1) symbol(2) symbol(3)
+log symbol(1, 3) symbol(2, 3) symbol(3, 3)
 ```
 
 ```output
-@ o o
+@ o x
 ```
 
 > [!hint]
-> `if index == 1 then ... else ...`.
+> Two early `return`s, one for `index == 1` and one for `index == length`.
 
 ```osl solution
-def symbol(int index) string (
-  return if index == 1 then "@" else "o"
+def symbol(int index, int length) string (
+  if index == 1 return "@"
+  if index == length return "x"
+  return "o"
 )
 
-log symbol(1) symbol(2) symbol(3)
+log symbol(1, 3) symbol(2, 3) symbol(3, 3)
 ```
 :::
 
-
 ## Move
 
-Moving is: put a new head in front, drop the last segment. `step` takes a direction and returns the moved snake. The try-it tab moves right and then down.
+Moving is: put a new head in front and drop the last segment. `delta` turns a direction into a step, and `step` returns the moved snake. `snake.trim(1, snake.len - 1)` keeps everything except the tail.
 
 ```osl
 struct Point (
@@ -92,45 +92,34 @@ struct Point (
   int y
 )
 
+def cellAt(Point[] snake, Point p) string (
+  if p == snake[1] return "@"
+  if snake.contains(p) return "o"
+  return "."
+)
+
 def render(Point[] snake, int width, int height) string (
   string board = ""
   for y in 1 to height (
-    string row = ""
     for x in 1 to width (
-      string cell = "."
-      for i, p in snake (
-        if p.x == x and p.y == y (
-          cell = if i == 1 then "@" else "o"
-        )
-      )
-      row ++= cell
+      board ++= cellAt(snake, Point(x, y))
     )
-    board ++= row ++ "\n"
+    board ++= "\n"
   )
   return board
 )
 
+def delta(string dir) Point -> match dir (
+  "up" -> Point(0, -1)
+  "down" -> Point(0, 1)
+  "left" -> Point(-1, 0)
+  _ -> Point(1, 0)
+)
 
 def step(Point[] snake, string dir) Point[] (
+  Point d = delta(dir)
   Point head = snake[1]
-  Point next = head
-  switch dir (
-    case "up"
-      next = Point(head.x, head.y - 1)
-    case "down"
-      next = Point(head.x, head.y + 1)
-    case "left"
-      next = Point(head.x - 1, head.y)
-    case "right"
-      next = Point(head.x + 1, head.y)
-  )
-  Point[] moved = [next]
-  for i, p in snake (
-    if i < snake.len (
-      moved.append(p)
-    )
-  )
-  return moved
+  return [Point(head.x + d.x, head.y + d.y)] ++ snake.trim(1, snake.len - 1)
 )
 
 // try it
@@ -148,8 +137,10 @@ log render(snake, 10, 5)
 ..........
 ```
 
+**Try changing** the directions, or chain a few more `step` calls.
+
 :::exercise title="Opposites"
-Write `opposite` so it returns `right` for `left`, `down` for `up`, and so on. Next step needs it to stop the snake turning back on itself.
+Write `opposite` so it returns `right` for `left`, `down` for `up`, and so on. The next step uses it to stop the snake turning back on itself.
 
 ```osl
 def opposite(string dir) string (
@@ -164,35 +155,48 @@ right down up left
 ```
 
 > [!hint]
-> A `switch` on `dir` with a `return` in each case.
+> It's a `match` on `dir`, like `delta` above.
 
 ```osl solution
-def opposite(string dir) string (
-  switch dir (
-    case "left"
-      return "right"
-    case "right"
-      return "left"
-    case "up"
-      return "down"
-    default
-      return "up"
-  )
+def opposite(string dir) string -> match dir (
+  "up" -> "down"
+  "down" -> "up"
+  "left" -> "right"
+  _ -> "left"
 )
 
 log opposite("left") opposite("up") opposite("down") opposite("right")
 ```
 :::
 
-
 ## Make it a game
 
-State and rules now live in a `Game` class: the snake, the direction and methods `turn`, `update` and `render`. `turn` ignores a reversal, because turning back into your own neck would be instant death. The try-it tab queues a few turns and updates.
+State and rules now live in a `Game` class: the snake, the direction, and the methods `turn`, `update` and `render`. `turn` ignores a reversal, because turning into your own neck would be instant death. `update` is just `step` on the game's own snake.
 
 ```osl
 struct Point (
   int x
   int y
+)
+
+def delta(string dir) Point -> match dir (
+  "up" -> Point(0, -1)
+  "down" -> Point(0, 1)
+  "left" -> Point(-1, 0)
+  _ -> Point(1, 0)
+)
+
+def opposite(string dir) string -> match dir (
+  "up" -> "down"
+  "down" -> "up"
+  "left" -> "right"
+  _ -> "left"
+)
+
+def step(Point[] snake, string dir) Point[] (
+  Point d = delta(dir)
+  Point head = snake[1]
+  return [Point(head.x + d.x, head.y + d.y)] ++ snake.trim(1, snake.len - 1)
 )
 
 class Game (
@@ -202,48 +206,28 @@ class Game (
   string dir = "right"
 
   def turn(string next) (
-    boolean reverse = (self.dir == "left" and next == "right") or (self.dir == "right" and next == "left") or (self.dir == "up" and next == "down") or (self.dir == "down" and next == "up")
-    if !reverse (
+    if next != opposite(self.dir) (
       self.dir = next
     )
   )
 
   def update() (
-    Point head = self.snake[1]
-    Point next = head
-    switch self.dir (
-      case "up"
-        next = Point(head.x, head.y - 1)
-      case "down"
-        next = Point(head.x, head.y + 1)
-      case "left"
-        next = Point(head.x - 1, head.y)
-      case "right"
-        next = Point(head.x + 1, head.y)
-    )
-    Point[] moved = [next]
-    for i, p in self.snake (
-      if i < self.snake.len (
-        moved.append(p)
-      )
-    )
-    self.snake = moved
+    self.snake = step(self.snake, self.dir)
+  )
+
+  def cellAt(Point p) string (
+    if p == self.snake[1] return "@"
+    if self.snake.contains(p) return "o"
+    return "."
   )
 
   def render() string (
     string board = ""
     for y in 1 to self.height (
-      string row = ""
       for x in 1 to self.width (
-        string cell = "."
-        for i, p in self.snake (
-          if p.x == x and p.y == y (
-            cell = if i == 1 then "@" else "o"
-          )
-        )
-        row ++= cell
+        board ++= self.cellAt(Point(x, y))
       )
-      board ++= row ++ "\n"
+      board ++= "\n"
     )
     return board
   )
@@ -268,6 +252,8 @@ log g.render()
 .....@....
 ```
 
+The `turn("left")` did nothing: the snake was heading right. Delete it and `turn("down")` still works.
+
 :::quiz
 `Point` is a struct and `Game` is a class. Why?
 
@@ -275,17 +261,39 @@ log g.render()
 - [x] A point is a small value that's fine to copy. The game is one thing whose state changes.
 - [ ] Structs can't hold numbers.
 
-Structs copy on assignment and classes are shared. `game.update()` has to change the one game everyone holds.
+Structs copy on assignment and classes are shared. `g.update()` has to change the one game everyone holds.
 :::
 
 ## Food and score
 
-The food is a point. When the head lands on it, the tail stays, so the snake grows, the score goes up and the food moves. Where? `random` is a tiny generator inside the game, so the same seed always gives the same food and every step here prints the same board.
+The food is a point. When the head lands on it, the tail stays, so the snake grows, the score goes up and the food moves somewhere the snake isn't. `std:random` picks the spot. The try-it tab seeds it, so the food lands on the same square every time you run it.
 
 ```osl
+import "std:random"
+
 struct Point (
   int x
   int y
+)
+
+def delta(string dir) Point -> match dir (
+  "up" -> Point(0, -1)
+  "down" -> Point(0, 1)
+  "left" -> Point(-1, 0)
+  _ -> Point(1, 0)
+)
+
+def opposite(string dir) string -> match dir (
+  "up" -> "down"
+  "down" -> "up"
+  "left" -> "right"
+  _ -> "left"
+)
+
+def step(Point[] snake, string dir) Point[] (
+  Point d = delta(dir)
+  Point head = snake[1]
+  return [Point(head.x + d.x, head.y + d.y)] ++ snake.trim(1, snake.len - 1)
 )
 
 class Game (
@@ -295,86 +303,52 @@ class Game (
   string dir = "right"
   Point food = Point(7, 3)
   int score = 0
-  int seed = 5
-
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
 
   def turn(string next) (
-    boolean reverse = (self.dir == "left" and next == "right") or (self.dir == "right" and next == "left") or (self.dir == "up" and next == "down") or (self.dir == "down" and next == "up")
-    if !reverse (
+    if next != opposite(self.dir) (
       self.dir = next
     )
   )
 
   def placeFood() (
-    boolean free = false
-    while !free (
-      Point spot = Point(1 + self.random(self.width), 1 + self.random(self.height))
-      free = true
-      for p in self.snake (
-        if p.x == spot.x and p.y == spot.y (
-          free = false
-        )
-      )
-      self.food = spot
+    Point spot = Point(random.int(1, self.width), random.int(1, self.height))
+    while self.snake.contains(spot) (
+      spot = Point(random.int(1, self.width), random.int(1, self.height))
     )
+    self.food = spot
   )
 
   def update() (
-    Point head = self.snake[1]
-    Point next = head
-    switch self.dir (
-      case "up"
-        next = Point(head.x, head.y - 1)
-      case "down"
-        next = Point(head.x, head.y + 1)
-      case "left"
-        next = Point(head.x - 1, head.y)
-      case "right"
-        next = Point(head.x + 1, head.y)
-    )
-    Point[] moved = [next]
-    for i, p in self.snake (
-      if i < self.snake.len (
-        moved.append(p)
-      )
-    )
-    if next.x == self.food.x and next.y == self.food.y (
-      moved.append(self.snake[self.snake.len])
+    Point tail = self.snake[self.snake.len]
+    self.snake = step(self.snake, self.dir)
+    if self.snake[1] == self.food (
+      self.snake.append(tail)
       self.score += 1
-      self.snake = moved
       self.placeFood()
-    ) else (
-      self.snake = moved
     )
+  )
+
+  def cellAt(Point p) string (
+    if p == self.snake[1] return "@"
+    if self.snake.contains(p) return "o"
+    if p == self.food return "*"
+    return "."
   )
 
   def render() string (
     string board = ""
     for y in 1 to self.height (
-      string row = ""
       for x in 1 to self.width (
-        string cell = "."
-        if self.food.x == x and self.food.y == y (
-          cell = "*"
-        )
-        for i, p in self.snake (
-          if p.x == x and p.y == y (
-            cell = if i == 1 then "@" else "o"
-          )
-        )
-        row ++= cell
+        board ++= self.cellAt(Point(x, y))
       )
-      board ++= row ++ "\n"
+      board ++= "\n"
     )
     return board ++ "score " ++ self.score
   )
 )
 
 // try it
+random.seed(5)
 Game g = Game()
 for _ in 1 to 3 (
   g.update()
@@ -386,17 +360,17 @@ log g.snake.len
 ```output
 ..........
 ..........
-*..ooo@...
+...ooo@...
 ..........
-..........
+........*.
 score 1
 4
 ```
 
-**Try changing** `seed`, and watch the food land somewhere else.
+**Try changing** the seed and watch the food land somewhere else.
 
 :::exercise title="Stay on the board"
-Write `inBounds`: true when the point is inside the board.
+Write `inBounds`: true when the point is inside the board. The next step needs it.
 
 ```osl
 struct Point (
@@ -438,15 +412,36 @@ log inBounds(Point(10, 6), 10, 5)
 ```
 :::
 
-
 ## Game over
 
-Hitting a wall or your own body sets `over`, and `update` stops doing anything. Eight steps to the right is more than the board has: the try-it tab ends in `GAME OVER`.
+Hitting a wall or your own body sets `over`, and `update` stops doing anything. The try-it tab runs eight steps to the right, which is more than the board has, and then plays a scripted game: `play` feeds in one move per tick (`-` means keep going). That's how you'd test a rule: set up a game, play it, check the result.
 
 ```osl
+import "std:random"
+
 struct Point (
   int x
   int y
+)
+
+def delta(string dir) Point -> match dir (
+  "up" -> Point(0, -1)
+  "down" -> Point(0, 1)
+  "left" -> Point(-1, 0)
+  _ -> Point(1, 0)
+)
+
+def opposite(string dir) string -> match dir (
+  "up" -> "down"
+  "down" -> "up"
+  "left" -> "right"
+  _ -> "left"
+)
+
+def step(Point[] snake, string dir) Point[] (
+  Point d = delta(dir)
+  Point head = snake[1]
+  return [Point(head.x + d.x, head.y + d.y)] ++ snake.trim(1, snake.len - 1)
 )
 
 class Game (
@@ -457,115 +452,96 @@ class Game (
   Point food = Point(7, 3)
   int score = 0
   bool over = false
-  int seed = 5
-
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
 
   def turn(string next) (
-    boolean reverse = (self.dir == "left" and next == "right") or (self.dir == "right" and next == "left") or (self.dir == "up" and next == "down") or (self.dir == "down" and next == "up")
-    if !reverse (
+    if next != opposite(self.dir) (
       self.dir = next
     )
   )
 
   def placeFood() (
-    boolean free = false
-    while !free (
-      Point spot = Point(1 + self.random(self.width), 1 + self.random(self.height))
-      free = true
-      for p in self.snake (
-        if p.x == spot.x and p.y == spot.y (
-          free = false
-        )
-      )
-      self.food = spot
+    Point spot = Point(random.int(1, self.width), random.int(1, self.height))
+    while self.snake.contains(spot) (
+      spot = Point(random.int(1, self.width), random.int(1, self.height))
     )
+    self.food = spot
   )
 
   def update() (
     if self.over return
-    Point head = self.snake[1]
-    Point next = head
-    switch self.dir (
-      case "up"
-        next = Point(head.x, head.y - 1)
-      case "down"
-        next = Point(head.x, head.y + 1)
-      case "left"
-        next = Point(head.x - 1, head.y)
-      case "right"
-        next = Point(head.x + 1, head.y)
-    )
-    if next.x < 1 or next.x > self.width or next.y < 1 or next.y > self.height (
+    Point tail = self.snake[self.snake.len]
+    Point[] moved = step(self.snake, self.dir)
+    Point head = moved[1]
+    boolean wall = head.x < 1 or head.x > self.width or head.y < 1 or head.y > self.height
+    if wall or self.snake.contains(head) (
       self.over = true
       return
     )
-    for p in self.snake (
-      if p.x == next.x and p.y == next.y (
-        self.over = true
-        return
-      )
-    )
-    Point[] moved = [next]
-    for i, p in self.snake (
-      if i < self.snake.len (
-        moved.append(p)
-      )
-    )
-    if next.x == self.food.x and next.y == self.food.y (
-      moved.append(self.snake[self.snake.len])
+    self.snake = moved
+    if head == self.food (
+      self.snake.append(tail)
       self.score += 1
-      self.snake = moved
       self.placeFood()
-    ) else (
-      self.snake = moved
     )
+  )
+
+  def cellAt(Point p) string (
+    if p == self.snake[1] return "@"
+    if self.snake.contains(p) return "o"
+    if p == self.food return "*"
+    return "."
   )
 
   def render() string (
     string board = ""
     for y in 1 to self.height (
-      string row = ""
       for x in 1 to self.width (
-        string cell = "."
-        if self.food.x == x and self.food.y == y (
-          cell = "*"
-        )
-        for i, p in self.snake (
-          if p.x == x and p.y == y (
-            cell = if i == 1 then "@" else "o"
-          )
-        )
-        row ++= cell
+        board ++= self.cellAt(Point(x, y))
       )
-      board ++= row ++ "\n"
+      board ++= "\n"
     )
-    string status = if self.over then "GAME OVER" else "score " ++ self.score
-    return board ++ status
+    return board ++ if self.over then "GAME OVER" else "score " ++ self.score
   )
 )
 
 // try it
-Game g = Game()
-for _ in 1 to 8 (
-  g.update()
+def play(Game g, string[] moves) (
+  for move in moves (
+    if move != "-" (
+      g.turn(move)
+    )
+    g.update()
+  )
 )
+
+random.seed(5)
+Game wall = Game()
+play(wall, ["-", "-", "-", "-", "-", "-", "-", "-"])
+log wall.render()
+
+Game g = Game()
+play(g, ["-", "-", "-", "down", "-", "left", "-", "-", "up"])
 log g.render()
-log g.over
+log g.snake.len g.score g.over
 ```
 
 ```output
 ..........
 ..........
-*.....ooo@
+......ooo@
 ..........
-..........
+........*.
 GAME OVER
-true
+...*......
+..........
+..........
+...@......
+...ooo....
+score 1
+4 1 false
 ```
+
+**Try changing** the moves and steer the snake onto the next `*`. Make it run into itself.
 
 :::exercise title="Faster as you go"
 Make `delay` return 200 at score 0, 10 less per point, and never below 80.
@@ -604,277 +580,103 @@ Why is the game logic separate from the drawing code?
 If `update` never touches the window, a test can play a thousand moves in a millisecond. The window only reads the state.
 :::
 
-## Play a scripted game
-
-A `play` function feeds a list of moves in, one per tick (`-` means keep going). This is how you'd test a rule: set up a game, play it, and check the result.
-
-```osl
-struct Point (
-  int x
-  int y
-)
-
-class Game (
-  int width = 10
-  int height = 5
-  Point[] snake = [Point(4, 3), Point(3, 3), Point(2, 3)]
-  string dir = "right"
-  Point food = Point(7, 3)
-  int score = 0
-  bool over = false
-  int seed = 5
-
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
-
-  def turn(string next) (
-    boolean reverse = (self.dir == "left" and next == "right") or (self.dir == "right" and next == "left") or (self.dir == "up" and next == "down") or (self.dir == "down" and next == "up")
-    if !reverse (
-      self.dir = next
-    )
-  )
-
-  def placeFood() (
-    boolean free = false
-    while !free (
-      Point spot = Point(1 + self.random(self.width), 1 + self.random(self.height))
-      free = true
-      for p in self.snake (
-        if p.x == spot.x and p.y == spot.y (
-          free = false
-        )
-      )
-      self.food = spot
-    )
-  )
-
-  def update() (
-    if self.over return
-    Point head = self.snake[1]
-    Point next = head
-    switch self.dir (
-      case "up"
-        next = Point(head.x, head.y - 1)
-      case "down"
-        next = Point(head.x, head.y + 1)
-      case "left"
-        next = Point(head.x - 1, head.y)
-      case "right"
-        next = Point(head.x + 1, head.y)
-    )
-    if next.x < 1 or next.x > self.width or next.y < 1 or next.y > self.height (
-      self.over = true
-      return
-    )
-    for p in self.snake (
-      if p.x == next.x and p.y == next.y (
-        self.over = true
-        return
-      )
-    )
-    Point[] moved = [next]
-    for i, p in self.snake (
-      if i < self.snake.len (
-        moved.append(p)
-      )
-    )
-    if next.x == self.food.x and next.y == self.food.y (
-      moved.append(self.snake[self.snake.len])
-      self.score += 1
-      self.snake = moved
-      self.placeFood()
-    ) else (
-      self.snake = moved
-    )
-  )
-
-  def render() string (
-    string board = ""
-    for y in 1 to self.height (
-      string row = ""
-      for x in 1 to self.width (
-        string cell = "."
-        if self.food.x == x and self.food.y == y (
-          cell = "*"
-        )
-        for i, p in self.snake (
-          if p.x == x and p.y == y (
-            cell = if i == 1 then "@" else "o"
-          )
-        )
-        row ++= cell
-      )
-      board ++= row ++ "\n"
-    )
-    string status = if self.over then "GAME OVER" else "score " ++ self.score
-    return board ++ status
-  )
-)
-
-def play(Game g, string[] moves) (
-  for move in moves (
-    if move != "-" (
-      g.turn(move)
-    )
-    g.update()
-  )
-)
-
-// try it
-Game g = Game()
-play(g, ["-", "-", "-", "down", "-", "left", "-", "-", "up"])
-log g.render()
-log g.snake.len g.score g.over
-```
-
-```output
-..........
-..........
-*.........
-...@......
-...ooo....
-score 1
-4 1 false
-```
-
-**Try changing** the moves, and see if you can reach 2 points.
-
 ## Draw it with raylib
 
-Now the window. `raylib.runWindow(frame, options)` opens one and calls `frame(ms)` each frame until it closes. The frame reads the arrow keys, calls `turn`, `update`s every 150 ms, and draws the state: `raylib.clear`, then a `rectangle` per segment and some `text`. None of the rules changed. Raylib draws through SDL2, which needs its development files to build. Next: [raylib](../packages/raylib.md) (textures, sound, 3D), or a [terminal dashboard](terminal-dashboard.md).
+Now the window. `raylib.runWindow(frame, options)` opens one and calls `frame(ms)` each frame until it closes. The frame reads the arrow keys, calls `turn`, runs `update` every 150 ms, and draws the state: `raylib.clear`, then a `rectangle` per square and some `text`. The rules are the ones you've built; `cellAt` and `render` are gone, because raylib draws the squares. Raylib draws through SDL2, which needs its development files to build.
 
 ```osl norun
 import "std:raylib"
+import "std:random"
 
 struct Point (
   int x
   int y
 )
 
+def delta(string dir) Point -> match dir (
+  "up" -> Point(0, -1)
+  "down" -> Point(0, 1)
+  "left" -> Point(-1, 0)
+  _ -> Point(1, 0)
+)
+
+def opposite(string dir) string -> match dir (
+  "up" -> "down"
+  "down" -> "up"
+  "left" -> "right"
+  _ -> "left"
+)
+
+def step(Point[] snake, string dir) Point[] (
+  Point d = delta(dir)
+  Point head = snake[1]
+  return [Point(head.x + d.x, head.y + d.y)] ++ snake.trim(1, snake.len - 1)
+)
+
 class Game (
-  int width = 10
-  int height = 5
+  int width = 16
+  int height = 12
   Point[] snake = [Point(4, 3), Point(3, 3), Point(2, 3)]
   string dir = "right"
   Point food = Point(7, 3)
   int score = 0
   bool over = false
-  int seed = 5
-
-  def random(int below) int (
-    self.seed = ((self.seed * 1103515245) + 12345) % 2147483648
-    return self.seed % below
-  )
 
   def turn(string next) (
-    boolean reverse = (self.dir == "left" and next == "right") or (self.dir == "right" and next == "left") or (self.dir == "up" and next == "down") or (self.dir == "down" and next == "up")
-    if !reverse (
+    if next != opposite(self.dir) (
       self.dir = next
     )
   )
 
   def placeFood() (
-    boolean free = false
-    while !free (
-      Point spot = Point(1 + self.random(self.width), 1 + self.random(self.height))
-      free = true
-      for p in self.snake (
-        if p.x == spot.x and p.y == spot.y (
-          free = false
-        )
-      )
-      self.food = spot
+    Point spot = Point(random.int(1, self.width), random.int(1, self.height))
+    while self.snake.contains(spot) (
+      spot = Point(random.int(1, self.width), random.int(1, self.height))
     )
+    self.food = spot
   )
 
   def update() (
     if self.over return
-    Point head = self.snake[1]
-    Point next = head
-    switch self.dir (
-      case "up"
-        next = Point(head.x, head.y - 1)
-      case "down"
-        next = Point(head.x, head.y + 1)
-      case "left"
-        next = Point(head.x - 1, head.y)
-      case "right"
-        next = Point(head.x + 1, head.y)
-    )
-    if next.x < 1 or next.x > self.width or next.y < 1 or next.y > self.height (
+    Point tail = self.snake[self.snake.len]
+    Point[] moved = step(self.snake, self.dir)
+    Point head = moved[1]
+    boolean wall = head.x < 1 or head.x > self.width or head.y < 1 or head.y > self.height
+    if wall or self.snake.contains(head) (
       self.over = true
       return
     )
-    for p in self.snake (
-      if p.x == next.x and p.y == next.y (
-        self.over = true
-        return
-      )
-    )
-    Point[] moved = [next]
-    for i, p in self.snake (
-      if i < self.snake.len (
-        moved.append(p)
-      )
-    )
-    if next.x == self.food.x and next.y == self.food.y (
-      moved.append(self.snake[self.snake.len])
+    self.snake = moved
+    if head == self.food (
+      self.snake.append(tail)
       self.score += 1
-      self.snake = moved
       self.placeFood()
-    ) else (
-      self.snake = moved
     )
-  )
-
-  def render() string (
-    string board = ""
-    for y in 1 to self.height (
-      string row = ""
-      for x in 1 to self.width (
-        string cell = "."
-        if self.food.x == x and self.food.y == y (
-          cell = "*"
-        )
-        for i, p in self.snake (
-          if p.x == x and p.y == y (
-            cell = if i == 1 then "@" else "o"
-          )
-        )
-        row ++= cell
-      )
-      board ++= row ++ "\n"
-    )
-    string status = if self.over then "GAME OVER" else "score " ++ self.score
-    return board ++ status
   )
 )
 
 int cell = 32
 Game game = Game()
-game.width = 16
-game.height = 12
 number elapsed = 0
 
+def block(Point p, int inset, string color) (
+  int size = cell - (inset * 2)
+  raylib.rectangle({
+    x: ((p.x - 1) * cell) + inset,
+    y: ((p.y - 1) * cell) + inset,
+    width: size,
+    height: size
+  }, color, {radius: 6})
+)
+
 raylib.runWindow(def(number ms) (
-  if raylib.isKeyPressed("up") (
-    game.turn("up")
-  )
-  if raylib.isKeyPressed("down") (
-    game.turn("down")
-  )
-  if raylib.isKeyPressed("left") (
-    game.turn("left")
-  )
-  if raylib.isKeyPressed("right") (
-    game.turn("right")
+  for key in ["up", "down", "left", "right"] (
+    if raylib.isKeyPressed(key) (
+      game.turn(key)
+    )
   )
   if game.over and raylib.isKeyPressed("r") (
     game = Game()
-    game.width = 16
-    game.height = 12
   )
 
   elapsed += ms
@@ -884,15 +686,25 @@ raylib.runWindow(def(number ms) (
   )
 
   raylib.clear("#1e1e2e")
-  raylib.rectangle({x: ((game.food.x - 1) * cell) + 4, y: ((game.food.y - 1) * cell) + 4, width: cell - 8, height: cell - 8}, "#f38ba8", {radius: 8})
+  block(game.food, 4, "#f38ba8")
   for i, p in game.snake (
-    string color = if i == 1 then "#a6e3a1" else "#74c7ec"
-    raylib.rectangle({x: ((p.x - 1) * cell) + 1, y: ((p.y - 1) * cell) + 1, width: cell - 2, height: cell - 2}, color, {radius: 6})
+    block(p, 1, if i == 1 then "#a6e3a1" else "#74c7ec")
   )
   raylib.text("Score " ++ game.score, {x: 8, y: 6}, {size: 20, color: "#cdd6f4"})
   if game.over (
     raylib.text("Game over. Press R", {x: 150, y: 170}, {size: 28, color: "#cdd6f4"})
   )
-), {width: 512, height: 384, title: "Snake", fps: 60})
+), {width: 512, height: 384, title: "Snake", fps: 60}).unwrap()
 ```
 
+Save it as `snake.osl` and run it with `osl run snake.osl`. The board is 16 by 12 squares of 32 pixels, which is the 512 by 384 window. Next: [raylib](../packages/raylib.md) for textures, sound and 3D, or a [terminal dashboard](terminal-dashboard.md).
+
+:::quiz
+The window's frame function uses `elapsed` to call `update` every 150 ms, rather than on every frame. Why?
+
+- [ ] `update` is too slow to run 60 times a second.
+- [x] Frames come as fast as the screen refreshes, so the snake would move at the frame rate. Counting milliseconds ties its speed to time instead.
+- [ ] `raylib.runWindow` can't call `update` directly.
+
+`ms` is how long the last frame took. Add it up, and each time it passes 150 take 150 off and make one move.
+:::

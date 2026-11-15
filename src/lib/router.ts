@@ -17,6 +17,8 @@ export function navigate(href: string, replace = false) {
   if (typeof window === "undefined") return;
   const url = new URL(href, location.href);
   const samePage = normalize(url.pathname) === normalize(location.pathname);
+  // A link to the address already shown doesn't add a history entry.
+  if (url.href === location.href) replace = true;
   saveScroll();
   restoreTo = undefined;
   shownPath = normalize(url.pathname);
@@ -30,11 +32,32 @@ export function navigate(href: string, replace = false) {
   for (const listener of listeners) listener(normalize(url.pathname));
 }
 
+let targeted: Element | null = null;
+
+/* Scrolls to the element a #hash names and moves keyboard focus there, or
+   goes to the top when there's no such element. The target also gets
+   .is-target, since :target doesn't follow pushState. */
 export function scrollToHash(hash: string) {
-  const id = decodeURIComponent(hash.slice(1));
+  let id = "";
+  try {
+    id = decodeURIComponent(hash.slice(1));
+  } catch {
+    id = hash.slice(1);
+  }
   const target = id ? document.getElementById(id) : null;
-  if (target) target.scrollIntoView({ block: "start" });
-  else window.scrollTo({ top: 0 });
+  targeted?.classList.remove("is-target");
+  targeted = target;
+  if (!target) return window.scrollTo({ top: 0 });
+  target.scrollIntoView({ block: "start" });
+  target.classList.add("is-target");
+  focusQuietly(target);
+}
+
+/* Focuses an element without scrolling to it, making it focusable first if
+   it isn't, so Tab carries on from there. */
+export function focusQuietly(element: HTMLElement) {
+  if (!element.matches("a[href], button, input, select, textarea, [tabindex]")) element.tabIndex = -1;
+  element.focus({ preventScroll: true });
 }
 
 /* Each history entry remembers how far down its page was scrolled, so Back
@@ -83,12 +106,15 @@ export function trackScroll() {
 
 /* Puts the page where this history entry left it, or at its #hash, or at
    the top. */
-export function restoreScroll() {
+export function restoreScroll(moveFocus = false) {
   const saved = restoreTo;
   restoreTo = undefined;
-  if (typeof saved === "number") window.scrollTo({ top: saved });
-  else if (location.hash) scrollToHash(location.hash);
-  else window.scrollTo({ top: 0 });
+  if (location.hash && typeof saved !== "number") return scrollToHash(location.hash);
+  window.scrollTo({ top: saved ?? 0 });
+  // After a navigation, keyboard and screen reader users start at the new
+  // page's heading instead of the top of the document.
+  const heading = document.querySelector<HTMLElement>("main h1") ?? document.getElementById("main");
+  if (moveFocus && heading) focusQuietly(heading);
 }
 
 export function usePath(initial: string): string {

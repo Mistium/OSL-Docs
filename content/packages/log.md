@@ -5,17 +5,17 @@ package: log
 
 # log
 
-`log` is a logger for programs that run unattended or print a lot: servers, scripts, tools. Every entry has a level (`DEBUG`, `INFO`, `SUCCESS`, `WARN` or `ERROR`), a time and a message. You can hide the noisy levels, keep the recent entries to inspect or export them, and draw tables and progress bars.
+`std:log` is a logger for programs that run unattended or print a lot: servers, scripts, tools. Every entry has a level (`DEBUG`, `INFO`, `SUCCESS`, `WARN` or `ERROR`), a time and a message. You can hide the noisy levels, keep recent entries to inspect or export, and draw tables and progress bars.
 
 ```osl fragment varies
 import "std:log"
 ```
 
-For quick printing while you work, the `log` statement from the language (`log a b`) is simpler. Reach for this package when you want levels, timestamps and a record of what happened.
+For quick printing while you work, the `log` statement (`log a b`) is simpler. Use this package for levels, timestamps and a record of what happened.
 
 ## Levels
 
-Each level has a function that takes a message. Lines start with the time of day and the level, and are coloured in a terminal. Because the time changes on every run, these examples are marked as varying.
+Each level has a function that takes a message. Lines start with the time of day and the level, and are coloured in a terminal.
 
 ```osl varies
 import "std:log"
@@ -29,13 +29,11 @@ log.debug("this one is hidden")
 
 Debug entries are below the default level, so they are dropped. Output goes to standard output. Levels, from least to most severe, are `DEBUG`, `INFO` (and `SUCCESS`, which ranks the same), `WARN` and `ERROR`.
 
-Try it: swap `log.warn` for `log.error` and watch the colour change in a terminal.
-
 ## Choose what you see
 
 `log.setLevel(name)` sets the least severe level that is printed. `log.level()` tells you what it is now. Entries below the level are neither printed nor recorded.
 
-```osl
+```osl varies
 import "std:log"
 
 log log.level()
@@ -50,9 +48,7 @@ log log.history()[1].message
 log.setLevel("LOUD") catch ( log "not a level" )
 ```
 
-An unknown level name is a `ValueError`. Turn on debug output while chasing a problem, and set `WARN` in a program that should only speak when something is wrong.
-
-Try it: set the level to `ERROR` and see which lines survive.
+An unknown level name is a `ValueError`. Turn on `DEBUG` while chasing a problem, and set `WARN` for a program that should only speak when something is wrong.
 
 ## Printf-style messages
 
@@ -104,7 +100,7 @@ total: 42 items
 
 `log.time(message)` prefixes the time of day to the millisecond, `log.timestamp(message)` the unix time in microseconds, and `log.withTimestamp(level, message)` the full date. They are meant for measuring and correlating, and always differ between runs.
 
-```osl varies varies
+```osl varies
 import "std:log"
 
 log.time("request received")
@@ -116,7 +112,7 @@ log.withTimestamp("INFO", "something happened")
 
 `log.assert(condition, message)` logs an error when the condition is false, and does nothing otherwise. It never stops the program: use [testing](testing.md) when a failure must be fatal.
 
-```osl
+```osl varies
 import "std:log"
 
 log.assert(1 + 1 == 2, "arithmetic works")
@@ -147,7 +143,7 @@ log.info("not recorded")
 log log.history().len
 ```
 
-`exportHistory(path)` writes the entries to a file, one per line as `[HH:MM:SS] [LEVEL] message`. It returns a [result](../learn/errors.md), because the file may not be writable.
+`exportHistory(path)` writes the entries to a file, one per line as `[HH:MM:SS] [LEVEL] message`. It returns a [result](result.md), because the file may not be writable.
 
 ```osl varies
 import "std:log"

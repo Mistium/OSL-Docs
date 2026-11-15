@@ -345,6 +345,22 @@ Ada: mean 91.7, spread 6.2
 Bo: no scores
 ```
 
+:::quiz
+What does this print?
+
+```osl fragment
+auto a = math.sqrt(-1)
+auto b = math.sqrt(-1)
+log a == b
+```
+
+- [ ] `true`
+- [x] `false`
+- [ ] A `MathError`
+
+The square root of -1 is `NaN`, which is never equal to anything, itself included. Test for it with `math.isNaN`.
+:::
+
 :::exercise title="Mean and range"
 Print the average of the temperatures to one decimal place, then the gap between the hottest and coldest day.
 

@@ -4702,7 +4702,7 @@
             }
           ],
           "returns": "*diff.Diff",
-          "doc": "text compares two texts line by line. Options: context (unchanged lines\nkept around each change, default 3)."
+          "doc": "text compares two texts line by line. A newline ends a line, so a text\nthat ends with one has no empty last line. Options: context (unchanged\nlines kept around each change, default 3)."
         },
         {
           "name": "tokenize",
@@ -22705,7 +22705,7 @@
             }
           ],
           "returns": "string[]",
-          "doc": "extractHashtags returns every #hashtag in text, including the #."
+          "doc": "extractHashtags returns every #hashtag in text, including the #. A # in\nthe middle of a word, as in a URL's page#section, starts no hashtag."
         },
         {
           "name": "extractMentions",
@@ -22717,7 +22717,7 @@
             }
           ],
           "returns": "string[]",
-          "doc": "extractMentions returns every @mention in text, including the @."
+          "doc": "extractMentions returns every @mention in text, including the @. An @ in\nthe middle of a word, as in the email address a@example.com, starts no\nmention."
         },
         {
           "name": "extractNumbers",
@@ -37811,5 +37811,5 @@
       "types": []
     }
   ],
-  "version": "9.2.0"
+  "version": "9.3.0"
 }

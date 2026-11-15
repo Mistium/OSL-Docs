@@ -5,7 +5,7 @@ package: events
 
 # events
 
-`std:events` lets one part of a program announce that something happened and another part react, without either knowing about the other. Events are named by strings. Any code can register a listener for a name, and any code can emit it. It works inside one program, across threads. It is not a network or message-queue tool.
+`std:events` lets one part of a program announce that something happened and another part react, without either knowing about the other. Events are named by strings: any code can listen for a name and any code can emit it. It works inside one program, across threads, and is not a network or message-queue tool.
 
 ## Listen and emit
 
@@ -186,6 +186,50 @@ cart now has 2 items
 ```
 
 A listener's parameters aren't checked against what `emit` sends. A listener that expects an `int` but is emitted with nothing fails with a type error, and one that is given extra arguments ignores them, so keep each event's arguments the same everywhere.
+
+:::quiz
+`events.once("ready", f)` is registered, then `events.emit("ready")` is called twice. How many times does `f` run?
+
+- [ ] Twice.
+- [x] Once.
+- [ ] Never, because `once` needs a second argument.
+
+A `once` listener removes itself just before its first call.
+:::
+
+:::exercise title="Too hot"
+Register a listener for `"temp"` that logs `too hot: ` and the temperature, but only when it is above 30. The two emits are already written.
+
+```osl
+import "std:events"
+
+events.emit("temp", 25)
+events.emit("temp", 35)
+```
+
+```output
+too hot: 35
+```
+
+> [!hint]
+> `events.on("temp", def(int degrees) -> ( ... ))` goes before the emits.
+
+> [!hint]
+> Put an `if degrees > 30 ( ... )` inside the listener.
+
+```osl solution
+import "std:events"
+
+events.on("temp", def(int degrees) -> (
+  if degrees > 30 (
+    log "too hot: " ++ degrees
+  )
+))
+
+events.emit("temp", 25)
+events.emit("temp", 35)
+```
+:::
 
 ## API reference
 

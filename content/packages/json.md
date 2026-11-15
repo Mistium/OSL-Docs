@@ -5,7 +5,7 @@ package: json
 
 # json
 
-`json` reads and writes JSON. Reach for it when you talk to a web API, read a config file, or store data another program will read. It can turn text into a typed struct, into plain objects and arrays, or into a stream of tokens when the file is too big to hold in memory.
+`std:json` reads and writes JSON, for web APIs, config files and data another program will read. It turns text into a typed struct, into plain objects and arrays, or into a stream of tokens when the file is too big to hold in memory.
 
 ```osl fragment
 import "std:json"
@@ -13,7 +13,7 @@ import "std:json"
 
 ## Parse into a struct
 
-The best way to read JSON is to say what shape you expect. `json.parse<T>` checks the text against the type `T` and returns a [result](../learn/errors.md): the value if it fits, an error if it doesn't.
+The best way to read JSON is to say what shape you expect. `json.parse<T>` checks the text against the type `T` and returns a [result](result.md): the value if it fits, an error if it doesn't.
 
 ```osl
 import "std:json"
@@ -223,7 +223,8 @@ dark 14
 import "std:json"
 import "std:fs"
 
-fs.writeFile("config.json", json.stringify({port: 8080, debug: false}, {indent: 2})).unwrap()
+string pretty = json.stringify({port: 8080, debug: false}, {indent: 2})
+fs.writeFile("config.json", pretty).unwrap()
 fs.writeFile("broken.json", "{\"port\": ").unwrap()
 
 auto config = json.parseFile("config.json").unwrap()
@@ -237,6 +238,8 @@ for path in ["missing.json", "broken.json"] (
       log path e.kind
   )
 )
+fs.remove("config.json").unwrap()
+fs.remove("broken.json").unwrap()
 ```
 
 ```output
@@ -343,7 +346,7 @@ s.close().unwrap()
 1 two null
 ```
 
-`maxBytes` makes `open` and `readObject`'s `maxKeys` refuse input that is bigger than you are willing to handle, which matters when the file comes from someone else.
+The `maxBytes` option of `open` and the `maxKeys` option of `readObject` refuse input bigger than you are willing to handle, which matters when the file comes from someone else.
 
 :::exercise title="Summarise a config"
 Parse the JSON text into a `Config` struct. Print the app name, then each server on its own line as `host:port`. If a server has no port, use `80`. Finally print how many servers there are.
@@ -361,7 +364,10 @@ struct Config (
   Server[] servers = []
 )
 
-string text = `{"app": "shop", "servers": [{"host": "a.example", "port": 8080}, {"host": "b.example"}]}`
+string text = `{
+  "app": "shop",
+  "servers": [{"host": "a.example", "port": 8080}, {"host": "b.example"}]
+}`
 log text.len
 ```
 
@@ -391,7 +397,10 @@ struct Config (
   Server[] servers = []
 )
 
-string text = `{"app": "shop", "servers": [{"host": "a.example", "port": 8080}, {"host": "b.example"}]}`
+string text = `{
+  "app": "shop",
+  "servers": [{"host": "a.example", "port": 8080}, {"host": "b.example"}]
+}`
 Config c = json.parse<Config>(text).unwrap()
 log c.app
 for s in c.servers ( log s.host ++ ":" ++ s.port )

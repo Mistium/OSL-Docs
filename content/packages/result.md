@@ -283,6 +283,20 @@ NotFoundError
 gone
 ```
 
+:::quiz
+What does this print?
+
+```osl fragment
+auto r = result.ok(4).andThen(n -> result.err(error("ValueError", "too big")))
+log r.isOk()
+```
+
+- [ ] `true`, because the first result was `ok`
+- [x] `false`, because the function passed to `andThen` returned an error
+
+`andThen` runs on an `ok` value and returns whatever result the function gives, so a failure there becomes the outcome.
+:::
+
 :::exercise title="A safe sum"
 Write `total(string[] texts)`, which returns a result holding the sum of the whole numbers in `texts`, or the first failure. Use `andThen`. The program prints -1 for the list with a bad entry.
 

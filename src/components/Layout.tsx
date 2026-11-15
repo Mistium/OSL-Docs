@@ -42,7 +42,11 @@ export function Header({ current }: { current: string }) {
           <Logo />
           <span class="brand__name">OSL</span>
         </a>
-        <nav class={`topnav${open ? " is-open" : ""}`} aria-label="Main">
+        <nav
+          class={`topnav${open ? " is-open" : ""}`}
+          aria-label="Main"
+          onClick={(e) => (e.target as Element).closest("a") && setOpen(false)}
+        >
           {NAV.map((item) => (
             <a key={item.href} href={item.href} class="topnav__link" aria-current={current === item.area ? "page" : undefined}>
               {item.label}

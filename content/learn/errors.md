@@ -77,6 +77,25 @@ skipping: ParseError
 
 When the handler is one statement, it can follow `catch` directly: `json.parse<int[]>(text) catch continue`. `(e)` names the error; leave it out when you don't need it.
 
+A handler can also finish with a value, which becomes the result of the whole expression, so a failure turns into a fallback:
+
+```osl
+string[] inputs = ["12", "twelve"]
+for text in inputs (
+  int n = text.tryAs<int> catch (
+    log "not a number: " ++ text
+    -1
+  )
+  log n
+)
+```
+
+```output
+12
+not a number: twelve
+-1
+```
+
 Errors have a `kind`, such as `ParseError` or `TypeError`, and a `message` that explains what went wrong.
 
 ## Passing failure up with !

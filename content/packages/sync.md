@@ -266,6 +266,59 @@ Call `add` before starting the work it counts, not inside it, or `wait` may see 
 
 When you have the thread handles, `thread.waitAll` does the same job and also gives back the results. A wait group is for work that doesn't hand a value back, or that is started from many places.
 
+:::quiz
+A thread calls `lock.lock()` and, still holding it, calls `lock.lock()` again. What happens?
+
+- [ ] The second call does nothing.
+- [ ] The thread waits forever.
+- [x] It throws a `DeadlockError`.
+
+Locks aren't re-entrant. OSL detects the self-wait and throws instead of hanging.
+:::
+
+:::exercise title="Set up once"
+`loadConfig` is called from three places and should do its work only once, but it runs three times. Wrap its work in `sync.once`.
+
+```osl
+import "std:sync"
+
+int loads = 0
+
+def loadConfig() (
+  loads++
+)
+
+loadConfig()
+loadConfig()
+loadConfig()
+log loads
+```
+
+```output
+1
+```
+
+> [!hint]
+> `sync.once(name, fn)` calls `fn` only the first time it sees `name`.
+
+```osl solution
+import "std:sync"
+
+int loads = 0
+
+def loadConfig() (
+  sync.once("config", def() -> (
+    loads++
+  ))
+)
+
+loadConfig()
+loadConfig()
+loadConfig()
+log loads
+```
+:::
+
 ## API reference
 
 ::api

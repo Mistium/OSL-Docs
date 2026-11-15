@@ -8,7 +8,14 @@ import { interceptLinks, normalize, prefetchLinks, slugFromPath, trackScroll } f
 async function start() {
   const path = normalize(location.pathname);
   const slug = slugFromPath(path);
-  const page = !(slug in SPECIAL) && hasPage(slug) ? await loadPage(slug) : null;
+  let page = null;
+  try {
+    page = !(slug in SPECIAL) && hasPage(slug) ? await loadPage(slug) : null;
+  } catch (error) {
+    // The prerendered page stays readable; it just won't be interactive.
+    console.error("couldn't load this page's code", error);
+    return;
+  }
   if (page) primePage(slug, page);
   interceptLinks();
   trackScroll();

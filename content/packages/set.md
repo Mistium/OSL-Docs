@@ -188,6 +188,52 @@ removed: ["a.txt"]
 kept: 2
 ```
 
+:::quiz
+What does this print?
+
+```osl fragment
+set a = set(["x", "y"])
+set b = set(["y", "z"])
+log b.difference(a).toArray()
+```
+
+- [ ] `["x"]`
+- [x] `["z"]`
+- [ ] `["y"]`
+
+`difference` keeps what is in the first set and not in the second. `b.difference(a)` is `z`; `a.difference(b)` would be `x`.
+:::
+
+:::exercise title="Missing skills"
+A job needs every skill in `required`. Print the skills the candidate is missing, then whether they have them all.
+
+```osl
+set required = set(["osl", "sql", "go"])
+set have = set(["go", "osl"])
+
+log required.toArray().toSorted()
+```
+
+```output
+["sql"]
+false
+```
+
+> [!hint]
+> The missing skills are what `required` has that `have` doesn't: `difference`.
+
+> [!hint]
+> They have everything when `required.isSubsetOf(have)`.
+
+```osl solution
+set required = set(["osl", "sql", "go"])
+set have = set(["go", "osl"])
+
+log required.difference(have).toArray().toSorted()
+log required.isSubsetOf(have)
+```
+:::
+
 ## Reference
 
 `set` has no package, so its API is listed here. `value` is a set.

@@ -134,7 +134,11 @@ An embed is a card attached to a message: a title, text, fields, a footer, an im
 ```osl
 import "std:originchats"
 
-auto embed = originchats.newEmbed({title: "Build finished", description: "All checks passed", color: "#22aa55"})
+auto embed = originchats.newEmbed({
+  title: "Build finished",
+  description: "All checks passed",
+  color: "#22aa55"
+})
   .addField("Branch", "main", {inline: true})
   .addField("Time", "42s", {inline: true})
   .withFooter("CI")
@@ -160,7 +164,11 @@ Change the colour or add a field and run it again. To post it, pass it to a send
 ```osl
 import "std:originchats"
 
-auto poll = originchats.newPoll("Lunch?", ["Pizza", {text: "Sushi", emoji: "🍣"}], {multiselect: true}).build()
+auto poll = originchats.newPoll(
+  "Lunch?",
+  ["Pizza", {text: "Sushi", emoji: "🍣"}],
+  {multiselect: true}
+).build()
 log poll
 ```
 
@@ -190,7 +198,9 @@ log embed.title
 ```osl solution
 import "std:originchats"
 
-auto embed = originchats.newEmbed({title: "Status", description: "All good"}).addField("Uptime", "99.9%").build()
+auto embed = originchats.newEmbed({title: "Status", description: "All good"})
+  .addField("Uptime", "99.9%")
+  .build()
 log embed.fields.len
 ```
 :::

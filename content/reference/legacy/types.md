@@ -51,7 +51,7 @@ isTrue = true
 both = true and false       // false
 ```
 
-Today it is `boolean`, and the values are written in lower case. The operators are `and`, `or`, `!` (not) and `^^` (xor).
+Today it is `boolean`, and the values are written in lower case. The operators are `and`, `or`, `xor` and `!` (not).
 
 ```osl
 boolean isTrue = true
@@ -76,7 +76,7 @@ price = 19.99
 total = 10.5 + 20      // 30.5
 ```
 
-Today there are two common types: `int` for whole numbers, and `number` for anything that may have a decimal part. There are also sized types such as `int8` and `float32` for binary formats.
+Today there are two common types: `int` for whole numbers, and `number` for anything that may have a decimal part. There are also sized types such as `int8` and `number32` for binary formats.
 
 ```osl
 int count = 42
@@ -180,7 +180,7 @@ no middle name
 
 ## Checking a type
 
-The legacy `typeof()` returned one of `"string"`, `"number"`, `"boolean"`, `"array"`, `"object"` and `"null"`, and every value had `.getType()` and `.isType("...")`. `typeof` still exists, and is for values whose type is not known until the program runs, such as parsed JSON:
+The legacy `typeof()` returned one of `"string"`, `"number"`, `"boolean"`, `"array"`, `"object"` and `"null"`, and every value had `.getType()` and `.isType("...")`. `typeof` and `.getType()` still exist, but `.isType` does not. `typeof` is for values whose type is not known until the program runs, such as parsed JSON:
 
 ```osl
 import "std:json"
@@ -207,12 +207,12 @@ For a variable with a declared type, `typeof` is redundant, and the compiler war
 
 | Legacy | Today |
 | --- | --- |
-| Strings must use double quotes. | Still true. Backticks make templates and multi-line strings. |
+| Strings must use double quotes. | Single quotes work too. Backticks make templates and multi-line strings. |
 | Booleans are case-insensitive. | Write `true` and `false`. |
 | Numbers match `[0-9.\-]+`. | Numbers are `int`, `number`, or a sized type. |
 | Arrays can mix types. | Arrays have an item type. Use `any[]` to mix. |
 | Object keys need no quotes. | Still true. Wrap a key in brackets to compute it: `{[name]: 1}`. |
 | Any variable can hold `null`. | Only types ending in `?` can. |
-| `.getType()` on every value. | `typeof(value)`. |
+| `.getType()` on every value. | Still there, and `typeof(value)` gives the same name. |
 
 See [Legacy OSL](index.md) for the other differences.

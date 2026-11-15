@@ -13,7 +13,11 @@ Point your editor's LSP client at the command `osl lsp` for files ending in `.os
 For Neovim:
 
 ```lua
-vim.lsp.config("osl", { cmd = { "osl", "lsp" }, filetypes = { "osl" }, root_markers = { "opal.json", ".git" } })
+vim.lsp.config("osl", {
+  cmd = { "osl", "lsp" },
+  filetypes = { "osl" },
+  root_markers = { "opal.json", ".git" },
+})
 vim.lsp.enable("osl")
 vim.filetype.add({ extension = { osl = "osl" } })
 ```

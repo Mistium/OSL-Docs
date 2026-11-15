@@ -7,7 +7,7 @@ package: layout
 
 `std:layout` is the layout engine behind [ui](ui.md) and [window](window.md), with no screen attached. Give it a tree of tags and a size, and it tells you the rectangle of every element. It follows the same rules as a web page: hug, fill and fixed sizes, `gap`, `pad` and nine-point `align`.
 
-Reach for it to test that a view lays out the way you meant, to measure text before you draw it, to find out what sits under a click, and to build or change trees in code. Text is measured with the UI's own built-in font, so every machine gets the same numbers.
+Use it to test that a view lays out the way you meant, to measure text before you draw it, to find what sits under a click, and to build or change trees in code. Text is measured with the UI's own built-in font, so every machine gets the same numbers.
 
 ## Laying out a tree
 
@@ -132,8 +132,6 @@ log narrow.height > wide.height
 {"height":46,"width":97.2}
 true
 ```
-
-Measuring is how you size a custom-drawn thing to its label, or check that a long translation will still fit a button.
 
 ## Finding what is at a point
 

@@ -37,7 +37,7 @@ HELLO, OSL
 
 :::cards
 - [Command line](cli.md): `osl run`, `compile`, `test`, `fmt`, `fix` and the rest
-- [Opal](opal.md): projects, packages and `osl.json`
+- [Opal](opal.md): projects, packages and `opal.json`
 - [Testing](testing.md): test blocks and `osl test`
 - [Editor support](editor.md): the language server and editor setup
 - [Diagnostics](diagnostics.md): errors and warnings the compiler gives, and what they mean

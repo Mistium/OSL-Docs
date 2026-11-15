@@ -1,0 +1,23 @@
+# Old GitBook addresses, so links and search results to them still land on
+# the matching page.
+/guide/getting-started                     /install                            301
+/guide/programs-and-variables              /learn/variables                    301
+/guide/types                               /learn/types                        301
+/guide/collections                         /learn/arrays                       301
+/guide/control-flow                        /learn/control-flow                 301
+/guide/functions                           /learn/functions                    301
+/guide/nominal-types                       /learn/structs                      301
+/guide/operators                           /learn/operators                    301
+/guide/errors                              /learn/errors                       301
+/guide/iterators                           /learn/iterators                    301
+/guide/imports-and-projects                /learn/modules                      301
+/guide/*                                   /learn                              301
+/reference/builtins-and-methods            /reference/builtins                 301
+/legacy-osl                                /reference/legacy                   301
+/legacy-osl/debug-commands                 /reference/legacy/debug-commands    301
+/legacy-osl/prototype-helpers              /reference/legacy/prototype-helpers 301
+/legacy-osl/originals/basics/local-scoping /reference/legacy/local-scoping     301
+/legacy-osl/originals/basics/types         /reference/legacy/types             301
+/legacy-osl/*                              /reference/legacy                   301
+/packages/categories/*                     /packages                           301
+/compiler/*                                /                                   301

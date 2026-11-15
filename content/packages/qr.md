@@ -51,7 +51,13 @@ NotFoundError
 ```osl
 import "std:qr"
 
-auto code = qr.code("hi", {size: 100, margin: 2, level: "H", color: "#000080", background: "#ffffff"}).unwrap()
+auto code = qr.code("hi", {
+  size: 100,
+  margin: 2,
+  level: "H",
+  color: "#000080",
+  background: "#ffffff"
+}).unwrap()
 log code.width()
 log code.pixel(1, 1)
 log qr.read(code).unwrap()

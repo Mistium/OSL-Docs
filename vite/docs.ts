@@ -89,7 +89,12 @@ export function docs(): Plugin {
         res.end(JSON.stringify(searchIndex()));
       });
       dev.middlewares.use((req, res, next) => {
-        const path = decodeURIComponent((req.url ?? "").split(/[?#]/)[0]).replace(/^\/+/, "");
+        let path: string;
+        try {
+          path = decodeURIComponent((req.url ?? "").split(/[?#]/)[0]).replace(/^\/+/, "");
+        } catch {
+          return next();
+        }
         if (!/\.(md|txt)$/.test(path) || path === "robots.txt") return next();
         const file = markdownFiles().get(path);
         if (file === undefined) return next();

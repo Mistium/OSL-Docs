@@ -44,7 +44,11 @@ number volume = 0.5
 
 raylib.runWindow(def(ms) (
   sound = raygui.checkBox({x: 20, y: 20, width: 24, height: 24}, "Sound", sound)
-  volume = raygui.valueSlider({x: 20, y: 60, width: 200, height: 24}, volume, {min: 0, max: 1, textLeft: "Vol"})
+  volume = raygui.valueSlider(
+    {x: 20, y: 60, width: 200, height: 24},
+    volume,
+    {min: 0, max: 1, textLeft: "Vol"}
+  )
   raygui.progress({x: 20, y: 100, width: 200, height: 16}, volume)
 ), {width: 300, height: 160, title: "State", background: "#f5f5f5"})
 ```
@@ -112,7 +116,11 @@ string answer = ""
 raylib.runWindow(def(ms) (
   raygui.label({x: 20, y: 20, width: 300, height: 24}, "answer: " ++ answer)
   if asking (
-    auto reply = raygui.messageDialog({x: 40, y: 50, width: 240, height: 100}, "Delete everything?", {title: "Careful", buttons: ["Yes", "No"]})
+    auto reply = raygui.messageDialog(
+      {x: 40, y: 50, width: 240, height: 100},
+      "Delete everything?",
+      {title: "Careful", buttons: ["Yes", "No"]}
+    )
     if reply != null (
       answer = if reply == 1 then "yes" else "no"
       asking = false

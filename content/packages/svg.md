@@ -42,7 +42,11 @@ Vector art stays sharp at any size, so ask for the size you want. `scale` multip
 ```osl
 import "std:svg"
 
-string doc = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><rect width="100" height="50" fill="blue"/></svg>`
+string doc = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50">`,
+  `<rect width="100" height="50" fill="blue"/>`,
+  `</svg>`
+].join("")
 
 auto twice = svg.render(doc, {scale: 2}).unwrap()
 log twice.width() twice.height()
@@ -69,7 +73,10 @@ Giving `scale` together with `width` or `height` throws a `ValueError`, since th
 ```osl
 import "std:svg"
 
-string doc = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 200 100"/>`
+string doc = [
+  `<svg xmlns="http://www.w3.org/2000/svg" `,
+  `width="100" height="50" viewBox="0 0 200 100"/>`
+].join("")
 auto info = svg.info(doc).unwrap()
 log info.width info.height
 log info.viewBox
@@ -92,7 +99,12 @@ Every function has a `File` version that takes a path: `svg.renderFile`, `svg.in
 import "std:svg"
 import "std:fs"
 
-fs.writeFile("icon.svg", `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="blue"/></svg>`).unwrap()
+string source = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">`,
+  `<rect width="10" height="10" fill="blue"/>`,
+  `</svg>`
+].join("")
+fs.writeFile("icon.svg", source).unwrap()
 
 auto icon = svg.renderFile("icon.svg", {scale: 3}).unwrap()
 log icon.width() icon.pixel(30, 30)
@@ -119,7 +131,11 @@ import "std:fs"
 
 fs.remove("logo.png", {force: true}).unwrap()
 
-string doc = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><circle cx="32" cy="32" r="30" fill="orange"/></svg>`
+string doc = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">`,
+  `<circle cx="32" cy="32" r="30" fill="orange"/>`,
+  `</svg>`
+].join("")
 auto logo = svg.render(doc, {scale: 2}).unwrap()
 logo.save("logo.png").unwrap()
 
@@ -140,7 +156,12 @@ SVG text draws with a default font. To use a font from a file, register it first
 import "std:svg"
 
 svg.addFont("Inter", "fonts/Inter.ttf").unwrap()
-auto pic = svg.render(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="40"><text x="4" y="28" font-family="Inter" font-size="24">Hello</text></svg>`).unwrap()
+string doc = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="40">`,
+  `<text x="4" y="28" font-family="Inter" font-size="24">Hello</text>`,
+  `</svg>`
+].join("")
+auto pic = svg.render(doc).unwrap()
 pic.save("hello.png").unwrap()
 ```
 
@@ -163,7 +184,11 @@ Render the same 16 by 16 SVG at 16 and at 64 pixels wide, and print both widths.
 ```osl
 import "std:svg"
 
-string icon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#2f6feb"/></svg>`
+string icon = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">`,
+  `<circle cx="8" cy="8" r="7" fill="#2f6feb"/>`,
+  `</svg>`
+].join("")
 
 log svg.render(icon).unwrap().width()
 ```
@@ -179,7 +204,11 @@ log svg.render(icon).unwrap().width()
 ```osl solution
 import "std:svg"
 
-string icon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#2f6feb"/></svg>`
+string icon = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">`,
+  `<circle cx="8" cy="8" r="7" fill="#2f6feb"/>`,
+  `</svg>`
+].join("")
 
 log svg.render(icon).unwrap().width()
 log svg.render(icon, {width: 64}).unwrap().width()

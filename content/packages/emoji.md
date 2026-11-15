@@ -5,9 +5,7 @@ package: emoji
 
 # emoji
 
-Emoji are trickier than they look. A flag is two code points, a thumbs up with a skin tone is two, and a family is seven (three people joined by invisible joiners). Counting them with `.len` or splitting a string by character gets this wrong. `std:emoji` knows the rules: each of those is one emoji.
-
-Reach for it to count reactions, validate that a field holds exactly one emoji, clean text for a system that can't show them, or pull emoji out of a message.
+Emoji are trickier than they look. A flag is two code points, a thumbs up with a skin tone is two, and a family is five (three people joined by two invisible joiners). Counting them with `.len` or splitting a string by character gets this wrong. `std:emoji` knows the rules: each of those is one emoji.
 
 ## Detecting and counting
 
@@ -26,7 +24,7 @@ false
 2
 ```
 
-Compare that with the length of the text, which counts every code point that went into the two emoji:
+The text's `.len` counts every code point that went into the emoji:
 
 ```osl
 import "std:emoji"
@@ -98,7 +96,7 @@ Launch day [emoji] !
 abc
 ```
 
-Removing leaves the spaces around the emoji, so tidy up afterwards with `.trim()` or [`regex.stripWhitespace`](regex.md).
+Removing leaves the spaces around the emoji, so tidy up afterwards with `.trim()`.
 
 ## Asking what a string is
 
@@ -156,6 +154,52 @@ a false
 🇬🇧 true
 👨‍👩‍👧 true
 ```
+
+:::quiz
+What does `emoji.count("🇬🇧")` return?
+
+- [ ] `2`, because a flag is two code points.
+- [x] `1`, because the flag is a single emoji.
+- [ ] `0`, because flags aren't emoji.
+
+`std:emoji` counts what a reader sees. `"🇬🇧".len` would be 2.
+:::
+
+:::exercise title="Clean a status"
+Finish `clean` so it removes every emoji from a status and trims the spaces they leave behind.
+
+```osl
+import "std:emoji"
+
+def clean(string text) string -> text
+
+log clean("Launch 🚀")
+log clean("🎉 Party 🎉")
+log clean("plain")
+```
+
+```output
+Launch
+Party
+plain
+```
+
+> [!hint]
+> `emoji.remove(text)` deletes the emoji but leaves the spaces.
+
+> [!hint]
+> Chain `.trim()` onto the result.
+
+```osl solution
+import "std:emoji"
+
+def clean(string text) string -> emoji.remove(text).trim()
+
+log clean("Launch 🚀")
+log clean("🎉 Party 🎉")
+log clean("plain")
+```
+:::
 
 ## API reference
 

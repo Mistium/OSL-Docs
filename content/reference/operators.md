@@ -235,7 +235,7 @@ none
 
 ## Ranges
 
-`a to b` is the array of whole numbers from `a` to `b``, both included, counting down if `a` is larger. It has the lowest precedence of the arithmetic operators, so `1 to n + 1` ends at `n + 1`.
+`a to b` is the array of whole numbers from `a` to `b`, both included, counting down if `a` is larger. It has the lowest precedence of the arithmetic operators, so `1 to n + 1` ends at `n + 1`.
 
 ```osl
 log 1 to 5 5 to 1

@@ -146,7 +146,7 @@ for word in text.split(" ") (
   counts[word] += 1
 )
 
-string[] words = counts.getKeys().sortBy(w -> -counts[w])
+string[] words = counts.getKeys().sort().sortBy(w -> -counts[w])
 for word in words.left(3) (
   log word.padEnd(" ", 5) ++ ("#" * counts[word])
 )`,

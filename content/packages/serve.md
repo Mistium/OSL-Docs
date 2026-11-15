@@ -521,6 +521,16 @@ The sleep gives the thread time to start listening. When you don't need the thre
 
 `app.ws(path, server)` mounts a [ws](ws.md) server on a route, so one router serves pages and sockets on the same port. `app.ui(path, target)` shows a [ui](ui.md) interface that updates live. Both go through the same middleware as ordinary routes.
 
+:::quiz
+A middleware handler checks a token and finds it invalid. It calls `c.unauthorized("no")` and does not call `c.next()`. What happens to the route's own handler?
+
+- [ ] It runs anyway.
+- [x] It never runs: the chain stopped at the middleware.
+- [ ] It runs, but with an empty body.
+
+Calling `c.next()` is what passes the request on.
+:::
+
 :::exercise title="A greeting endpoint"
 Add `POST /greet`. It takes JSON like `{"name": "Ada"}` and answers 200 with `{"message": "Hello, Ada!"}`. When `name` is missing or empty it answers 400 with a message of your choice. The program already calls it three times.
 
@@ -571,9 +581,9 @@ app.post("/greet", def(*serve.Context c) (
   c.json(200, {message: "Hello, " ++ name ++ "!"})
 ))
 
-app.start("127.0.0.1:8772").unwrap()
+app.start("127.0.0.1:8852").unwrap()
 
-auto url = "http://127.0.0.1:8772/greet"
+auto url = "http://127.0.0.1:8852/greet"
 for body in [{name: "Ada"}, {name: ""}, {other: 1}] (
   auto r = requests.post(url, {json: body}).unwrap()
   log r.status r.body.trim()
@@ -587,16 +597,6 @@ app.stop().unwrap()
 400 {"error":"name is required"}
 400 {"error":"name is required"}
 ```
-:::
-
-:::quiz
-A middleware handler checks a token and finds it invalid. It calls `c.unauthorized("no")` and does not call `c.next()`. What happens to the route's own handler?
-
-- [ ] It runs anyway.
-- [x] It never runs: the chain stopped at the middleware.
-- [ ] It runs, but with an empty body.
-
-Calling `c.next()` is what passes the request on.
 :::
 
 :::quiz
@@ -653,10 +653,10 @@ app.get("/visit", def(*serve.Context c) (
   c.text(200, "" ++ visits)
 ))
 
-app.start("127.0.0.1:8773").unwrap()
+app.start("127.0.0.1:8853").unwrap()
 
 for _ in 1 to 3 (
-  log requests.get("http://127.0.0.1:8773/visit").unwrap().body
+  log requests.get("http://127.0.0.1:8853/visit").unwrap().body
 )
 
 app.stop().unwrap()

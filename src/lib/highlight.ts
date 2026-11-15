@@ -39,3 +39,7 @@ export function highlightCode(code: string, language: string): string | null {
 }
 
 export const escapeHTML = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/** Highlighted HTML for `code`, or the code escaped as plain text. */
+export const highlightHTML = (code: string, language: string): string =>
+  highlightCode(code, language) ?? escapeHTML(code);

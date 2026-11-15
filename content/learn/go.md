@@ -28,17 +28,16 @@ Refer to the package by its Go name, usually the last part of its path: `go:net/
 
 ## Values cross over
 
-OSL values convert to the Go types a function expects, and Go results come back as OSL values. Strings stay strings, numbers convert to the right Go number type, and typed OSL arrays become Go slices:
+OSL values convert to the Go types a function expects, and Go results come back as OSL values. Strings stay strings, numbers convert to the right Go number type, and arrays become Go slices, array literals included:
 
 ```osl
 import "go:strings"
 import "go:slices"
 import "go:math"
 
-def hyphenate(string[] words) string -> strings.Join(words, "-")
 def largest(int[] values) int -> slices.Max(values)
 
-log hyphenate(["a", "b", "c"])
+log strings.Join(["a", "b", "c"], "-")
 log largest([3, 9, 4])
 log math.Hypot(3, 4)
 ```
@@ -50,7 +49,7 @@ a-b-c
 ```
 
 > [!note] Go and threads
-> Go code runs outside OSL's automatic thread safety, so passing a top-level variable to a Go function earns a `ConcurrencyWarning`: Go could keep hold of it while another thread changes it. Values that live inside a function, like `words` above, don't warn.
+> Go code runs outside OSL's automatic thread safety. Packages that do their work on the spot and keep nothing, such as `strings`, `strconv`, `math` and `unicode`, take any value. Passing a top-level variable to any other Go package earns a `ConcurrencyWarning`: Go could keep hold of it, or change it, while another thread uses it. Values that live inside a function, like `values` above, don't warn.
 
 ## Go types
 
@@ -64,14 +63,15 @@ p.X = 5
 log p.X p.Y
 
 image.Point q = image.Point(x = 10, y = 20)
-image.Point sum = q.Add(p)
-log sum.String()
+log q.Add(p).String()
 ```
 
 ```output
 5 2
 (15,22)
 ```
+
+A Go function's result keeps its Go type, so you can call its methods straight away, as `q.Add(p).String()` does.
 
 Pointers to Go types are written with `*`, as in `*strings.Builder`.
 
@@ -108,4 +108,32 @@ How do you call Go's `strings.TrimSpace` from OSL?
 - [ ] `go.strings.TrimSpace(text)`
 
 A `go:` import gives you the package by its Go name, ready to call.
+:::
+
+:::exercise title="Split and shout"
+Use Go's `strings` package to split the text at each comma and print the pieces joined with ` | `, in capitals.
+
+```osl
+string csv = "pear,fig,apple"
+
+log csv
+```
+
+```output
+PEAR | FIG | APPLE
+```
+
+> [!hint]
+> `import "go:strings"`, then `strings.Split(csv, ",")` gives an array.
+
+> [!hint]
+> `strings.Join(pieces, " | ")` joins it, and `strings.ToUpper` makes capitals.
+
+```osl solution
+import "go:strings"
+
+string csv = "pear,fig,apple"
+
+log strings.ToUpper(strings.Join(strings.Split(csv, ","), " | "))
+```
 :::

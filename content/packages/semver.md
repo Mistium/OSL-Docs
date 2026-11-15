@@ -172,7 +172,7 @@ false
 true
 ```
 
-By convention a pre-release is not accepted by a plain range, as `semver.satisfies("1.0.0-beta", "^1.0.0")` shows (it is `false`), so a release candidate doesn't reach people who asked for stable versions.
+Ranges compare by version order, so a pre-release counts as lower than its release: `semver.satisfies("1.0.0-beta", "^1.0.0")` is `false`. Unlike npm, `satisfies` doesn't exclude pre-releases of later versions, so `1.9.0-beta` does satisfy `^1.0.0`. Filter pre-releases out yourself (`v.prerelease == null` after `semver.parse`) if stable-only matters.
 
 Combined, these make a compatibility check:
 
@@ -199,6 +199,42 @@ charts 1.3.0 ok
 export 2.0.1 incompatible
 themes 1.9.4 ok
 ```
+
+:::quiz
+What does `semver.satisfies("1.5.0", "~1.4.0")` give?
+
+- [ ] `true`, because 1.5.0 is newer
+- [x] `false`, because `~1.4.0` stops before 1.5.0
+- [ ] A `ParseError`
+
+`~1.4.0` accepts patch releases of 1.4 only. `^1.4.0` would accept 1.5.0.
+:::
+
+:::exercise title="Newest compatible version"
+Print the newest version in `tags` that satisfies `^1.0.0`. Right now it prints the newest of all, which is `2.0.0`.
+
+```osl
+import "std:semver"
+
+string[] tags = ["0.9.0", "1.2.0", "1.8.2", "2.0.0"]
+log semver.max(tags).unwrap()
+```
+
+```output
+1.8.2
+```
+
+> [!hint]
+> Filter first: `tags.filter(t -> semver.satisfies(t, "^1.0.0").unwrapOr(false))`.
+
+```osl solution
+import "std:semver"
+
+string[] tags = ["0.9.0", "1.2.0", "1.8.2", "2.0.0"]
+auto compatible = tags.filter(t -> semver.satisfies(t, "^1.0.0").unwrapOr(false))
+log semver.max(compatible).unwrap()
+```
+:::
 
 ## API reference
 

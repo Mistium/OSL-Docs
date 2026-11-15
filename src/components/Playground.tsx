@@ -8,7 +8,7 @@ import { FileCode2, Link2, Play, Plus, AlignLeft, X, Check, TerminalSquare, Aler
 import { check, compilerState, format, onCompilerState, transpile, warmCompiler, type CompilerState, type FileMap } from "../lib/compiler";
 import { canRun, run } from "../lib/runner";
 import { decodeFiles, encodeFiles } from "../lib/share";
-import { highlightCode } from "../lib/highlight";
+import { highlightHTML } from "../lib/highlight";
 import type { Diagnostic } from "../lib/types";
 import { Editor } from "./Editor";
 import { DiagnosticList } from "./CodeExample";
@@ -44,16 +44,24 @@ export function Playground() {
   }, []);
 
   useEffect(() => {
-    window.clearTimeout(timer.current);
+    // Leaving the playground cancels this, so a check that finishes late
+    // can't write #code= onto the next page's address.
+    let alive = true;
     timer.current = window.setTimeout(async () => {
       try {
         const result = await check(files, names[0]);
-        setDiagnostics(result.diagnostics);
+        if (alive) setDiagnostics(result.diagnostics);
       } catch {
         /* The compiler failed to load; the status line says so. */
       }
-      history.replaceState(null, "", `#${encodeFiles(files)}`);
+      if (alive && location.pathname === "/playground") {
+        history.replaceState(history.state, "", `#${encodeFiles(files)}`);
+      }
     }, 300);
+    return () => {
+      alive = false;
+      window.clearTimeout(timer.current);
+    };
   }, [files]);
 
   useEffect(() => {
@@ -71,6 +79,7 @@ export function Playground() {
   };
 
   const go = async () => {
+    if (busy) return;
     setBusy(true);
     setPane("output");
     try {
@@ -225,7 +234,7 @@ export function Playground() {
             {pane === "problems" && (diagnostics.length ? <DiagnosticList diagnostics={[...errors, ...warnings]} onPick={pick} /> : <p class="output__empty">No problems. The compiler is happy.</p>)}
             {pane === "go" && (
               <pre class="hljs playground__go">
-                <code dangerouslySetInnerHTML={{ __html: highlightCode(goSource || "// Compiling…", "go") ?? goSource }} />
+                <code dangerouslySetInnerHTML={{ __html: highlightHTML(goSource || "// Compiling…", "go") }} />
               </pre>
             )}
           </div>

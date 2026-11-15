@@ -5,7 +5,7 @@ package: cache
 
 # cache
 
-`std:cache` is an in-memory key-value store that forgets on purpose. It holds at most a set number of entries and drops the least recently used one when it is full, and each entry can expire after a time to live. Reach for it to avoid repeating slow work: a lookup that hits the network, a rendered page, the result of a heavy calculation. A cache lives only as long as the program, so use [save](save.md) or [db](db.md) for data that must survive.
+`std:cache` is an in-memory key-value store that forgets on purpose. It holds at most a set number of entries and drops the least recently used one when it is full, and each entry can expire after a time to live. Use it to avoid repeating slow work: a network lookup, a rendered page, a heavy calculation. A cache lives only as long as the program, so use [save](save.md) or [db](db.md) for data that must survive.
 
 ## Set and get
 
@@ -33,8 +33,6 @@ null
 true false
 2
 ```
-
-Try storing an array or an object as a value. Any value works.
 
 `has` tells a missing key from one that holds `null`. `delete` returns whether it removed something, and `clear()` empties the cache.
 
@@ -129,7 +127,7 @@ computed 1 time
 
 Here a handler counts how often it does real work, and a cache with a short life sits in front of it. The first request is a miss, the next is served from the cache, and an expired entry is computed again:
 
-```osl
+```osl norun
 import "std:serve"
 import "std:requests"
 import "std:cache"
@@ -158,13 +156,7 @@ log requests.get("http://127.0.0.1:8777/report").unwrap().body
 app.stop().unwrap()
 ```
 
-```output
-report #1
-report #1
-report #2
-```
-
-The cache can be used from several threads at once, so a handler can share one as above.
+It prints `report #1` twice and then `report #2`. The cache is safe to use from several threads at once, so handlers can share one.
 
 > [!note]
 > `fetch` doesn't stop two simultaneous misses from both running the loader. If the work must happen once even then, guard it with a lock from [sync](sync.md).
@@ -214,7 +206,6 @@ int misses = 0
 for key in ["a", "b", "a", "c", "a", "b"] (
   log key
 )
-log lookups.size()
 log "misses" misses
 ```
 

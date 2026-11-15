@@ -15,6 +15,8 @@ const ready = (async () => {
   if (!self.oslReady) throw new Error("the compiler didn't start");
   self.postMessage({ ready: true, version: self.oslVersion });
 })();
+// A rejected start isn't an uncaught error, so the page wouldn't hear of it.
+ready.catch((error) => self.postMessage({ failed: String(error && error.message ? error.message : error) }));
 
 self.onmessage = async (event) => {
   const { id, op, files, entry, source } = event.data;

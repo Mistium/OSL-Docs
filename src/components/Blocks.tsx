@@ -105,14 +105,17 @@ function Quiz({ block, ctx }: { block: Extract<Block, { type: "quiz" }>; ctx: Re
         {block.options.map((option, n) => {
           const chosen = picked.includes(n);
           const state = chosen ? (option.correct ? "right" : "wrong") : done && option.correct ? "right" : "";
+          // aria-disabled, not disabled, so the button keeps keyboard focus
+          // once it's been answered.
+          const inactive = done || chosen;
           return (
             <button
               key={n}
               type="button"
               class={`quiz__option${state ? ` is-${state}` : ""}`}
-              disabled={done || chosen}
+              aria-disabled={inactive}
               aria-pressed={chosen}
-              onClick={() => setPicked([...picked, n])}
+              onClick={() => !inactive && setPicked([...picked, n])}
             >
               <span class="quiz__mark" aria-hidden="true">
                 {state === "right" ? <CheckCircle2 /> : state === "wrong" ? <XCircle /> : String.fromCharCode(65 + n)}
@@ -124,21 +127,23 @@ function Quiz({ block, ctx }: { block: Extract<Block, { type: "quiz" }>; ctx: Re
           );
         })}
       </div>
-      {!done && wrong > 0 && (
-        <p class="quiz__retry">
-          Not quite. Try again, or{" "}
-          <button type="button" class="link-btn" onClick={() => setRevealed(true)}>
-            show the answer
-          </button>
-          .
-        </p>
-      )}
-      {done && block.explain.length > 0 && (
-        <div class="quiz__explain">
-          {solved && <strong class="quiz__yes">{wrong === 0 ? "Right first time." : "That's it."} </strong>}
-          <Blocks blocks={block.explain} ctx={ctx} />
-        </div>
-      )}
+      <div aria-live="polite">
+        {!done && wrong > 0 && (
+          <p class="quiz__retry">
+            Not quite. Try again, or{" "}
+            <button type="button" class="link-btn" onClick={() => setRevealed(true)}>
+              show the answer
+            </button>
+            .
+          </p>
+        )}
+        {done && block.explain.length > 0 && (
+          <div class="quiz__explain">
+            {solved && <strong class="quiz__yes">{wrong === 0 ? "Right first time." : "That's it."} </strong>}
+            <Blocks blocks={block.explain} ctx={ctx} />
+          </div>
+        )}
+      </div>
     </section>
   );
 }
@@ -252,8 +257,8 @@ function Steps({ block, ctx }: { block: Extract<Block, { type: "steps" }>; ctx: 
 export function Cards({ cards }: { cards: { title: string; href: string; text: string; tag?: string }[] }) {
   return (
     <div class="cards">
-      {cards.map((card) => (
-        <a key={card.href} class="card" href={hrefOf(card.href)}>
+      {cards.map((card, n) => (
+        <a key={`${n}:${card.href}`} class="card" href={hrefOf(card.href)}>
           <span class="card__title">
             <Text text={card.title} />
             {card.tag && <span class="card__tag">{card.tag}</span>}

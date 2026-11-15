@@ -5,7 +5,7 @@ package: db
 
 # db
 
-`std:db` is a database in a file. It is built on SQLite, so there is no server to install or run: `db.open("app.db")` creates the file if it needs to and you start storing. Use it when data has outgrown a settings file, when you need to search, sort or update part of it, or when several things must change together or not at all. For a handful of named strings, [save](save.md) is lighter.
+`std:db` is a database in a file. It is built on SQLite, so there is no server to install or run: `db.open("app.db")` creates the file if it needs to and you start storing. Use it when data has outgrown a settings file, when you need to search, sort or update part of it, or when several changes must happen together or not at all. For a handful of named strings, [save](save.md) is lighter.
 
 A database offers two ways to work, and you can mix them in one file:
 
@@ -71,8 +71,6 @@ conn.close().unwrap()
 ["users"]
 ["id","name","age"]
 ```
-
-Try inserting a row without a `name` and see whether the table allows it.
 
 `insert` returns the new row's id. `createTable(name, columns)` builds a table from an object of column definitions when you don't want to write the SQL:
 
@@ -223,7 +221,8 @@ conn.insert("accounts", {name: "bob", balance: 20}).unwrap()
 def transfer(*db.DB conn, string source, string dest, int amount) result<unit, error> (
   return conn.transaction(def(*db.DB tx) result<int, error> (
     tx.exec("UPDATE accounts SET balance = balance - ? WHERE name = ?", amount, source)!
-    int left = tx.queryMapOne("SELECT balance FROM accounts WHERE name = ?", source).unwrap()["balance"]
+    auto row = tx.queryMapOne("SELECT balance FROM accounts WHERE name = ?", source).unwrap()
+    int left = row["balance"]
     if left < 0 (
       return result.err(error("insufficient funds"))
     )
@@ -391,9 +390,9 @@ conn.close().unwrap()
 
 A filter with an operator the collection doesn't know, such as `$bogus`, is a programming error and throws a `ValueError`, instead of coming back as a failed result.
 
-## Which to use
+## Tables or collections
 
-Reach for tables when every row has the same columns, when you join data across tables, or when you want the database to enforce types and uniqueness. Reach for collections when records vary, when you are still discovering the shape, or when the data is naturally a nested document. Both live in the same file and can be used in one transaction.
+Use tables when every row has the same columns, when you join data across tables, or when you want the database to enforce types and uniqueness. Use collections when records vary or the data is a nested document. Both live in the same file and can share a transaction.
 
 :::exercise title="A to-do list"
 Make a `todos` table with an `id`, a `title` and a `done` column (0 or 1, default 0). Insert three to-dos, mark one done, and print the titles that are still open, in the order they were added.
@@ -425,7 +424,9 @@ import "std:db"
 
 auto conn = db.open(":memory:").unwrap()
 
-conn.exec("CREATE TABLE todos (id INTEGER PRIMARY KEY, title TEXT, done INTEGER DEFAULT 0)").unwrap()
+conn.exec(
+  "CREATE TABLE todos (id INTEGER PRIMARY KEY, title TEXT, done INTEGER DEFAULT 0)"
+).unwrap()
 for title in ["write docs", "test docs", "ship docs"] (
   conn.insert("todos", {title: title}).unwrap()
 )

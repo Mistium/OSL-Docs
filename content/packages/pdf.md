@@ -75,7 +75,11 @@ doc.setFontSize(20)
 doc.text("Quarterly report")
 doc.setFontSize(12)
 doc.newLine()
-doc.text("Sales rose in every region this quarter, and the table below shows how the numbers break down by product.", {wrap: true})
+string summary = [
+  "Sales rose in every region this quarter,",
+  "and the table below shows how the numbers break down by product."
+].join(" ")
+doc.text(summary, {wrap: true})
 log doc.pageText(1)
 
 doc.addPage()

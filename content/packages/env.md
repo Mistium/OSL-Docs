@@ -5,9 +5,7 @@ package: env
 
 # env
 
-`std:env` reads and sets environment variables and works with `.env` files. Use it for configuration that changes between machines: ports, API keys, database paths, a development or production mode. Keeping secrets in the environment keeps them out of your source and your repository.
-
-The examples set their own variables so they print the same everywhere. In a real program the variables come from the shell, a service manager or a `.env` file.
+`std:env` reads and sets environment variables and works with `.env` files. Use it for configuration that changes between machines: ports, API keys, database paths, a development or production mode. Secrets in the environment stay out of your source and your repository. The examples set their own variables; in a real program they come from the shell, a service manager or a `.env` file.
 
 ## Read a variable
 
@@ -122,7 +120,8 @@ A `.env` file holds `NAME=value` lines, with comments after `#`, optional quotes
 ```osl
 import "std:env"
 
-auto config = env.parse("# database\nHOST=localhost\nNAME=\"my app\"\nURL=$HOST/db\nexport PORT=5432\n")
+string text = "# database\nHOST=localhost\nNAME=\"my app\"\nURL=$HOST/db\nexport PORT=5432\n"
+auto config = env.parse(text)
 
 log config.keys()
 log config.get("NAME")

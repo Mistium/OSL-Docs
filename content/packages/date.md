@@ -5,17 +5,13 @@ package: date
 
 # date
 
-`std:date` is for anything with a calendar or a clock: parsing a timestamp from a file, adding 30 days to a deadline, working out how long ago something happened, or showing the same moment in London and Tokyo.
-
-Three types do the work:
+`std:date` is for anything with a calendar or a clock: parsing a timestamp, adding 30 days to a deadline, working out how long ago something happened, or showing the same moment in London and Tokyo. Three types do the work:
 
 - `date.DateTime` is one instant in time, held in UTC. Every date you parse or build is one.
 - `date.Duration` is a length of time, such as the gap between two instants.
 - `date.ZonedDateTime` is a view of an instant in a time zone, for showing local times.
 
 A `DateTime` never changes. Every method that "changes" it returns a new one.
-
-The examples here use fixed dates so their output stays the same. `date.now()` gives the current instant, which is different every time you run it.
 
 ## Parsing a date
 
@@ -377,6 +373,21 @@ true
 ```
 
 To time how long something takes, subtract two instants: `date.now().since(start).millis()`.
+
+:::quiz
+What does this print?
+
+```osl fragment
+auto d = date.parse("2024-01-31T10:00:00Z").unwrap()
+log d.add("mo", 1).iso()
+```
+
+- [ ] `2024-02-29T10:00:00Z`, the last day of February.
+- [x] `2024-03-02T10:00:00Z`
+- [ ] It throws, because February has no 31st.
+
+Months follow the calendar and don't clamp, so "February 31" rolls over into March (2024 is a leap year, so two days past the 29th).
+:::
 
 :::exercise title="Days until the deadline"
 A project is due on 2025-03-31. Given today's date, print how many whole days are left and the weekday the deadline falls on.

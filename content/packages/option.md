@@ -222,6 +222,53 @@ no nickname
 
 Choose `T?` by default. Choose `option<T>` when null can be real data, or you want the `map` and `andThen` methods.
 
+:::quiz
+A settings lookup can store `null` on purpose, meaning "the user cleared this". Which return type lets the caller tell "cleared" from "never set"?
+
+- [ ] `string?`, because `null` covers both
+- [x] `option<string?>`, because `some(null)` and `none()` differ
+- [ ] `result<string, error>`, because errors are values
+
+`string?` collapses both cases into `null`. An option keeps them apart: `some(null)` is a value that happens to be null, and `none()` is no value at all.
+:::
+
+:::exercise title="First even number"
+Finish `firstEven` so it returns `some` of the first even number in the array, or `none()` when there isn't one.
+
+```osl
+import "std:option"
+
+def firstEven(int[] items) option<int> (
+  return none()
+)
+
+log firstEven([3, 5, 8, 10]).unwrapOr(-1)
+log firstEven([3, 5]).unwrapOr(-1)
+```
+
+```output
+8
+-1
+```
+
+> [!hint]
+> Loop over `items` and `return some(item)` as soon as `item % 2 == 0`.
+
+```osl solution
+import "std:option"
+
+def firstEven(int[] items) option<int> (
+  for item in items (
+    if item % 2 == 0 ( return some(item) )
+  )
+  return none()
+)
+
+log firstEven([3, 5, 8, 10]).unwrapOr(-1)
+log firstEven([3, 5]).unwrapOr(-1)
+```
+:::
+
 ## API reference
 
 ::api

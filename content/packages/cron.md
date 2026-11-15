@@ -24,7 +24,10 @@ When both day fields are restricted, a day matches if either one does. Times are
 ```osl
 import "std:cron"
 
-for schedule in ["* * * * *", "*/15 * * * *", "0 9-17 * * 1-5", "0 0 1 1 *", "60 * * * *", "* * * *", "0 0 31 2 *"] (
+string[] schedules = [
+  "* * * * *", "*/15 * * * *", "0 9-17 * * 1-5", "0 0 1 1 *", "60 * * * *", "* * * *", "0 0 31 2 *"
+]
+for schedule in schedules (
   log schedule cron.isValid(schedule)
 )
 ```
@@ -66,26 +69,7 @@ true
 0
 ```
 
-A quarter-hour schedule fires at most 15 minutes after any moment, and exactly 15 minutes after the previous fire. A fire time is always on a whole minute. `next` throws a `ValueError` for an invalid schedule, so check with `isValid` when the text comes from a user:
-
-```osl
-import "std:cron"
-
-def describe(string schedule) string (
-  if !cron.isValid(schedule) (
-    return schedule ++ " is not a schedule"
-  )
-  return schedule ++ " fires every day: " ++ (cron.next(schedule, {from: 0}) > 0)
-)
-
-log describe("0 6 * * *")
-log describe("every day")
-```
-
-```output
-0 6 * * * fires every day: true
-every day is not a schedule
-```
+A quarter-hour schedule fires at most 15 minutes after any moment, and exactly 15 minutes after the previous fire. A fire time is always on a whole minute. `next` throws a `ValueError` for an invalid schedule, so check with `isValid` when the text comes from a user.
 
 ## A scheduler with jobs
 
@@ -264,7 +248,7 @@ while true (
 
 ## Keeping a job short
 
-Each run goes on a thread of its own, so a job can do anything an async function can. For work that takes a while or can fail, let the job start the real work and handle failures itself, so that nothing is lost in the scheduler's error printing:
+Each run goes on a thread of its own. A job that can fail should handle its own failures, so nothing is lost in the scheduler's error printing:
 
 ```osl
 import "std:cron"
@@ -292,6 +276,63 @@ log done
 ```
 
 See [`std:retry`](retry.md) for the retry options, and [`std:thread`](thread.md) for running work on threads.
+
+:::quiz
+When does a job with the schedule `0 9 * * 1-5` run?
+
+- [ ] Every five minutes, from 9 to 1.
+- [x] At 09:00 local time, Monday to Friday.
+- [ ] On the 9th of every month.
+
+The fields are minute, hour, day of month, month and day of week, so this is minute 0 of hour 9 on weekdays 1 to 5.
+:::
+
+:::quiz
+What does `cron.isValid("0 0 31 2 *")` return?
+
+- [ ] `true`, because every field is in range.
+- [x] `false`, because February 31st never comes.
+- [ ] It throws a `ValueError`.
+
+A schedule that can never fire is invalid, and `isValid` reports that rather than throwing.
+:::
+
+:::exercise title="Run a job on demand"
+Add a job named `"hello"` that runs every five minutes and logs `hi`. Run it twice with `run`, then log its `runCount`.
+
+```osl
+import "std:cron"
+
+auto scheduler = cron.new()
+
+log scheduler.job("hello").runCount
+```
+
+```output
+hi
+hi
+2
+```
+
+> [!hint]
+> `scheduler.add(name, schedule, fn)` registers the job. The schedule is `"*/5 * * * *"`.
+
+> [!hint]
+> `scheduler.run("hello")` runs it immediately, and each run adds one to `runCount`.
+
+```osl solution
+import "std:cron"
+
+auto scheduler = cron.new()
+scheduler.add("hello", "*/5 * * * *", def() -> (
+  log "hi"
+))
+
+scheduler.run("hello")
+scheduler.run("hello")
+log scheduler.job("hello").runCount
+```
+:::
 
 ## API reference
 

@@ -27,7 +27,14 @@ export function decodeFiles(hash: string): FileMap | null {
     const code = params.get("code");
     if (code !== null) return { "main.osl": fromBase64(code) };
     const files = params.get("files");
-    if (files !== null) return JSON.parse(fromBase64(files)) as FileMap;
+    if (files !== null) {
+      const parsed: unknown = JSON.parse(fromBase64(files));
+      // A garbled or hand-made link must not reach the editor as non-text.
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+      const entries = Object.entries(parsed);
+      if (!entries.length || entries.some(([, code]) => typeof code !== "string")) return null;
+      return Object.fromEntries(entries) as FileMap;
+    }
   } catch {
     return null;
   }

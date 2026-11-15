@@ -323,6 +323,16 @@ After a reconnect the server sees a brand new connection, so anything it knew ab
 
 A server accepts upgrades only from pages on its own origin unless you call `server.allowAllOrigins()`. Do that only for a public API. Because the upgrade is an ordinary HTTP request, middleware on the route applies to it, so `serve.requireBearer` or your own check can refuse a socket before it opens. For `wss://`, use `server.runTLS(certFile, keyFile)` or `app.runTLS(...)`, or put a proxy that terminates TLS in front.
 
+:::quiz
+A client handler runs on the connection's own thread. How does the example above pass the messages to the main program?
+
+- [ ] It prints them from inside the handler.
+- [x] It sends them into a channel, and the main thread calls `recv()`.
+- [ ] `ws.connect` returns them in an array.
+
+A channel hands values between threads safely and lets `recv()` wait until one arrives.
+:::
+
 :::exercise title="Shout service"
 Make the server answer each message with the message upper-cased and its length, as JSON: `{"shout": "HI", "length": 2}`. The client part is written for you.
 
@@ -395,9 +405,9 @@ server.on("message", def(*ws.Connection conn, string message) (
 ))
 
 app.ws("/shout", server)
-app.start("127.0.0.1:8786").unwrap()
+app.start("127.0.0.1:8854").unwrap()
 
-auto client = ws.connect("ws://127.0.0.1:8786/shout").unwrap()
+auto client = ws.connect("ws://127.0.0.1:8854/shout").unwrap()
 auto inbox = thread.channel(4)
 client.on("message", def(*ws.Connection conn, string message) (
   inbox.send(message).unwrap()
@@ -415,16 +425,6 @@ app.stop().unwrap()
 {"length":2,"shout":"HI"}
 {"length":3,"shout":"OSL"}
 ```
-:::
-
-:::quiz
-A client handler runs on the connection's own thread. How does the example above pass the messages to the main program?
-
-- [ ] It prints them from inside the handler.
-- [x] It sends them into a channel, and the main thread calls `recv()`.
-- [ ] `ws.connect` returns them in an array.
-
-A channel hands values between threads safely and lets `recv()` wait until one arrives.
 :::
 
 :::exercise title="Visitor numbers"
@@ -505,11 +505,11 @@ server.on("connect", def(*ws.Connection conn) (
 ))
 
 app.ws("/", server)
-app.start("127.0.0.1:8787").unwrap()
+app.start("127.0.0.1:8855").unwrap()
 
-auto a = ws.connect("ws://127.0.0.1:8787/").unwrap()
+auto a = ws.connect("ws://127.0.0.1:8855/").unwrap()
 log firstMessage(a)
-auto b = ws.connect("ws://127.0.0.1:8787/").unwrap()
+auto b = ws.connect("ws://127.0.0.1:8855/").unwrap()
 log firstMessage(b)
 
 a.close({wait: true})

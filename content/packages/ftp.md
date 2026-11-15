@@ -7,8 +7,6 @@ package: ftp
 
 FTP is the old protocol for moving files to and from a server, still common on shared hosting and in data feeds. `std:ftp` connects, logs in, and gives you a remote file manager. For servers you control, prefer [ssh](ssh.md) with SFTP.
 
-Examples that talk to a server are `norun`, since the checker has no network. The connection rules, which you can see run, are the first thing to learn.
-
 ## Connect
 
 `ftp.connect(address, options)` opens a connection and logs in. It returns a result. Without a `username` it logs in as `anonymous`. Close the connection when you are done:
@@ -35,7 +33,12 @@ A login to another machine without TLS is refused before the password leaves you
 ```osl
 import "std:ftp"
 
-auto attempt = ftp.connect("203.0.113.1:21", {username: "u", password: "p", tls: "none", timeout: 500})
+auto attempt = ftp.connect("203.0.113.1:21", {
+  username: "u",
+  password: "p",
+  tls: "none",
+  timeout: 500
+})
 log attempt.unwrapErr().kind
 log attempt.unwrapErr().message
 ```

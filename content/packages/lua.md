@@ -5,7 +5,7 @@ package: lua
 
 # lua
 
-`std:lua` runs Lua 5.1 code (with gopher-lua, a Lua interpreter written in Go). Use it to give your program a scripting language: rules, configuration, plugins or game logic that people can change without recompiling. You can run a snippet and take its value, or keep an interpreter alive, set variables in it, call its functions, and let it call functions of yours.
+`std:lua` runs Lua 5.1 code (with gopher-lua, a Lua interpreter written in Go). Use it to give your program a scripting language for rules, configuration, plugins or game logic that people can change without recompiling. You can run a snippet and take its value, or keep an interpreter alive, share data with it and call functions in both directions.
 
 > [!warning]
 > Lua code gets the whole standard library, `os` and `io` included, so it can read files and run commands. Don't run code you don't trust. [js](js.md) runs JavaScript in a real sandbox if you need one.
@@ -170,7 +170,7 @@ true
 
 ## A rule engine
 
-Putting it together: rules written in Lua, kept in a string here but read with `fs.readFile` in a real program, and applied to your data one at a time:
+Rules written in Lua (kept in a string here; a real program would read them with `fs.readFile`) applied to your data one at a time:
 
 ```osl
 import "std:lua"

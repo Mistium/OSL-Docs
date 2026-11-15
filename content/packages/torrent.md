@@ -19,7 +19,10 @@ import "std:fs"
 
 fs.writeFile("notes.txt", "hello torrent " * 1000).unwrap()
 
-auto t = torrent.fromPath("notes.txt", {pieceLength: 16384, trackers: ["udp://tracker.example:80"]}).unwrap()
+auto t = torrent.fromPath("notes.txt", {
+  pieceLength: 16384,
+  trackers: ["udp://tracker.example:80"]
+}).unwrap()
 log t.name() t.size()
 log t.pieceLength() t.pieceCount()
 log t.files()
@@ -69,7 +72,10 @@ import "std:torrent"
 import "std:fs"
 
 fs.writeFile("notes.txt", "hello torrent " * 1000).unwrap()
-auto t = torrent.fromPath("notes.txt", {pieceLength: 16384, trackers: ["udp://tracker.example:80"]}).unwrap()
+auto t = torrent.fromPath("notes.txt", {
+  pieceLength: 16384,
+  trackers: ["udp://tracker.example:80"]
+}).unwrap()
 
 string link = t.magnetURI()
 log link.startsWith("magnet:?xt=urn:btih:" ++ t.infoHash())

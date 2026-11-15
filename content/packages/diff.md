@@ -5,7 +5,7 @@ package: diff
 
 # diff
 
-`diff` finds what changed between two texts. Use it to show a patch, preview a file edit before saving it, check that a generated file changed at all, or highlight edits in a review screen. You can compare line by line, word by word or character by character.
+`std:diff` finds what changed between two texts, by line, by word or by character. Use it to show a patch, preview an edit before saving it, or highlight changes in a review screen.
 
 ```osl fragment
 import "std:diff"
@@ -153,9 +153,9 @@ log diff.text("a < b\nsame", "a > b\nsame").html()
 
 ```
 
-## Real-world: only write when changed
+## Only write when changed
 
-A generator can compare the new output with the file on disk, and skip the write (and its timestamp change) when nothing differs.
+A generator can compare its output with the file on disk and skip the write when nothing differs.
 
 ```osl
 import "std:diff"
@@ -182,6 +182,7 @@ def save(string path, string text) (
 save("out.txt", "a\nb")
 save("out.txt", "a\nb")
 save("out.txt", "a\nc\nd")
+fs.remove("out.txt").unwrap()
 ```
 
 ```output

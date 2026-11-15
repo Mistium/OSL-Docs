@@ -83,9 +83,19 @@ export function Editor({ value, onChange, diagnostics = [], onRun, onFormat, lab
     requestAnimationFrame(() => el.setSelectionRange(caret, caretEnd));
   };
 
+  // Tab indents, so Escape then Tab is the way out of the editor by keyboard.
+  const leaving = useRef(false);
+
   const onKeyDown = (event: KeyboardEvent) => {
     const el = area.current!;
     const { selectionStart: start, selectionEnd: end } = el;
+    // Typing with an input method sends Enter and Tab for its own use.
+    if (event.isComposing) return;
+    if (event.key === "Tab" && leaving.current) {
+      leaving.current = false;
+      return;
+    }
+    leaving.current = event.key === "Escape";
     if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
       event.preventDefault();
       onRun?.();
@@ -96,10 +106,7 @@ export function Editor({ value, onChange, diagnostics = [], onRun, onFormat, lab
       onFormat?.();
       return;
     }
-    if (event.key === "Escape") {
-      el.blur();
-      return;
-    }
+    if (event.key === "Escape") return;
     if (event.key === "Tab") {
       event.preventDefault();
       const lineStart = value.lastIndexOf("\n", start - 1) + 1;
@@ -168,6 +175,7 @@ export function Editor({ value, onChange, diagnostics = [], onRun, onFormat, lab
           autocapitalize="off"
           autocomplete="off"
           aria-label={label}
+          aria-description="Tab indents. Press Escape, then Tab, to move on."
           wrap="off"
           onInput={(e) => onChange((e.currentTarget as HTMLTextAreaElement).value)}
           onKeyDown={onKeyDown}

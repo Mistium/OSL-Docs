@@ -7,9 +7,9 @@ time: 25 minutes
 
 # Build a web API
 
-You'll build Shorty: post a long URL, get back a short code, and visiting the code redirects to the URL. Along the way you'll use routes, path parameters, JSON bodies, status codes, validation, middleware and route groups.
+You'll build Shorty: post a long URL, get back a short code, and visiting the code redirects to the URL. Along the way: routes, path parameters, JSON bodies, validation, middleware and route groups.
 
-Servers run forever, so each step starts the router in the try-it tab with `app.start`, calls it with `std:requests`, prints the answer and stops it.
+Servers run forever, so each try-it tab starts the router with `app.start`, calls it with `std:requests`, prints the answer and stops it.
 
 ## Answer a request
 
@@ -27,12 +27,7 @@ app.get("/health", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8720"
@@ -91,12 +86,7 @@ app.post("/links", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8721"
@@ -195,12 +185,7 @@ app.get("/:code", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8722"
@@ -345,12 +330,7 @@ app.get("/:code", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8725"
@@ -361,14 +341,14 @@ show(r.status, r.body)
 r = requests.post(base ++ "/links", {json: {url: "javascript:alert(1)"}}).unwrap()
 show(r.status, r.body)
 r = requests.post(base ++ "/links", {body: "not json"}).unwrap()
-show(r.status, r.body)
+log r.status
 app.stop().unwrap()
 ```
 
 ```output
 201 {"code":"l1","url":"https://osl-lang.org"}
 422 {"error":"url must start with http"}
-400 {"error":"the request body is not valid JSON for the target: invalid character 'o' in literal null (expecting 'u')"}
+400
 ```
 
 :::exercise title="Reject spaces"
@@ -502,12 +482,7 @@ app.get("/:code", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8726"
@@ -646,25 +621,23 @@ app.get("/:code", def(*serve.Context c) (
 
 // try it
 def show(int status, string body) (
-  string text = body.trim()
-  if text == "" (
-    log status
-  ) else (
-    log status text
-  )
+  log (status ++ " " ++ body).trim()
 )
 
 string base = "http://127.0.0.1:8727"
 app.start("127.0.0.1:8727").unwrap()
 
-auto key = {headers: {Authorization: "Bearer secret"}}
-auto r = requests.post(base ++ "/api/links", {json: {url: "https://osl-lang.org"}}).unwrap()
+auto auth = {Authorization: "Bearer secret"}
+string url = base ++ "/api/links"
+auto body = {url: "https://osl-lang.org"}
+
+auto r = requests.post(url, {json: body}).unwrap()
 show(r.status, r.body)
-r = requests.post(base ++ "/api/links", {headers: {Authorization: "Bearer secret"}, json: {url: "https://osl-lang.org"}}).unwrap()
+r = requests.post(url, {json: body, headers: auth}).unwrap()
 show(r.status, r.body)
 r = requests.get(base ++ "/l1", {redirects: false}).unwrap()
 show(r.status, r.headers["X-Powered-By"])
-r = requests.get(base ++ "/api/links/l1", key).unwrap()
+r = requests.get(url ++ "/l1", {headers: auth}).unwrap()
 show(r.status, r.body)
 app.stop().unwrap()
 ```
@@ -688,89 +661,18 @@ The first middleware runs for every request and calls `c.next()`. The group's be
 
 ## Run it for real
 
-The try-it tab replaced `app.run`. For real, finish with `app.run(":8080")`, which serves until the program stops. This is the program you'd save as `shorty.osl`.
+The try-it tab starts and stops the server itself. To run Shorty for real, save the program above without the try-it part and finish it with `app.run`, which serves until the program stops:
 
-```osl norun
-import "std:serve"
-import "std:requests"
-import "std:result"
-
-class Link (
-  string url = ""
-  int hits = 0
-)
-
-class NewLink (
-  string url = ""
-)
-
-def validate(NewLink input) result<NewLink, error> (
-  if !input.url.startsWith("http") (
-    return result.err(error("url must start with http"))
-  )
-  return result.ok(input)
-)
-
-map<string, Link> links = {}
-int made = 0
-
-*serve.Router app = serve.new()
-
-app.use(def(*serve.Context c) (
-  c.setHeader("X-Powered-By", "shorty")
-  c.next()
-))
-
-app.get("/health", def(*serve.Context c) (
-  c.text(200, "Shorty is running")
-))
-
-app.group("/api", def(*serve.Router g) (
-  g.use(serve.requireBearer("secret"))
-
-  g.post("/links", def(*serve.Context c) (
-    NewLink input = NewLink()
-    c.bindJSON(input).unwrap()
-    switch validate(input) (
-      case ok(good)
-        made += 1
-        string code = "l" ++ made
-        Link link = Link()
-        link.url = good.url
-        links[code] = link
-        c.json(201, {code: code, url: good.url})
-      case err(e)
-        c.json(422, {error: e.message})
-    )
-  ))
-
-  g.get("/links/:code", def(*serve.Context c) (
-    string code = c.param("code")
-    if !links.contains(code) (
-      c.notFound("no such link")
-      return
-    )
-    c.json(200, {url: links[code].url, hits: links[code].hits})
-  ))
-))
-
-app.get("/:code", def(*serve.Context c) (
-  string code = c.param("code")
-  if !links.contains(code) (
-    c.notFound("no such link")
-    return
-  )
-  links[code].hits += 1
-  c.redirect(302, links[code].url)
-))
-
-
-
-
-
-
+```osl fragment
 log "Shorty is listening on http://localhost:8080"
 app.run(":8080").unwrap()
 ```
 
-Try it with `curl -H "Authorization: Bearer secret" -d '{"url":"https://osl-lang.org"}' localhost:8080/api/links`. Links vanish on restart: keep them in [db](../packages/db.md) (`db.open`, `createTable`, `insert`) by replacing the map with three small functions. Next: [realtime chat](realtime-chat.md), or the [serve](../packages/serve.md) and [requests](../packages/requests.md) pages.
+Run it with `osl run shorty.osl`, then in another terminal:
+
+```bash
+curl -H "Authorization: Bearer secret" -d '{"url":"https://osl-lang.org"}' localhost:8080/api/links
+curl -i localhost:8080/l1
+```
+
+Links vanish when the program restarts. To keep them, swap the map for [db](../packages/db.md) (`db.open`, `createTable`, `insert`). Next: [realtime chat](realtime-chat.md), or the [serve](../packages/serve.md) and [requests](../packages/requests.md) pages.

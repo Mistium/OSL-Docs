@@ -7,7 +7,7 @@ package: encodings/utf16
 
 OSL strings count characters: `"😀".len` is `1`. JavaScript, Java, C# and the Windows API count UTF-16 code units, where that emoji takes two. When you port code from those languages or must match offsets and orderings produced by them, this package gives you the same answers.
 
-Reach for it when you read positions from JavaScript (a text editor, a language server, a browser), compare with JavaScript's `<`, or need its exact upper and lower casing. For everything else, the built-in string methods are the right tool.
+Use it when you read positions from JavaScript (an editor, a language server, a browser), must match JavaScript's `<`, or need its exact casing. Otherwise the built-in string methods are the right tool.
 
 ```osl fragment
 import "std:encodings/utf16"
@@ -95,8 +95,6 @@ OSL: true
 UTF-16: 1
 ```
 
-Use it as a sort order when the results must match JavaScript, for example when you merge your output with sorted data produced there.
-
 ## Case
 
 `upper` and `lower` apply full Unicode case mapping, like `toUpperCase` and `toLowerCase`. Note that `ß` becomes `SS`, which changes the length.
@@ -115,7 +113,7 @@ STRASSE àlvaro
 
 ## Case-insensitive checks
 
-Three helpers compare as if both sides were lower-cased: `compareLower`, `containsLower` and `isSameLower`. They save you from building the lower-cased copies yourself.
+Three helpers compare as if both sides were lower-cased: `compareLower`, `containsLower` and `isSameLower`. 
 
 ```osl
 import "std:encodings/utf16"

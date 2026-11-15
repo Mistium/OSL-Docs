@@ -5,9 +5,9 @@ package: box2d
 
 # box2d
 
-`std:box2d` is a 2D physics engine. You build a world, put bodies in it, give each body a shape, and call `advance` once per frame. The engine moves the bodies, resolves collisions and tells you where everything ended up. Reach for it for games, toys and anything where things should stack, bounce and slide.
+`std:box2d` is a 2D physics engine. You build a world, put bodies in it, give each body a shape, and call `advance` once per frame. The engine moves the bodies, resolves collisions and tells you where everything ended up. Use it for games, toys and anything where things should stack, bounce and slide.
 
-The engine does not draw anything. It works in plain numbers, so it runs (and can be tested) without a window. Pair it with [window](window.md) or [raylib](raylib.md) to show the bodies.
+The engine draws nothing. It works in plain numbers, so it runs, and can be tested, without a window. Pair it with [window](window.md) or [raylib](raylib.md) to show the bodies.
 
 ```osl fragment
 import "std:box2d"

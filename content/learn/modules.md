@@ -183,3 +183,28 @@ What does `import "utils"` import?
 
 A bare name without `./` or `.osl` is a folder. A file needs its path: `import "./utils.osl"`.
 :::
+
+:::exercise title="Use the standard library"
+Import `std:json` and print the object as JSON text, instead of with `log` alone.
+
+```osl
+object settings = {theme: "dark", size: 14}
+
+log settings
+```
+
+```output
+{"size":14,"theme":"dark"}
+```
+
+> [!hint]
+> Start with `import "std:json"`, then call `json.stringify(...)`.
+
+```osl solution
+import "std:json"
+
+object settings = {theme: "dark", size: 14}
+
+log json.stringify(settings)
+```
+:::

@@ -41,7 +41,16 @@ Tables, task lists and strikethrough work as they do on GitHub.
 ```osl
 import "std:md"
 
-string text = "| name | qty |\n|------|-----|\n| bolt | 12 |\n\n- [x] write\n- [ ] test\n\n~~old~~ new"
+string text = [
+  "| name | qty |",
+  "|------|-----|",
+  "| bolt | 12 |",
+  "",
+  "- [x] write",
+  "- [ ] test",
+  "",
+  "~~old~~ new"
+].join("\n")
 log md.toHTML(text)
 ```
 
@@ -106,7 +115,11 @@ log md.toHTML("A <kbd>Ctrl</kbd> key", {unsafe: true})
 ```osl
 import "std:md"
 
-string html = `<h1>Title</h1><p>Hello <b>bold</b> and <a href="http://example.com">a link</a>.</p><ul><li>one</li><li>two</li></ul>`
+string html = [
+  `<h1>Title</h1>`,
+  `<p>Hello <b>bold</b> and <a href="http://example.com">a link</a>.</p>`,
+  `<ul><li>one</li><li>two</li></ul>`
+].join("")
 log md.fromHTML(html).unwrap()
 ```
 
@@ -130,7 +143,9 @@ Try it: add an `<h2>` and an `<em>` to the HTML.
 ```osl
 import "std:md"
 
-string cleaned = md.sanitize("**bold** <script>x()</script> [bad](javascript:alert(1)) [good](https://example.com)").unwrap()
+string cleaned = md.sanitize(
+  "**bold** <script>x()</script> [bad](javascript:alert(1)) [good](https://example.com)"
+).unwrap()
 log cleaned
 ```
 

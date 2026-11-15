@@ -76,7 +76,7 @@ log timestamp > 1700000000000
 ```output
 true
 true
-9.2.0
+9.3.0
 true
 ```
 
@@ -283,6 +283,8 @@ Some names from other languages, and from older OSL documentation, don't exist. 
 | `parseInt(x)`, `parseFloat(x)` | `x.toInt()`, `x.toNum()` |
 | `isNaN(x)`, `isFinite(x)` | `x.isNaN()`, `x.isFinite()` |
 | `not x` | `!x` |
+
+`osl fix` rewrites `sqrt`, `keys`, `values`, `entries` and `input` for you. `range` it leaves to you.
 
 ```osl error
 log sqrt(16)

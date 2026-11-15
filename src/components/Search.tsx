@@ -31,7 +31,10 @@ function score(entry: Entry, words: string[]): number {
 
 function snippet(text: string, words: string[]): string {
   const lower = text.toLowerCase();
-  const at = Math.max(0, Math.min(...words.map((w) => lower.indexOf(w)).filter((n) => n >= 0)));
+  // Where the first matching word is, or the start when only the title or a
+  // heading matched.
+  const hits = words.map((w) => lower.indexOf(w)).filter((n) => n >= 0);
+  const at = hits.length ? Math.min(...hits) : 0;
   const start = Math.max(0, at - 50);
   return (start > 0 ? "…" : "") + text.slice(start, start + 150) + (start + 150 < text.length ? "…" : "");
 }
@@ -43,6 +46,8 @@ export function Search({ onClose }: { onClose: () => void }) {
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Closing puts focus back where it was before the dialog opened.
+    const before = document.activeElement as HTMLElement | null;
     void loadIndex().then(setEntries);
     input.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -51,6 +56,7 @@ export function Search({ onClose }: { onClose: () => void }) {
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.classList.remove("is-locked");
+      if (before?.isConnected) before.focus({ preventScroll: true });
     };
   }, []);
 
@@ -87,7 +93,7 @@ export function Search({ onClose }: { onClose: () => void }) {
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") {
                 e.preventDefault();
-                setSelected(Math.min(selected + 1, results.length - 1));
+                setSelected(Math.max(0, Math.min(selected + 1, results.length - 1)));
               } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 setSelected(Math.max(selected - 1, 0));

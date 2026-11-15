@@ -65,7 +65,11 @@ Each push request carries a short-lived token (an ES256 JSON Web Token) for the 
 import "std:webpush"
 
 auto keys = webpush.generateKeys()
-string token = webpush.signJWT("https://push.example.com", keys.privateKey, {subject: "mailto:admin@example.com"}).unwrap()
+string token = webpush.signJWT(
+  "https://push.example.com",
+  keys.privateKey,
+  {subject: "mailto:admin@example.com"}
+).unwrap()
 
 log token.split(".").len
 log webpush.verifyJWT(token, keys.publicKey)
@@ -170,7 +174,11 @@ auto keys = webpush.generateKeys()
 
 log webpush.derivePublicKey(keys.privateKey).unwrap() == keys.publicKey
 
-string token = webpush.signJWT("https://push.example.com", keys.privateKey, {subject: "mailto:a@example.com"}).unwrap()
+string token = webpush.signJWT(
+  "https://push.example.com",
+  keys.privateKey,
+  {subject: "mailto:a@example.com"}
+).unwrap()
 log webpush.verifyJWT(token, keys.publicKey)
 ```
 

@@ -250,7 +250,10 @@ The `extract` functions scan free text and return what they find, in order:
 ```osl
 import "std:regex"
 
-string post = "Thanks @ada! Docs at https://osl-lang.org/docs, mail bo@example.com #osl #docs, 3 or 12 tips."
+string post = [
+  "Thanks @ada! Docs at https://osl-lang.org/docs,",
+  "mail bo@example.com #osl #docs, 3 or 12 tips."
+].join(" ")
 log regex.extractMentions(post)
 log regex.extractHashtags(post)
 log regex.extractURLs(post)
@@ -260,7 +263,7 @@ log regex.extractWords("Hi, there!")
 ```
 
 ```output
-["@ada","@example"]
+["@ada"]
 ["#osl","#docs"]
 ["https://osl-lang.org/docs,"]
 ["bo@example.com"]
@@ -268,7 +271,7 @@ log regex.extractWords("Hi, there!")
 ["Hi","there"]
 ```
 
-Two things to notice. `extractMentions` also found `@example`, inside the email address, because it looks for any `@` followed by word characters. And the URL kept its trailing comma: the helper takes everything up to the next space. Trim or filter the results yourself if your text has such cases, or write your own pattern with `findAll`.
+Two things to notice. `extractMentions` skipped the `@` inside `bo@example.com`: a mention has to start the text or follow a character that can't be part of a name. And the URL kept its trailing comma, because the helper takes everything up to the next space. Trim the results yourself if your text has such cases, or write your own pattern with `findAll`.
 
 ## Reshaping text
 
@@ -324,6 +327,20 @@ POST 500
 GET 404
 slow requests: 1
 ```
+
+:::quiz
+What does this print?
+
+```osl fragment
+log regex.match("^\\d+$", "order 66")
+```
+
+- [ ] `true`, because the text contains digits
+- [x] `false`, because `^` and `$` require the whole text to be digits
+- [ ] `66`
+
+Without the anchors, `regex.match` is true when the pattern matches anywhere in the text.
+:::
 
 :::exercise title="Reformat phone numbers"
 Rewrite every number written as `5551234567` into `(555) 123-4567`, leaving the rest of the sentence alone.

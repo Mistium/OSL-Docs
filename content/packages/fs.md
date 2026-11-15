@@ -5,13 +5,11 @@ package: fs
 
 # fs
 
-`fs` is how a program works with the file system: reading and writing files, listing and walking directories, copying and moving things, and building paths. Most functions return a [result](../learn/errors.md), because files go missing and disks fill up. Pure path functions such as `base` and `ext` only work on strings and never touch the disk.
+`std:fs` reads and writes files, lists and walks directories, copies and moves things, and builds paths. Most functions return a [result](result.md), because files go missing and disks fill up. Pure path functions such as `base` and `ext` only work on strings and never touch the disk.
 
 ```osl fragment
 import "std:fs"
 ```
-
-The examples on this page run in an empty scratch directory, so the paths are relative to it.
 
 ## Write and read text
 
@@ -48,8 +46,6 @@ start
 next
 ```
 
-Try it: change the text and run again. The file is replaced each time.
-
 ## Files that are not there
 
 A missing file is not a crash, it is an error value with a `kind`. Check for it and decide what to do.
@@ -73,7 +69,7 @@ NotFoundError
 default
 ```
 
-Kinds you will meet are `NotFoundError`, `PermissionError` and `IOError` (everything else, such as reading a directory as a file). `fs.exists(path)` is true when something is there, and after a guard like `if !fs.exists(path) return` the compiler knows the read won't fail for that reason.
+Kinds you will meet are `NotFoundError`, `PermissionError` and `IOError` (everything else, such as reading a directory as a file). `fs.exists(path)` is true when something is there.
 
 ```osl
 import "std:fs"
@@ -426,9 +422,9 @@ log countWords(fs.openText("one two\nthree four five"))
 5
 ```
 
-## Real-world: write then replace safely
+## Update with a backup
 
-Because `writeFile` is atomic and `rename` replaces the destination, you can build a file somewhere else and swap it in. Here a program updates a settings file, keeping a backup of the old one:
+Because `writeFile` is atomic, a program can update a settings file and keep the old one as a backup:
 
 ```osl
 import "std:fs"
@@ -446,6 +442,8 @@ def update(string path, int volume) result<unit, error> (
 update("settings.json", 9).unwrap()
 log fs.readFile("settings.json").unwrap()
 log fs.readFile("settings.json.bak").unwrap()
+fs.remove("settings.json").unwrap()
+fs.remove("settings.json.bak").unwrap()
 ```
 
 ```output
