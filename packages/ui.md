@@ -123,8 +123,12 @@ edges, not space inside it:
 ```
 
 It sits from the top and left, unless only `pad.bottom` or only `pad.right` is given, which sit it
-from that edge. `width=fill` or `height=fill` stretches it between both edges. Inside, its children
-lay out as a column.
+from that edge. `width=fill` or `height=fill` stretches it between both edges. The edges are inside
+the parent's border, a percentage is of the parent's size, and inside a `<scroll>` it scrolls with
+the content. Absolutes draw in the order they're written, above everything else in the parent.
+
+Inside, its children lay out as a column does, and `direction`, `gap` and `align` work as on one.
+State prefixes don't apply to its position or size: `hover:pad.top` does nothing.
 
 ## Styles
 
