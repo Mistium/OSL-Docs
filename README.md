@@ -1,59 +1,88 @@
-# OSL
+# osl-lang.org
 
-OSL is a compiled scripting language. The compiler reads `.osl` source, generates Go, and builds a native executable.
+The source of [osl-lang.org](https://osl-lang.org), the OSL documentation site:
+an interactive course, code-along projects, a page for every standard package
+and a reference for the language and its tools.
 
-```osl
-import "std:serve"
+Pages are Markdown in `content/`. Every OSL example on them is compiled and run
+by the real compiler at build time, and the site plays back what it printed.
+Editing an example checks it in the browser with the compiler's front end built
+to WebAssembly, and running edited code goes to an optional sandboxed run
+server.
 
-*serve.Router app = serve.New()
+## Working on it
 
-app.GET("/", def(*serve.Context context) -> (
-  context.string(200, "Hello from OSL")
-))
-
-app.run(":8080")
-```
-
-Run a source file while working on it:
+Needs [bun](https://bun.sh), Go and git.
 
 ```bash
-osl run main.osl
+bun install
+bun osl:assets      # build the compiler osl.json pins, osl.wasm and the package API
+bun examples        # compile and run new or changed examples, record their output
+bun dev             # serves on port 5180
 ```
 
-Build an executable when you want a binary:
+Before sending a change:
 
 ```bash
-osl compile main.osl -o app
-./app
+bun typecheck
+bun test
+bun examples:check  # fails if an example has no recording for the pinned OSL
+bun run build       # static site in dist/, every route prerendered
 ```
 
-## Read this first
+## Layout
 
-Start with [Install and run OSL](guide/getting-started.md). The rest of the guide follows the order in which the language becomes useful:
+| Path | What's there |
+| --- | --- |
+| `content/learn/` | The course, one lesson per page |
+| `content/build/` | Code-along projects (`layout: project`, one step per `##`) |
+| `content/packages/` | A page per `std:` package; the API tables come from `generated/api.json` |
+| `content/reference/` | Language and tool reference, and the legacy OSL pages |
+| `src/` | The Preact app: pages, editor, quizzes, exercises, navigation |
+| `src/nav.ts` | Sidebar order and labels |
+| `vite/` | Content loading, the `.md` copy of every page, `llms.txt` |
+| `scripts/` | `osl-assets`, `examples` and the prerender step |
+| `tools/` | The wasm and API-dump commands, built inside the pinned compiler |
+| `runner/main.osl` | The run server for edited code |
+| `tests/` | `bun test`: the Markdown parser, share links and the router |
+| `osl.json` | The OSL commit and version the site documents |
 
-1. [Programs and variables](guide/programs-and-variables.md)
-2. [Types](guide/types.md)
-3. [Arrays and objects](guide/collections.md)
-4. [Control flow](guide/control-flow.md)
-5. [Functions](guide/functions.md)
-6. [Structs, enums, and classes](guide/nominal-types.md)
-7. [Operators](guide/operators.md)
-8. [Errors and results](guide/errors.md)
-9. [Imports and project structure](guide/imports-and-projects.md)
+## Writing pages
 
-The examples use the same style as the production code in `originchats-osl`: type-first declarations, narrow functions, directory imports, typed package handles, explicit assertions at dynamic boundaries, and parentheses around mixed arithmetic.
+A page is Markdown with frontmatter (`title`, `description`, and `layout` for
+projects). Fenced `osl` blocks are examples:
 
-## Find an API
+- an `output` fence straight after one is what it must print;
+- `osl norun` is compiled but not run (servers, windows, files);
+- `osl error` must fail to compile, `osl fails` must exit with a failure;
+- `osl fragment` is shown but not compiled;
+- `osl varies` runs but its output isn't pinned (random numbers, time).
 
-Language-level functions and methods are listed in [Built-ins and value methods](reference/builtins-and-methods.md). Imported APIs live in the [standard-library package reference](packages/README.md).
+The full list of flags is at the top of `src/lib/markdown.ts`. Quizzes and
+exercises are `:::quiz` and `:::exercise` containers closed by a `:::` line;
+see any lesson in `content/learn/` for the shape. After editing examples, run
+`bun examples` and commit `generated/examples.json` with the page.
 
-Compiler and project commands have separate references:
+Every page is also served as Markdown at its path plus `.md`, and the whole
+site as `/llms.txt` and `/llms-full.txt`.
 
-- [OSL command line](reference/cli.md)
-- [Opal projects](reference/opal.md)
-- [Testing](reference/testing.md)
-- [Editor tooling](reference/editor.md)
+## Updating OSL
 
-## One rule worth learning now
+Point `osl.json` at the new commit and version, then:
 
-OSL arrays and strings are 1-indexed. The first item is at index `1`. This affects indexing, loops, slicing, and every example in this guide.
+```bash
+bun osl:assets
+bun examples --force
+```
+
+## Run server
+
+Running edited code needs the run server, which compiles and runs each job in a
+bubblewrap sandbox with no network:
+
+```bash
+osl run runner/main.osl              # PORT=8095 by default
+VITE_OSL_RUNNER=https://run.example bun run build
+```
+
+Without `VITE_OSL_RUNNER` the site still checks edited code but can't run it.

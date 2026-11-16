@@ -1,0 +1,239 @@
+// The docs' run server: POST /run compiles and runs a small OSL program and
+// returns what it printed. The site calls it when someone runs code they
+// edited (unedited examples play back recorded output and never get here).
+//
+// Every job compiles inside a bubblewrap sandbox that sees only the system,
+// the Go toolchain, the compiler and the job's own folder, with no network.
+// It then runs in a tighter one: no network, a read-only view of /usr and the
+// job, a small /tmp, and limits on time, output, file size and memory. Under
+// systemd the run also goes in its own cgroup scope, which caps its memory
+// and process count as a whole.
+//
+//   osl run runner/main.osl
+//
+// Settings come from the environment:
+//   PORT           port to listen on (8095)
+//   OSL_BIN        the osl compiler (osl)
+//   RUNNER_DIR     where jobs are built (/tmp/osl-runner)
+//   RUNNER_JOBS    jobs at once (4)
+//   RUNNER_ORIGIN  the site allowed to call it (*)
+
+import "std:serve"
+import "std:process"
+import "std:fs"
+import "std:env"
+import "std:sync"
+import "std:crypto"
+import "std:regex"
+
+string port = env.get("PORT", "8095")
+string workRoot = env.get("RUNNER_DIR", "/tmp/osl-runner")
+int maxJobs = env.get("RUNNER_JOBS", "4").toInt()
+string origin = env.get("RUNNER_ORIGIN", "*")
+
+int maxSource = 64 * 1024
+int maxOutput = 64 * 1024
+int compileMs = 60000
+int runMs = 10000
+
+def fail(string message) (
+  log "run server: " ++ message
+  process.exit(1)
+)
+
+def output(string command, string[] args) string (
+  auto ran = process.run(command, args) catch (e) (
+    fail(command ++ ": " ++ e.message)
+    return ""
+  )
+  if !ran.ok (
+    fail(command ++ " failed: " ++ ran.stderr.trim())
+  )
+  return ran.stdout.trim()
+)
+
+// The sandboxes bind in only what they need, so they need absolute paths.
+string oslBin = output("sh", ["-c", "command -v \"$1\"", "sh", env.get("OSL_BIN", "osl")])
+string[] goEnv = output("go", ["env", "GOROOT", "GOCACHE", "GOMODCACHE"]).split("\n")
+string goRoot = goEnv[1]
+string goCache = goEnv[2]
+string goModCache = goEnv[3]
+fs.mkdir(goCache, {recursive: true}).unwrap()
+fs.mkdir(goModCache, {recursive: true}).unwrap()
+
+def canScope() boolean (
+  auto ran = process.run("systemd-run", ["--user", "--scope", "-q", "--", "true"]) catch (e) (
+    return false
+  )
+  return ran.ok
+)
+boolean scoped = canScope()
+if !scoped (
+  log "run server: systemd-run --user doesn't work here, so runs get per-process limits only"
+)
+
+// Start clean: a crash can leave job folders behind. Only folders named like
+// a job go, so a RUNNER_DIR pointed somewhere shared loses nothing else.
+*regex.Pattern jobName = regex.compile("^[0-9a-f]{24}$").unwrap()
+fs.mkdir(workRoot, {recursive: true}).unwrap()
+for name in fs.readDir(workRoot).unwrap() (
+  if jobName.match(name) (
+    fs.remove(workRoot ++ "/" ++ name, {force: true}).unwrap()
+  )
+)
+
+*sync.Lock jobsLock = sync.newLock()
+int running = 0
+
+// Only plain file names, so nothing escapes the job's folder.
+*regex.Pattern fileName = regex.compile("^[A-Za-z0-9][A-Za-z0-9_-]{0,39}\\.osl$").unwrap()
+
+def claim() boolean (
+  jobsLock.lock()
+  defer jobsLock.unlock()
+  if running >= maxJobs return false
+  running += 1
+  return true
+)
+
+def release() (
+  jobsLock.lock()
+  defer jobsLock.unlock()
+  running -= 1
+)
+
+// Both sandboxes see /usr and their own small /tmp, and nothing of the
+// runner's environment.
+def baseSandbox(string tmpSize) string[] (
+  return [
+    "--ro-bind", "/usr", "/usr",
+    // /lib, /lib64 and /bin are links into /usr on some systems and folders
+    // on others; binding them works for both, and skips the missing ones.
+    "--ro-bind-try", "/lib", "/lib",
+    "--ro-bind-try", "/lib64", "/lib64",
+    "--ro-bind-try", "/bin", "/bin",
+    "--dev", "/dev",
+    "--proc", "/proc",
+    "--size", tmpSize, "--tmpfs", "/tmp",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--clearenv",
+    "--setenv", "HOME", "/tmp"
+  ]
+)
+
+// The compiler also reads /etc, the Go toolchain and the module cache, and
+// writes the job's folder and the build cache.
+def compileSandbox(string dir) string[] (
+  return [
+    ...baseSandbox("536870912"),
+    "--ro-bind", "/etc", "/etc",
+    "--ro-bind", oslBin, "/opt/osl",
+    "--ro-bind", goRoot, goRoot,
+    "--ro-bind", goModCache, goModCache,
+    "--bind", goCache, goCache,
+    "--bind", dir, "/job",
+    "--chdir", "/job",
+    "--setenv", "PATH", goRoot ++ "/bin:/usr/bin",
+    "--setenv", "GOCACHE", goCache,
+    "--setenv", "GOMODCACHE", goModCache,
+    "--setenv", "GOPROXY", "off",
+    "--setenv", "GOFLAGS", "-mod=mod",
+    "--setenv", "GOTOOLCHAIN", "local",
+    "--setenv", "CGO_ENABLED", "0"
+  ]
+)
+
+// The program sees the system's libraries and its own folder, read-only.
+def runSandbox(string dir) string[] (
+  return [
+    ...baseSandbox("67108864"),
+    "--ro-bind", dir, "/job",
+    "--chdir", "/job",
+    "--setenv", "PATH", "/usr/bin"
+  ]
+)
+
+// Memory and process caps for the run: a cgroup scope when there is one,
+// per-process limits always.
+def runLimits() string[] (
+  string[] limits = ["prlimit", "--as=2147483648", "--fsize=10485760", "--"]
+  if !scoped return limits
+  return [
+    "systemd-run", "--user", "--scope", "-q",
+    "-p", "MemoryMax=512M", "-p", "MemorySwapMax=0", "-p", "TasksMax=64",
+    "--", ...limits
+  ]
+)
+
+def clip(string text) string (
+  if text.len <= maxOutput return text
+  return text.left(maxOutput)
+)
+
+def runJob(object files, string entry, string stdin) object (
+  string dir = workRoot ++ "/" ++ crypto.randomHex(12)
+  fs.mkdir(dir, {recursive: true}).unwrap()
+  defer void fs.remove(dir, {force: true})
+
+  for name of files (
+    fs.writeFile(dir ++ "/" ++ name, files[name].toStr()).unwrap()
+  )
+
+  string[] compile = [...compileSandbox(dir), "/opt/osl", "compile", entry, "-o", "app"]
+  auto built = process.run("bwrap", compile, {timeout: compileMs, maxOutput: maxOutput}) catch (e) (
+    return {output: "", exit: -1, error: "The compiler didn't finish: " ++ e.message}
+  )
+  if !built.ok (
+    return {output: clip(built.stderr ++ built.stdout), exit: built.code, compileFailed: true}
+  )
+
+  string[] command = [...runLimits(), "bwrap", ...runSandbox(dir), "/bin/sh", "-c", "exec ./app 2>&1"]
+  object options = {timeout: runMs, maxOutput: maxOutput, input: stdin}
+  auto ran = process.run(command[1], command.right(command.len - 1), options) catch (e) (
+    if e.kind == "TimeoutError" return {output: "", exit: -1, timedOut: true}
+    return {output: "", exit: -1, error: e.message}
+  )
+  return {output: clip(ran.stdout), exit: ran.code, truncated: ran.truncated}
+)
+
+*serve.Router app = serve.new()
+app.use(serve.cors(origin, "GET, POST, OPTIONS", "Content-Type"))
+app.use(serve.maxBodySize(maxSource * 2))
+app.use(serve.rateLimit({requests: 30, window: 60000}))
+
+app.get("/", def(*serve.Context c) -> (
+  c.json(200, {ok: true, running: running, slots: maxJobs})
+))
+
+app.post("/run", def(*serve.Context c) -> (
+  object body = c.bodyJSON() catch (
+    c.json(400, {error: "Send JSON: {files, entry, stdin}."})
+    return
+  )
+  object files = body.files.<object>({})
+  string entry = body.entry.<string>("main.osl")
+  string stdin = body.stdin.<string>("")
+  int size = 0
+  for name of files (
+    if !fileName.match(name) (
+      c.json(400, {error: "File names must look like main.osl."})
+      return
+    )
+    size += files[name].toStr().len
+  )
+  if files.getKeys().len == 0 or files[entry] == null or size > maxSource (
+    c.json(400, {error: "Send up to 64 KB of OSL in files, including the entry file."})
+    return
+  )
+  if !claim() (
+    c.json(429, {error: "busy"})
+    return
+  )
+  defer release()
+  c.json(200, runJob(files, entry, stdin))
+))
+
+log "run server on :" ++ port ++ " using " ++ oslBin ++ (if scoped then ", cgroup limits on" else "")
+app.run(":" ++ port).unwrap()

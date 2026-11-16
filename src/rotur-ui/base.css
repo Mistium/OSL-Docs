@@ -1,0 +1,70 @@
+/* Rotur UI base: a light reset, body type, focus, selection and scrollbars.
+ * Needs tokens.css. It styles bare elements, so load it before the app's own CSS. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: #2a2a2a transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--r-bg);
+  color: var(--r-text);
+  font-family: var(--r-font);
+  font-size: var(--r-text-base);
+  line-height: var(--r-leading);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+img, video { max-width: 100%; }
+[hidden] { display: none !important; }
+
+a { color: var(--r-accent-text); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+@media (hover: hover) { a:hover { color: var(--r-accent-strong); } }
+
+code, kbd, samp, pre { font-family: var(--r-font-mono); font-size: 0.92em; }
+
+::placeholder { color: var(--r-text-faint); opacity: 1; }
+::selection { background: color-mix(in srgb, var(--r-accent) 32%, transparent); color: var(--r-text); }
+
+/* One focus style for everything reached by keyboard. Mouse clicks don't draw it. */
+:focus-visible {
+  outline: var(--r-focus-width) solid var(--r-focus);
+  outline-offset: var(--r-focus-offset);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Thin, quiet scrollbars. Firefox and Chromium 121+ read the standard properties. */
+* { scrollbar-width: thin; }
+@supports not (scrollbar-width: thin) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border: 3px solid transparent; border-radius: 99px; background-clip: padding-box; }
+  @media (hover: hover) { ::-webkit-scrollbar-thumb:hover { background-color: #3a3a3a; } }
+}
+
+.r-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
