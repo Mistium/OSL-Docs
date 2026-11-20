@@ -20,8 +20,8 @@ export function render(path: string) {
   const html = renderToString(<App path={path} page={page} />);
   const summary =
     slug === ""
-      ? "OSL is a readable, typed language that compiles to Go and ships as one native binary. " +
-        "Learn it by example, in your browser."
+      ? "OSL is a small, simple language with a lot of power behind it, and it compiles to fast " +
+        "native programs. Learn it by example, in your browser."
       : page?.description || index.pages[slug]?.description || "";
   // Descriptions are written in Markdown; the meta tag wants plain text.
   const description = plain(summary);

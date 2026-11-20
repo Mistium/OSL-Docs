@@ -15,5 +15,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["vite.config.ts", "vite", "scripts"]
+  "include": ["vite.config.ts", "vite", "scripts", "functions"]
 }

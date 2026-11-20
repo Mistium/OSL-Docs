@@ -30,6 +30,11 @@ bun examples:check  # fails if an example has no recording for the pinned OSL
 bun run build       # static site in dist/, every route prerendered
 ```
 
+The site is deployed to Cloudflare Pages with `wrangler pages deploy dist`,
+run from the repository root so that `functions/` goes up with it.
+`functions/install.sh.ts` serves `/install.sh` (the installer from the
+compiler's repository); `bun dev` doesn't run it.
+
 ## Layout
 
 | Path | What's there |
