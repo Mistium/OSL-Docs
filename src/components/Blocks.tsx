@@ -6,7 +6,6 @@ import { highlightCode } from "../lib/highlight";
 import type { PageData } from "../lib/types";
 import { CodeExample, CopyButton } from "./CodeExample";
 import { markExercise, useProgress } from "../lib/progress";
-import { canRun } from "../lib/runner";
 import { WIDGETS } from "./widgets";
 
 export type RenderContext = { page: PageData };
@@ -153,24 +152,19 @@ const normalizeOutput = (text: string) => text.replace(/\r\n/g, "\n").replace(/[
 function Exercise({ block, ctx }: { block: Extract<Block, { type: "exercise" }>; ctx: RenderContext }) {
   const progress = useProgress();
   const id = `${ctx.page.slug}#${block.starter?.id ?? block.title}`;
-  const [result, setResult] = useState<"pass" | "fail" | "compiles" | null>(null);
+  const [result, setResult] = useState<"pass" | "fail" | null>(null);
   const [hints, setHints] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const solved = Boolean(progress.exercises[id]) || result === "pass";
   const expect = block.expect;
 
-  const onOutput = (output: string, edited: boolean) => {
+  const onOutput = (output: string | null, edited: boolean) => {
     if (expect === undefined || !edited) return;
+    if (output === null) return setResult(null);
     if (normalizeOutput(output) === normalizeOutput(expect)) {
       setResult("pass");
       markExercise(id);
     } else setResult("fail");
-  };
-
-  const onCheck = (diagnostics: { severity: string }[]) => {
-    if (canRun) return;
-    if (!diagnostics.some((d) => d.severity === "error")) setResult((r) => (r === "pass" ? r : "compiles"));
-    else setResult(null);
   };
 
   return (
@@ -185,7 +179,15 @@ function Exercise({ block, ctx }: { block: Extract<Block, { type: "exercise" }>;
         </div>
       </header>
       <Blocks blocks={block.blocks} ctx={ctx} />
-      {block.starter && <CodeExample example={block.starter} recorded={ctx.page.outputs[block.starter.id]} onOutput={onOutput} onCheck={onCheck} runLabel={canRun ? "Run and check" : "Run"} startEditing />}
+      {block.starter && (
+        <CodeExample
+          example={block.starter}
+          recorded={ctx.page.outputs[block.starter.id]}
+          onOutput={onOutput}
+          runLabel="Run and check"
+          startEditing
+        />
+      )}
       {expect !== undefined && (
         <div class="exercise__expect">
           <div class="output__label">Expected output</div>
@@ -200,11 +202,6 @@ function Exercise({ block, ctx }: { block: Extract<Block, { type: "exercise" }>;
       {result === "fail" && (
         <p class="exercise__result is-fail">
           <XCircle aria-hidden="true" /> It runs, but the output doesn't match yet. Compare it with the expected output.
-        </p>
-      )}
-      {result === "compiles" && !canRun && (
-        <p class="exercise__result">
-          <Info aria-hidden="true" /> It compiles. To see its output, run it with <code>osl run main.osl</code>, then compare it with the expected output or open the solution.
         </p>
       )}
       <div class="exercise__help">

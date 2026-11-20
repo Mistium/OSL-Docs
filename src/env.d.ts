@@ -11,8 +11,5 @@ declare module "virtual:landing-outputs" {
 }
 
 interface ImportMetaEnv {
-  /* The run server's URL, such as https://run.osl-lang.org. Without one,
-     edited code is checked in the browser but not run. */
-  readonly VITE_OSL_RUNNER?: string;
   readonly VITE_SITE_URL?: string;
 }

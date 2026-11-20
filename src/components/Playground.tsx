@@ -1,12 +1,23 @@
-/* The playground: write OSL in the browser. The compiler runs here, in a web
-   worker, so checking, formatting and the generated Go need no server; the
-   run server, when the site has one, runs the program. Code lives in the
-   URL, so a link shares it. */
+/* The playground: write OSL in the browser. Everything runs here, with no
+   server: the compiler checks, formats and transpiles in a web worker, and
+   Run builds the program with Go's compiler and runs it (lib/runner.ts).
+   Code lives in the URL, so a link shares it. */
 
 import { useEffect, useRef, useState } from "preact/hooks";
-import { FileCode2, Link2, Play, Plus, AlignLeft, X, Check, TerminalSquare, AlertTriangle } from "lucide-preact";
+import {
+  AlertTriangle,
+  AlignLeft,
+  Check,
+  FileCode2,
+  Link2,
+  Play,
+  Plus,
+  Square,
+  TerminalSquare,
+  X,
+} from "lucide-preact";
 import { check, compilerState, format, onCompilerState, transpile, warmCompiler, type CompilerState, type FileMap } from "../lib/compiler";
-import { canRun, run } from "../lib/runner";
+import { run } from "../lib/runner";
 import { decodeFiles, encodeFiles } from "../lib/share";
 import { normalize } from "../lib/router";
 import { highlightHTML } from "../lib/highlight";
@@ -27,6 +38,10 @@ export function Playground() {
   const [output, setOutput] = useState<{ text: string; exit?: number; note?: string } | null>(null);
   const [goSource, setGoSource] = useState("");
   const [busy, setBusy] = useState(false);
+  // What Run is doing (downloading Go, compiling, running), and how to stop it.
+  const [status, setStatus] = useState("");
+  const stopper = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
   const [copied, setCopied] = useState(false);
   const [state, setState] = useState<CompilerState>(compilerState().state);
   const [focusLine, setFocusLine] = useState<{ line: number; at: number } | null>(null);
@@ -41,7 +56,14 @@ export function Playground() {
       setActive(Object.keys(fromHash)[0]);
     }
     warmCompiler();
-    return onCompilerState(setState);
+    const unsubscribe = onCompilerState(setState);
+    return () => {
+      unsubscribe();
+      // Leaving the playground stops a program still running, and a run
+      // still being checked goes no further.
+      mounted.current = false;
+      stopper.current?.abort();
+    };
   }, []);
 
   useEffect(() => {
@@ -85,20 +107,43 @@ export function Playground() {
     setPane("output");
     try {
       const checked = await check(files, names[0]);
+      if (!mounted.current) return;
       setDiagnostics(checked.diagnostics);
       if (checked.diagnostics.some((d) => d.severity === "error")) {
         setPane("problems");
         setOutput(null);
         return;
       }
-      if (!canRun) {
-        setOutput({ text: "", note: "It compiles. This copy of the site has no run server, so programs can't run here yet. Install OSL and run it with osl run main.osl." });
-        return;
+      setOutput(null);
+      const controller = new AbortController();
+      stopper.current = controller;
+      const result = await run(files, names[0], {
+        stdin,
+        signal: controller.signal,
+        timeoutMs: 60_000,
+        onStatus: setStatus,
+        onOutput: (text) => setOutput({ text }),
+      });
+      if (result.diagnostics) {
+        setDiagnostics(result.diagnostics);
+        setPane("problems");
       }
-      const result = await run(files, names[0], stdin);
-      setOutput({ text: result.error ?? result.output, exit: result.exit, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
+      const note = result.stopped
+        ? "Stopped."
+        : result.timedOut
+          ? "Stopped after a minute."
+          : result.truncated
+            ? "Output was cut short."
+            : undefined;
+      const ended = !result.error && !result.stopped && !result.timedOut;
+      const exit = ended ? result.exit : undefined;
+      setOutput({ text: result.error ?? result.output, exit, note });
+    } catch (error) {
+      setOutput({ text: String((error as Error).message ?? error) });
     } finally {
       setBusy(false);
+      setStatus("");
+      stopper.current = null;
     }
   };
 
@@ -170,9 +215,15 @@ export function Playground() {
           <button type="button" class="btn btn--ghost" onClick={share}>
             {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />} {copied ? "Link copied" : "Share"}
           </button>
-          <button type="button" class="btn btn--run" onClick={go} disabled={busy}>
-            <Play aria-hidden="true" /> {busy ? "Running…" : canRun ? "Run" : "Check"}
-          </button>
+          {status ? (
+            <button type="button" class="btn btn--run" onClick={() => stopper.current?.abort()}>
+              <Square aria-hidden="true" /> Stop
+            </button>
+          ) : (
+            <button type="button" class="btn btn--run" onClick={go} disabled={busy}>
+              <Play aria-hidden="true" /> {busy ? "Building…" : "Run"}
+            </button>
+          )}
         </div>
       </div>
       <div class="playground__main">
@@ -212,6 +263,11 @@ export function Playground() {
           <div class="playground__pane">
             {pane === "output" && (
               <>
+                {status && status !== "Running…" && (
+                  <p class="output__note" role="status">
+                    {status}
+                  </p>
+                )}
                 {output ? (
                   <>
                     {output.text && <pre class="output__text">{output.text}</pre>}
@@ -219,17 +275,25 @@ export function Playground() {
                     {output.note && <p class="output__note">{output.note}</p>}
                     {!output.text && !output.note && <p class="output__empty">The program printed nothing.</p>}
                   </>
-                ) : (
+                ) : status === "Running…" ? (
+                  <p class="output__empty">Running. Nothing printed yet.</p>
+                ) : status ? null : (
+                  // While it builds, the status above says what it's doing.
                   <p class="output__empty">
-                    {errors.length ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. See Problems.` : `Press ${canRun ? "Run" : "Check"}, or Ctrl+Enter in the editor.`}
+                    {errors.length
+                      ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. ` +
+                        "See Problems."
+                      : "Press Run, or Ctrl+Enter in the editor."}
                   </p>
                 )}
-                {canRun && (
-                  <details class="playground__stdin">
-                    <summary>Standard input</summary>
-                    <textarea value={stdin} onInput={(e) => setStdin((e.currentTarget as HTMLTextAreaElement).value)} placeholder="Text the program reads with ask()" />
-                  </details>
-                )}
+                <details class="playground__stdin">
+                  <summary>Standard input</summary>
+                  <textarea
+                    value={stdin}
+                    onInput={(e) => setStdin((e.currentTarget as HTMLTextAreaElement).value)}
+                    placeholder="Text the program reads with ask()"
+                  />
+                </details>
               </>
             )}
             {pane === "problems" && (diagnostics.length ? <DiagnosticList diagnostics={[...errors, ...warnings]} onPick={pick} /> : <p class="output__empty">No problems. The compiler is happy.</p>)}

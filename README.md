@@ -6,9 +6,10 @@ and a reference for the language and its tools.
 
 Pages are Markdown in `content/`. Every OSL example on them is compiled and run
 by the real compiler at build time, and the site plays back what it printed.
-Editing an example checks it in the browser with the compiler's front end built
-to WebAssembly, and running edited code goes to an optional sandboxed run
-server.
+Edited code is checked, built and run in the browser, with no server: the
+compiler's front end built to WebAssembly turns it into Go, and Go's own
+compiler and linker, built to WebAssembly too, build that into a program that
+runs in a web worker.
 
 ## Working on it
 
@@ -48,8 +49,7 @@ compiler's repository); `bun dev` doesn't run it.
 | `vite/` | Content loading, the `.md` copy of every page, `llms.txt` |
 | `scripts/` | `osl-assets`, `examples` and the prerender step |
 | `tools/` | The wasm and API-dump commands, built inside the pinned compiler |
-| `runner/main.osl` | The run server for edited code |
-| `tests/` | `bun test`: the Markdown parser, share links and the router |
+| `tests/` | `bun test`: the Markdown parser, share links, the router and the in-browser filesystem |
 | `osl.json` | The OSL commit and version the site documents |
 
 ## Writing pages
@@ -80,14 +80,25 @@ bun osl:assets
 bun examples --force
 ```
 
-## Run server
+## Running code in the browser
 
-Running edited code needs the run server, which compiles and runs each job in a
-bubblewrap sandbox with no network:
+Run on an edited example or in the playground needs nothing but the browser.
+`bun osl:assets` builds what it uses into `public/osl/`:
 
-```bash
-osl run runner/main.osl              # PORT=8095 by default
-VITE_OSL_RUNNER=https://run.example bun run build
-```
+- `osl.wasm`: the compiler's front end. `oslBuild` gives the Go files a
+  js/wasm build of the program compiles: the generated `main.go` and the
+  runtime sources it asks for, picked by build constraints.
+- `go/compile.wasm.gz` and `go/link.wasm.gz`: Go's compile and link commands
+  built for js/wasm, and `go/pkg/`: Go's standard library and the modules
+  OSL's packages use, built for js/wasm, with `go/packages.json` listing each
+  package's dependencies and the ones that don't build for js/wasm. They're
+  gzipped (the compiler is over Cloudflare Pages' 25 MiB file limit raw).
 
-Without `VITE_OSL_RUNNER` the site still checks edited code but can't run it.
+`public/osl/go-build.js` runs compile and link over an in-memory filesystem
+(`memfs.js`) holding the program and the archives it needs, and
+`public/osl/go-run.js` runs the result, one fresh worker per run, so Stop ends
+it. The first run downloads about 13 MB of compiler plus the packages the
+program uses, and the browser caches them. Programs that use a package that
+doesn't build for js/wasm (raylib's C code, SQLite) can't build in the
+browser, and say so; ones that need a network, a server or other processes
+build, but can't do those things there.

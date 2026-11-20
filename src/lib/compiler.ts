@@ -4,6 +4,14 @@
 import type { Diagnostic } from "./types";
 
 export type CheckResult = { diagnostics: Diagnostic[]; go?: string; error?: string };
+/* The Go files a browser build of the program compiles, the packages they
+   import, and the C source sets it would need (which can't build in a
+   browser). */
+export type BuildResult = CheckResult & {
+  files?: FileMap;
+  imports?: string[] | null;
+  native?: string[] | null;
+};
 export type FileMap = Record<string, string>;
 
 type Pending = { resolve: (value: any) => void; reject: (error: Error) => void };
@@ -75,4 +83,6 @@ export const warmCompiler = () => void start();
 
 export const check = (files: FileMap, entry = "main.osl") => call<CheckResult>({ op: "check", files, entry });
 export const transpile = (files: FileMap, entry = "main.osl") => call<CheckResult>({ op: "transpile", files, entry });
+export const build = (files: FileMap, entry = "main.osl") =>
+  call<BuildResult>({ op: "build", files, entry });
 export const format = (source: string) => call<{ source?: string; error?: string }>({ op: "format", source });

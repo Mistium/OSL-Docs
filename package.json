@@ -1,6 +1,6 @@
 {
   "name": "osl-docs",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "description": "The OSL documentation site: an interactive course, tutorials and a reference for every package.",

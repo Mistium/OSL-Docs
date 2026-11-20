@@ -1,13 +1,23 @@
 /* An OSL example. It reads like a code block until someone clicks into it,
    then it is an editor the compiler checks as they type. Run plays back the
-   output recorded when the docs were built, or runs edited code on the run
-   server when the site has one. */
+   output recorded when the docs were built, or builds and runs edited code
+   in the browser (lib/runner.ts). */
 
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { Check, Copy, FileCode2, Play, RotateCcw, SquarePen, ExternalLink, AlignLeft } from "lucide-preact";
+import {
+  AlignLeft,
+  Check,
+  Copy,
+  ExternalLink,
+  FileCode2,
+  Play,
+  RotateCcw,
+  Square,
+  SquarePen,
+} from "lucide-preact";
 import { highlightCode, highlightHTML } from "../lib/highlight";
 import { check, format, transpile, warmCompiler, type FileMap } from "../lib/compiler";
-import { canRun, run as runRemote } from "../lib/runner";
+import { run as runProgram } from "../lib/runner";
 import type { Diagnostic, Recorded } from "../lib/types";
 import type { Example } from "../lib/markdown";
 import { Editor } from "./Editor";
@@ -22,8 +32,9 @@ type Output = { kind: "recorded" | "live" | "note" | "error"; text: string; exit
 export type ExampleProps = {
   example: Example;
   recorded?: Recorded;
-  /* Called with the program's output whenever it runs, for exercises. */
-  onOutput?: (output: string, edited: boolean, files: FileMap) => void;
+  /* Called with the program's output whenever it runs, for exercises, and
+     with null when a run of edited code starts, so an old result clears. */
+  onOutput?: (output: string | null, edited: boolean, files: FileMap) => void;
   /* Called with each check's diagnostics, for exercises. */
   onCheck?: (diagnostics: Diagnostic[], files: FileMap) => void;
   runLabel?: string;
@@ -133,6 +144,9 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   const [checking, setChecking] = useState(false);
   const [output, setOutput] = useState<Output | null>(null);
   const [busy, setBusy] = useState(false);
+  // What a run of edited code is doing (downloading Go, compiling, running).
+  const [status, setStatus] = useState("");
+  const stopper = useRef<AbortController | null>(null);
   const [goSource, setGoSource] = useState<string | null>(null);
   const [focusLine, setFocusLine] = useState<{ line: number; at: number } | null>(null);
   const timer = useRef<number>(0);
@@ -179,6 +193,15 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   // Each run gets a number; a run that a newer run or a reset replaced
   // drops its result instead of showing it out of order.
   const runId = useRef(0);
+  // Leaving the page stops a program still running, and a run still being
+  // checked goes no further.
+  useEffect(
+    () => () => {
+      runId.current++;
+      stopper.current?.abort();
+    },
+    [],
+  );
   const run = async () => {
     if (busy) return;
     const id = ++runId.current;
@@ -198,6 +221,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
       return;
     }
     setBusy(true);
+    onOutput?.(null, true, program(files));
     try {
       const checked = await check(program(files), names[0]);
       if (stale()) return;
@@ -213,29 +237,47 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
           kind: "note",
           text: "",
           diagnostics: checked.diagnostics,
-          note: "It compiles. This example keeps running (a server, a window or a loop), so it isn't run here: copy it into main.osl and run osl run main.osl.",
+          note:
+            "It compiles. This example keeps running (a server, a window or a loop), so it " +
+            "isn't run here: copy it into main.osl and run osl run main.osl.",
         });
         return;
       }
-      if (!canRun) {
-        show({
-          kind: "note",
-          text: "",
-          diagnostics: checked.diagnostics,
-          note: "Your change compiles. Running edited code needs OSL itself: copy it into main.osl and run osl run main.osl, or reset to see the recorded output.",
-        });
-        return;
-      }
-      const result = await runRemote(program(files), names[0], example.stdin ?? "");
+      const controller = new AbortController();
+      stopper.current = controller;
+      const result = await runProgram(program(files), names[0], {
+        stdin: example.stdin ?? "",
+        signal: controller.signal,
+        onStatus: (text) => !stale() && setStatus(text),
+        onOutput: (text) => {
+          show({ kind: "live", text, diagnostics: checked.diagnostics });
+        },
+      });
       if (result.error) show({ kind: "error", text: result.error });
       else {
-        show({ kind: "live", text: result.output, exit: result.exit, diagnostics: result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics, note: result.timedOut ? "Stopped after the time limit." : result.truncated ? "Output was cut short." : undefined });
-        if (!stale()) onOutput?.(result.output, true, program(files));
+        const note = result.stopped
+          ? "Stopped."
+          : result.timedOut
+            ? "Stopped after 10 seconds."
+            : result.truncated
+              ? "Output was cut short."
+              : undefined;
+        const ds = result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics;
+        const exit = result.stopped || result.timedOut ? undefined : result.exit;
+        const kind = result.diagnostics ? "error" : "live";
+        show({ kind, text: result.output, exit, diagnostics: ds, note });
+        if (!stale() && !result.stopped && !result.timedOut) {
+          onOutput?.(result.output, true, program(files));
+        }
       }
     } catch (error) {
       show({ kind: "error", text: String((error as Error).message ?? error) });
     } finally {
-      if (!stale()) setBusy(false);
+      if (!stale()) {
+        setBusy(false);
+        setStatus("");
+        stopper.current = null;
+      }
     }
   };
 
@@ -262,6 +304,9 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
 
   const reset = () => {
     runId.current++;
+    stopper.current?.abort();
+    stopper.current = null;
+    setStatus("");
     setBusy(false);
     setFiles(original);
     setOutput(null);
@@ -347,13 +392,32 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         <div class="example__actions">
           <button type="button" class="btn btn--run" onClick={run} disabled={busy}>
             <Play aria-hidden="true" />
-            {busy ? "Running…" : runLabel ?? (example.mode === "norun" ? "Check" : example.mode === "error" ? "Compile" : "Run")}
+            {busy
+              ? "Running…"
+              : (runLabel ??
+                (example.mode === "norun" ? "Check" : example.mode === "error" ? "Compile" : "Run"))}
           </button>
+          {status && (
+            <button
+              type="button"
+              class="btn btn--ghost"
+              onClick={() => stopper.current?.abort()}
+            >
+              <Square aria-hidden="true" />
+              Stop
+            </button>
+          )}
           <button type="button" class={`btn btn--ghost${goSource !== null ? " is-on" : ""}`} onClick={() => showGo()} aria-pressed={goSource !== null}>
             <FileCode2 aria-hidden="true" />
             Go
           </button>
-          {!editing && <span class="example__hint">Click the code to edit it</span>}
+          {status && status !== "Running…" ? (
+            <span class="example__hint" role="status">
+              {status}
+            </span>
+          ) : (
+            !editing && <span class="example__hint">Click the code to edit it</span>
+          )}
           {editing && <span class="example__hint"><kbd>Ctrl</kbd> <kbd>Enter</kbd> runs</span>}
         </div>
       )}

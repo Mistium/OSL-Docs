@@ -6,3 +6,4 @@ public/osl/osl.wasm
 public/osl/wasm_exec.js
 .DS_Store
 *.tsbuildinfo
+public/osl/go/
