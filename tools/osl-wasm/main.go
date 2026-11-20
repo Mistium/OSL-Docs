@@ -160,7 +160,7 @@ func compile(req request, mode compiler.Mode) (result compiler.Result, diagnosti
 func buildFiles(goCode string) (files map[string]string, native []string, err error) {
 	// std:process names syscall.SIGHUP, which Go doesn't define for js/wasm;
 	// Signal(1) is the same signal on every platform that has one. Remove
-	// this once osl.json pins an OSL with the fix (osl/.go PR SIGHUP_PR).
+	// this once osl.json pins an OSL with the fix (osl/.go PR #127).
 	goCode = strings.ReplaceAll(goCode, "OSLsyscall.SIGHUP", "OSLsyscall.Signal(1)")
 	files = map[string]string{"main.go": goCode}
 	clause, err := parser.ParseFile(token.NewFileSet(), "main.go", goCode, parser.PackageClauseOnly)

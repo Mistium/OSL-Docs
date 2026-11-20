@@ -30,6 +30,9 @@ export type RunOptions = {
 };
 
 const MAX_OUTPUT = 64 * 1024;
+// Terminal colours and cursor codes: the output panel shows plain text, as the
+// recorded output (scripts/examples.ts strips them too) does.
+const ANSI = /\x1b\[[0-9;?]*[A-Za-z]/g;
 const BASE = `${import.meta.env.BASE_URL}osl/`;
 
 function unsupported(): string | null {
@@ -89,7 +92,7 @@ function execute(wasm: ArrayBuffer, options: RunOptions): Promise<RunResult> {
       worker.terminate();
       clearTimeout(timer);
       options.signal?.removeEventListener("abort", stop);
-      resolve({ output, exit: -1, truncated, ...result });
+      resolve({ output: output.replace(ANSI, ""), exit: -1, truncated, ...result });
     };
     const stop = () => finish({ stopped: true });
     const timer = setTimeout(() => finish({ timedOut: true }), options.timeoutMs ?? 10_000);
@@ -103,7 +106,7 @@ function execute(wasm: ArrayBuffer, options: RunOptions): Promise<RunResult> {
           truncated = true;
           return finish({});
         }
-        options.onOutput?.(output);
+        options.onOutput?.(output.replace(ANSI, ""));
       } else if (failed !== undefined) finish({ error: `The program couldn't run: ${failed}` });
       else finish({ exit });
     };
