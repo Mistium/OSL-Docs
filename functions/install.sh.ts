@@ -19,13 +19,14 @@ export async function onRequest({ request }: { request: Request }): Promise<Resp
   }
   let upstream: Response;
   try {
-    upstream = await fetch(SCRIPT);
+    upstream = await fetch(SCRIPT, { signal: AbortSignal.timeout(10_000) });
   } catch {
     upstream = new Response(null, { status: 502 });
   }
   if (!upstream.ok) {
     // curl -f stops on the status, so sh never runs this; it's for a browser.
-    const message = `The OSL installer couldn't be fetched from ${SCRIPT}. Try again in a minute.\n`;
+    const message =
+      `The OSL installer couldn't be fetched from ${SCRIPT}. Try again in a minute.\n`;
     return new Response(message, { status: 502, headers: HEADERS });
   }
   return new Response(request.method === "HEAD" ? null : upstream.body, { headers: HEADERS });

@@ -31,8 +31,8 @@ function priorities(packages: number): Priority[] {
       title: "Code you can read aloud",
       text: (
         <>
-          A file runs from top to bottom. Types come first, blocks are parentheses and counting starts at
-          one, so someone new to the code can follow it line by line.
+          A file runs from top to bottom. Types come first, blocks are parentheses and
+          counting starts at one, so someone new to the code can follow it line by line.
         </>
       ),
     },
@@ -41,8 +41,9 @@ function priorities(packages: number): Priority[] {
       title: "Room for complex programs",
       text: (
         <>
-          Structs, classes, generics, enums, threads and errors as values are part of the language, and{" "}
-          {packages} packages ship with it. Programs grow without turning hard to read.
+          Structs, classes, generics, enums, threads and errors as values are part of the
+          language, and {packages} packages ship with it. Programs grow without turning hard to
+          read.
         </>
       ),
     },
@@ -51,8 +52,8 @@ function priorities(packages: number): Priority[] {
       title: "Fast, native executables",
       text: (
         <>
-          OSL compiles to Go, and Go builds a native executable. There's no virtual machine and no runtime
-          to install: you ship one file.
+          OSL compiles to Go, and Go builds a native executable. There's no virtual machine
+          and no runtime to install: you ship one file.
         </>
       ),
     },
@@ -61,8 +62,9 @@ function priorities(packages: number): Priority[] {
       title: "Easy to start, easy to use",
       text: (
         <>
-          <code>log "Hello"</code> is a whole program. One <code>osl</code> command runs, tests, formats and
-          fixes your code, and every compiler error says how to fix it.
+          <code>log "Hello"</code> is a whole program. One <code>osl</code> command runs,
+          tests, formats and fixes your code, and its errors explain what went wrong, usually
+          with the fix.
         </>
       ),
     },
@@ -99,8 +101,8 @@ export function Landing() {
         <div class="home-hero__copy">
           <h1 class="home-hero__title">Readable code for complex programs.</h1>
           <p class="home-hero__lede">
-            OSL is a programming language that stays easy to read as your program grows. It compiles to a
-            fast native executable, and it's easy to install, learn and use.
+            OSL is a programming language that stays easy to read as your program grows. It
+            compiles to a fast native executable, and it's easy to install, learn and use.
           </p>
           <div class="home-actions">
             <a class="btn btn--primary btn--lg" href="/learn">
@@ -123,7 +125,9 @@ export function Landing() {
         </div>
         <div class="home-hero__code">
           <CodeExample example={hero} recorded={recordings[hero.id]} />
-          <p class="home-note">Typed JSON, with the error handled. This is the real compiler, running in your browser.</p>
+          <p class="home-note">
+            Typed JSON, with the error handled. This is the real compiler, running in your browser.
+          </p>
         </div>
       </section>
 

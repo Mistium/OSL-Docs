@@ -247,7 +247,7 @@ function homeMarkdown(ctx: Omit<Context, "entry">): string {
         "the language, and the standard library ships with it.",
       "- **Fast:** OSL compiles to Go, which builds a native executable with no runtime to install.",
       "- **Easy:** `log \"Hello\"` is a whole program, one `osl` command runs, tests, formats and " +
-        "fixes code, and every compiler error says how to fix it.",
+        "fixes code, and its errors explain what went wrong, usually with the fix.",
     ].join("\n"),
     fence(hero.files["main.osl"], "osl"),
     recorded?.output ? `Output:\n\n${fence(recorded.output, "text")}` : "",

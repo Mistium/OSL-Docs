@@ -84,7 +84,9 @@ export function Footer() {
             <Logo />
             <span class="brand__name">OSL</span>
           </a>
-          <p>Readable code for complex programs, compiled to fast native executables. MIT licensed.</p>
+          <p>
+            Readable code for complex programs, compiled to fast native executables. MIT licensed.
+          </p>
         </div>
         <div class="footer__cols">
           <div>
