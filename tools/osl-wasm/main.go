@@ -27,6 +27,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	goast "go/ast"
 	"go/build"
 	"go/parser"
 	"go/token"
@@ -35,6 +36,7 @@ import (
 	"path"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"syscall/js"
 
@@ -155,17 +157,47 @@ func compile(req request, mode compiler.Mode) (result compiler.Result, diagnosti
 // the runtime companion sources it asks for with "//osl:go <set>" lines,
 // picked by build constraints as go build would for js/wasm and moved into
 // the program's package, as packages.WriteGoSources does on disk for osl run.
-// native lists the C source sets it asks for with "//osl:native <set>",
-// which need cgo and so can't build for js/wasm.
-func buildFiles(goCode string) (files map[string]string, native []string, err error) {
+// imports lists the packages those files import, and native the C source
+// sets it asks for with "//osl:native <set>", which need cgo and so can't
+// build for js/wasm. The directives are found the way packages.WriteGoSources
+// and packages.WriteNativeSources find them, so a browser build picks the
+// same sources osl run does.
+func buildFiles(goCode string) (files map[string]string, imports, native []string, err error) {
 	// std:process names syscall.SIGHUP, which Go doesn't define for js/wasm;
 	// Signal(1) is the same signal on every platform that has one. Remove
 	// this once osl.json pins an OSL with the fix (osl/.go PR #127).
 	goCode = strings.ReplaceAll(goCode, "OSLsyscall.SIGHUP", "OSLsyscall.Signal(1)")
 	files = map[string]string{"main.go": goCode}
-	clause, err := parser.ParseFile(token.NewFileSet(), "main.go", goCode, parser.PackageClauseOnly)
+	seen := map[string]bool{}
+	// importsOf parses a file's imports, adds them to imports, and says
+	// whether it uses cgo, which a build with CgoEnabled false leaves out.
+	importsOf := func(name string, data []byte) (*goast.File, bool, error) {
+		parsed, err := parser.ParseFile(token.NewFileSet(), name, data, parser.ImportsOnly)
+		if err != nil {
+			return nil, false, err
+		}
+		var paths []string
+		for _, spec := range parsed.Imports {
+			path, err := strconv.Unquote(spec.Path.Value)
+			if err != nil {
+				return nil, false, err
+			}
+			if path == "C" {
+				return parsed, true, nil
+			}
+			paths = append(paths, path)
+		}
+		for _, path := range paths {
+			if !seen[path] {
+				seen[path] = true
+				imports = append(imports, path)
+			}
+		}
+		return parsed, false, nil
+	}
+	clause, _, err := importsOf("main.go", []byte(goCode))
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	source := fs.FS(packages.FS)
 	ctx := build.Default
@@ -191,7 +223,7 @@ func buildFiles(goCode string) (files map[string]string, native []string, err er
 		dir := "runtime/" + name
 		entries, err := fs.ReadDir(source, dir)
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		}
 		for _, entry := range entries {
 			file := entry.Name()
@@ -203,18 +235,32 @@ func buildFiles(goCode string) (files map[string]string, native []string, err er
 			}
 			data, err := fs.ReadFile(source, dir+"/"+file)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
-			fset := token.NewFileSet()
-			parsed, err := parser.ParseFile(fset, file, data, parser.PackageClauseOnly)
+			parsed, cgo, err := importsOf(file, data)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
-			start, end := fset.Position(parsed.Name.Pos()).Offset, fset.Position(parsed.Name.End()).Offset
-			files["osl_"+name+"_"+file] = string(data[:start]) + clause.Name.Name + string(data[end:])
+			if cgo {
+				continue
+			}
+			// Offsets are from the file's start: Pos is 1-based for a file
+			// parsed alone in a new FileSet.
+			start, end := int(parsed.Name.Pos())-1, int(parsed.Name.End())-1
+			renamed := string(data[:start]) + clause.Name.Name + string(data[end:])
+			files["osl_"+name+"_"+file] = renamed
 		}
 	}
-	return files, native, nil
+	return files, imports, native, nil
+}
+
+func hasErrors(diagnostics []diagnostic) bool {
+	for _, d := range diagnostics {
+		if d.Severity == "error" {
+			return true
+		}
+	}
+	return false
 }
 
 func reply(value map[string]any) any {
@@ -260,12 +306,13 @@ func handler(mode compiler.Mode, want output) js.Func {
 		if want == generatedGo && failure == nil {
 			out["go"] = string(result.Go)
 		}
-		if want == buildSources && failure == nil && len(result.Go) > 0 {
-			files, native, err := buildFiles(string(result.Go))
-			if err != nil {
+		if want == buildSources && failure == nil && !hasErrors(diagnostics) {
+			if len(result.Go) == 0 {
+				out["error"] = "The compiler produced no Go for this program."
+			} else if files, imports, native, err := buildFiles(string(result.Go)); err != nil {
 				out["error"] = plain(err.Error())
 			} else {
-				out["files"], out["native"] = files, native
+				out["files"], out["imports"], out["native"] = files, imports, native
 			}
 		}
 		return reply(out)

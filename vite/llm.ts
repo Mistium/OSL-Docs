@@ -292,7 +292,11 @@ export function markdownFiles(): Map<string, string> {
   files.set("index.md", homeMarkdown(ctx));
   files.set(
     "playground.md",
-    `${header("Playground", "Write OSL in the browser.", "playground")}\n\nThe playground is an interactive editor: the OSL compiler runs in the page, so it checks, formats and shows the generated Go for whatever you type, and it builds and runs programs in the browser with Go's own compiler. Code lives in the page's URL, so a link shares it. To run OSL on your own machine, see [Install OSL](/install.md).\n`,
+    `${header("Playground", "Write OSL in the browser.", "playground")}\n\n` +
+      "The playground is an interactive editor: the OSL compiler runs in the page, so it " +
+      "checks, formats and shows the generated Go for whatever you type, and it builds and " +
+      "runs programs in the browser with Go's own compiler. Code lives in the page's URL, so " +
+      "a link shares it. To run OSL on your own machine, see [Install OSL](/install.md).\n",
   );
   // Read in the site's order, so llms-full.txt reads like the docs.
   const order = [...AREAS.flatMap((a) => a.sections.flatMap((s) => s.pages)), ...pages.keys()].filter((slug, n, all) => pages.has(slug) && all.indexOf(slug) === n);

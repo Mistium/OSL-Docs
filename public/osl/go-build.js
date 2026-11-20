@@ -3,12 +3,13 @@
    scripts/osl-assets.ts, run here over an in-memory filesystem holding the
    program and the standard library archives it needs.
 
-   Messages are {id, files, native}: the Go files osl.wasm's oslBuild gives
-   (main.go and the runtime sources it needs) and the C source sets it asks
-   for. Each gets status updates {id, status} and then one reply:
-   {id, result: {wasm}} with the program as an ArrayBuffer,
-   {id, result: {errors}} when Go won't build it, {id, result: {unsupported}}
-   when it needs more than Go's standard library, or {id, error}. */
+   Messages are {id, files, imports, native}: the Go files osl.wasm's
+   oslBuild gives (main.go and the runtime sources it needs), the packages
+   they import, and the C source sets it asks for. Each gets status updates
+   {id, status} and then one reply: {id, result: {wasm}} with the program as
+   an ArrayBuffer, {id, result: {errors}} when Go won't build it,
+   {id, result: {unsupported}} when it needs a package that doesn't build for
+   js/wasm, or {id, error}. */
 
 importScripts("memfs.js", "wasm_exec.js");
 
@@ -39,9 +40,16 @@ const once = (load) => {
   };
 };
 
-const manifest = once(async () => (await fetch(`${GO}packages.json`)).json());
-const compiler = once(async () => WebAssembly.compile(await fetchBytes(`${GO}compile.wasm.gz`)));
-const linker = once(async () => WebAssembly.compile(await fetchBytes(`${GO}link.wasm.gz`)));
+const manifest = once(async () => {
+  const response = await fetch(`${GO}packages.json`);
+  if (!response.ok) throw new Error(`couldn't load ${GO}packages.json (${response.status})`);
+  return response.json();
+});
+const loadTool = (name) => once(async () => WebAssembly.compile(await fetchBytes(`${GO}${name}`)));
+const compiler = loadTool("compile.wasm.gz");
+const linker = loadTool("link.wasm.gz");
+// Whether this worker has Go's compiler and linker yet, for the status.
+let toolsLoaded = false;
 
 const archives = new Map();
 function archive(path) {
@@ -51,17 +59,6 @@ function archive(path) {
     archives.set(path, loading);
   }
   return archives.get(path);
-}
-
-/* The packages a Go file imports. */
-function imports(go) {
-  const found = new Set();
-  const header = go.slice(0, go.search(/^(?:func|type|var|const)\s/m) >>> 0);
-  for (const block of header.matchAll(/^import\s*\(([\s\S]*?)^\)/gm)) {
-    for (const m of block[1].matchAll(/"([^"]+)"/g)) found.add(m[1]);
-  }
-  for (const m of header.matchAll(/^import\s+(?:[\w.]+\s+)?"([^"]+)"/gm)) found.add(m[1]);
-  return [...found];
 }
 
 /* Runs one of Go's commands to completion and returns its exit code and
@@ -90,20 +87,18 @@ async function hash(text) {
 
 const RUN_IT = "Install OSL and run it with osl run main.osl.";
 
-async function build(id, files, native) {
+async function build(id, files, imports, native) {
   const status = (text) => self.postMessage({ id, status: text });
   if (native?.length) {
-    const sets = native.join(", ");
-    return { unsupported: `This program uses C code (${sets}), so it can't be built in the browser. ${RUN_IT}` };
+    const uses = `This program uses C code (${native.join(", ")}),`;
+    return { unsupported: `${uses} so it can't be built in the browser. ${RUN_IT}` };
   }
   const names = Object.keys(files).sort();
   const key = await hash(JSON.stringify(names.map((name) => [name, files[name]])));
   if (built.has(key)) return { wasm: built.get(key).slice(0) };
 
   const available = await manifest();
-  const wanted = [...new Set(names.flatMap((name) => imports(files[name])))].filter(
-    (path) => !BUILTIN.has(path),
-  );
+  const wanted = imports.filter((path) => !BUILTIN.has(path));
   const missing = wanted.filter((path) => !available.packages[path]);
   if (missing.length) {
     const list = missing.map((p) => `"${p}"`).join(", ");
@@ -112,9 +107,8 @@ async function build(id, files, native) {
       ? "which needs C code or a real operating system"
       : `which ${missing.length > 1 ? "aren't" : "isn't"} in Go's standard library or the ` +
         "modules OSL's packages use";
-    return {
-      unsupported: `This program needs ${list}, ${why}, so it can't be built in the browser. ${RUN_IT}`,
-    };
+    const needs = `This program needs ${list}, ${why}, so it can't be built in the browser.`;
+    return { unsupported: `${needs} ${RUN_IT}` };
   }
   const closure = new Set(["runtime", ...available.packages.runtime.deps]);
   for (const path of wanted) {
@@ -123,13 +117,13 @@ async function build(id, files, native) {
   }
   for (const path of BUILTIN) closure.delete(path);
 
-  const first = !archives.size;
-  status(first ? "Downloading Go's compiler (13 MB, just once)…" : "Compiling…");
+  status(toolsLoaded ? "Compiling…" : "Downloading Go's compiler (13 MB, just once)…");
   const [compile, link, stdlib] = await Promise.all([
     compiler(),
     linker(),
     Promise.all([...closure].map(async (path) => [path, await archive(path)])),
   ]);
+  toolsLoaded = true;
 
   const output = [];
   const decoder = new TextDecoder();
@@ -144,13 +138,16 @@ async function build(id, files, native) {
     importcfg += `packagefile ${path}=/pkg/${path}.a\n`;
   }
   memfs.writeFile("/work/importcfg", new TextEncoder().encode(importcfg));
-  for (const name of names) memfs.writeFile(`/work/${name}`, new TextEncoder().encode(files[name]));
+  for (const name of names) {
+    memfs.writeFile(`/work/${name}`, new TextEncoder().encode(files[name]));
+  }
   memfs.chdir("/work");
 
   status("Compiling…");
   const compiled = await tool(compile, memfs, [
     "compile", "-o", "/work/main.a", "-p", "main", "-complete", "-pack",
-    "-trimpath", "/work", "-importcfg", "/work/importcfg", ...names.map((name) => `/work/${name}`),
+    "-trimpath", "/work", "-importcfg", "/work/importcfg",
+    ...names.map((name) => `/work/${name}`),
   ], output);
   if (compiled.code !== 0) {
     return { errors: compiled.output.trim() || `Go's compiler exited with ${compiled.code}.` };
@@ -159,8 +156,8 @@ async function build(id, files, native) {
   output.length = 0;
   status("Linking…");
   const linked = await tool(link, memfs, [
-    "link", "-o", "/work/main.wasm", "-importcfg", "/work/importcfg", "-buildmode=exe", "-s", "-w",
-    "/work/main.a",
+    "link", "-o", "/work/main.wasm", "-importcfg", "/work/importcfg",
+    "-buildmode=exe", "-s", "-w", "/work/main.a",
   ], output);
   const wasm = memfs.readFile("/work/main.wasm");
   if (linked.code !== 0 || !wasm) {
@@ -176,10 +173,10 @@ async function build(id, files, native) {
 let queue = Promise.resolve();
 
 self.onmessage = (event) => {
-  const { id, files, native } = event.data;
+  const { id, files, imports = [], native } = event.data;
   queue = queue.then(async () => {
     try {
-      const result = await build(id, files, native);
+      const result = await build(id, files, imports, native);
       self.postMessage({ id, result }, result.wasm ? [result.wasm] : []);
     } catch (error) {
       self.postMessage({ id, error: String(error && error.message ? error.message : error) });

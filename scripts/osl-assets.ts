@@ -16,7 +16,16 @@
    internal packages. Needs Go and git. */
 
 import { $ } from "bun";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -78,12 +87,15 @@ writeFileSync(join(root, "public/osl/version.json"), JSON.stringify({ version: p
    commands, built here for js/wasm, against archives of those packages, built
    here for js/wasm too: the standard library, and the modules at the versions
    the compiler's go.mod pins. Packages that need cgo don't build for js/wasm;
-   go/packages.json names them so the browser can say why. Everything is
+   go/packages.json names them so the browser can say why. It builds into a
+   new folder and swaps it in at the end, so a failed run leaves the old one.
+   Everything is
    gzipped: the compiler is over Cloudflare Pages' 25 MiB file limit raw. The
    same Go builds osl.wasm, so one wasm_exec.js runs all of it. */
-type GoPackage = { ImportPath: string; Export?: string; Deps?: string[] };
+type GoPackage = { ImportPath: string; Export?: string; Deps?: string[]; Error?: { Err: string } };
 
-const goDir = join(root, "public/osl/go");
+const finalDir = join(root, "public/osl/go");
+const goDir = `${finalDir}.new`;
 rmSync(goDir, { recursive: true, force: true });
 mkdirSync(join(goDir, "pkg"), { recursive: true });
 const wasmEnv = { ...process.env, GOOS: "js", GOARCH: "wasm" };
@@ -103,15 +115,28 @@ try {
 }
 
 const packages: Record<string, { deps: string[] }> = {};
+// Packages go list found but couldn't build for js/wasm.
+const failed = new Set<string>();
+// How a package that is fine elsewhere fails for js/wasm: no files for it, or
+// files that don't compile without cgo or another OS. Anything else (a module
+// that didn't download, a broken toolchain) is a real failure.
+const wontBuild = (err: string) => /^build constraints exclude all Go files|^# /.test(err);
 async function archive(what: string, args: string[], cwd: string) {
   console.log(`building ${what} for js/wasm`);
-  const fields = "-json=ImportPath,Export,Deps";
-  const list = $`go list -e -export -deps ${fields} ${args}`.cwd(cwd).env(wasmEnv).nothrow();
-  const listed = await list.text();
+  const fields = "-json=ImportPath,Export,Deps,Error";
+  // -e lists packages that fail with their errors instead of stopping.
+  const listed = await $`go list -e -export -deps ${fields} ${args}`.cwd(cwd).env(wasmEnv).text();
   for (const chunk of listed.split(/\n(?=\{)/)) {
     if (!chunk.trim()) continue;
     const pkg = JSON.parse(chunk) as GoPackage;
-    if (!pkg.Export || packages[pkg.ImportPath]) continue;
+    if (pkg.Error && !wontBuild(pkg.Error.Err)) {
+      throw new Error(`go list couldn't load ${pkg.ImportPath}: ${pkg.Error.Err}`);
+    }
+    if (!pkg.Export) {
+      if (pkg.ImportPath !== "unsafe") failed.add(pkg.ImportPath);
+      continue;
+    }
+    if (packages[pkg.ImportPath]) continue;
     const file = join(goDir, "pkg", `${pkg.ImportPath}.a.gz`);
     mkdirSync(join(file, ".."), { recursive: true });
     writeFileSync(file, gzip(readFileSync(pkg.Export)));
@@ -123,15 +148,24 @@ const goImports = (await $`go run ./cmd/osl-docs-goimports`.cwd(src).text())
   .split("\n")
   .filter(Boolean);
 await archive("the modules OSL's packages use", goImports, src);
+for (const path of ["runtime", "fmt"]) {
+  if (!packages[path]) throw new Error(`${path} didn't build for js/wasm`);
+}
 // The ones that need cgo or another OS, which programs can't use here.
-const unavailable = goImports.filter((path) => !packages[path]);
+const unavailable = [...failed].filter((path) => !packages[path]).sort();
 const manifest = { go: goVersion, packages, unavailable };
 writeFileSync(join(goDir, "packages.json"), JSON.stringify(manifest) + "\n");
 // What programs find on a Linux machine and not in a browser: the time zone
 // database (Go's own copy) and the MIME types table, for std:date and
-// std:mime. public/osl/go-run.js gives each program a copy.
+// std:mime. public/osl/go-run.js gives each program a copy. The MIME table is
+// this machine's, as it is for the output scripts/examples.ts records here;
+// without one, Go uses its built-in table in the browser too.
 cpSync(join(goroot, "lib/time/zoneinfo.zip"), join(goDir, "zoneinfo.zip"));
 if (existsSync("/etc/mime.types")) cpSync("/etc/mime.types", join(goDir, "mime.types"));
+else console.warn("no /etc/mime.types here, so std:mime will use Go's built-in table");
+rmSync(finalDir, { recursive: true, force: true });
+renameSync(goDir, finalDir);
 const count = Object.keys(packages).length;
-console.log(`${count} packages for ${goVersion}; ${unavailable.join(", ")} don't build for js/wasm`);
+const external = unavailable.filter((path) => goImports.includes(path));
+console.log(`${count} packages for ${goVersion}; ${external.join(", ")} don't build for js/wasm`);
 console.log(`OSL ${pin.version} assets ready`);

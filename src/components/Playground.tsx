@@ -4,7 +4,18 @@
    Code lives in the URL, so a link shares it. */
 
 import { useEffect, useRef, useState } from "preact/hooks";
-import { FileCode2, Link2, Play, Plus, AlignLeft, X, Check, TerminalSquare, AlertTriangle, Square } from "lucide-preact";
+import {
+  AlertTriangle,
+  AlignLeft,
+  Check,
+  FileCode2,
+  Link2,
+  Play,
+  Plus,
+  Square,
+  TerminalSquare,
+  X,
+} from "lucide-preact";
 import { check, compilerState, format, onCompilerState, transpile, warmCompiler, type CompilerState, type FileMap } from "../lib/compiler";
 import { run } from "../lib/runner";
 import { decodeFiles, encodeFiles } from "../lib/share";
@@ -44,7 +55,12 @@ export function Playground() {
       setActive(Object.keys(fromHash)[0]);
     }
     warmCompiler();
-    return onCompilerState(setState);
+    const unsubscribe = onCompilerState(setState);
+    return () => {
+      unsubscribe();
+      // Leaving the playground stops a program still running.
+      stopper.current?.abort();
+    };
   }, []);
 
   useEffect(() => {
@@ -116,7 +132,10 @@ export function Playground() {
             ? "Output was cut short."
             : undefined;
       const ended = !result.error && !result.stopped && !result.timedOut;
-      setOutput({ text: result.error ?? result.output, exit: ended ? result.exit : undefined, note });
+      const exit = ended ? result.exit : undefined;
+      setOutput({ text: result.error ?? result.output, exit, note });
+    } catch (error) {
+      setOutput({ text: String((error as Error).message ?? error) });
     } finally {
       setBusy(false);
       setStatus("");
@@ -192,7 +211,7 @@ export function Playground() {
           <button type="button" class="btn btn--ghost" onClick={share}>
             {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />} {copied ? "Link copied" : "Share"}
           </button>
-          {status === "Running…" ? (
+          {status ? (
             <button type="button" class="btn btn--run" onClick={() => stopper.current?.abort()}>
               <Square aria-hidden="true" /> Stop
             </button>
@@ -257,7 +276,8 @@ export function Playground() {
                     {status === "Running…"
                       ? "Running. Nothing printed yet."
                       : errors.length
-                        ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. See Problems.`
+                        ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. ` +
+                          "See Problems."
                         : "Press Run, or Ctrl+Enter in the editor."}
                   </p>
                 )}

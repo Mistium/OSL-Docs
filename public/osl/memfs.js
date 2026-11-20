@@ -85,11 +85,18 @@
       }
       return names.sort();
     };
-    const grow = (node, size) => {
-      if (size <= node.data.length) return;
-      const next = new Uint8Array(Math.max(size, node.data.length * 2, 64));
-      next.set(node.data.subarray(0, node.size));
-      node.data = next;
+    // Sets a file's size. Bytes past the old end read as zeros, as on disk,
+    // even where the buffer still holds what was there before a shrink.
+    const resize = (node, size) => {
+      if (size > node.data.length) {
+        const next = new Uint8Array(Math.max(size, node.data.length * 2, 64));
+        next.set(node.data.subarray(0, node.size));
+        node.data = next;
+      } else if (size > node.size) {
+        node.data.fill(0, node.size, size);
+      }
+      node.size = size;
+      node.mtime = now();
     };
     const stat = (node) => ({
       dev: 1,
@@ -140,19 +147,29 @@
       return n;
     };
     const writeAt = (node, buffer, offset, length, position) => {
-      grow(node, position + length);
+      if (position + length > node.size) resize(node, position + length);
       node.data.set(buffer.subarray(offset, offset + length), position);
-      node.size = Math.max(node.size, position + length);
       node.mtime = now();
       return length;
+    };
+    // The open file behind a descriptor, if it was opened for reading or
+    // for writing as asked.
+    const ACCESS = 3;
+    const opened = (fd, writing) => {
+      const file = fds.get(fd);
+      if (!file) throw fail("EBADF");
+      const access = file.flags & ACCESS;
+      const allowed = writing ? access !== constants.O_RDONLY : access !== constants.O_WRONLY;
+      if (!allowed) throw fail("EBADF", file.path);
+      return file;
     };
 
     const fs = {
       constants,
       writeSync(fd, buffer) {
         if (fd === 1 || fd === 2) return writeOut(fd, buffer);
-        const file = fds.get(fd);
-        if (!file) throw fail("EBADF");
+        const file = opened(fd, true);
+        if (file.flags & constants.O_APPEND) file.pos = file.node.size;
         const n = writeAt(file.node, buffer, 0, buffer.length, file.pos);
         file.pos += n;
         return n;
@@ -160,8 +177,7 @@
       write(fd, buffer, offset, length, position, callback) {
         call(callback, () => {
           if (fd === 1 || fd === 2) return writeOut(fd, buffer.subarray(offset, offset + length));
-          const file = fds.get(fd);
-          if (!file) throw fail("EBADF");
+          const file = opened(fd, true);
           if (file.flags & constants.O_APPEND) position = file.node.size;
           const at = position ?? file.pos;
           const n = writeAt(file.node, buffer, offset, length, at);
@@ -177,8 +193,7 @@
             stdinPos += n;
             return n;
           }
-          const file = fds.get(fd);
-          if (!file) throw fail("EBADF");
+          const file = opened(fd, false);
           if (file.node.dir) throw fail("EISDIR", file.path);
           const at = position ?? file.pos;
           const n = readAt(file.node, buffer, offset, length, at);
@@ -201,10 +216,7 @@
           if (flags & constants.O_DIRECTORY && !node.dir) throw fail("ENOTDIR", path);
           const writing = flags & (constants.O_WRONLY | constants.O_RDWR);
           if (node.dir && writing) throw fail("EISDIR", path);
-          if (flags & constants.O_TRUNC && !node.dir) {
-            node.size = 0;
-            node.mtime = now();
-          }
+          if (flags & constants.O_TRUNC && !node.dir) resize(node, 0);
           const fd = nextFd++;
           fds.set(fd, { node, path, flags, pos: 0 });
           return fd;
@@ -266,6 +278,12 @@
           to = resolve(to);
           const node = lookup(from);
           requireParent(to);
+          if (from === to) return;
+          if (to.startsWith(`${from}/`)) throw fail("EINVAL", to);
+          const target = nodes.get(to);
+          if (target && node.dir && !target.dir) throw fail("ENOTDIR", to);
+          if (target && !node.dir && target.dir) throw fail("EISDIR", to);
+          if (target?.dir && children(to).length) throw fail("ENOTEMPTY", to);
           const moves = [[from, to]];
           if (node.dir) {
             for (const key of nodes.keys()) {
@@ -280,16 +298,13 @@
       truncate(path, length, callback) {
         call(callback, () => {
           const node = lookup(resolve(path));
-          grow(node, length);
-          node.size = length;
+          if (node.dir) throw fail("EISDIR", path);
+          resize(node, length);
         });
       },
       ftruncate(fd, length, callback) {
         call(callback, () => {
-          const file = fds.get(fd);
-          if (!file) throw fail("EBADF");
-          grow(file.node, length);
-          file.node.size = length;
+          resize(opened(fd, true).node, length);
         });
       },
       chmod(path, mode, callback) {
@@ -367,7 +382,8 @@
         file = normalize(file, "/");
         mkdirs(parent(file));
         const node = makeNode(false, 0o644);
-        node.data = bytes;
+        // A copy, so a program writing to the file can't change the caller's.
+        node.data = bytes.slice();
         node.size = bytes.length;
         nodes.set(file, node);
       },

@@ -49,7 +49,7 @@ compiler's repository); `bun dev` doesn't run it.
 | `vite/` | Content loading, the `.md` copy of every page, `llms.txt` |
 | `scripts/` | `osl-assets`, `examples` and the prerender step |
 | `tools/` | The wasm and API-dump commands, built inside the pinned compiler |
-| `tests/` | `bun test`: the Markdown parser, share links and the router |
+| `tests/` | `bun test`: the Markdown parser, share links, the router and the in-browser filesystem |
 | `osl.json` | The OSL commit and version the site documents |
 
 ## Writing pages
@@ -89,14 +89,16 @@ Run on an edited example or in the playground needs nothing but the browser.
   js/wasm build of the program compiles: the generated `main.go` and the
   runtime sources it asks for, picked by build constraints.
 - `go/compile.wasm.gz` and `go/link.wasm.gz`: Go's compile and link commands
-  built for js/wasm, and `go/pkg/`: Go's standard library built for js/wasm,
-  with `go/std.json` listing each package's dependencies. They're gzipped
-  (the compiler is over Cloudflare Pages' 25 MiB file limit raw).
+  built for js/wasm, and `go/pkg/`: Go's standard library and the modules
+  OSL's packages use, built for js/wasm, with `go/packages.json` listing each
+  package's dependencies and the ones that don't build for js/wasm. They're
+  gzipped (the compiler is over Cloudflare Pages' 25 MiB file limit raw).
 
 `public/osl/go-build.js` runs compile and link over an in-memory filesystem
 (`memfs.js`) holding the program and the archives it needs, and
 `public/osl/go-run.js` runs the result, one fresh worker per run, so Stop ends
 it. The first run downloads about 13 MB of compiler plus the packages the
-program uses, and the browser caches them. Programs that need more than Go's
-standard library (C code, or Go modules) can't build in the browser, and say
-so.
+program uses, and the browser caches them. Programs that use a package that
+doesn't build for js/wasm (raylib's C code, SQLite) can't build in the
+browser, and say so; ones that need a network, a server or other processes
+build, but can't do those things there.

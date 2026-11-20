@@ -4,7 +4,17 @@
    in the browser (lib/runner.ts). */
 
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { Check, Copy, FileCode2, Play, RotateCcw, SquarePen, ExternalLink, AlignLeft, Square } from "lucide-preact";
+import {
+  AlignLeft,
+  Check,
+  Copy,
+  ExternalLink,
+  FileCode2,
+  Play,
+  RotateCcw,
+  Square,
+  SquarePen,
+} from "lucide-preact";
 import { highlightCode, highlightHTML } from "../lib/highlight";
 import { check, format, transpile, warmCompiler, type FileMap } from "../lib/compiler";
 import { run as runProgram } from "../lib/runner";
@@ -22,8 +32,9 @@ type Output = { kind: "recorded" | "live" | "note" | "error"; text: string; exit
 export type ExampleProps = {
   example: Example;
   recorded?: Recorded;
-  /* Called with the program's output whenever it runs, for exercises. */
-  onOutput?: (output: string, edited: boolean, files: FileMap) => void;
+  /* Called with the program's output whenever it runs, for exercises, and
+     with null when a run of edited code starts, so an old result clears. */
+  onOutput?: (output: string | null, edited: boolean, files: FileMap) => void;
   /* Called with each check's diagnostics, for exercises. */
   onCheck?: (diagnostics: Diagnostic[], files: FileMap) => void;
   runLabel?: string;
@@ -139,6 +150,8 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   const [goSource, setGoSource] = useState<string | null>(null);
   const [focusLine, setFocusLine] = useState<{ line: number; at: number } | null>(null);
   const timer = useRef<number>(0);
+  // Leaving the page stops a program still running.
+  useEffect(() => () => stopper.current?.abort(), []);
 
   const edited = names.some((n) => files[n] !== original[n]);
   const fragment = example.mode === "fragment";
@@ -201,6 +214,7 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
       return;
     }
     setBusy(true);
+    onOutput?.(null, true, program(files));
     try {
       const checked = await check(program(files), names[0]);
       if (stale()) return;
@@ -216,7 +230,9 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
           kind: "note",
           text: "",
           diagnostics: checked.diagnostics,
-          note: "It compiles. This example keeps running (a server, a window or a loop), so it isn't run here: copy it into main.osl and run osl run main.osl.",
+          note:
+            "It compiles. This example keeps running (a server, a window or a loop), so it " +
+            "isn't run here: copy it into main.osl and run osl run main.osl.",
         });
         return;
       }
@@ -226,7 +242,9 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
         stdin: example.stdin ?? "",
         signal: controller.signal,
         onStatus: (text) => !stale() && setStatus(text),
-        onOutput: (text) => show({ kind: "live", text, diagnostics: checked.diagnostics }),
+        onOutput: (text) => {
+          show({ kind: "live", text, diagnostics: checked.diagnostics });
+        },
       });
       if (result.error) show({ kind: "error", text: result.error });
       else {
@@ -239,8 +257,11 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
               : undefined;
         const ds = result.diagnostics ? place(result.diagnostics, files) : checked.diagnostics;
         const exit = result.stopped || result.timedOut ? undefined : result.exit;
-        show({ kind: result.diagnostics ? "error" : "live", text: result.output, exit, diagnostics: ds, note });
-        if (!stale() && !result.stopped && !result.timedOut) onOutput?.(result.output, true, program(files));
+        const kind = result.diagnostics ? "error" : "live";
+        show({ kind, text: result.output, exit, diagnostics: ds, note });
+        if (!stale() && !result.stopped && !result.timedOut) {
+          onOutput?.(result.output, true, program(files));
+        }
       }
     } catch (error) {
       show({ kind: "error", text: String((error as Error).message ?? error) });
@@ -366,10 +387,15 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
             <Play aria-hidden="true" />
             {busy
               ? "Running…"
-              : (runLabel ?? (example.mode === "norun" ? "Check" : example.mode === "error" ? "Compile" : "Run"))}
+              : (runLabel ??
+                (example.mode === "norun" ? "Check" : example.mode === "error" ? "Compile" : "Run"))}
           </button>
-          {status === "Running…" && (
-            <button type="button" class="btn btn--ghost" onClick={() => stopper.current?.abort()}>
+          {status && (
+            <button
+              type="button"
+              class="btn btn--ghost"
+              onClick={() => stopper.current?.abort()}
+            >
               <Square aria-hidden="true" />
               Stop
             </button>

@@ -158,8 +158,9 @@ function Exercise({ block, ctx }: { block: Extract<Block, { type: "exercise" }>;
   const solved = Boolean(progress.exercises[id]) || result === "pass";
   const expect = block.expect;
 
-  const onOutput = (output: string, edited: boolean) => {
+  const onOutput = (output: string | null, edited: boolean) => {
     if (expect === undefined || !edited) return;
+    if (output === null) return setResult(null);
     if (normalizeOutput(output) === normalizeOutput(expect)) {
       setResult("pass");
       markExercise(id);
@@ -178,7 +179,15 @@ function Exercise({ block, ctx }: { block: Extract<Block, { type: "exercise" }>;
         </div>
       </header>
       <Blocks blocks={block.blocks} ctx={ctx} />
-      {block.starter && <CodeExample example={block.starter} recorded={ctx.page.outputs[block.starter.id]} onOutput={onOutput} runLabel="Run and check" startEditing />}
+      {block.starter && (
+        <CodeExample
+          example={block.starter}
+          recorded={ctx.page.outputs[block.starter.id]}
+          onOutput={onOutput}
+          runLabel="Run and check"
+          startEditing
+        />
+      )}
       {expect !== undefined && (
         <div class="exercise__expect">
           <div class="output__label">Expected output</div>

@@ -4,9 +4,14 @@
 import type { Diagnostic } from "./types";
 
 export type CheckResult = { diagnostics: Diagnostic[]; go?: string; error?: string };
-/* The Go files a browser build of the program compiles, and the C source sets
-   it would need (which can't build in a browser). */
-export type BuildResult = CheckResult & { files?: FileMap; native?: string[] | null };
+/* The Go files a browser build of the program compiles, the packages they
+   import, and the C source sets it would need (which can't build in a
+   browser). */
+export type BuildResult = CheckResult & {
+  files?: FileMap;
+  imports?: string[] | null;
+  native?: string[] | null;
+};
 export type FileMap = Record<string, string>;
 
 type Pending = { resolve: (value: any) => void; reject: (error: Error) => void };

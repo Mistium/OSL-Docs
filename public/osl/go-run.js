@@ -2,7 +2,8 @@
    fresh worker for every run and ends it to stop the program, so a program
    that never finishes can't hold anything up.
 
-   It takes one message, {wasm, stdin, args}, then posts {out} as the program
+   It takes one message, {wasm, stdin, args} (args are the program's
+   command-line arguments after its name), then posts {out} as the program
    prints (stdout and stderr together, in order) and {exit} when it ends. */
 
 importScripts("memfs.js", "wasm_exec.js");
@@ -29,7 +30,9 @@ self.onmessage = async (event) => {
   let pending = "";
   let timer = 0;
   let sent = 0;
-  const flush = () => {
+  const flush = (last = false) => {
+    // The last flush also ends a UTF-8 sequence the program left unfinished.
+    if (last) pending += decoder.decode();
     clearTimeout(timer);
     timer = 0;
     sent = performance.now();
@@ -39,7 +42,7 @@ self.onmessage = async (event) => {
   const print = (bytes) => {
     pending += decoder.decode(bytes, { stream: true });
     if (pending.length > 8192 || performance.now() - sent > 50) flush();
-    else timer ||= setTimeout(flush, 30);
+    else timer ||= setTimeout(() => flush(), 30);
   };
 
   try {
@@ -69,10 +72,10 @@ self.onmessage = async (event) => {
     };
     const { instance } = await WebAssembly.instantiate(wasm, go.importObject);
     await go.run(instance);
-    flush();
+    flush(true);
     self.postMessage({ exit: code });
   } catch (error) {
-    flush();
+    flush(true);
     self.postMessage({ failed: String(error && error.message ? error.message : error) });
   }
 };

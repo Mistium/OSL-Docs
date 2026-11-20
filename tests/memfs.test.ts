@@ -87,6 +87,46 @@ describe("memfs", () => {
     expect(call(m, "stat", "/e/a.txt").size).toBe(1);
   });
 
+  test("growing a file, by truncating or writing past its end, fills the gap with zeros", () => {
+    const m = create();
+    const { O_CREAT, O_RDWR, O_TRUNC } = m.fs.constants;
+    m.writeFile("/f", new Uint8Array([1, 2, 3, 4, 5]));
+    const fd = call(m, "open", "/f", O_RDWR, 0);
+    call(m, "ftruncate", fd, 0);
+    call(m, "ftruncate", fd, 5);
+    expect([...m.readFile("/f")!]).toEqual([0, 0, 0, 0, 0]);
+
+    m.writeFile("/g", new Uint8Array([1, 2, 3, 4]));
+    const again = call(m, "open", "/g", O_RDWR | O_TRUNC | O_CREAT, 0o644);
+    call(m, "write", again, new Uint8Array([9]), 0, 1, 3);
+    expect([...m.readFile("/g")!]).toEqual([0, 0, 0, 9]);
+  });
+
+  test("descriptors only read or write as they were opened to", () => {
+    const m = create();
+    const { O_WRONLY, O_APPEND } = m.fs.constants;
+    m.writeFile("/f", text("abc"));
+    const reading = call(m, "open", "/f", 0, 0);
+    expect(codeOf(() => call(m, "write", reading, text("x"), 0, 1, null))).toBe("EBADF");
+    const writing = call(m, "open", "/f", O_WRONLY | O_APPEND, 0);
+    expect(codeOf(() => call(m, "read", writing, new Uint8Array(1), 0, 1, null))).toBe("EBADF");
+    m.fs.writeSync(writing, text("d"));
+    expect(new TextDecoder().decode(m.readFile("/f")!)).toBe("abcd");
+  });
+
+  test("rename refuses to fill a full directory, swap kinds, or nest one in itself", () => {
+    const m = create();
+    m.writeFile("/f", text("f"));
+    m.writeFile("/d/x", text("x"));
+    m.mkdir("/empty");
+    expect(codeOf(() => call(m, "rename", "/f", "/d"))).toBe("EISDIR");
+    expect(codeOf(() => call(m, "rename", "/d", "/f"))).toBe("ENOTDIR");
+    expect(codeOf(() => call(m, "rename", "/empty", "/d"))).toBe("ENOTEMPTY");
+    expect(codeOf(() => call(m, "rename", "/d", "/d/sub"))).toBe("EINVAL");
+    call(m, "rename", "/d", "/empty");
+    expect(call(m, "readdir", "/empty")).toEqual(["x"]);
+  });
+
   test("errors carry the codes Go maps to its own", () => {
     const m = create();
     const { O_CREAT, O_EXCL, O_WRONLY } = m.fs.constants;
