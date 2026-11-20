@@ -208,8 +208,8 @@
           const exclusive = flags & constants.O_CREAT && flags & constants.O_EXCL;
           if (node && exclusive) throw fail("EEXIST", path);
           if (!node) {
-            if (!(flags & constants.O_CREAT)) throw fail("ENOENT", path);
             requireParent(path);
+            if (!(flags & constants.O_CREAT)) throw fail("ENOENT", path);
             node = makeNode(false, mode);
             nodes.set(path, node);
           }
@@ -279,6 +279,7 @@
           const node = lookup(from);
           requireParent(to);
           if (from === to) return;
+          if (from === "/") throw fail("EBUSY", from);
           if (to.startsWith(`${from}/`)) throw fail("EINVAL", to);
           const target = nodes.get(to);
           if (target && node.dir && !target.dir) throw fail("ENOTDIR", to);

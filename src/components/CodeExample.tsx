@@ -150,8 +150,6 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   const [goSource, setGoSource] = useState<string | null>(null);
   const [focusLine, setFocusLine] = useState<{ line: number; at: number } | null>(null);
   const timer = useRef<number>(0);
-  // Leaving the page stops a program still running.
-  useEffect(() => () => stopper.current?.abort(), []);
 
   const edited = names.some((n) => files[n] !== original[n]);
   const fragment = example.mode === "fragment";
@@ -195,6 +193,15 @@ export function CodeExample({ example, recorded, onOutput, onCheck, runLabel, st
   // Each run gets a number; a run that a newer run or a reset replaced
   // drops its result instead of showing it out of order.
   const runId = useRef(0);
+  // Leaving the page stops a program still running, and a run still being
+  // checked goes no further.
+  useEffect(
+    () => () => {
+      runId.current++;
+      stopper.current?.abort();
+    },
+    [],
+  );
   const run = async () => {
     if (busy) return;
     const id = ++runId.current;

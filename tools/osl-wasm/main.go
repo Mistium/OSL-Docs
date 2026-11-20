@@ -169,8 +169,9 @@ func buildFiles(goCode string) (files map[string]string, imports, native []strin
 	goCode = strings.ReplaceAll(goCode, "OSLsyscall.SIGHUP", "OSLsyscall.Signal(1)")
 	files = map[string]string{"main.go": goCode}
 	seen := map[string]bool{}
-	// importsOf parses a file's imports, adds them to imports, and says
-	// whether it uses cgo, which a build with CgoEnabled false leaves out.
+	// importsOf parses a file's imports and says whether it uses cgo, which
+	// a build with CgoEnabled false leaves out. Unless it does, its imports
+	// join the list.
 	importsOf := func(name string, data []byte) (*goast.File, bool, error) {
 		parsed, err := parser.ParseFile(token.NewFileSet(), name, data, parser.ImportsOnly)
 		if err != nil {
@@ -195,9 +196,12 @@ func buildFiles(goCode string) (files map[string]string, imports, native []strin
 		}
 		return parsed, false, nil
 	}
-	clause, _, err := importsOf("main.go", []byte(goCode))
+	clause, cgo, err := importsOf("main.go", []byte(goCode))
 	if err != nil {
 		return nil, nil, nil, err
+	}
+	if cgo {
+		native = append(native, "cgo")
 	}
 	source := fs.FS(packages.FS)
 	ctx := build.Default

@@ -41,6 +41,7 @@ export function Playground() {
   // What Run is doing (downloading Go, compiling, running), and how to stop it.
   const [status, setStatus] = useState("");
   const stopper = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
   const [copied, setCopied] = useState(false);
   const [state, setState] = useState<CompilerState>(compilerState().state);
   const [focusLine, setFocusLine] = useState<{ line: number; at: number } | null>(null);
@@ -58,7 +59,9 @@ export function Playground() {
     const unsubscribe = onCompilerState(setState);
     return () => {
       unsubscribe();
-      // Leaving the playground stops a program still running.
+      // Leaving the playground stops a program still running, and a run
+      // still being checked goes no further.
+      mounted.current = false;
       stopper.current?.abort();
     };
   }, []);
@@ -104,6 +107,7 @@ export function Playground() {
     setPane("output");
     try {
       const checked = await check(files, names[0]);
+      if (!mounted.current) return;
       setDiagnostics(checked.diagnostics);
       if (checked.diagnostics.some((d) => d.severity === "error")) {
         setPane("problems");
@@ -271,14 +275,15 @@ export function Playground() {
                     {output.note && <p class="output__note">{output.note}</p>}
                     {!output.text && !output.note && <p class="output__empty">The program printed nothing.</p>}
                   </>
-                ) : (
+                ) : status === "Running…" ? (
+                  <p class="output__empty">Running. Nothing printed yet.</p>
+                ) : status ? null : (
+                  // While it builds, the status above says what it's doing.
                   <p class="output__empty">
-                    {status === "Running…"
-                      ? "Running. Nothing printed yet."
-                      : errors.length
-                        ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. ` +
-                          "See Problems."
-                        : "Press Run, or Ctrl+Enter in the editor."}
+                    {errors.length
+                      ? `${errors.length} error${errors.length > 1 ? "s" : ""} to fix first. ` +
+                        "See Problems."
+                      : "Press Run, or Ctrl+Enter in the editor."}
                   </p>
                 )}
                 <details class="playground__stdin">

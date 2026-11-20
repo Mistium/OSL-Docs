@@ -47,23 +47,26 @@ function unsupported(): string | null {
 }
 
 type Built = { wasm?: ArrayBuffer; errors?: string; unsupported?: string };
+type Program = { files: FileMap; imports: string[]; native: string[] };
 type Waiting = {
+  program: Program;
   resolve: (built: Built | null) => void;
   reject: (error: Error) => void;
   onStatus?: (status: string) => void;
 };
 
 /* Long enough for a slow first download of the compiler; a build that takes
-   longer is stuck, and ending the worker frees the builds queued behind it. */
+   longer is stuck. */
 const BUILD_TIMEOUT = 5 * 60_000;
 
 let builder: Worker | null = null;
 let nextId = 1;
+// Builds in the order they were asked for; the worker builds one at a time,
+// so the first is the one it's on.
 const waiting = new Map<number, Waiting>();
 
-/* Ends the build worker and fails what it was building. The next build
-   starts a fresh one. */
-function stopBuilder(error: Error) {
+/* Ends the build worker and fails every build: it can't run them. */
+function failBuilds(error: Error) {
   builder?.terminate();
   builder = null;
   const calls = [...waiting.values()];
@@ -71,12 +74,23 @@ function stopBuilder(error: Error) {
   for (const call of calls) call.reject(error);
 }
 
+/* Ends the build worker and gives the builds still waiting to a fresh one,
+   so a build that was stopped or got stuck can't hold up the rest. */
+function restartBuilder() {
+  builder?.terminate();
+  builder = null;
+  if (!waiting.size) return;
+  const worker = (builder = startBuilder());
+  for (const [id, call] of waiting) worker.postMessage({ id, ...call.program });
+}
+
 function startBuilder(): Worker {
   const worker = new Worker(`${BASE}go-build.js`);
   const broken = (message: string) => () => {
-    if (builder === worker) stopBuilder(new Error(message));
+    if (builder === worker) failBuilds(new Error(message));
   };
   worker.onmessage = (event) => {
+    if (builder !== worker) return;
     const { id, status, result, error } = event.data;
     const call = waiting.get(id);
     if (!call) return;
@@ -92,7 +106,7 @@ function startBuilder(): Worker {
 
 /* Builds the program, or gives null if the signal stopped it first. */
 function goBuild(
-  prepared: { files: FileMap; imports: string[]; native: string[] },
+  program: Program,
   signal: AbortSignal | undefined,
   onStatus?: Waiting["onStatus"],
 ): Promise<Built | null> {
@@ -104,22 +118,22 @@ function goBuild(
       signal?.removeEventListener("abort", stop);
       then(value);
     };
-    const stop = () => {
+    // Takes this build out of the queue. If the worker is on it, the worker
+    // is ended, and the builds behind it go to a fresh one.
+    const end = (outcome: (call: Waiting) => void) => () => {
       const call = waiting.get(id);
       if (!call) return;
+      const current = waiting.keys().next().value === id;
       waiting.delete(id);
-      // Nothing else is waiting on this build, so end it: if it was stuck,
-      // the next build would wait behind it.
-      if (!waiting.size && builder === worker) stopBuilder(new Error("stopped"));
-      call.resolve(null);
+      if (current) restartBuilder();
+      outcome(call);
     };
-    const timer = setTimeout(() => {
-      if (builder !== worker) return;
-      stopBuilder(new Error("Go took too long to build the program, so it was stopped."));
-    }, BUILD_TIMEOUT);
-    waiting.set(id, { resolve: settle(resolve), reject: settle(reject), onStatus });
+    const stop = end((call) => call.resolve(null));
+    const tooLong = "Go took too long to build the program, so it was stopped.";
+    const timer = setTimeout(end((call) => call.reject(new Error(tooLong))), BUILD_TIMEOUT);
+    waiting.set(id, { program, resolve: settle(resolve), reject: settle(reject), onStatus });
     signal?.addEventListener("abort", stop);
-    worker.postMessage({ id, ...prepared });
+    worker.postMessage({ id, ...program });
   });
 }
 
