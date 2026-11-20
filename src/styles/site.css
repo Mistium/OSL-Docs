@@ -1993,7 +1993,7 @@ pre {
   display: inline-block;
   color: var(--r-accent);
 }
-.squiggle {
+.home-wave {
   position: absolute;
   left: 0.02em;
   bottom: -0.24em;
@@ -2001,16 +2001,16 @@ pre {
   height: 0.2em;
   overflow: visible;
 }
-.squiggle path {
+.home-wave path {
   fill: none;
   stroke: #ffc35a;
   stroke-width: 5;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 1;
-  animation: squiggle-draw 900ms var(--r-ease) 250ms both;
+  animation: home-wave-draw 900ms var(--r-ease) 250ms both;
 }
-@keyframes squiggle-draw {
+@keyframes home-wave-draw {
   from {
     stroke-dashoffset: 1;
   }
@@ -2075,7 +2075,7 @@ pre {
 }
 @media (prefers-reduced-motion: reduce) {
   .doodle b,
-  .squiggle path {
+  .home-wave path {
     animation: none !important;
   }
 }

@@ -32,9 +32,9 @@ function Install() {
 }
 
 /* A hand-drawn wave under the name. */
-function Squiggle() {
+function Wave() {
   return (
-    <svg class="squiggle" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="home-wave" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true">
       <path d="M3 13 C 25 3, 42 3, 60 11 S 98 19, 118 10 S 160 2, 197 9" pathLength="1" />
     </svg>
   );
@@ -110,8 +110,8 @@ function ideas(packages: number): Idea[] {
       text: (
         <>
           Classes, generics, enums, threads and errors as values are all built in, with{" "}
-          {packages} packages for servers, databases, games and desktop apps. Every Go package is
-          one import away.
+          {packages} packages for servers, databases, games and desktop apps. You can call into any
+          Go package too.
         </>
       ),
     },
@@ -167,7 +167,7 @@ export function Landing() {
             Meet{" "}
             <span class="home-hero__name">
               OSL
-              <Squiggle />
+              <Wave />
             </span>
           </h1>
           <p class="home-hero__lede">

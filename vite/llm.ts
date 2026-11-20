@@ -244,9 +244,10 @@ function homeMarkdown(ctx: Omit<Context, "entry">): string {
       "- **Simple:** `log \"Hello\"` is a whole program, with no main function, build file or " +
         "boilerplate, and `osl run` runs it.",
       "- **Powerful:** classes, generics, enums, threads and errors as values are built in, the " +
-        "standard library covers servers, databases, games and desktop apps, and every Go " +
-        "package is one import away.",
-      "- **Fast:** OSL compiles to Go, which builds a native executable with no runtime to install.",
+        "standard library covers servers, databases, games and desktop apps, and you can call " +
+        "into any Go package.",
+      "- **Fast:** OSL compiles to Go, which builds a native executable with no runtime to " +
+        "install.",
     ].join("\n"),
     fence(hero.files["main.osl"], "osl"),
     recorded?.output ? `Output:\n\n${fence(recorded.output, "text")}` : "",
