@@ -117,7 +117,9 @@ async function build(id, files, imports, native) {
   }
   for (const path of BUILTIN) closure.delete(path);
 
-  status(toolsLoaded ? "Compiling…" : "Downloading Go's compiler (13 MB, just once)…");
+  // A fresh worker loads the compiler again, but the browser has it cached.
+  const loading = "Loading Go's compiler (a 13 MB download the first time)…";
+  status(toolsLoaded ? "Compiling…" : loading);
   const [compile, link, stdlib] = await Promise.all([
     compiler(),
     linker(),
