@@ -1,6 +1,6 @@
 /* Runs the OSL compiler's front end (osl.wasm) off the main thread. Messages
-   are {id, op: "check" | "transpile" | "format", files, entry} and each gets
-   one reply {id, result} or {id, error}. */
+   are {id, op: "check" | "transpile" | "build" | "format", files, entry} and
+   each gets one reply {id, result} or {id, error}. */
 
 importScripts("wasm_exec.js");
 
@@ -25,6 +25,7 @@ self.onmessage = async (event) => {
     let reply;
     if (op === "format") reply = self.oslFormat(source);
     else if (op === "transpile") reply = self.oslTranspile(JSON.stringify({ files, entry }));
+    else if (op === "build") reply = self.oslBuild(JSON.stringify({ files, entry }));
     else reply = self.oslCheck(JSON.stringify({ files, entry }));
     self.postMessage({ id, result: JSON.parse(reply) });
   } catch (error) {

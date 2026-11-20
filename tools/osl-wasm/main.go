@@ -4,12 +4,16 @@
 // docs site loads it in a web worker to check, format and transpile the code
 // people edit, with the same diagnostics `osl lsp check` prints.
 //
-// It registers four globals:
+// It registers five globals:
 //
 //	oslCheck(request)     -> {"diagnostics": [...]}
 //	oslTranspile(request) -> {"diagnostics": [...], "go": "..."}
+//	oslBuild(request)     -> {"diagnostics": [...], "files": {"main.go": "..."}, "native": [...]}
 //	oslFormat(source)     -> {"source": "..."} or {"error": "..."}
 //	oslVersion            -> "9.1.0"
+//
+// oslBuild gives the Go files a build of the program for js/wasm compiles,
+// which the site then builds and runs in the browser (public/osl/go-build.js).
 //
 // A request is JSON: {"files": {"main.osl": "...", "greet.osl": "..."},
 // "entry": "main.osl"}. Every file lives in memory under /playground, so
@@ -23,6 +27,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go/build"
+	"go/parser"
+	"go/token"
+	"io"
+	"io/fs"
 	"path"
 	"regexp"
 	"sort"
@@ -142,6 +151,72 @@ func compile(req request, mode compiler.Mode) (result compiler.Result, diagnosti
 	return result, diagnostics, failure
 }
 
+// buildFiles is the Go a js/wasm build of the program compiles: main.go and
+// the runtime companion sources it asks for with "//osl:go <set>" lines,
+// picked by build constraints as go build would for js/wasm and moved into
+// the program's package, as packages.WriteGoSources does on disk for osl run.
+// native lists the C source sets it asks for with "//osl:native <set>",
+// which need cgo and so can't build for js/wasm.
+func buildFiles(goCode string) (files map[string]string, native []string, err error) {
+	// std:process names syscall.SIGHUP, which Go doesn't define for js/wasm;
+	// Signal(1) is the same signal on every platform that has one. Remove
+	// this once osl.json pins an OSL with the fix (osl/.go PR SIGHUP_PR).
+	goCode = strings.ReplaceAll(goCode, "OSLsyscall.SIGHUP", "OSLsyscall.Signal(1)")
+	files = map[string]string{"main.go": goCode}
+	clause, err := parser.ParseFile(token.NewFileSet(), "main.go", goCode, parser.PackageClauseOnly)
+	if err != nil {
+		return nil, nil, err
+	}
+	source := fs.FS(packages.FS)
+	ctx := build.Default
+	ctx.GOOS, ctx.GOARCH, ctx.CgoEnabled = "js", "wasm", false
+	ctx.BuildTags = packages.BuildTags(false)
+	ctx.JoinPath = path.Join
+	ctx.IsDir = func(name string) bool {
+		info, err := fs.Stat(source, name)
+		return err == nil && info.IsDir()
+	}
+	ctx.OpenFile = func(name string) (io.ReadCloser, error) { return source.Open(name) }
+	for _, line := range strings.Split(goCode, "\n") {
+		line = strings.TrimSpace(line)
+		if name, ok := strings.CutPrefix(line, "//osl:native "); ok {
+			native = append(native, strings.TrimSpace(name))
+			continue
+		}
+		name, ok := strings.CutPrefix(line, "//osl:go ")
+		if !ok {
+			continue
+		}
+		name = strings.TrimSpace(name)
+		dir := "runtime/" + name
+		entries, err := fs.ReadDir(source, dir)
+		if err != nil {
+			return nil, nil, err
+		}
+		for _, entry := range entries {
+			file := entry.Name()
+			if !strings.HasSuffix(file, ".go") || strings.HasSuffix(file, "_test.go") {
+				continue
+			}
+			if match, err := ctx.MatchFile(dir, file); err != nil || !match {
+				continue
+			}
+			data, err := fs.ReadFile(source, dir+"/"+file)
+			if err != nil {
+				return nil, nil, err
+			}
+			fset := token.NewFileSet()
+			parsed, err := parser.ParseFile(fset, file, data, parser.PackageClauseOnly)
+			if err != nil {
+				return nil, nil, err
+			}
+			start, end := fset.Position(parsed.Name.Pos()).Offset, fset.Position(parsed.Name.End()).Offset
+			files["osl_"+name+"_"+file] = string(data[:start]) + clause.Name.Name + string(data[end:])
+		}
+	}
+	return files, native, nil
+}
+
 func reply(value map[string]any) any {
 	data, _ := json.Marshal(value)
 	return string(data)
@@ -158,7 +233,17 @@ func decode(args []js.Value) (request, error) {
 	return req, nil
 }
 
-func handler(mode compiler.Mode, withGo bool) js.Func {
+// What a handler adds to the diagnostics: nothing, the generated Go, or the
+// files a js/wasm build of it compiles.
+type output int
+
+const (
+	diagnosticsOnly output = iota
+	generatedGo
+	buildSources
+)
+
+func handler(mode compiler.Mode, want output) js.Func {
 	return js.FuncOf(func(_ js.Value, args []js.Value) any {
 		req, err := decode(args)
 		if err != nil {
@@ -172,8 +257,16 @@ func handler(mode compiler.Mode, withGo bool) js.Func {
 		if failure != nil {
 			out["error"] = plain(failure.Error())
 		}
-		if withGo && failure == nil {
+		if want == generatedGo && failure == nil {
 			out["go"] = string(result.Go)
+		}
+		if want == buildSources && failure == nil && len(result.Go) > 0 {
+			files, native, err := buildFiles(string(result.Go))
+			if err != nil {
+				out["error"] = plain(err.Error())
+			} else {
+				out["files"], out["native"] = files, native
+			}
 		}
 		return reply(out)
 	})
@@ -182,8 +275,9 @@ func handler(mode compiler.Mode, withGo bool) js.Func {
 func main() {
 	pipeline.ConfigurePackages(packages.FS)
 	pipeline.ConfigureVersion(version)
-	js.Global().Set("oslCheck", handler(compiler.ModeAnalysis, false))
-	js.Global().Set("oslTranspile", handler(compiler.ModeTranspile, true))
+	js.Global().Set("oslCheck", handler(compiler.ModeAnalysis, diagnosticsOnly))
+	js.Global().Set("oslTranspile", handler(compiler.ModeTranspile, generatedGo))
+	js.Global().Set("oslBuild", handler(compiler.ModeTranspile, buildSources))
 	js.Global().Set("oslFormat", js.FuncOf(func(_ js.Value, args []js.Value) any {
 		if len(args) == 0 {
 			return reply(map[string]any{"error": "missing source"})
