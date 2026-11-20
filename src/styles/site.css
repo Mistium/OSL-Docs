@@ -1917,7 +1917,7 @@ pre {
 .home-hero__title {
   margin: 0 0 20px;
   font-family: var(--r-font-display);
-  font-size: clamp(3rem, 6.4vw, 5rem);
+  font-size: clamp(2.8rem, 5vw, 4rem);
   font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 0.94;
@@ -1970,26 +1970,13 @@ pre {
 .home-section {
   margin-top: clamp(4rem, 8vw, 7rem);
 }
-.home-section__head {
-  display: grid;
-  gap: 12px;
-  max-width: 47rem;
-  margin-bottom: 32px;
-}
 .home-title {
-  margin: 0;
+  margin: 0 0 32px;
   font-family: var(--r-font-display);
   font-size: clamp(1.9rem, 3.6vw, 2.8rem);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.08;
-}
-.home-lede {
-  max-width: 44rem;
-  margin: 0;
-  color: var(--r-text-muted);
-  font-size: var(--r-text-md);
-  line-height: 1.7;
 }
 .home p > code {
   padding: 1px 5px;
@@ -2000,177 +1987,35 @@ pre {
   font-size: 0.86em;
 }
 
-/* Rows: a mono tag on the left, the words on the right, each on a panel. */
-.spec {
+/* What OSL puts first: four flat panels, two by two. */
+.priorities {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
-.spec__row {
-  display: grid;
-  grid-template-columns: minmax(10rem, 0.34fr) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: baseline;
+.priority {
+  min-width: 0;
   padding: 24px 28px;
   border-radius: var(--r-radius-xl);
   background: var(--shade-1);
 }
-.spec__tag {
+.priority__tag {
+  display: block;
+  margin-bottom: 10px;
   color: var(--r-accent-text);
   font-family: var(--r-font-mono);
   font-size: var(--r-text-xs);
-  white-space: nowrap;
 }
-.spec__body h3 {
+.priority h3 {
   margin: 0;
   font-size: var(--r-text-lg);
   font-weight: 600;
 }
-.spec__body p {
-  max-width: 40rem;
+.priority p {
   margin: 7px 0 0;
   color: var(--r-text-muted);
   font-size: var(--r-text-md);
   line-height: 1.7;
-}
-
-/* What OSL believes: the idea beside its live example. */
-.belief {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-  padding: 32px 0;
-}
-.belief__copy {
-  min-width: 0;
-}
-.belief__copy .spec__tag {
-  display: block;
-  margin-bottom: 8px;
-}
-.belief h3 {
-  margin: 0 0 8px;
-  font-size: var(--r-text-lg);
-  font-weight: 600;
-}
-.belief p {
-  margin: 0;
-  color: var(--r-text-muted);
-  font-size: var(--r-text-md);
-  line-height: 1.7;
-}
-.belief__code {
-  min-width: 0;
-}
-.belief__code .example {
-  margin: 0;
-}
-
-/* Build it in OSL: a segmented control, then the project. */
-.segmented {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  max-width: 100%;
-  margin-bottom: 24px;
-  padding: 3px;
-  border-radius: var(--r-radius-md);
-  background: var(--r-surface);
-}
-.segmented__item {
-  padding: 6px 12px;
-  border: 0;
-  border-radius: var(--r-radius-sm);
-  background: none;
-  color: var(--r-text-muted);
-  font: inherit;
-  font-size: var(--r-text-sm);
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.segmented__item:hover {
-  color: var(--r-text);
-}
-.segmented__item[aria-selected="true"] {
-  background: var(--r-surface-hover);
-  color: var(--r-text);
-}
-.showcase {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-}
-.showcase__copy h3 {
-  margin: 0 0 8px;
-  font-size: var(--r-text-lg);
-  font-weight: 600;
-}
-.showcase__copy p {
-  margin: 0 0 16px;
-  color: var(--r-text-muted);
-  font-size: var(--r-text-md);
-  line-height: 1.7;
-}
-.showcase__code {
-  min-width: 0;
-}
-.showcase__code .example {
-  margin: 0;
-}
-
-/* The toolchain: a plain code block of commands. */
-.split {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-}
-.split .home-section__head {
-  margin-bottom: 16px;
-}
-.commands {
-  margin: 0;
-  border-radius: var(--r-radius-lg);
-  background: var(--code-bg);
-  overflow-x: auto;
-}
-.commands__body {
-  display: grid;
-  gap: 2px;
-  padding: 16px;
-  font-family: var(--r-font-mono);
-  font-size: 13px;
-  line-height: 1.7;
-}
-.commands__line {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 14px;
-}
-.commands__prompt {
-  color: var(--r-accent-text);
-  user-select: none;
-}
-.commands__what {
-  color: var(--hl-comment);
-}
-
-/* Everything in the box: each group's packages as plain names. */
-.stdlib__names {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-}
-.stdlib__names a {
-  color: var(--r-text);
-  font-family: var(--r-font-mono);
-  font-size: var(--r-text-sm);
-  text-decoration: none;
-}
-.stdlib__names a:hover {
-  color: var(--r-accent-text);
 }
 
 /* Get started: three flat panels. */
@@ -2225,18 +2070,12 @@ pre {
   .home {
     padding-top: 40px;
   }
-  .spec__row,
-  .belief,
-  .showcase,
-  .split,
+  .priorities,
   .starts {
     grid-template-columns: minmax(0, 1fr);
   }
-  .spec__row {
-    gap: 8px;
-  }
-  .belief {
-    gap: 16px;
+  .priority {
+    padding: 20px;
   }
 }
 

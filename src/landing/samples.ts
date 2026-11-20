@@ -15,15 +15,30 @@ function sample(title: string, code: string, mode: ExampleMode = "run"): Sample 
 
 export const SAMPLES: Record<string, Sample> = {
   hero: sample(
-    "Hello, OSL",
-    `string[] crew = ["Ada", "Grace", "Linus"]
+    "Typed JSON",
+    `import "std:json"
 
-for i, name in crew (
-  log \`\${i}. Hello, \${name}!\`
+struct Order (
+  string item
+  int qty
+  number price
 )
 
-def shout(string text) string -> text.toUpper() ++ "!"
-log shout("one binary, no runtime")`,
+def total(Order[] orders) number (
+  return orders.map(o -> o.qty * o.price).sum()
+)
+
+string body = \`[
+  {"item": "tea", "qty": 2, "price": 3.5},
+  {"item": "cake", "qty": 1, "price": 4}
+]\`
+
+switch json.parse<Order[]>(body) (
+  case ok(orders)
+    log \`\${orders.len} items, \${total(orders)} total\`
+  case err(e)
+    log "bad order: " ++ e.message
+)`,
   ),
   playground: sample(
     "A first program",

@@ -3224,6 +3224,12 @@
   "diagnostics": [],
   "osl": "9.3.0"
  },
+ "6660f018be4fc": {
+  "output": "2 items, 11 total\n",
+  "exit": 0,
+  "diagnostics": [],
+  "osl": "9.3.0"
+ },
  "6663b507fe0af": {
   "output": "ValueError\nValueError\ntrue\n",
   "exit": 0,

@@ -10,7 +10,7 @@ import { Playground } from "./components/Playground";
 export const SPECIAL: Record<string, string> = { "": "home", playground: "playground" };
 
 export function documentTitle(slug: string, page: PageData | null) {
-  if (slug === "") return "OSL: a readable language that compiles to native code";
+  if (slug === "") return "OSL: readable code for complex programs";
   if (slug === "playground") return "Playground · OSL";
   if (!page) return "Not found · OSL";
   const area = areaOf(slug);

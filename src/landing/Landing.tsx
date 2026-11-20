@@ -1,24 +1,14 @@
-/* osl-lang.org: what OSL is, what it believes, and what you can build with
-   it. Every code sample is live: it is compiled when the site is built, and
-   in the browser it can be edited, checked and run. */
+/* osl-lang.org: what OSL puts first, one live example, and where to start.
+   The code sample is live: it is compiled when the site is built, and in the
+   browser it can be edited, checked and run. */
 
-import { useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
 import { ArrowRight } from "lucide-preact";
 import index from "virtual:docs-index";
 import { CodeExample, CopyButton } from "../components/CodeExample";
-import { highlightHTML } from "../lib/highlight";
-import type { Recorded } from "../lib/types";
-import { INSTALL, LESSONS, PACKAGE_GROUPS, SOURCE, packageSlug } from "../nav";
-import { SAMPLES, type Sample } from "./samples";
+import { INSTALL, LESSONS, PACKAGE_GROUPS, SOURCE } from "../nav";
+import { SAMPLES } from "./samples";
 import recordings from "virtual:landing-outputs";
-
-const recorded = (sample: Sample): Recorded | undefined => recordings[sample.example.id];
-
-function Live({ name, compact = false }: { name: string; compact?: boolean }) {
-  const sample = SAMPLES[name];
-  return <CodeExample example={sample.example} recorded={recorded(sample)} compact={compact} />;
-}
 
 function Install() {
   return (
@@ -32,166 +22,85 @@ function Install() {
   );
 }
 
-const PILLARS = [
-  {
-    tag: "readable",
-    title: "Read it aloud",
-    text: "A file runs from top to bottom. Types come first, blocks are parentheses, and counting starts at one. You can read an OSL program aloud.",
-  },
-  {
-    tag: "fast",
-    title: "Native, with nothing to install",
-    text: "OSL compiles to Go, and Go builds a native executable. No virtual machine and no runtime to install: one file you copy to a server and run.",
-  },
-  {
-    tag: "dependable",
-    title: "Checked before it runs",
-    text: "Declare types where they matter and let the rest be inferred. Failure is a value in the signature, and the compiler follows your guards.",
-  },
-  {
-    tag: "complete",
-    title: "The whole toolkit in the box",
-    text: "Web servers, databases, desktop apps, games, threads and crypto ship with the compiler. Anything else is one Go import away.",
-  },
-];
+type Priority = { tag: string; title: string; text: ComponentChildren };
 
-type Belief = { title: string; text: ComponentChildren; sample: string };
-
-const BELIEFS: Belief[] = [
-  {
-    title: "A program is just the code",
-    text: (
-      <>
-        No <code>main</code>, no package line, no build file. A file that says <code>log "Hello, world"</code> is a complete program, and so is a web
-        server. When a project grows, imports and Opal take over; the first line never needs them.
-      </>
-    ),
-    sample: "script",
-  },
-  {
-    title: "Types where they earn their keep",
-    text: (
-      <>
-        Write the type at the edges, where functions meet, and let <code>auto</code> fill in the middle. The compiler checks every boundary and
-        generates direct Go for what it knows, so the types you write make the program faster as well as safer.
-      </>
-    ),
-    sample: "types",
-  },
-  {
-    title: "Failure is a value you can see",
-    text: (
-      <>
-        A call that can fail returns a <code>result</code>. Match on it, pass it up with <code>!</code>, or unwrap it on purpose. The compiler warns
-        about failures nobody handles, and it reads your <code>if</code> guards so a call you've made safe stops warning.
-      </>
-    ),
-    sample: "results",
-  },
-  {
-    title: "The compiler explains itself",
-    text: (
-      <>
-        An error says what went wrong, where, and how to fix it, often with the exact code to write. <code>osl fix</code> applies the fixes it is sure
-        of, and the language server shows them as you type. Press <em>Compile</em> to see one.
-      </>
-    ),
-    sample: "teach",
-  },
-  {
-    title: "Counting starts at one",
-    text: (
-      <>
-        The first item of an array is <code>[1]</code>, the last is <code>[-1]</code>, and a loop over five things counts to five. OSL is written for
-        the way people count, and position <code>0</code> is a compile error rather than an off-by-one.
-      </>
-    ),
-    sample: "ones",
-  },
-  {
-    title: "Go is one import away",
-    text: (
-      <>
-        Every Go package is an <code>import "go:…"</code> away, with no bindings to write. OSL values convert to Go types at the call, so the Go
-        ecosystem is part of the standard library.
-      </>
-    ),
-    sample: "go",
-  },
-];
-
-const SHOWCASE = [
-  { key: "server", label: "Web servers", text: "Routes, JSON, middleware, WebSockets and TLS from std:serve and std:ws. One binary serves the API and the site.", href: "/build/web-api", cta: "Build a web API" },
-  { key: "ui", label: "Desktop apps", text: "Write a component once with std:ui's markup, and show it in a native window or as a live web page.", href: "/build/desktop-app", cta: "Build a desktop app" },
-  { key: "game", label: "Games", text: "Windows, input, sprites, sound, 3D and physics, through raylib, raygui and box2d.", href: "/build/game", cta: "Build a game" },
-  { key: "cli", label: "Command-line tools", text: "Read files and arguments, talk to processes and the terminal, and compile to a binary that starts instantly.", href: "/build/cli-tool", cta: "Build a CLI tool" },
-  { key: "threads", label: "Concurrent programs", text: "Threads, channels, locks and parallel maps, with collections that stay safe when threads share them.", href: "/learn/concurrency", cta: "Learn concurrency" },
-  { key: "bot", label: "Chat bots", text: "Commands, slash commands, embeds and polls on originChats, with reconnection built in.", href: "/build/chat-bot", cta: "Build a chat bot" },
-];
-
-const TOOLS = [
-  ["osl run main.osl", "compile and run, with a warm cache in milliseconds"],
-  ["osl compile main.osl", "build a native executable"],
-  ["osl test", "run the test blocks beside your code"],
-  ["osl fmt src/", "format every file the one way"],
-  ["osl fix src/", "apply the compiler's suggested fixes"],
-  ["osl lsp", "diagnostics, completion and rename in your editor"],
-  ["opal add owner/repo", "add a package from Git, pinned in opal.lock"],
-];
-
-function Showcase() {
-  const [active, setActive] = useState(SHOWCASE[0].key);
-  const current = SHOWCASE.find((s) => s.key === active)!;
-  return (
-    <>
-      <div class="segmented" role="tablist" aria-label="Things to build">
-        {SHOWCASE.map((s) => (
-          <button key={s.key} type="button" role="tab" aria-selected={s.key === active} class="segmented__item" onClick={() => setActive(s.key)}>
-            {s.label}
-          </button>
-        ))}
-      </div>
-      <div class="showcase" role="tabpanel" aria-label={current.label}>
-        <div class="showcase__copy">
-          <h3>{current.label}</h3>
-          <p>{current.text}</p>
-          <a class="arrow-link" href={current.href}>
-            {current.cta} <ArrowRight aria-hidden="true" />
-          </a>
-        </div>
-        <div class="showcase__code">
-          <Live key={current.key} name={current.key} compact />
-        </div>
-      </div>
-    </>
-  );
+function priorities(packages: number): Priority[] {
+  return [
+    {
+      tag: "readable",
+      title: "Code you can read aloud",
+      text: (
+        <>
+          A file runs from top to bottom. Types come first, blocks are parentheses and counting starts at
+          one, so someone new to the code can follow it line by line.
+        </>
+      ),
+    },
+    {
+      tag: "capable",
+      title: "Room for complex programs",
+      text: (
+        <>
+          Structs, classes, generics, enums, threads and errors as values are part of the language, and{" "}
+          {packages} packages ship with it. Programs grow without turning hard to read.
+        </>
+      ),
+    },
+    {
+      tag: "fast",
+      title: "Fast, native executables",
+      text: (
+        <>
+          OSL compiles to Go, and Go builds a native executable. There's no virtual machine and no runtime
+          to install: you ship one file.
+        </>
+      ),
+    },
+    {
+      tag: "easy",
+      title: "Easy to start, easy to use",
+      text: (
+        <>
+          <code>log "Hello"</code> is a whole program. One <code>osl</code> command runs, tests, formats and
+          fixes your code, and every compiler error says how to fix it.
+        </>
+      ),
+    },
+  ];
 }
 
-function Head({ id, title, children }: { id: string; title: string; children?: ComponentChildren }) {
-  return (
-    <div class="home-section__head">
-      <h2 id={id} class="home-title">
-        {title}
-      </h2>
-      {children && <p class="home-lede">{children}</p>}
-    </div>
-  );
-}
+const STARTS = [
+  {
+    href: "/learn",
+    title: "Take the course",
+    text: `${LESSONS.length} short lessons, from your first line to generics and threads.`,
+    cta: "Start learning",
+  },
+  {
+    href: "/build",
+    title: "Build a project",
+    text: "A CLI tool, a web API, a desktop app, a game or a bot, one step at a time.",
+    cta: "Pick a project",
+  },
+  {
+    href: "/packages",
+    title: "Explore the packages",
+    text: "Every package in the standard library, with a walkthrough and its full API.",
+    cta: "Browse packages",
+  },
+];
 
 export function Landing() {
-  const total = PACKAGE_GROUPS.reduce((n, g) => n + g.packages.length, 0);
+  const packages = PACKAGE_GROUPS.reduce((n, g) => n + g.packages.length, 0);
+  const hero = SAMPLES.hero.example;
   return (
     <div class="home">
       <section class="home-hero">
         <div class="home-hero__copy">
-          <h1 class="home-hero__title">
-            Write less.
-            <br />
-            Mean more.
-          </h1>
+          <h1 class="home-hero__title">Readable code for complex programs.</h1>
           <p class="home-hero__lede">
-            OSL is a readable, typed language that compiles to native code. Write it top to bottom like a script, check it like a compiled language, and ship
-            it as one executable.
+            OSL is a programming language that stays easy to read as your program grows. It compiles to a
+            fast native executable, and it's easy to install, learn and use.
           </p>
           <div class="home-actions">
             <a class="btn btn--primary btn--lg" href="/learn">
@@ -213,118 +122,40 @@ export function Landing() {
           </div>
         </div>
         <div class="home-hero__code">
-          <Live name="hero" />
-          <p class="home-note">This is the real compiler, running in your browser. Click the code to change it.</p>
+          <CodeExample example={hero} recorded={recordings[hero.id]} />
+          <p class="home-note">Typed JSON, with the error handled. This is the real compiler, running in your browser.</p>
         </div>
       </section>
 
-      <section class="home-section" aria-labelledby="why">
-        <Head id="why" title="Why OSL" />
-        <div class="spec">
-          {PILLARS.map((p) => (
-            <div key={p.tag} class="spec__row">
-              <span class="spec__tag">{p.tag}</span>
-              <div class="spec__body">
-                <h3>{p.title}</h3>
-                <p>{p.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section class="home-section" aria-labelledby="beliefs">
-        <Head id="beliefs" title="What OSL believes">
-          Six ideas shape the language. Each example is live: run it, change it, break it.
-        </Head>
-        <div class="beliefs">
-          {BELIEFS.map((b, n) => (
-            <article key={b.title} class="belief">
-              <div class="belief__copy">
-                <span class="spec__tag">{String(n + 1).padStart(2, "0")}</span>
-                <h3>{b.title}</h3>
-                <p>{b.text}</p>
-              </div>
-              <div class="belief__code">
-                <Live name={b.sample} compact />
-              </div>
+      <section class="home-section" aria-labelledby="priorities">
+        <h2 id="priorities" class="home-title">
+          What OSL puts first
+        </h2>
+        <div class="priorities">
+          {priorities(packages).map((p) => (
+            <article key={p.tag} class="priority">
+              <span class="priority__tag">{p.tag}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section class="home-section" aria-labelledby="build">
-        <Head id="build" title="Build it in OSL">
-          One language from the server to the window. Every project here has a step-by-step tutorial.
-        </Head>
-        <Showcase />
-      </section>
-
-      <section class="home-section split" aria-labelledby="tools">
-        <div>
-          <Head id="tools" title="One command for the whole loop">
-            The compiler is also the formatter, the test runner, the fixer and the language server. Opal, the package manager, ships with it.
-          </Head>
-          <a class="arrow-link" href="/reference/cli">
-            The command line <ArrowRight aria-hidden="true" />
-          </a>
-        </div>
-        <div class="commands" role="img" aria-label="OSL commands">
-          <div class="commands__body">
-            {TOOLS.map(([cmd, what]) => (
-              <div key={cmd} class="commands__line">
-                <code class="hljs" dangerouslySetInnerHTML={{ __html: `<span class="commands__prompt">$</span> ${highlightHTML(cmd, "bash")}` }} />
-                <span class="commands__what"># {what}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section class="home-section" aria-labelledby="stdlib">
-        <Head id="stdlib" title="Everything in the box">
-          {total} packages ship with the compiler. Each one has a tutorial and a complete reference generated from its source.
-        </Head>
-        <div class="spec">
-          {PACKAGE_GROUPS.map((g) => (
-            <div key={g.slug} class="spec__row">
-              <span class="spec__tag">{g.title}</span>
-              <div class="stdlib__names">
-                {g.packages.map((p) => (
-                  <a key={p} href={`/${packageSlug(p)}`}>
-                    {p}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section class="home-section" aria-labelledby="start">
-        <Head id="start" title="Get started" />
+        <h2 id="start" class="home-title">
+          Get started
+        </h2>
         <div class="starts">
-          <a class="start" href="/learn">
-            <h3>Take the course</h3>
-            <p>{LESSONS.length} short lessons, from your first line to generics and threads, with quizzes and exercises along the way.</p>
-            <span class="arrow-link">
-              Start learning <ArrowRight aria-hidden="true" />
-            </span>
-          </a>
-          <a class="start" href="/build">
-            <h3>Build a project</h3>
-            <p>Make a CLI tool, a web API, a chat server, a desktop app, a game or a bot, one step at a time.</p>
-            <span class="arrow-link">
-              Pick a project <ArrowRight aria-hidden="true" />
-            </span>
-          </a>
-          <a class="start" href="/packages">
-            <h3>Explore the packages</h3>
-            <p>Every package in the standard library, with a walkthrough and every function it offers.</p>
-            <span class="arrow-link">
-              Browse packages <ArrowRight aria-hidden="true" />
-            </span>
-          </a>
+          {STARTS.map((s) => (
+            <a key={s.href} class="start" href={s.href}>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+              <span class="arrow-link">
+                {s.cta} <ArrowRight aria-hidden="true" />
+              </span>
+            </a>
+          ))}
         </div>
       </section>
     </div>

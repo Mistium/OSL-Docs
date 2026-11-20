@@ -135,4 +135,4 @@ export const LESSONS: string[] = AREAS[0].sections.flatMap((s) => s.pages).filte
 export const SOURCE = "https://git.rotur.dev/osl/.go";
 export const DOCS_SOURCE = "https://github.com/Mistium/OSL-Docs";
 export const EDIT_BASE = "https://github.com/Mistium/OSL-Docs/edit/main/content";
-export const INSTALL = "curl -fsSL https://gosl.mistium.com | sh";
+export const INSTALL = "curl -fsSL https://osl-lang.org/install.sh | sh";
