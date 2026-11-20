@@ -85,7 +85,7 @@ export function Footer() {
             <span class="brand__name">OSL</span>
           </a>
           <p>
-            Readable code for complex programs, compiled to fast native executables. MIT licensed.
+            A simple, powerful language that compiles to fast native programs. MIT licensed.
           </p>
         </div>
         <div class="footer__cols">

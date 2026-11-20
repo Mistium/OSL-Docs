@@ -1,6 +1,7 @@
-/* osl-lang.org: what OSL puts first, one live example, and where to start.
-   The code sample is live: it is compiled when the site is built, and in the
-   browser it can be edited, checked and run. */
+/* osl-lang.org: hello, what OSL is about, one live example, and where to
+   start. The code sample is live: it is compiled when the site is built, and
+   in the browser it can be edited, checked and run. Colours are rotur-ui
+   swatches; the little drawings are flat CSS in the style of its motifs. */
 
 import type { ComponentChildren } from "preact";
 import { ArrowRight } from "lucide-preact";
@@ -9,6 +10,14 @@ import { CodeExample, CopyButton } from "../components/CodeExample";
 import { INSTALL, LESSONS, PACKAGE_GROUPS, SOURCE } from "../nav";
 import { SAMPLES } from "./samples";
 import recordings from "virtual:landing-outputs";
+
+/* rotur-ui's SWATCHES, by name. */
+const LILAC = "#c299cf";
+const SKY = "#56c6e8";
+const MARIGOLD = "#ffc35a";
+const MINT = "#74d48f";
+const CORAL = "#ff8a80";
+const PERIWINKLE = "#8aa2ff";
 
 function Install() {
   return (
@@ -22,49 +31,99 @@ function Install() {
   );
 }
 
-type Priority = { tag: string; title: string; text: ComponentChildren };
+/* A hand-drawn wave under the name. */
+function Squiggle() {
+  return (
+    <svg class="squiggle" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M3 13 C 25 3, 42 3, 60 11 S 98 19, 118 10 S 160 2, 197 9" pathLength="1" />
+    </svg>
+  );
+}
 
-function priorities(packages: number): Priority[] {
+/* One short line of code, typing itself. */
+function SimpleDoodle() {
+  return (
+    <div class="doodle doodle--simple" aria-hidden="true">
+      <i>
+        <b />
+        <b />
+        <b />
+      </i>
+    </div>
+  );
+}
+
+/* Small blocks stacking into something bigger. */
+function PowerfulDoodle() {
+  return (
+    <div class="doodle doodle--powerful" aria-hidden="true">
+      <i>
+        {Array.from({ length: 6 }, (_, n) => (
+          <b key={n} />
+        ))}
+      </i>
+    </div>
+  );
+}
+
+/* A dot that gets there first. */
+function FastDoodle() {
+  return (
+    <div class="doodle doodle--fast" aria-hidden="true">
+      <i>
+        <b />
+        <b />
+        <b />
+        <b />
+      </i>
+    </div>
+  );
+}
+
+type Idea = {
+  tag: string;
+  colour: string;
+  title: string;
+  Doodle: () => ComponentChildren;
+  text: ComponentChildren;
+};
+
+function ideas(packages: number): Idea[] {
   return [
     {
-      tag: "readable",
-      title: "Code you can read aloud",
+      tag: "simple",
+      colour: LILAC,
+      title: "Simple to write",
+      Doodle: SimpleDoodle,
       text: (
         <>
-          A file runs from top to bottom. Types come first, blocks are parentheses and
-          counting starts at one, so someone new to the code can follow it line by line.
+          <code>log "Hello"</code> is a whole program. There's no main function, no build file and
+          no boilerplate: you write what you mean, and <code>osl run</code> runs it.
         </>
       ),
     },
     {
-      tag: "capable",
-      title: "Room for complex programs",
+      tag: "powerful",
+      colour: SKY,
+      title: "Powerful when you need it",
+      Doodle: PowerfulDoodle,
       text: (
         <>
-          Structs, classes, generics, enums, threads and errors as values are part of the
-          language, and {packages} packages ship with it. Programs grow without turning hard to
-          read.
+          Classes, generics, enums, threads and errors as values are all built in, with{" "}
+          {packages} packages for servers, databases, games and desktop apps. Every Go package is
+          one import away.
         </>
       ),
     },
     {
       tag: "fast",
-      title: "Fast, native executables",
+      colour: MARIGOLD,
+      title: "And still fast",
+      Doodle: FastDoodle,
       text: (
         <>
-          OSL compiles to Go, and Go builds a native executable. There's no virtual machine
-          and no runtime to install: you ship one file.
-        </>
-      ),
-    },
-    {
-      tag: "easy",
-      title: "Easy to start, easy to use",
-      text: (
-        <>
-          <code>log "Hello"</code> is a whole program. One <code>osl</code> command runs,
-          tests, formats and fixes your code, and its errors explain what went wrong, usually
-          with the fix.
+          OSL compiles to Go, and Go builds a native executable. There's no virtual machine and no
+          runtime to install, just one file you can hand to anyone.
         </>
       ),
     },
@@ -74,23 +133,28 @@ function priorities(packages: number): Priority[] {
 const STARTS = [
   {
     href: "/learn",
+    colour: MINT,
     title: "Take the course",
     text: `${LESSONS.length} short lessons, from your first line to generics and threads.`,
     cta: "Start learning",
   },
   {
     href: "/build",
-    title: "Build a project",
+    colour: CORAL,
+    title: "Build something",
     text: "A CLI tool, a web API, a desktop app, a game or a bot, one step at a time.",
     cta: "Pick a project",
   },
   {
     href: "/packages",
+    colour: PERIWINKLE,
     title: "Explore the packages",
-    text: "Every package in the standard library, with a walkthrough and its full API.",
+    text: "Everything in the standard library, with a walkthrough and its full API.",
     cta: "Browse packages",
   },
 ];
+
+const tint = (colour: string) => ({ "--c": colour });
 
 export function Landing() {
   const packages = PACKAGE_GROUPS.reduce((n, g) => n + g.packages.length, 0);
@@ -99,10 +163,16 @@ export function Landing() {
     <div class="home">
       <section class="home-hero">
         <div class="home-hero__copy">
-          <h1 class="home-hero__title">Readable code for complex programs.</h1>
+          <h1 class="home-hero__title">
+            Meet{" "}
+            <span class="home-hero__name">
+              OSL
+              <Squiggle />
+            </span>
+          </h1>
           <p class="home-hero__lede">
-            OSL is a programming language that stays easy to read as your program grows. It
-            compiles to a fast native executable, and it's easy to install, learn and use.
+            A small, simple language with a lot of power behind it. Write a one-line script or a
+            whole web server, then run it as a fast native program.
           </p>
           <div class="home-actions">
             <a class="btn btn--primary btn--lg" href="/learn">
@@ -126,21 +196,23 @@ export function Landing() {
         <div class="home-hero__code">
           <CodeExample example={hero} recorded={recordings[hero.id]} />
           <p class="home-note">
-            Typed JSON, with the error handled. This is the real compiler, running in your browser.
+            Read some JSON into a typed struct, handle the error, add it up. Press Run, or click the
+            code and change it.
           </p>
         </div>
       </section>
 
-      <section class="home-section" aria-labelledby="priorities">
-        <h2 id="priorities" class="home-title">
-          What OSL puts first
+      <section class="home-section" aria-labelledby="ideas">
+        <h2 id="ideas" class="home-title">
+          Simple, powerful, and still fast
         </h2>
-        <div class="priorities">
-          {priorities(packages).map((p) => (
-            <article key={p.tag} class="priority">
-              <span class="priority__tag">{p.tag}</span>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
+        <div class="ideas">
+          {ideas(packages).map(({ tag, colour, title, Doodle, text }) => (
+            <article key={tag} class="idea" style={tint(colour)}>
+              <Doodle />
+              <span class="idea__tag">{tag}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
             </article>
           ))}
         </div>
@@ -148,11 +220,11 @@ export function Landing() {
 
       <section class="home-section" aria-labelledby="start">
         <h2 id="start" class="home-title">
-          Get started
+          Jump in
         </h2>
         <div class="starts">
           {STARTS.map((s) => (
-            <a key={s.href} class="start" href={s.href}>
+            <a key={s.href} class="start" href={s.href} style={tint(s.colour)}>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
               <span class="arrow-link">

@@ -26,8 +26,8 @@ type Context = { entry: Entry; pages: Map<string, Entry>; api: { version: string
 export const markdownPath = (slug: string) => (slug === "" ? "index.md" : `${slug}.md`);
 
 const TAGLINE =
-  "OSL is a programming language that keeps code readable as programs grow complex, " +
-  "compiles to a fast native executable, and is easy to learn and use.";
+  "OSL is a small, simple programming language with a lot of power behind it. " +
+  "It compiles to Go and ships as one fast native executable.";
 
 function fence(code: string, lang = "") {
   const longest = Math.max(2, ...[...code.matchAll(/`+/g)].map((m) => m[0].length));
@@ -240,14 +240,13 @@ function homeMarkdown(ctx: Omit<Context, "entry">): string {
   const parts = [
     header("OSL", TAGLINE, ""),
     [
-      "OSL puts four things first:",
-      "- **Readable:** a file runs from top to bottom, types come first, blocks are parentheses " +
-        "and counting starts at one.",
-      "- **Capable:** structs, classes, generics, enums, threads and errors as values are part of " +
-        "the language, and the standard library ships with it.",
+      "OSL is about three things:",
+      "- **Simple:** `log \"Hello\"` is a whole program, with no main function, build file or " +
+        "boilerplate, and `osl run` runs it.",
+      "- **Powerful:** classes, generics, enums, threads and errors as values are built in, the " +
+        "standard library covers servers, databases, games and desktop apps, and every Go " +
+        "package is one import away.",
       "- **Fast:** OSL compiles to Go, which builds a native executable with no runtime to install.",
-      "- **Easy:** `log \"Hello\"` is a whole program, one `osl` command runs, tests, formats and " +
-        "fixes code, and its errors explain what went wrong, usually with the fix.",
     ].join("\n"),
     fence(hero.files["main.osl"], "osl"),
     recorded?.output ? `Output:\n\n${fence(recorded.output, "text")}` : "",
